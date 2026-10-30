@@ -370,7 +370,8 @@
     <p style="margin:0 0 0.9rem; color:var(--muted); font-size:0.9rem; max-width:72ch;">
       Dates come from the dated entries in <span class="mono">docs/roadmap.md</span> and
       <span class="mono">docs/shipped.md</span> — day granularity, which is all that was ever
-      recorded. There are no commit timestamps to check against: the repo still has no commits.
+      recorded. Everything up to 31 October predates the first commit, so there are no commit
+      timestamps to check it against; from the push onwards, git history is the record.
     </p>
     <div class="timeline" id="timeline"></div>
   </section>
@@ -505,7 +506,7 @@
       summary: "The engineering side is done: 6.4's accessibility audit closed 30 Oct, so zero blocking build days remain. Every remaining blocker waits on a person — credentials, the repo push, and the legal review that sets the date.",
       items: [
         { id: "6.1", name: "Credentials (Google, Resend, Dodo, Paddle, D1)", state: "external", note: "leaflockpdf.com bought 30 Oct, which was its first gate — the OAuth redirect URIs and the email sending domain can now be registered. Still open: Google, Resend, Dodo, Paddle, D1, and a mailbox for hello@ (TODO §0)", lead: 5,  owner: "you", blocker: true },
-        { id: "6.2", name: "GitHub repo, first commit, CI run", state: "external", note: "verified ready 30 Oct: workflow correct, CI already retries flakes, 500 files with no secrets and .dev.vars ignored — waiting only on repo creation and push", lead: 1,  owner: "you", blocker: true },
+        { id: "6.2", name: "GitHub repo, first commit, CI run", state: "done", when: "31 Oct", note: "basicappcompany/leaflock-pdf, private. Two commits (512 files), pushed 31 Oct, and run 41110988456 was green first time in 8m11s — 275 browser tests in 4.3m on a clean Linux runner, no retries used. The empty LeafLockPDF repo created 30 Oct was renamed rather than duplicated. gh needed the workflow scope before GitHub would accept a push containing ci.yml" },
         { id: "6.3", name: "Legal review of policy pages", state: "external", note: "brief ready to send (docs/legal-brief.md) — but it needs six answers only you have first: entity name/address, governing law + courts, DPDP grievance officer, minimum age, hosting, email provider", lead: 21, owner: "lawyer", blocker: true },
         { id: "6.4", name: "Accessibility audit", state: "done", when: "30 Oct", note: "20 checks in accessibility.spec.ts, WCAG A/AA clean on 10 page kinds; fixed one real 1.4.10 Reflow failure (tables overflowed at 320px)" },
         { id: "6.5", name: "SOC 2 / ISO pursuit", state: "external", note: "post-launch, 6–12mo, not a blocker", lead: 270, owner: "auditor", afterLaunch: true, after: "after launch" },
@@ -537,9 +538,9 @@
     {
       title: "GitHub / CI",
       items: [
-        "Create the repo, push the first commit",
-        "Set it as origin, watch Actions go green",
-        "Branch protection once main exists on GitHub",
+        "Done 31 Oct: repo, two commits pushed, first Actions run green in 8m11s",
+        "Branch protection: require CI before merging to main",
+        "Bump checkout/setup-node/pnpm action-setup off deprecated Node 20",
       ],
     },
     {
@@ -583,6 +584,7 @@
     { date: "30 Oct 2026", what: "Legal brief written for 6.3 — <span><span class='mono'>docs/legal-brief.md</span>: the ask, the data we actually hold mapped to all six database tables, and the six owner answers that gate it. The critical path can start as soon as those are filled in</span>", count: "" },
     { date: "30 Oct 2026", what: "Second competitive review — <span>18 players. Four new client-side rivals (PDFCraft 90+ tools, free) end tool count as a differentiator; a rival's privacy claim contradicts its own pricing page, which promoted 3.4/3.5; and $59/yr is the cheapest professional PDF product found anywhere, reopening the Pro price</span>", count: "+11 players" },
     { date: "30 Oct 2026", what: "Strategy set — <span>market split into 7 categories; 2, 4 and 5 are winnable solo and 1 is not. Self-serve only, bespoke enterprise deferred to a new Phase 7 with five entry conditions. Three paid tiers priced per category. Phase 3's 19.5 days of prose resequenced behind ~8 days that open three revenue categories</span>", count: "+4 items" },
+    { date: "31 Oct 2026", what: "On GitHub, CI green (6.2) — <span>the project left this laptop for the first time: <span class='mono'>basicappcompany/leaflock-pdf</span>, private, two commits and 512 files. Run 41110988456 passed first time in 8m11s, <strong>275 browser tests in 4.3m</strong> with no retries — so the two flakes seen locally were load, not the suite. One blocker closed, two left, both owner-gated</span>", count: "" },
     { date: "30 Oct 2026", what: "Verifiability page shipped (3.4) — <span>the demo rivals copying our wording cannot copy: <span class='mono'>/verify</span> has the browser list every request it has made, refuse a cross-origin fetch while you watch and name the rule that stopped it, and report going offline by itself. Platform probed before designing: a blocked request fires <span class='mono'>securitypolicyviolation</span> but leaves no Resource Timing entry. Phase 3 is now 2/6</span>", count: "+5 browser tests" },
     { date: "30 Oct 2026", what: "Claims page shipped (3.5) — <span>a page written to be quoted: the wording that survives 2.12, everything we receive (the metering request carries <strong>no body at all</strong>), what is kept on the device, and the security-questionnaire answers category 4 asks for. It doubles as Practice's trust page. Found three claims that shipped features had already falsified — no cookies, no account, nothing stored on your device — and <span class='mono'>statedClaims.test.ts</span> now guards the phrasings that expire</span>", count: "+3 tests" },
     { date: "30 Oct 2026", what: "Practice tier shipped (4.9) — <span>the six professional tools moved out of Pro, every price reset to the 30 Oct decision (Pro $4/$24, ten years $120, Practice $249, Business $499), and tool access now ranks plans against tiers rather than unlocking everything for any paid plan. <span class='mono'>statedPrices.test.ts</span> was added for the same reason the allowances got one, and caught the Business page still advertising $299 in its frontmatter</span>", count: "+8 tests" },

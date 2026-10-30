@@ -17,6 +17,30 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 31 October 2026 — On GitHub, CI green (roadmap 6.2)
+
+`basicappcompany/leaflock-pdf`, private. Two commits, 512 files. First Actions run green
+in 8m11s: type check, `pnpm tracker`, 490 unit tests, then 275 browser tests in 4.3m.
+
+**The findings worth keeping, because each cost a round trip:**
+
+- **A token needs the `workflow` scope** before GitHub will accept a push containing
+  `.github/workflows/*`. The push is refused whole, not partially, so there is no
+  half-pushed state to clean up — but it does mean two browser round trips with `gh`.
+- **An empty repo already existed** under a different spelling (`LeafLockPDF`, made the
+  day before). Renaming it was free and GitHub redirects the old name; creating a second
+  one would have left two private repos for one project.
+- **The local flakes were load, not the suite.** `/rotate-pdf` overflow and one
+  accessibility case both failed under four local workers and both passed on the runner
+  with none of CI's two retries used. Worth remembering before chasing a flake that only
+  appears at `workers: 4`.
+
+**Stated limit:** CI is the gate, not a deploy. Cloudflare Pages deploys from its own git
+integration and that project does not exist yet, so nothing shipped to a URL — the chain
+is still Pages project, then custom domain, then the apex record (`docs/TODO.md` §0).
+
+---
+
 ## 30 October 2026 — Verifiability page (roadmap 3.4)
 
 `/verify`: three panels, each reporting something only the visitor's browser can say —

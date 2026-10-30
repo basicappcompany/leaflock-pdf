@@ -45,10 +45,12 @@ with their own schema (§4d) · **the device-local recent-work shelf** (§4e).
 had been wrong for days, in the one section of this document written to tell a reader what
 exists (`docs/process.md` §8).
 
-**Written but not yet live:** `.github/workflows/ci.yml` runs the type check, unit tests
-and full Playwright suite on push and PR — but this repo has no commits and no git
-remote yet (`docs/TODO.md` §4a), so nothing has actually run it. Treat it as reviewed,
-not as proven.
+**Live and proven since 31 October 2026:** `.github/workflows/ci.yml` runs the type check,
+`pnpm tracker`, the unit tests and the full Playwright suite on push and PR. First run was
+green in 8m11s on `ubuntu-latest`, with 275 browser tests in 4.3m and no retries used — so
+the one step that had no local equivalent, `playwright install --with-deps chromium` on a
+fresh runner, is now tested rather than assumed. Remote is `basicappcompany/leaflock-pdf`,
+private.
 
 **Built but switched off:** paid plans (`paidPlansAvailable = false` in
 `src/lib/pricing.ts`). Checkout answers 503 until the Dodo keys exist.

@@ -159,8 +159,9 @@ clock running. What follows is therefore a record, not a schedule.
 | 28 Oct 2026 | Depth pass, PDF→Word, PDF→Excel, the three metadata tools, mix pages, reverse/blank landings, N-up, booklet; the competitive and cost reviews | +10 tools |
 | 29 Oct 2026 | Office→PDF completed (Word, Excel, CSV, RTF), Bates numbering, PDF/A, extract tables, page labels, extract images, PDF→Markdown | +9 tools |
 
-Day granularity is all that was ever recorded, and there are no commit timestamps to check
-it against — the repo still has no commits (`docs/TODO.md` §4a).
+Day granularity is all that was ever recorded, and for everything up to 31 October there are
+no commit timestamps to check it against: the first commit was made on 30 October and pushed
+on the 31st (item 6.2). From there on, git history is the record and this table is not.
 
 **The measured pace: 19 tools across the two working sessions of 28–29 October**, with
 Phases 1 and 2 now complete bar one externally-gated decoder. Two things that number does
@@ -195,20 +196,23 @@ waiting, which is the comparison this table exists for:
 | Target | Item | |
 | --- | --- | --- |
 | ~~30 Oct 2026~~ | ~~4.1 Re-tier the catalogue~~ — **done 30 Oct, no tier changes** | ~~0.5 working days~~ |
-| 30 Oct 2026 | 6.2 GitHub repo, first commit, CI green | owner, 1 day |
+| ~~30 Oct 2026~~ | ~~6.2 GitHub repo, first commit, CI green~~ — **done 31 Oct, green first run** | ~~owner, 1 day~~ |
 | ~~2 Nov 2026~~ | ~~6.4 Accessibility audit~~ — **done 30 Oct, three days early** | ~~1 working day~~ |
 | 3 Nov 2026 | 6.1 Credentials (Google, Resend, Dodo, D1) | owner, ~5 days |
 | **19 Nov 2026** | **6.3 Legal review of the policy pages** | **lawyer, ~21 days** |
 
-- **Launch-ready, blockers only: 19 November 2026.** The critical path is the lawyer, not
-  the code — **the blocking engineering is now zero.** It was 1.5 working days on
-  29 October: 4.1 closed with no tier changes and 6.4's audit shipped, both on 30 October.
-  Every remaining blocker waits on a person, so from here nothing we build moves this date
-  at all; only starting the legal review does.
-- **Whole roadmap before going live: 15 February 2027** — 46.5 working days of build. The
-  ~13-week gap between the two dates is the real price of launching complete rather than
-  staged, and the category ordering above is the argument for not paying it: eight of those
-  days open three revenue categories, and nineteen serve the one that cannot be won.
+- **Launch-ready, blockers only: run `pnpm tracker`.** Both dates in this section used to be
+  typed here and both drifted, which is what the tracker exists to prevent: it recomputes
+  from today's date plus each item's own estimate, so any copy is stale the next morning.
+  What is worth writing down is the shape rather than the number — **the blocking
+  engineering is zero.** It was 1.5 working days on 29 October; 4.1 closed with no tier
+  changes and 6.4's audit shipped, both on 30 October, and 6.2 went to GitHub with CI green
+  on 31 October. Of the three remaining blockers, two are left and **both wait on a person**,
+  so nothing we build moves the launch date at all. Only starting the legal review does.
+- **Whole roadmap before going live:** the same command prints it, and the gap between the
+  two dates is the real price of launching complete rather than staged. The category
+  ordering above is the argument for not paying it: about eight of those days open three
+  revenue categories, and nineteen serve the one that cannot be won.
 
   That page count is derived in `docs/status.html`, not fixed here: "one guide per tool"
   moves with the catalogue, so the ~74 written on 29 October was short by three before the

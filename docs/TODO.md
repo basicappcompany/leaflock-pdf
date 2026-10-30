@@ -33,11 +33,12 @@ spread — so it gated everything below it rather than being a branding task.
       checking what the purchase actually left to do. `astro.config.mjs` sets
       `site: 'https://leaflockpdf.com'`, the **apex**, and every canonical, hreflang, sitemap
       entry and OG URL is derived from it, so the apex is the hostname that has to serve the
-      site. The order is forced: §6.2's repo and first push come first, because Cloudflare
-      Pages builds from the repo and the Pages project (`leaflock-pdf`, i.e.
-      `leaflock-pdf.pages.dev`) has to exist before a custom domain can attach to it. Adding
-      `leaflockpdf.com` as a custom domain on that project is what creates the apex record,
-      once the zone is on Cloudflare.
+      site. The order was forced, and the first step is done: the repo exists and `main` is
+      pushed (item 6.2, 31 October). **What is next is the Cloudflare Pages project** — Pages
+      builds from the repo, and the project (`leaflock-pdf`, i.e. `leaflock-pdf.pages.dev`)
+      has to exist and be connected to `basicappcompany/leaflock-pdf` before a custom domain
+      can attach to it. Adding `leaflockpdf.com` as a custom domain on that project is what
+      creates the apex record, once the zone is on Cloudflare.
 - [ ] **Decide `www` now, and the answer is a redirect rather than a second site.** Nothing in
       the codebase mentions `www.leaflockpdf.com` — zero occurrences — so if `www` ever
       serves the build, it serves every page under a hostname whose own canonical points at
@@ -170,19 +171,34 @@ local Miniflare one under `.wrangler/state` exists.
 - [ ] Set `SESSION_IP_SALT` as a production secret — the local value is the literal
       `dev-only…` string and must not be reused.
 
-## 4a. CI exists but has nowhere to run
+## 4a. CI runs on GitHub — done 31 October 2026 (item 6.2)
 
-`.github/workflows/ci.yml` (type check, unit tests, the full Playwright suite including
-the performance budget) is written and correct, but this repo has no commits and no
-`git remote` yet — confirmed with `git log` and `git remote -v`. A workflow file does
-nothing until it reaches GitHub.
+`.github/workflows/ci.yml` (type check, `pnpm tracker`, unit tests, the full Playwright
+suite including the performance budget) now runs where it was always meant to.
 
-- [ ] First commit, create the GitHub repo, push, set it as `origin`.
-- [ ] Confirm the first Actions run goes green — `pnpm exec playwright install
-      --with-deps chromium` on a fresh `ubuntu-latest` runner is the one step with no
-      local equivalent to have already tested.
-- [ ] Branch protection: require this workflow to pass before merging to `main`, once
-      there is a `main` on GitHub to protect.
+- [x] **First commit, repo, push, `origin`.** `basicappcompany/leaflock-pdf`, **private** —
+      the product is closed source (`docs/design.md` §13), so this is not a default to
+      drift from. Two commits, 512 files. The empty `LeafLockPDF` repo created on 30 October
+      was renamed rather than duplicated, so there is one repo for the project.
+- [x] **First Actions run green**, 41110988456, 8m11s, no retries used. The step with no
+      local equivalent — `playwright install --with-deps chromium` on a fresh
+      `ubuntu-latest` runner — is now tested rather than assumed, and the two flakes seen
+      locally did not recur, which says they were parallel load rather than the suite.
+- [ ] **Branch protection:** require this workflow to pass before merging to `main`. Worth
+      doing now there is a `main` to protect, and it is the only part of 6.2 left.
+- [ ] **Three actions target the deprecated Node 20** and are being force-run on Node 24:
+      `actions/checkout@v4`, `actions/setup-node@v4`, `pnpm/action-setup@v4`. A
+      warning, not a failure. Bump each to v5 when the workflow is next touched.
+- [ ] **`ubuntu-latest` migrated to Ubuntu 26 on 19 October 2026**, so the runner can change
+      under us. Pin `runs-on: ubuntu-24.04` to make that a decision instead of a surprise.
+
+Two things worth knowing before anyone repeats this on another machine:
+
+- **`gh` needed the `workflow` scope.** The first push was rejected outright — GitHub will
+  not let an OAuth token create `.github/workflows/*` without it. `gh auth refresh -h
+  github.com -s workflow` fixes it, and nothing partial lands: the whole ref is refused.
+- **`winget` is disabled by Group Policy** on the owner's machine, so `gh` is a portable
+  install in `~/tools/gh/bin` beside the portable Node. It will not self-update.
 
 ## 5. Daily allowances — confirmed 28 October 2026
 
