@@ -5,7 +5,7 @@ export const pricing = {
   metaDescription:
     'LeafLock PDF is free to use, with no file-size limit. Pro removes the daily limit for $4 a month or $24 a year, and Practice adds the six professional tools for $249 a year. No trials that turn into charges.',
   intro: 'Every core tool is free, with no account. Pro is for people who work with PDFs every day.',
-  earlyAccess: 'Pro is in early access: Pro tools are free for everyone until paid plans open.',
+  earlyAccess: 'Pro and Practice are in early access: every tool, including the six professional ones, is free for everyone until paid plans open.',
   /**
    * Only things that genuinely do not exist yet. This previously promised batch processing
    * — already a shipped Pro tool — and an installable offline app, which shipped in Phase 1

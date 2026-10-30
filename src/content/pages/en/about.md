@@ -29,7 +29,7 @@ The tools cover the common jobs:
 - **Edit and sign:** [Add page numbers](/add-page-numbers), [Add watermark](/add-watermark), [Sign PDF](/sign-pdf), [Edit PDF](/edit-pdf), [Fill PDF form](/fill-pdf-form), [Redact PDF](/redact-pdf)
 - **Secure and fix:** [Protect PDF](/protect-pdf), [Unlock PDF](/unlock-pdf), [Compress PDF](/compress-pdf), [Repair PDF](/repair-pdf), [Flatten PDF](/flatten-pdf), [Compare PDF](/compare-pdf)
 
-Some tools are marked Pro. During early access, Pro tools are free to use. See [Help](/help) for details on Pro and pricing.
+Some tools carry a Pro or Practice badge. During early access, every tool is free to use, badge or not. See [Help](/help) for details on the plans and pricing.
 
 ## Who it's for
 

@@ -149,9 +149,15 @@ fails as soon as it is exercised locally.
 
 ## 3. Dodo Payments — values present but unverified
 
-`DODO_MODE=test`, `DODO_WEBHOOK_SECRET=whsec_…` and the three product ids
+`DODO_MODE=test`, `DODO_WEBHOOK_SECRET=whsec_…` and three of the four product ids
 (`DODO_PRODUCT_PRO_MONTHLY`, `…_PRO_YEARLY`, `…_LIFETIME`) read as made-up stand-ins
 rather than ids copied from a real dashboard.
+
+**`DODO_PRODUCT_PRACTICE_YEARLY` had no value at all**, local or otherwise — added by item
+4.9 on 30 October 2026 with the Practice tier and missed in that pass: it is declared in
+`functions/env.d.ts` and read twice in `src/lib/server/billing.ts`, so `productIdFor()`
+returned undefined for Practice and its checkout would have found no product. A stand-in
+now sits in `.dev.vars` beside the other three, and needs a real id like them.
 
 - [ ] Confirm each product id against the Dodo test dashboard, or create the products.
 - [ ] Confirm the webhook secret belongs to a real endpoint pointed at

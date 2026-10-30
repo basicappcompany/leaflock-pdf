@@ -98,6 +98,40 @@ describe('paid pricing copy', () => {
     expect(toolsIn('pro').map((tool) => tool.id)).toEqual([]);
   });
 
+
+  it('describes each paid tool as the tier the registry gives it', () => {
+    // The drift this misses otherwise, and it shipped: item 4.9 moved six tools from Pro to
+    // Practice and updated the pricing page, the badges and the gate screen - but not the
+    // tools' own FAQ answers. Redact PDF and Compare PDF went on saying "It's a Pro tool"
+    // on their own pages, under a Practice badge, with a Practice gate behind them. Three
+    // surfaces agreed and the fourth, the one a visitor reads while deciding, did not.
+    //
+    // Checked against the registry rather than a list here, so a future re-tier fails until
+    // the tool's own words follow it.
+    const wrong: string[] = [];
+    for (const tool of tools.filter((item) => item.tier !== 'free')) {
+      const mine = messages.common.toolPage.tiers[tool.tier].label;
+      const others = (['pro', 'practice'] as const)
+        .filter((tier) => tier !== tool.tier)
+        .map((tier) => messages.common.toolPage.tiers[tier].label);
+
+      const page = messages.tools[tool.id];
+      const copy = [page.summary, ...page.howTo, ...(page.faq ?? []).flatMap((entry) => [entry.q, entry.a])].join('\n');
+
+      for (const other of others) {
+        // "a Pro tool", "part of Pro" - a plan name applied to this tool. The tool's own
+        // tier name is fine, and so is prose that happens to mention another plan without
+        // claiming this tool belongs to it, which is why the phrasing is anchored.
+        const claims = new RegExp(`(a|an|the)\\s+${other}\\s+tool|part of ${other}\\b`, 'i');
+        if (claims.test(copy)) {
+          wrong.push(`${tool.id} is ${mine} but its own copy calls it ${other}`);
+        }
+      }
+    }
+
+    expect(wrong, `These tools describe themselves as the wrong plan:\n  ${wrong.join('\n  ')}\n`).toEqual([]);
+  });
+
   it('keeps OCR free, which is a recorded conversion argument', () => {
     // docs/roadmap.md Phase 4: "Adobe also gates full OCR, which we give away — keep it
     // that way, it is a conversion argument." A silent re-tier would contradict the plan.

@@ -26,7 +26,7 @@ This page compares the two on facts you can check. Everything we say about Small
 | --- | --- | --- |
 | Where files are processed | In your browser, on your device | On Smallpdf's servers; its privacy notice names a hosting provider with servers in the EU |
 | How long files are kept | Not kept: files aren't uploaded | Varies by account status; see below (per its privacy notice and Merge PDF page) |
-| Free plan | All tools free, including Pro tools during early access | Free plan with limited document downloads; 7-day free trial of Pro (per its pricing and home pages) |
+| Free plan | All tools free, including the Pro and Practice ones during early access | Free plan with limited document downloads; 7-day free trial of Pro (per its pricing and home pages) |
 | Platforms | Web browser | Web, Windows desktop app, mobile app, Chrome extension |
 | Interface languages | English | 24 languages in its language menu |
 | Office conversions (Word, Excel, PowerPoint) | Not yet | Yes |

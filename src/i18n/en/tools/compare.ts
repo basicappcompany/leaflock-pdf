@@ -34,7 +34,7 @@ export default {
     },
     {
       q: 'Is Compare PDF free?',
-      a: 'It’s a Pro tool, and it’s free to use during early access.',
+      a: 'It’s a Practice tool, and it’s free to use during early access.',
     },
   ],
   original: 'Original',

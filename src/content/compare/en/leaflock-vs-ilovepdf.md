@@ -26,7 +26,7 @@ This page compares the two on facts you can check. Everything we say about iLove
 | --- | --- | --- |
 | Where files are processed | In your browser, on your device | On iLovePDF's servers (per its FAQ) |
 | How long files are kept | Not kept: files aren't uploaded | Deleted automatically within 2 hours of processing; signed documents kept up to 5 years (per its security page) |
-| Free plan | All tools free, including Pro tools during early access | Free Basic plan with limited tools and processing (per its pricing page) |
+| Free plan | All tools free, including the Pro and Practice ones during early access | Free Basic plan with limited tools and processing (per its pricing page) |
 | Free-tier file limits | No set limits; very large files depend on your device's memory | Published per tool, for example 100 MB for Merge PDF and 15 MB for OCR PDF (per its pricing page) |
 | Platforms | Web browser | Web, desktop (Windows and Mac) and mobile (iOS and Android) |
 | Interface languages | English | 26 languages in its language menu |

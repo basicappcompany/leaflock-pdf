@@ -34,7 +34,7 @@ export default {
     },
     {
       q: 'Is Redact PDF free?',
-      a: 'It’s a Pro tool, and it’s free to use during early access.',
+      a: 'It’s a Practice tool, and it’s free to use during early access.',
     },
   ],
   drawHint: 'Drag on the page to cover what must be hidden. Drag a box to move it, or its corner to resize it.',

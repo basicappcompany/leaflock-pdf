@@ -49,11 +49,11 @@ Results you create with the tools are yours, subject to the rights of anyone els
 
 Some parts of the Service use open-source software under its own licence terms. [TO CONFIRM: where open-source notices are published]
 
-## 5. Pro plans
+## 5. Paid plans
 
 ### Early access
 
-Pro tools are currently in early access and free to use. We may end early access and start charging for Pro tools. We'll announce this on the site before it happens. Nobody will be charged for early access, and you won't be enrolled in a paid plan without choosing one.
+Tools marked Pro or Practice are currently in early access and free to use. We may end early access and start charging for them. We'll announce this on the site before it happens. Nobody will be charged for early access, and you won't be enrolled in a paid plan without choosing one.
 
 ### Billing
 
