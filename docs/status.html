@@ -101,6 +101,85 @@
   .stat--danger { border-color: var(--danger); background: var(--danger-soft); }
   .stat--market { border-color: var(--focus); background: var(--focus-soft); }
 
+  /* ---------- section index ----------
+     One element, two layouts. Wide enough and it is a fixed column beside the content,
+     with its own scrollbar so a long index never pushes the page around; narrower and it
+     becomes a sticky strip that scrolls sideways. Added because finding a section meant
+     scrolling the whole page to look for a heading. */
+  .index {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    margin-inline: calc(-1 * max(16px, calc((100vw - 920px) / 2)));
+    padding: 0.5rem max(16px, calc((100vw - 920px) / 2));
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+    scrollbar-width: thin;
+  }
+  .index a {
+    flex: 0 0 auto;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-size: 0.78rem;
+    text-decoration: none;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .index a:hover { color: var(--text); border-color: var(--muted); }
+  .index a[aria-current="true"] {
+    color: var(--text);
+    border-color: var(--focus);
+    background: var(--focus-soft);
+    font-weight: 600;
+  }
+  .index a .sub { color: var(--muted); font-size: 0.72rem; }
+  .index a[aria-current="true"] .sub { color: inherit; }
+
+  /* 1320px is where a 200px column plus its gap fits beside the 920px content without
+     squeezing it: below that the strip above is the better trade. */
+  @media (min-width: 1320px) {
+    .index {
+      position: fixed;
+      top: 1.5rem;
+      bottom: 1.5rem;
+      left: max(12px, calc((100vw - 920px) / 2 - 216px));
+      width: 200px;
+      flex-direction: column;
+      gap: 2px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      margin: 0;
+      padding: 0.35rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface, var(--bg));
+      backdrop-filter: none;
+    }
+    .index a { flex: none; border: 1px solid transparent; border-radius: 10px; white-space: normal; }
+    .index a.is-child { margin-left: 0.6rem; font-size: 0.74rem; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+  /* The index is sticky, so an anchor jump would land a heading underneath it. */
+  :target, [id] { scroll-margin-top: 4.5rem; }
+  @media (min-width: 1320px) { [id] { scroll-margin-top: 1.5rem; } }
+
+  /* Who the remaining work waits on, shown on the phase tile itself. */
+  .rail-step .split { font-size: 0.68rem; color: var(--muted); line-height: 1.25; }
+  .rail-step[data-state="progress"] .split { color: var(--text); }
+  .phase-head .split {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+
   /* ---------- phase rail ---------- */
   /* Column count comes from the data, not a literal: adding Phase 7 on 30 Oct would
      otherwise have left one step wrapped alone on a second row. */
@@ -316,9 +395,11 @@
     <div class="stats" id="stats"></div>
   </header>
 
+  <nav class="index" id="index" aria-label="Sections"></nav>
+
   <nav class="rail" id="rail" aria-label="Jump to phase"></nav>
 
-  <section>
+  <section id="left" data-nav="What's left">
     <h2 style="margin:0 0 0.3rem; font-size:1.05rem;">What's actually left</h2>
     <p style="margin:0 0 0.9rem; color:var(--muted); font-size:0.9rem; max-width:72ch;">
       Counted from the rows below every time this page opens, so it cannot disagree with them.
@@ -338,9 +419,9 @@
     </p>
   </section>
 
-  <section id="phases" style="display:flex; flex-direction:column; gap:1.1rem;"></section>
+  <section id="phases" data-nav="Phases" style="display:flex; flex-direction:column; gap:1.1rem;"></section>
 
-  <section>
+  <section id="pricing" data-nav="Pricing">
     <h2 style="margin:0 0 0.3rem; font-size:1.05rem;">Pricing — settled 30 Oct</h2>
     <p style="margin:0 0 0.9rem; color:var(--muted); font-size:0.9rem; max-width:72ch;">
       Priced per category against the cheapest credible rival in each, not against the market's single
@@ -350,12 +431,12 @@
     <div class="scroller" id="pricingTable"></div>
   </section>
 
-  <section>
+  <section id="yours" data-nav="Your side">
     <h2 style="margin:0 0 0.9rem; font-size:1.05rem;">Pending from your side</h2>
     <div class="owner-grid" id="ownerGrid"></div>
   </section>
 
-  <section class="launch">
+  <section class="launch" id="launch" data-nav="Launch dates">
     <h2>When can we launch?</h2>
     <p style="margin:0; color:var(--muted); max-width:72ch;">Both dates are computed from the item estimates and the observed cadence, not typed in. Only the <span id="blockerCountInline">—</span> blockers listed below can move the first one.</p>
     <div class="launch-paths" id="launchPaths"></div>
@@ -363,9 +444,9 @@
     <div class="timeline" id="blockers"></div>
   </section>
 
-  <section class="verdict" id="verdict"></section>
+  <section class="verdict" id="verdict" data-nav="Verdict"></section>
 
-  <section>
+  <section id="shipped" data-nav="Shipped when">
     <h2 style="margin:0 0 0.3rem; font-size:1.05rem;">What shipped when</h2>
     <p style="margin:0 0 0.9rem; color:var(--muted); font-size:0.9rem; max-width:72ch;">
       Dates come from the dated entries in <span class="mono">docs/roadmap.md</span> and
@@ -425,7 +506,7 @@
     tools: 43,
     pro: 0,
     practice: 6,
-    commits: 5,
+    commits: 6,
     ops: 29,
     landings: 5,
     guides: 6,
@@ -823,13 +904,71 @@
     </div>
   `).join("");
 
+  /**
+   * Who a phase's remaining work waits on, split the way the item data already encodes it:
+   * `lead` means waiting on a named person, `days` means build work (the tracker enforces
+   * one or the other, never both). Shown on the phase tile and the phase head so the answer
+   * is there without opening the phase and reading every item.
+   */
+  function phaseSplit(phase) {
+    const open = phase.items.filter((i) => i.state !== "done");
+    // Deferred work is counted separately, not folded into the live numbers: phaseEffort()
+    // already excludes afterLaunch, and a phase that reads "3d to build" when all three days
+    // sit behind the launch is the kind of disagreement this page exists to avoid.
+    const live = open.filter((i) => !i.afterLaunch);
+    const waiting = live.filter((i) => i.lead);
+    const build = live.filter((i) => i.days);
+    const gated = build.filter((i) => i.owner);
+    const byOwner = new Map();
+    for (const item of waiting) {
+      const owner = item.owner ?? "someone";
+      byOwner.set(owner, [...(byOwner.get(owner) ?? []), item]);
+    }
+    return {
+      waiting,
+      build,
+      gated,
+      byOwner,
+      deferred: open.filter((i) => i.afterLaunch),
+      buildDays: build.reduce((s, i) => s + (i.days ?? 0), 0),
+      ids: (list) => list.map((i) => i.id).join(", "),
+    };
+  }
+
+  /**
+   * One short line per phase: who it waits on, and how much is ours to build.
+   *
+   * Named by owner rather than totalled, because "3 waiting" does not answer the question a
+   * reader actually has, which is whether any of it is theirs.
+   */
+  function splitLine(phase) {
+    const s = phaseSplit(phase);
+    const parts = [...s.byOwner].map(([owner, items]) => `${owner} ${items.length}`);
+    if (s.build.length) parts.push(`build ${s.buildDays}d`);
+    if (s.gated.length) parts.push(`${s.gated.length} gated on ${[...new Set(s.gated.map((i) => i.owner))].join(" + ")}`);
+    if (!parts.length && s.deferred.length) return `${s.deferred.length} after launch`;
+    if (s.deferred.length) parts.push(`+${s.deferred.length} after launch`);
+    return parts.join(" · ");
+  }
+
+  /** The same thing spelled out, for the tooltip and the phase head. */
+  function splitDetail(phase) {
+    const s = phaseSplit(phase);
+    const parts = [...s.byOwner].map(([owner, items]) => `${owner}: ${s.ids(items)}`);
+    if (s.build.length) parts.push(`ours to build (${s.buildDays}d): ${s.ids(s.build)}`);
+    if (s.gated.length) parts.push(`ours but gated: ${s.gated.map((i) => `${i.id} needs ${i.owner}`).join(", ")}`);
+    if (s.deferred.length) parts.push(`after launch: ${s.ids(s.deferred)}`);
+    return parts.join(" — ") || "nothing open";
+  }
+
   const rail = document.getElementById("rail");
   rail.style.setProperty("--phase-count", PHASES.length);
   rail.innerHTML = PHASES.map(p => `
     <a href="#phase-${p.num}">
-      <div class="rail-step" data-state="${p.state}">
+      <div class="rail-step" data-state="${p.state}" title="${splitDetail(p)}">
         <span class="num">PHASE ${p.num}</span>
         <span class="name">${p.name}</span>
+        ${splitLine(p) ? `<span class="split">${splitLine(p)}</span>` : ""}
       </div>
     </a>
   `).join("");
@@ -841,6 +980,7 @@
         <h2><span class="phase-num">PHASE ${p.num}</span> ${p.name}</h2>
         <span class="phase-effort">${phaseEffort(p)}</span>
         ${pill(p.state)}
+        ${splitLine(p) ? `<span class="split">${splitDetail(p)}</span>` : ""}
       </div>
       <p class="phase-summary">${p.summary}</p>
       <div class="items">
@@ -925,6 +1065,77 @@
       <p>${l.note}</p>
     </div>
   `).join("");
+  /**
+   * The section index, built from the DOM rather than from a list typed here.
+   *
+   * Every `<section>` carrying `data-nav` becomes an entry, and the phases nest under
+   * theirs, so adding a section to this page puts it in the index without a second edit.
+   * That is the same reason every figure on the page is derived: a hand-kept copy of the
+   * page's own structure is one more thing to forget.
+   *
+   * The entries are plain anchors, so they work with no JavaScript beyond this build step,
+   * and keyboard and middle-click behave the way a link should.
+   */
+  (function buildIndex() {
+    const index = document.getElementById("index");
+    const entries = [];
+
+    for (const section of document.querySelectorAll("main > section[data-nav]")) {
+      entries.push({ id: section.id, label: section.dataset.nav, child: false });
+      // The phases live inside one section but are what a reader actually jumps to.
+      if (section.id === "phases") {
+        for (const phase of PHASES) {
+          const line = splitLine(phase);
+          entries.push({
+            id: `phase-${phase.num}`,
+            label: `${phase.num} · ${phase.name}`,
+            sub: phase.state === "done" ? "done" : line,
+            child: true,
+            title: splitDetail(phase),
+          });
+        }
+      }
+    }
+
+    index.innerHTML = entries
+      .map(
+        (e) =>
+          `<a href="#${e.id}"${e.child ? ' class="is-child"' : ""}${e.title ? ` title="${e.title}"` : ""}>` +
+          `${e.label}${e.sub ? ` <span class="sub">— ${e.sub}</span>` : ""}</a>`,
+      )
+      .join("");
+
+    // Scroll-spy: mark the entry whose target is nearest the top of the viewport, so the
+    // index answers "where am I" as well as "where can I go".
+    const targets = entries.map((e) => document.getElementById(e.id)).filter(Boolean);
+    const links = [...index.querySelectorAll("a")];
+    const mark = (id) => {
+      for (const link of links) {
+        const current = link.getAttribute("href") === `#${id}`;
+        if (current) link.setAttribute("aria-current", "true");
+        else link.removeAttribute("aria-current");
+        if (current) link.scrollIntoView({ block: "nearest", inline: "nearest" });
+      }
+    };
+
+    if (!("IntersectionObserver" in window)) return;
+    const seen = new Map();
+    const observer = new IntersectionObserver(
+      (records) => {
+        for (const record of records) seen.set(record.target, record);
+        // Whichever visible target sits highest wins; if none is visible, keep the last.
+        const visible = [...seen.values()]
+          .filter((r) => r.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length) mark(visible[0].target.id);
+      },
+      // A band near the top of the viewport, so the active entry changes when a section
+      // reaches reading position rather than when it first peeks into view.
+      { rootMargin: "-10% 0px -75% 0px", threshold: 0 },
+    );
+    for (const target of targets) observer.observe(target);
+  })();
+
 </script>
 </body>
 </html>
