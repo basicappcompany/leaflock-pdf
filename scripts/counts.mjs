@@ -77,6 +77,32 @@ try {
   /* Playwright not installed, or a spec failed to load: the other counts still stand. */
 }
 
+/**
+ * Commits and the remote, read from git rather than typed. The status page carried
+ * "two commits pushed" for about an hour before it was wrong, which is the same mistake
+ * as every other hand-kept figure here (`docs/process.md` §8) â€” and a commit count is
+ * the fastest-moving number in the project, so it is the worst one to store.
+ *
+ * Both degrade quietly: before the first commit there is nothing to count, and a clone
+ * with no remote still has a valid history. Neither case should fail the script.
+ */
+let commits = null;
+let remote = null;
+try {
+  const { stdout } = await run('git rev-list --count HEAD');
+  commits = Number(stdout.trim()) || null;
+} catch {
+  /* no commits yet, or not a git checkout */
+}
+try {
+  const { stdout } = await run('git remote get-url origin');
+  // Accept either form git prints and normalise to a browsable https URL.
+  const match = stdout.trim().match(/github\.com[:\/](.+?)(?:\.git)?$/);
+  if (match) remote = `https://github.com/${match[1]}`;
+} catch {
+  /* no remote configured */
+}
+
 const guides = (await walk('src/content/guides/en', /\.md$/)).length;
 const compares = (await walk('src/content/compare/en', /\.md$/)).length;
 
@@ -110,6 +136,7 @@ async function syncStatusHtml() {
     tools,
     pro,
     practice,
+    commits,
     ops,
     landings,
     guides,
@@ -135,6 +162,7 @@ const statusNote = await syncStatusHtml();
 console.log(
   [
     `tools            ${tools} (${tools - paid} free, ${pro} Pro, ${practice} Practice)`,
+    `commits          ${commits ?? 'none yet'}${remote ? ` (${remote})` : ' (no remote)'}`,
     `worker ops       ${ops}`,
     `landings         ${landings}`,
     `unit tests       ${unit}`,

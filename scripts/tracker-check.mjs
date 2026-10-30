@@ -151,6 +151,31 @@ console.log(
   ].join('\n'),
 );
 
+/**
+ * Elements the page's own script fills, but whose markup still ships real text.
+ *
+ * The header carried `id="repoState"` reading "0 commits " . no remote as a literal, with
+ * nothing anywhere assigning it — so through the first push, a green CI run and five
+ * commits, the most prominent line on the page still said there was no repository. No
+ * existing check could see it: `pnpm counts` owns the COUNTS block, this script owned the
+ * item data, and neither looks at the markup in between.
+ *
+ * The invariant: if the script assigns an element, its markup must ship an empty string, a
+ * dash, or a literal declared with `data-default` — never an undeclared sentence that will
+ * be believed if the assignment is missing or broken. `data-default` is for a literal that
+ * is genuinely correct unassigned, like the theme toggle reading "System".
+ */
+const assigned = new Set(
+  [...html.matchAll(/getElementById\(["'](\w+)["']\)\s*\.\s*(?:textContent|innerHTML)\s*=/g)].map((m) => m[1]),
+);
+for (const [, id, rest, literal] of html.matchAll(/<[^>]*id="(\w+)"([^>]*)>([^<]*)</g)) {
+  const text = literal.trim();
+  // A dash, a blank, or a declared default is fine; anything else reads as a claim.
+  if (assigned.has(id) && text.length > 2 && !rest.includes('data-default')) {
+    problems.push(`#${id} ships the literal "${text}" but the script overwrites it — use a dash placeholder`);
+  }
+}
+
 if (problems.length) {
   console.error(`\n${problems.length} problem${problems.length === 1 ? '' : 's'} in ${PATH}:`);
   for (const problem of problems) console.error(`  - ${problem}`);

@@ -306,11 +306,11 @@
     <h1>LeafLock PDF — where the build stands</h1>
     <p class="subtitle">A local mirror of <span class="mono">docs/roadmap.md</span>. Edited in place whenever something ships — not published, not fetched, just a file to reopen. Each row carries a fixed <span class="mono">phase.item</span> id — point at one, e.g. “start 4.3”, to pick where I work next. Ids are written into the data, not counted from position, so inserting a row can’t renumber the ones below it.</p>
     <div class="meta-row">
-      <span>Last verified <b id="lastVerified">30 Oct 2026</b></span>
-      <span>Repo: <b class="mono" id="repoState">0 commits · no remote</b></span>
+      <span>Last verified <b id="lastVerified">31 Oct 2026</b></span>
+      <span>Repo: <b class="mono" id="repoState">—</b></span>
       <span>Free tier: <b class="mono" id="freeTier">—</b></span>
       <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle colour theme">
-        <span class="icon" id="themeIcon">🖥️</span><span id="themeLabel">System</span>
+        <span class="icon" id="themeIcon" data-default>🖥️</span><span id="themeLabel" data-default>System</span>
       </button>
     </div>
     <div class="stats" id="stats"></div>
@@ -425,6 +425,7 @@
     tools: 43,
     pro: 0,
     practice: 6,
+    commits: 5,
     ops: 29,
     landings: 5,
     guides: 6,
@@ -436,6 +437,14 @@
     freeAccountDaily: 60,
   };
 
+/**
+ * Where the code actually lives, since 31 October 2026. A constant rather than a derived
+ * figure: it is an identifier, not a count, so if it ever changes that should be a
+ * deliberate edit here. The commit count beside it is the opposite case and comes from
+ * `COUNTS.commits`, which `pnpm counts` reads from `git rev-list --count HEAD`.
+ */
+  const REPO = "https://github.com/basicappcompany/leaflock-pdf";
+
   const PHASES = [
     {
       num: 1, name: "Foundations", state: "done",
@@ -443,7 +452,7 @@
       items: [
         { id: "1.1", name: "Installable / offline (service worker + manifest)", state: "done", when: "by 28 Oct" },
         { id: "1.2", name: "SEO & AI-rank generators (HowTo/ItemList/Product, llms.txt)", state: "done", when: "by 28 Oct" },
-        { id: "1.3", name: "Performance budget enforced in CI", state: "done", when: "by 28 Oct", note: "written, never run — no remote yet" },
+        { id: "1.3", name: "Performance budget enforced in CI", state: "done", when: "by 28 Oct", note: "and actually run since 31 Oct: it is part of the suite the first GitHub Actions run passed" },
         { id: "1.4", name: "Related-tools + category hub pages", state: "done", when: "by 28 Oct" },
       ],
     },
@@ -752,6 +761,13 @@
 
   // What the server actually grants, straight from the constants, so this page can never
   // show a cap the product does not honour — which is the bug that prompted all of this.
+  // Filled from COUNTS and REPO rather than typed into the markup. The literal it used
+  // to hold said "0 commits, no remote" and nothing ever replaced it, so the header went
+  // on claiming there was no repository through the push, a green CI run and five commits.
+  const slug = REPO.replace("https://github.com/", "");
+  document.getElementById("repoState").innerHTML = COUNTS.commits
+    ? `${COUNTS.commits} commit${COUNTS.commits === 1 ? "" : "s"} · <a href="${REPO}" target="_blank" rel="noopener" style="color:inherit">${slug}</a>`
+    : "no commits yet";
   document.getElementById("freeTier").textContent =
     `${COUNTS.anonymousDaily}/day anon · ${COUNTS.freeAccountDaily}/day account`;
 
@@ -767,8 +783,8 @@
 
   document.getElementById("stats").innerHTML = `
     <div class="stat"><span class="value mono">${SCOPE.done} / ${SCOPE.total}</span><span class="label">Items done</span></div>
-    <div class="stat stat--danger"><span class="value mono" style="color:var(--danger)">${SCOPE.blocking.length}</span><span class="label">Block the launch — ${SCOPE.blockingDays} days of build</span></div>
-    <div class="stat stat--market"><span class="value mono" style="color:var(--focus)">${SCOPE.open.length}</span><span class="label">items from market-leading — ${SCOPE.openDays} days of build</span></div>
+    <div class="stat stat--danger"><span class="value mono" style="color:var(--danger)">${SCOPE.blocking.length}</span><span class="label">Block the launch — ${SCOPE.blockingDays} day${SCOPE.blockingDays === 1 ? "" : "s"} of build</span></div>
+    <div class="stat stat--market"><span class="value mono" style="color:var(--focus)">${SCOPE.open.length}</span><span class="label">items from market-leading — ${SCOPE.openDays} day${SCOPE.openDays === 1 ? "" : "s"} of build</span></div>
     <div class="stat"><span class="value mono date">${fmt(launchDate)}</span><span class="label">Launch-ready, blockers only</span></div>
     <div class="stat"><span class="value mono date">${fmt(fullPlanDate)}</span><span class="label">If the whole roadmap ships first</span></div>
     <div class="stat"><span class="value mono">${COUNTS.tools} · ${COUNTS.unit}/${COUNTS.browser}</span><span class="label">Tools · unit/browser tests — written by <span class="mono">pnpm counts</span></span></div>
