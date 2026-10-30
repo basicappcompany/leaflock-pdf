@@ -204,11 +204,14 @@ waiting, which is the comparison this table exists for:
 - **Launch-ready, blockers only: run `pnpm tracker`.** Both dates in this section used to be
   typed here and both drifted, which is what the tracker exists to prevent: it recomputes
   from today's date plus each item's own estimate, so any copy is stale the next morning.
-  What is worth writing down is the shape rather than the number — **the blocking
-  engineering is zero.** It was 1.5 working days on 29 October; 4.1 closed with no tier
-  changes and 6.4's audit shipped, both on 30 October, and 6.2 went to GitHub with CI green
-  on 31 October. Of the three remaining blockers, two are left and **both wait on a person**,
-  so nothing we build moves the launch date at all. Only starting the legal review does.
+  What is worth writing down is the shape rather than the number. The blocking engineering
+  reached **zero** on 31 October — 1.5 days on 29 October, then 4.1 closed with no tier
+  changes, 6.4's audit shipped, and 6.2 went to GitHub with CI green — and then went back up
+  to **one day**, because adding item 4.12 on 31 October put a blocker with build work in it
+  for the first time since. That is the honest shape: **two of the three blockers wait on a
+  person** (6.1's credentials, 6.3's lawyer) and the third is a day of our own work that
+  cannot start until 6.1 provides the product ids. So the launch date still moves only when
+  someone else starts something — but it is no longer true that nothing we build touches it.
 - **Whole roadmap before going live:** the same command prints it, and the gap between the
   two dates is the real price of launching complete rather than staged. The category
   ordering above is the argument for not paying it: about eight of those days open three
@@ -1059,6 +1062,28 @@ that needs the full catalogue in front of it.
 
   `terms.md` §5's early-access promise governs how any of this is announced, which is why
   the decision belongs before launch rather than after.
+- **End early access, and actually sell the plans — item 4.12, added 31 October 2026.**
+  This had no item at all until someone asked why the pricing page says "Coming soon", which
+  is the answer: `paidPlansAvailable = false` in `src/lib/pricing.ts`. It belongs in Phase 4
+  because it is the monetisation switch rather than a feature, and it is a **blocker** rather
+  than additive for one reason — launching with every paid tier reading "Coming soon" is
+  launching with no revenue, so it gates the launch the way the policy pages do.
+
+  It is not a one-line flip, which is why it carries a day rather than an hour:
+
+  - The flag also drives `proToolsGated`, so the same change **stops the six Practice tools
+    being free**. That coupling is deliberate (`src/lib/pricing.ts` explains why locking a
+    tool with no way to buy it would strand its users), but it makes the switch a pricing
+    event rather than a deployment detail.
+  - It makes about **eight early-access strings wrong at once**: `pricing.ts`'s `earlyAccess`,
+    the two tier notes in `common.ts`, the Redact and Compare FAQs, `terms.md` §5,
+    `about.md`, `help.md` and both comparison tables. None of them interpolate the flag, and
+    that is the `statedClaims` failure mode again — so this item should also leave behind a
+    guard that fails if the flag is on while any page still promises free access.
+  - It needs the **four** real Dodo product ids from 6.1, including
+    `DODO_PRODUCT_PRACTICE_YEARLY`, and `DODO_MODE` switched to live.
+  - `terms.md` §5 promises the announcement comes **before** the change, so the order is
+    announce, wait, then flip.
 - Teams and seats (iLovePDF sells 1–25; Smallpdf has team accounts).
 - **Business edition pitch, rewritten 28 October 2026.** "The procurement-friendly
   answer to AGPL-licensed alternatives" doesn't land: Stirling-PDF, the actual

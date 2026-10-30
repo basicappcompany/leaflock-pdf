@@ -211,9 +211,10 @@ date so the two models still agree. Two things this one teaches that a tool coun
 - **"Today" is the only figure that goes stale with no edit at all**, so it is the last
   thing that should ever be typed. The pin survived three sessions of pressing the rule on
   every other number on that page.
-- **A derived date that recedes is not a broken projection.** Every remaining blocker is
-  lead time that starts when a person starts it, so an unstarted blocker really does cost a
-  day per day. The fixed counterpart is the 29 October baseline table in
+- **A derived date that recedes is not a broken projection.** While every blocker was pure
+  lead time — true from 31 October, when 6.2 closed, until 4.12 was added hours later — an
+  unstarted blocker really did cost a day per day. It is worth knowing which of the two
+  situations the board is in before reading a receding date as either fine or alarming. The fixed counterpart is the 29 October baseline table in
   `docs/roadmap.md`, deliberately frozen; the growing gap between the two *is* the
   measurement, and it only works if exactly one of them moves.
 
