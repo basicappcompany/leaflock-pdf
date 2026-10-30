@@ -1,0 +1,25 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Article from '../../layouts/Article.astro';
+import { getMessages } from '../../i18n';
+import { guidesFor, slugOf } from '../../lib/content';
+
+const locale = Astro.currentLocale ?? 'en';
+const t = getMessages(locale).common.guidesIndex;
+const guides = await guidesFor(locale);
+---
+
+<Article title={t.title} description={t.description} path="guides">
+  <ul class="card-list">
+    {
+      guides.map((guide) => (
+        <li>
+          <a href={getRelativeLocaleUrl(locale, `guides/${slugOf(guide)}`)}>
+            <strong>{guide.data.title}</strong>
+            <span>{guide.data.description}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Article>

@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import AccountPanel from '../components/auth/AccountPanel';
+import { getMessages } from '../i18n';
+
+const locale = Astro.currentLocale ?? 'en';
+const t = getMessages(locale).auth.account;
+---
+
+<Base title={t.metaTitle} description={t.metaDescription} path="account" noindex>
+  <div class="auth">
+    <h1>{t.heading}</h1>
+    <AccountPanel client:only="react" t={t} />
+  </div>
+</Base>

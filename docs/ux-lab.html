@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en" data-ux="1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LeafLock PDF — UX lab</title>
+    <style>
+      /* ============================================================
+         UX LAB
+         Each design shows the FRONT PAGE, and one feature — Merge PDF
+         — is clickable all the way through: add files, reorder,
+         remove, merge, download. Nothing really happens; it's a mock.
+         Colours and type are identical in all of them on purpose, so
+         what you're comparing is layout and flow.
+         ============================================================ */
+      *, *::before, *::after { box-sizing: border-box; }
+      :root {
+        --bg: #f6f7f8; --surface: #fff; --surface-2: #f1f3f5;
+        --fg: #16191d; --muted: #6b7280; --accent: #1f6f50;
+        --accent-soft: #e7f2ec; --accent-fg: #fff; --border: #e3e7eb;
+        --radius: 10px; --shadow: 0 1px 3px rgb(15 25 40 / .07);
+      }
+      body { margin: 0; background: #10131a; color: var(--fg);
+        font: 14.5px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+
+      .lab { position: sticky; top: 0; z-index: 80; padding: 12px 18px; background: #10131a; border-bottom: 1px solid #262c37; }
+      .lab__head { display: flex; flex-wrap: wrap; gap: 9px; align-items: baseline; margin: 0 0 9px; color: #e8edf4; font-size: 14px; font-weight: 600; }
+      .lab__head span { color: #828e9f; font-weight: 400; }
+      .lab__list { display: flex; flex-wrap: wrap; gap: 6px; }
+      .lab__btn { padding: 7px 11px; border: 1px solid #2e3744; border-radius: 8px; background: #171c24; color: #aebacb; font: inherit; font-size: 12.5px; cursor: pointer; }
+      .lab__btn:hover { border-color: #4a586b; color: #fff; }
+      .lab__btn[aria-pressed=true] { border-color: #4ade80; background: #14291d; color: #7df0a7; font-weight: 600; }
+      .lab__btn b { margin-right: 6px; opacity: .6; }
+
+      .stage { padding: 18px 18px 70px; }
+      .frame { max-width: 1000px; margin: 0 auto; }
+      .note { margin: 0 0 11px; color: #94a1b3; font-size: 13.5px; }
+      .note b { color: #e8edf4; }
+
+      .app { background: var(--bg); border-radius: 13px; overflow: hidden; box-shadow: 0 18px 44px rgb(0 0 0 / .33); }
+      .ux { display: none; }
+      [data-ux="1"] #v1,[data-ux="2"] #v2,[data-ux="3"] #v3,[data-ux="4"] #v4,
+      [data-ux="5"] #v5,[data-ux="6"] #v6,[data-ux="7"] #v7,[data-ux="8"] #v8 { display: block; }
+
+      /* shared furniture */
+      .top { display: flex; align-items: center; gap: 20px; padding: 13px 20px; background: var(--surface); border-bottom: 1px solid var(--border); }
+      .brand { display: flex; align-items: center; gap: 7px; font-weight: 700; }
+      .brand i { display: block; width: 16px; height: 16px; border-radius: 4px 10px 4px 10px; background: var(--accent); }
+      .nav { display: flex; gap: 16px; margin-left: auto; color: var(--muted); font-size: 13.5px; }
+      .body { padding: 22px 20px 26px; }
+      .h1 { margin: 0 0 6px; font-size: 27px; letter-spacing: -.02em; }
+      .h2 { margin: 0 0 12px; font-size: 16px; }
+      .sub { margin: 0 0 20px; color: var(--muted); }
+      .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 16px; border: 1px solid var(--accent); border-radius: 8px; background: var(--accent); color: var(--accent-fg); font: inherit; font-weight: 600; cursor: pointer; }
+      .btn--g { border-color: var(--border); background: var(--surface); color: var(--fg); }
+      .btn--s { padding: 6px 11px; font-size: 13px; }
+      .btn:disabled { opacity: .42; cursor: default; }
+      .card { padding: 15px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+      .muted { color: var(--muted); }
+      .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+      .ok { color: var(--accent); font-weight: 600; }
+
+      /* tool tiles (front pages reuse these) */
+      .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 11px; }
+      .tile { display: flex; flex-direction: column; gap: 5px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); text-align: left; font: inherit; cursor: pointer; }
+      .tile:hover { border-color: var(--accent); }
+      .tile b { font-weight: 650; }
+      .tile span { color: var(--muted); font-size: 13px; }
+      .tile i { display: grid; place-items: center; width: 30px; height: 30px; margin-bottom: 3px; border-radius: 7px; background: var(--accent-soft); color: var(--accent); font-style: normal; font-size: 14px; }
+      .live { border-color: var(--accent); }
+      .livetag { display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .05em; vertical-align: middle; }
+
+      /* merge flow */
+      .drop { display: grid; place-items: center; gap: 4px; padding: 26px 16px; border: 2px dashed var(--border); border-radius: 12px; background: var(--surface); text-align: center; cursor: pointer; }
+      .drop:hover { border-color: var(--accent); background: var(--accent-soft); }
+      .flist { display: flex; flex-direction: column; gap: 8px; }
+      .f { display: flex; align-items: center; gap: 10px; padding: 9px 11px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+      .ico { display: grid; place-items: center; width: 31px; height: 38px; flex: none; border: 1px solid var(--border); border-radius: 5px; background: var(--surface-2); color: var(--muted); font-size: 9px; font-weight: 700; }
+      .fname { font-weight: 600; font-size: 13.5px; }
+      .fmeta { color: var(--muted); font-size: 12.5px; }
+      .mv { width: 25px; height: 25px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--muted); cursor: pointer; }
+      .mv:disabled { opacity: .3; cursor: default; }
+      .x { padding: 3px 6px; border: 0; background: none; color: var(--muted); font: inherit; cursor: pointer; }
+      .x:hover { color: #b3261e; }
+      .bar { height: 6px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+      .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .55s ease; }
+      .done { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--accent); border-radius: var(--radius); background: var(--accent-soft); }
+      .back { border: 0; background: none; color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; padding: 0; }
+
+      /* 2 search */
+      .search { max-width: 520px; margin: 0 auto 8px; }
+      .search input { width: 100%; padding: 13px 16px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); font: inherit; font-size: 15px; box-shadow: var(--shadow); outline: none; }
+      .search input:focus { border-color: var(--accent); }
+      .hits { max-width: 520px; margin: 10px auto 0; }
+      .hit { display: flex; gap: 10px; align-items: center; width: 100%; padding: 10px 13px; border: 1px solid var(--border); border-radius: 9px; background: var(--surface); margin-bottom: 7px; font: inherit; text-align: left; cursor: pointer; }
+      .hit:hover { border-color: var(--accent); }
+
+      /* 3 sidebar */
+      .shell { display: grid; grid-template-columns: 184px 1fr; min-height: 430px; }
+      .side { padding: 16px 13px; background: var(--surface); border-right: 1px solid var(--border); }
+      .side button { display: block; width: 100%; padding: 8px 10px; margin-bottom: 3px; border: 0; border-radius: 7px; background: none; color: var(--muted); font: inherit; font-size: 13.5px; text-align: left; cursor: pointer; }
+      .side button.on { background: var(--accent-soft); color: var(--accent); font-weight: 650; }
+
+      /* 5 dashboard */
+      .dash { display: grid; grid-template-columns: 1fr 240px; gap: 14px; }
+      .ul { margin: 0; padding: 0; list-style: none; font-size: 13.5px; }
+      .ul li { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+      .ul li:last-child { border: 0; }
+      .meter { height: 7px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+      .meter i { display: block; height: 100%; background: var(--accent); }
+
+      /* 6 editorial */
+      .ed { max-width: 620px; }
+      .ed .h1 { font-size: 36px; line-height: 1.12; }
+      .edlist { border-top: 1px solid var(--border); }
+      .edrow { display: flex; gap: 14px; align-items: baseline; width: 100%; padding: 13px 0; border-bottom: 1px solid var(--border); background: none; border-left: 0; border-right: 0; border-top: 0; font: inherit; text-align: left; cursor: pointer; }
+      .edrow b { min-width: 150px; }
+      .edrow:hover b { color: var(--accent); }
+
+      /* 7 dense */
+      .dense { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+      .dense button.r { display: flex; gap: 12px; align-items: center; width: 100%; padding: 9px 13px; border: 0; border-bottom: 1px solid var(--border); background: none; font: inherit; font-size: 13.5px; text-align: left; cursor: pointer; }
+      .dense button.r:last-child { border-bottom: 0; }
+      .dense button.r:hover { background: var(--surface-2); }
+      .dense .c { color: var(--muted); font-size: 12.5px; margin-left: auto; }
+      .filter { width: 100%; max-width: 280px; padding: 8px 12px; margin-bottom: 11px; border: 1px solid var(--border); border-radius: 8px; font: inherit; }
+
+      /* 8 bento */
+      .bento { display: grid; grid-template-columns: repeat(4, 1fr); gap: 11px; }
+      .bento .tile:nth-child(1) { grid-column: span 2; grid-row: span 2; justify-content: center; }
+      .bento .tile:nth-child(1) b { font-size: 18px; }
+      .bento .tile:nth-child(4) { grid-column: span 2; }
+
+      /* modal + drawer */
+      .scrim { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 20px; background: rgb(10 15 25 / .55); }
+      .modal { width: min(540px, 100%); max-height: 86vh; overflow: auto; padding: 19px; border-radius: 14px; background: var(--surface); box-shadow: 0 24px 60px rgb(0 0 0 / .4); }
+      .drawerwrap { display: grid; grid-template-columns: 1fr 300px; gap: 14px; }
+
+      @media (max-width: 840px) {
+        .shell, .dash, .drawerwrap { grid-template-columns: 1fr; }
+        .bento { grid-template-columns: repeat(2, 1fr); }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="lab">
+      <p class="lab__head">
+        LeafLock PDF — UX lab
+        <span>Eight front pages. In each one, <b style="color:#7df0a7">Merge PDF</b> is clickable the whole way through — add, reorder, remove, merge, download. Same colours and type everywhere, so you're judging layout and flow.</span>
+      </p>
+      <div class="lab__list" id="list"></div>
+    </div>
+
+    <div class="stage">
+      <div class="frame">
+        <p class="note" id="note"></p>
+        <div class="app">
+
+          <!-- ============ 1 · CLASSIC GRID ============ -->
+          <section class="ux" id="v1">
+            <div class="top"><span class="brand"><i></i>LeafLock PDF</span><span class="nav"><span>Tools</span><span>Guides</span><span>Pricing</span></span></div>
+            <div class="body">
+              <div data-home="1">
+                <h1 class="h1">Private PDF tools. Your files never leave your device.</h1>
+                <p class="sub">Everything happens in your browser. Nothing is uploaded.</p>
+                <h2 class="h2">Organize</h2>
+                <div class="tiles" data-tiles="1"></div>
+              </div>
+              <div data-tool="1" hidden>
+                <button class="back" data-back="1">← All tools</button>
+                <h1 class="h1" style="margin-top:9px">Merge PDF</h1>
+                <p class="sub">Combine several PDFs into one, in the order you choose.</p>
+                <div class="drop" data-add="1"><b>Drop PDFs here</b><span class="muted">or click to choose</span></div>
+                <div class="flist" data-list="1" style="margin-top:12px"></div>
+                <div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn" data-run="1">Merge PDFs</button></div>
+                <div data-out="1" style="margin-top:12px"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 2 · SEARCH FIRST ============ -->
+          <section class="ux" id="v2">
+            <div class="top"><span class="brand"><i></i>LeafLock PDF</span><span class="nav"><span>Guides</span><span>Pricing</span></span></div>
+            <div class="body">
+              <div data-home="2">
+                <h1 class="h1" style="text-align:center">What do you need to do?</h1>
+                <p class="sub" style="text-align:center">Type it, or pick from below. Your files stay on your device.</p>
+                <div class="search"><input id="q2" type="text" placeholder="Try “merge”, “shrink”, “password”…" autocomplete="off" /></div>
+                <div class="hits" id="hits2"></div>
+              </div>
+              <div data-tool="2" hidden>
+                <button class="back" data-back="2">← Search again</button>
+                <h1 class="h1" style="margin-top:9px">Merge PDF</h1>
+                <p class="sub">Combine several PDFs into one.</p>
+                <div class="drop" data-add="2"><b>Drop PDFs here</b></div>
+                <div class="flist" data-list="2" style="margin-top:12px"></div>
+                <div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn" data-run="2">Merge PDFs</button></div>
+                <div data-out="2" style="margin-top:12px"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 3 · APP SIDEBAR ============ -->
+          <section class="ux" id="v3">
+            <div class="shell">
+              <aside class="side">
+                <span class="brand" style="margin-bottom:14px"><i></i>LeafLock</span>
+                <button class="on">Organize</button><button>Convert</button><button>Edit &amp; sign</button><button>Protect</button>
+                <hr style="border:0;border-top:1px solid var(--border);margin:12px 0" />
+                <button>Pricing</button><button>Guides</button>
+              </aside>
+              <div class="body">
+                <div data-home="3">
+                  <h1 class="h1">Organize</h1>
+                  <p class="sub">Seven tools for rearranging a PDF.</p>
+                  <div class="tiles" data-tiles="3"></div>
+                </div>
+                <div data-tool="3" hidden>
+                  <button class="back" data-back="3">← Organize</button>
+                  <h1 class="h1" style="margin-top:9px">Merge PDF</h1>
+                  <p class="sub">Files stay in the panel while you work.</p>
+                  <div class="drop" data-add="3" style="padding:18px"><b>Drop PDFs here</b></div>
+                  <div class="flist" data-list="3" style="margin-top:12px"></div>
+                  <div class="row" style="margin-top:14px"><button class="btn" data-run="3">Merge PDFs</button></div>
+                  <div data-out="3" style="margin-top:12px"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 4 · DROP FIRST ============ -->
+          <section class="ux" id="v4">
+            <div class="top"><span class="brand"><i></i>LeafLock PDF</span><span class="nav"><span>Tools</span><span>Pricing</span></span></div>
+            <div class="body">
+              <div data-home="4">
+                <h1 class="h1" style="text-align:center">Drop a PDF to begin</h1>
+                <p class="sub" style="text-align:center">We'll show you what you can do with it. Nothing is uploaded.</p>
+                <div class="drop" data-add="4" style="padding:46px 16px"><b style="font-size:17px">Drop PDFs here</b><span class="muted">or click to choose</span></div>
+                <p class="muted" style="text-align:center;margin:16px 0 9px;font-size:13px">Or start from a tool</p>
+                <div class="tiles" data-tiles="4" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))"></div>
+              </div>
+              <div data-tool="4" hidden>
+                <button class="back" data-back="4">← Start over</button>
+                <h1 class="h1" style="margin-top:9px">Merge PDF</h1>
+                <p class="sub">Your files are ready — put them in order.</p>
+                <div class="flist" data-list="4"></div>
+                <div class="row" style="margin-top:12px"><button class="btn btn--g btn--s" data-add="4">+ Add another</button><button class="btn" data-run="4" style="margin-left:auto">Merge PDFs</button></div>
+                <div data-out="4" style="margin-top:12px"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 5 · DASHBOARD ============ -->
+          <section class="ux" id="v5">
+            <div class="top"><span class="brand"><i></i>LeafLock PDF</span><span class="nav"><span>Tools</span><span>Account</span></span></div>
+            <div class="body">
+              <div data-home="5">
+                <h1 class="h1">Welcome back</h1>
+                <p class="sub">Pick up where you left off.</p>
+                <div class="dash">
+                  <div class="card">
+                    <h2 class="h2">Recent</h2>
+                    <ul class="ul">
+                      <li><span class="ico">PDF</span><span><b>Contract-v3.pdf</b><br /><span class="fmeta">Signed · 2 min ago</span></span><button class="btn btn--g btn--s" style="margin-left:auto">Open</button></li>
+                      <li><span class="ico">PDF</span><span><b>Invoices-March.pdf</b><br /><span class="fmeta">Merged from 6 files</span></span><button class="btn btn--g btn--s" style="margin-left:auto">Open</button></li>
+                    </ul>
+                    <h2 class="h2" style="margin-top:16px">Quick tools</h2>
+                    <div class="tiles" data-tiles="5" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))"></div>
+                  </div>
+                  <div>
+                    <div class="card" style="margin-bottom:12px">
+                      <b style="font-size:13.5px">Today</b>
+                      <p class="muted" style="margin:3px 0 8px;font-size:13px">7 of 30 tools used</p>
+                      <div class="meter"><i style="width:23%"></i></div>
+                    </div>
+                    <div class="card"><b style="font-size:13.5px">Saved workflow</b><p class="muted" style="margin:3px 0 0;font-size:13px">Invoice prep · 3 steps</p></div>
+                  </div>
+                </div>
+              </div>
+              <div data-tool="5" hidden>
+                <button class="back" data-back="5">← Workspace</button>
+                <h1 class="h1" style="margin-top:9px">Merge PDF</h1>
+                <p class="sub">Opens beside your workspace.</p>
+                <div class="drawerwrap">
+                  <div>
+                    <div class="drop" data-add="5" style="padding:18px"><b>Drop PDFs here</b></div>
+                    <div class="flist" data-list="5" style="margin-top:12px"></div>
+                  </div>
+                  <div class="card">
+                    <b style="font-size:13.5px">Merge</b>
+                    <p class="muted" style="margin:3px 0 11px;font-size:13px" data-count="5"></p>
+                    <button class="btn btn--s" data-run="5" style="width:100%">Merge PDFs</button>
+                    <div data-out="5" style="margin-top:11px"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 6 · EDITORIAL ============ -->
+          <section class="ux" id="v6">
+            <div class="top"><span class="brand"><i></i>LeafLock PDF</span><span class="nav"><span>Tools</span><span>Guides</span><span>Pricing</span></span></div>
+            <div class="body">
+              <div data-home="6">
+                <div class="ed">
+                  <h1 class="h1">Your documents are nobody else's business.</h1>
+                  <p class="sub">Every tool runs inside your browser. The file is never sent anywhere — not to us, not to anyone. You can check: turn off your internet and they still work.</p>
+                  <button class="btn" data-open="6">Merge a PDF</button>
+                </div>
+                <h2 class="h2" style="margin-top:26px">All tools</h2>
+                <div class="edlist" data-rows="6"></div>
+              </div>
+              <div data-tool="6" hidden>
+                <button class="back" data-back="6">← All tools</button>
+                <h1 class="h1" style="margin-top:9px">Merge PDF</h1>
+                <p class="sub">Combine several PDFs into one, in the order you choose.</p>
+                <div class="drop" data-add="6"><b>Drop PDFs here</b></div>
+                <div class="flist" data-list="6" style="margin-top:12px"></div>
+                <div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn" data-run="6">Merge PDFs</button></div>
+                <div data-out="6" style="margin-top:12px"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 7 · DENSE LIST ============ -->
+          <section class="ux" id="v7">
+            <div class="top"><span class="brand"><i></i>LeafLock PDF</span><span class="nav"><span>Pricing</span></span></div>
+            <div class="body">
+              <div data-home="7">
+                <h1 class="h1">All 24 tools</h1>
+                <p class="sub">Everything on one screen. No scrolling through cards.</p>
+                <input class="filter" id="q7" type="text" placeholder="Filter tools…" autocomplete="off" />
+                <div class="dense" id="rows7"></div>
+              </div>
+              <div data-tool="7" hidden>
+                <button class="back" data-back="7">← All tools</button>
+                <h1 class="h1" style="margin-top:9px">Merge PDF</h1>
+                <p class="sub">Compact, like the list it came from.</p>
+                <div class="row" style="margin-bottom:10px"><button class="btn btn--g btn--s" data-add="7">+ Add PDF</button><span class="muted" style="font-size:13px" data-count="7"></span><button class="btn btn--s" data-run="7" style="margin-left:auto">Merge</button></div>
+                <div class="flist" data-list="7"></div>
+                <div data-out="7" style="margin-top:12px"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 8 · BENTO + MODAL ============ -->
+          <section class="ux" id="v8">
+            <div class="top"><span class="brand"><i></i>LeafLock PDF</span><span class="nav"><span>Tools</span><span>Pricing</span></span></div>
+            <div class="body">
+              <h1 class="h1">Private PDF tools</h1>
+              <p class="sub">The tool opens over the page, so you never lose your place.</p>
+              <div class="bento" data-tiles="8"></div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+    <div id="host"></div>
+
+    <script>
+      const models = [
+        ['Classic grid', 'Hero, then cards by category. Familiar, scannable, and what the site does today.'],
+        ['Search first', 'One box instead of 24 cards. Fast if you know the word, poor for browsing.'],
+        ['App sidebar', 'Categories pinned on the left; tools open in the main pane. Feels like software, not a website.'],
+        ['Drop first', 'The file comes before the tool — drop it and the tool is already loaded with your files.'],
+        ['Dashboard', 'Account-centred: recent files, usage, saved workflows. Needs an account to be worth it.'],
+        ['Editorial', 'Leads with the argument, lists tools plainly beneath. Strongest for trust and SEO.'],
+        ['Dense list', 'All 24 on one screen with a filter. Power users love it; newcomers find it cold.'],
+        ['Bento + modal', 'Varied tiles, and the tool opens in a layer over the page.'],
+      ];
+
+      const TOOLS = [
+        ['Merge PDF', 'Combine several PDFs into one.', true],
+        ['Split PDF', 'Break one PDF into several.', false],
+        ['Remove pages', 'Delete the pages you don’t need.', false],
+        ['Rotate PDF', 'Turn pages the right way up.', false],
+        ['Compress PDF', 'Make a PDF small enough to email.', false],
+        ['Sign PDF', 'Draw or type a signature.', false],
+        ['Protect PDF', 'Add a password.', false],
+        ['PDF to text', 'Pull the text out.', false],
+      ];
+
+      const list = document.getElementById('list');
+      const note = document.getElementById('note');
+      function choose(n) {
+        document.documentElement.dataset.ux = String(n);
+        note.innerHTML = `<b>${n} · ${models[n - 1][0]}</b> — ${models[n - 1][1]}`;
+        for (const b of list.children) b.setAttribute('aria-pressed', String(Number(b.dataset.n) === n));
+        try { localStorage.setItem('leaflock-uxlab', String(n)); } catch {}
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      models.forEach(([name], i) => {
+        const n = i + 1;
+        const b = document.createElement('button');
+        b.className = 'lab__btn'; b.type = 'button'; b.dataset.n = String(n);
+        b.innerHTML = `<b>${n}</b>${name}`;
+        b.addEventListener('click', () => choose(n));
+        list.append(b);
+      });
+
+      /* ---------- the one shared, fake feature ---------- */
+      const pool = [['Contract.pdf', 4, '1.2 MB'], ['Appendix-A.pdf', 2, '0.4 MB'], ['Signatures.pdf', 1, '0.2 MB'],
+        ['Terms.pdf', 3, '0.8 MB'], ['Schedule.pdf', 2, '0.5 MB'], ['Cover.pdf', 1, '0.1 MB']];
+      const S = {};
+      const st = (id) => (S[id] ||= { files: [], next: 0, phase: 'idle' });
+      const pages = (d) => d.files.reduce((n, f) => n + f[1], 0);
+
+      function render(id) {
+        const d = st(id), n = d.files.length;
+        const box = document.querySelector(`[data-list="${id}"]`);
+        if (box) {
+          box.innerHTML = n ? d.files.map((f, i) => `<div class="f">
+            <span class="ico">PDF</span>
+            <span style="flex:1"><span class="fname">${f[0]}</span><br /><span class="fmeta">${f[1]} pages · ${f[2]}</span></span>
+            <button class="mv" ${i === 0 ? 'disabled' : ''} data-mv="${id}:${i}:-1" aria-label="Move up">↑</button>
+            <button class="mv" ${i === n - 1 ? 'disabled' : ''} data-mv="${id}:${i}:1" aria-label="Move down">↓</button>
+            <button class="x" data-rm="${id}:${i}" aria-label="Remove">✕</button></div>`).join('')
+            : '<p class="muted" style="margin:0;font-size:13.5px">No files yet.</p>';
+        }
+        const count = document.querySelector(`[data-count="${id}"]`);
+        if (count) count.textContent = `${n} file${n === 1 ? '' : 's'} · ${pages(d)} pages`;
+        const out = document.querySelector(`[data-out="${id}"]`);
+        if (out) {
+          out.innerHTML =
+            d.phase === 'need' ? '<p class="muted" style="margin:0;font-size:13.5px">Add at least two PDFs to merge.</p>'
+            : d.phase === 'working' ? '<div class="bar"><i style="width:100%"></i></div>'
+            : d.phase === 'done' ? `<div class="done"><span class="ico">PDF</span><span><b>merged.pdf</b><br /><span class="fmeta">${pages(d)} pages · ready</span></span><button class="btn btn--s" style="margin-left:auto">Download</button></div>`
+            : '';
+        }
+      }
+      function show(id, tool) {
+        const home = document.querySelector(`[data-home="${id}"]`);
+        const t = document.querySelector(`[data-tool="${id}"]`);
+        if (home) home.hidden = tool;
+        if (t) t.hidden = !tool;
+      }
+      function openTool(id, preload) {
+        const d = st(id);
+        if (preload && !d.files.length) { d.files = pool.slice(0, 2).map((f) => [...f]); d.next = 2; }
+        if (id === 8) return openModal();
+        show(id, true); render(id);
+      }
+      function add(id) {
+        const d = st(id);
+        d.files.push([...pool[d.next % pool.length]]); d.next++; d.phase = 'idle';
+        if (id === 4) show(4, true);
+        render(id);
+      }
+      function run(id) {
+        const d = st(id);
+        if (d.files.length < 2) { d.phase = 'need'; render(id); return; }
+        d.phase = 'working'; render(id);
+        setTimeout(() => { d.phase = 'done'; render(id); }, 850);
+      }
+
+      /* front pages */
+      function tiles(id, limit) {
+        const host = document.querySelector(`[data-tiles="${id}"]`);
+        if (!host) return;
+        host.innerHTML = TOOLS.slice(0, limit).map(([n, s, live], i) =>
+          `<button class="tile ${live ? 'live' : ''}" data-open="${live ? id : ''}" ${live ? '' : 'disabled'} title="${live ? '' : 'Not part of this demo'}">
+            <i>${['⊕','◫','⊖','↻','⤡','✎','🔒','≡'][i] || '•'}</i>
+            <b>${n}${live ? '<span class="livetag">Clickable</span>' : ''}</b><span>${s}</span></button>`).join('');
+      }
+      [1, 3, 4, 5, 8].forEach((id) => tiles(id, id === 8 ? 6 : id === 5 ? 4 : 8));
+
+      // 2 search
+      const q2 = document.getElementById('q2'), hits2 = document.getElementById('hits2');
+      function draw2() {
+        const q = q2.value.trim().toLowerCase();
+        const hits = TOOLS.filter(([n, s]) => !q || (n + ' ' + s).toLowerCase().includes(q)).slice(0, 5);
+        hits2.innerHTML = hits.length ? hits.map(([n, s, live]) =>
+          `<button class="hit" data-open="${live ? 2 : ''}" ${live ? '' : 'disabled'}><b>${n}${live ? '<span class="livetag">Clickable</span>' : ''}</b><span class="muted" style="font-size:13px">${s}</span></button>`).join('')
+          : `<p class="muted" style="text-align:center">Nothing matches “${q2.value}”.</p>`;
+      }
+      q2.addEventListener('input', draw2); draw2();
+
+      // 6 editorial rows
+      document.querySelector('[data-rows="6"]').innerHTML = TOOLS.map(([n, s, live]) =>
+        `<button class="edrow" data-open="${live ? 6 : ''}" ${live ? '' : 'disabled'}><b>${n}${live ? '<span class="livetag">Clickable</span>' : ''}</b><span class="muted">${s}</span></button>`).join('');
+
+      // 7 dense rows
+      const q7 = document.getElementById('q7'), rows7 = document.getElementById('rows7');
+      function draw7() {
+        const q = q7.value.trim().toLowerCase();
+        const hits = TOOLS.filter(([n, s]) => !q || (n + ' ' + s).toLowerCase().includes(q));
+        rows7.innerHTML = hits.map(([n, s, live]) =>
+          `<button class="r" data-open="${live ? 7 : ''}" ${live ? '' : 'disabled'}><b>${n}${live ? '<span class="livetag">Clickable</span>' : ''}</b><span class="c">${s}</span></button>`).join('')
+          || '<p class="muted" style="padding:13px;margin:0">Nothing matches.</p>';
+      }
+      q7.addEventListener('input', draw7); draw7();
+
+      /* 8 modal */
+      function openModal() {
+        const host = document.getElementById('host');
+        host.innerHTML = `<div class="scrim" id="scrim"><div class="modal">
+          <div class="row" style="justify-content:space-between"><h2 style="margin:0;font-size:18px">Merge PDF</h2><button class="x" id="closeM">✕</button></div>
+          <p class="muted" style="margin:4px 0 13px;font-size:13.5px">Order them, then merge. Nothing leaves this device.</p>
+          <div class="drop" data-add="8" style="padding:16px"><b>Add PDFs</b></div>
+          <div class="flist" data-list="8" style="margin-top:11px"></div>
+          <div data-out="8" style="margin-top:12px"></div>
+          <div class="row" style="margin-top:13px;justify-content:flex-end"><button class="btn" data-run="8">Merge PDFs</button></div>
+        </div></div>`;
+        render(8);
+        const close = () => { host.innerHTML = ''; };
+        document.getElementById('closeM').addEventListener('click', close);
+        document.getElementById('scrim').addEventListener('click', (e) => { if (e.target.id === 'scrim') close(); });
+      }
+
+      /* one listener for everything */
+      document.addEventListener('click', (e) => {
+        const t = e.target.closest('[data-open],[data-add],[data-run],[data-rm],[data-mv],[data-back]');
+        if (!t || t.disabled) return;
+        if (t.dataset.open) openTool(Number(t.dataset.open), Number(t.dataset.open) === 4);
+        else if (t.dataset.add) add(Number(t.dataset.add));
+        else if (t.dataset.run) run(Number(t.dataset.run));
+        else if (t.dataset.back) { const id = Number(t.dataset.back); show(id, false); }
+        else if (t.dataset.rm) { const [id, i] = t.dataset.rm.split(':').map(Number); st(id).files.splice(i, 1); st(id).phase = 'idle'; render(id); }
+        else if (t.dataset.mv) {
+          const [id, i, by] = t.dataset.mv.split(':').map(Number);
+          const d = st(id), j = i + by;
+          if (j < 0 || j >= d.files.length) return;
+          [d.files[i], d.files[j]] = [d.files[j], d.files[i]];
+          d.phase = 'idle'; render(id);
+        }
+      });
+
+      [1, 2, 3, 4, 5, 6, 7, 8].forEach(render);
+      let start = 1;
+      try { start = Number(localStorage.getItem('leaflock-uxlab')) || 1; } catch {}
+      choose(Math.min(Math.max(start, 1), models.length));
+    </script>
+  </body>
+</html>

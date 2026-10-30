@@ -1,0 +1,46 @@
+---
+import type { CommonMessages } from '../i18n';
+
+interface Props {
+  t: CommonMessages['theme'];
+}
+
+const { t } = Astro.props;
+const options = [
+  { value: 'system', label: t.system, icon: '◐' },
+  { value: 'light', label: t.light, icon: '☀' },
+  { value: 'dark', label: t.dark, icon: '☾' },
+];
+---
+
+<fieldset class="theme-toggle">
+  <legend class="visually-hidden">{t.label}</legend>
+  {
+    options.map((option) => (
+      <label class="theme-toggle__option" title={option.label}>
+        <input type="radio" name="theme" value={option.value} />
+        <span aria-hidden="true">{option.icon}</span>
+        <span class="visually-hidden">{option.label}</span>
+      </label>
+    ))
+  }
+</fieldset>
+
+<script>
+  // The saved choice is applied before first paint by the inline script in Base.astro;
+  // this just keeps the radio buttons and storage in sync.
+  const stored = localStorage.getItem('theme');
+  const current = stored === 'light' || stored === 'dark' ? stored : 'system';
+  for (const input of document.querySelectorAll<HTMLInputElement>('.theme-toggle input[name="theme"]')) {
+    input.checked = input.value === current;
+    input.addEventListener('change', () => {
+      if (input.value === 'system') {
+        localStorage.removeItem('theme');
+        delete document.documentElement.dataset.theme;
+      } else {
+        localStorage.setItem('theme', input.value);
+        document.documentElement.dataset.theme = input.value;
+      }
+    });
+  }
+</script>

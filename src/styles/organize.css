@@ -1,0 +1,154 @@
+/* Styles for the organize tools (split, remove, extract, organize, rotate, crop). */
+
+.page-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.page-selector__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space);
+}
+
+.page-selector__bar .field {
+  flex: 1 1 16rem;
+}
+
+/* Removed pages get a strike-through label so the state isn't shown by fading alone. */
+.page-grid__item.is-dimmed .page-grid__label {
+  text-decoration: line-through;
+}
+
+.blank-thumbnail {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: var(--radius-small);
+  background: var(--color-surface-2);
+}
+
+.blank-thumbnail__page {
+  width: 70%;
+  aspect-ratio: 0.7071;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--color-border);
+}
+
+.split-ranges {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.split-ranges li {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.split-ranges .field {
+  flex: 1;
+}
+
+.split-ranges .icon-button {
+  margin-bottom: 0.3rem;
+}
+
+/* ---------- Crop box ---------- */
+/* Handles sit just inside the box: the page preview clips anything outside the page. */
+
+.crop-box {
+  position: absolute;
+  border: 2px solid var(--color-accent);
+  /* Darken everything outside the box. */
+  box-shadow: 0 0 0 100vmax rgb(0 0 0 / 0.45);
+  cursor: move;
+  touch-action: none;
+}
+
+.crop-box:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.crop-handle {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 2px solid var(--color-accent);
+  border-radius: 4px;
+  background: #fff;
+  touch-action: none;
+}
+
+.crop-handle:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.crop-handle--top,
+.crop-handle--bottom {
+  left: 50%;
+  margin-left: -9px;
+  cursor: ns-resize;
+}
+
+.crop-handle--left,
+.crop-handle--right {
+  top: 50%;
+  margin-top: -9px;
+  cursor: ew-resize;
+}
+
+.crop-handle--top,
+.crop-handle--top-left,
+.crop-handle--top-right {
+  top: 0;
+}
+
+.crop-handle--bottom,
+.crop-handle--bottom-left,
+.crop-handle--bottom-right {
+  bottom: 0;
+}
+
+.crop-handle--left,
+.crop-handle--top-left,
+.crop-handle--bottom-left {
+  left: 0;
+}
+
+.crop-handle--right,
+.crop-handle--top-right,
+.crop-handle--bottom-right {
+  right: 0;
+}
+
+.crop-handle--top-left,
+.crop-handle--bottom-right {
+  cursor: nwse-resize;
+}
+
+.crop-handle--top-right,
+.crop-handle--bottom-left {
+  cursor: nesw-resize;
+}
+
+.crop-margins {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+/* Organize shows five buttons per page; give each page enough room for one row. */
+.organize-grid {
+  grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr));
+}

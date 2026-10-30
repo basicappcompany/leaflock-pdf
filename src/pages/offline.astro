@@ -1,0 +1,30 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Base from '../layouts/Base.astro';
+import { getMessages } from '../i18n';
+
+const locale = Astro.currentLocale ?? 'en';
+const common = getMessages(locale).common;
+const t = common.offline;
+---
+
+{/* The service worker's last resort for a URL that was never cached (public/sw.js).
+    noindex: it is a fallback, never a destination. */}
+<Base title={t.metaTitle} description={t.body} path="offline" noindex>
+  <div class="auth">
+    <h1>{t.heading}</h1>
+    <p class="lead">{t.body}</p>
+    <div class="hero__cta">
+      <a class="primary-button" href={getRelativeLocaleUrl(locale, '')}>{t.home}</a>
+      {/* The browser's address bar still holds the page the visitor asked for — this
+          page was served in its place — so reloading retries that URL, not this one.
+          A button rather than a link for the same reason: there is no URL to put in it. */}
+      <button type="button" class="secondary-button" id="offline-retry">{t.retry}</button>
+    </div>
+  </div>
+</Base>
+
+<script>
+  // Inline is fine: Astro hashes it into the CSP (see astro.config.mjs).
+  document.getElementById('offline-retry')?.addEventListener('click', () => location.reload());
+</script>

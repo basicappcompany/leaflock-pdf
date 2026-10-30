@@ -1,0 +1,44 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render, type CollectionEntry } from 'astro:content';
+import Article from '../../layouts/Article.astro';
+import { format, getMessages } from '../../i18n';
+import { entriesFor, slugOf } from '../../lib/content';
+
+export const getStaticPaths = (async () => {
+  const pages = await entriesFor('compare', 'en');
+  return pages.map((page) => ({ params: { slug: slugOf(page) }, props: { page } }));
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props as { page: CollectionEntry<'compare'> };
+const locale = Astro.currentLocale ?? 'en';
+const common = getMessages(locale).common;
+const { Content } = await render(page);
+const checked = new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(page.data.checkedOn);
+---
+
+<Article
+  title={page.data.title}
+  description={page.data.description}
+  path={`compare/${slugOf(page)}`}
+  trail={[{ name: common.compareIndex.title, path: 'compare' }]}
+  published={page.data.checkedOn}
+  isArticle
+>
+  <Content />
+  <section class="sources">
+    <h2>{common.article.sources}</h2>
+    <p class="muted">{format(common.article.checkedOn, { competitor: page.data.competitor, date: checked })}</p>
+    <ul>
+      {
+        page.data.sources.map((source) => (
+          <li>
+            <a href={source.url} rel="nofollow noopener" target="_blank">
+              {source.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Article>

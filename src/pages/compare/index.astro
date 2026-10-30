@@ -1,0 +1,26 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Article from '../../layouts/Article.astro';
+import { getMessages } from '../../i18n';
+import { entriesFor, slugOf } from '../../lib/content';
+
+const locale = Astro.currentLocale ?? 'en';
+const t = getMessages(locale).common.compareIndex;
+const pages = await entriesFor('compare', locale);
+---
+
+<Article title={t.title} description={t.description} path="compare">
+  <p>{t.intro}</p>
+  <ul class="card-list">
+    {
+      pages.map((page) => (
+        <li>
+          <a href={getRelativeLocaleUrl(locale, `compare/${slugOf(page)}`)}>
+            <strong>{page.data.title}</strong>
+            <span>{page.data.description}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Article>

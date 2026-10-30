@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LeafLock Build Status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: light-dark(#f6f7f4, #121513);
+    --surface: light-dark(#ffffff, #1b201c);
+    --surface-2: light-dark(#eef1ec, #242a25);
+    --text: light-dark(#1b221e, #e5ebe6);
+    --muted: light-dark(#5a655e, #a0aca4);
+    --border: light-dark(#d4dbd5, #343c36);
+    --accent: light-dark(#2a7548, #5fc58a);
+    --accent-soft: light-dark(#e3f1e8, #1c3326);
+    --warning: light-dark(#8a5a00, #f2c065);
+    --warning-soft: light-dark(#fbf1dc, #332a14);
+    /* Blocking work is the only thing on this page that is genuinely urgent, so red is
+       reserved for it — everything merely unfinished stays amber. */
+    --danger: light-dark(#b3261e, #ff8f86);
+    --danger-soft: light-dark(#fbe9e7, #3a1c19);
+    --focus: light-dark(#1d6fd8, #7fb3ff);
+    --focus-soft: light-dark(#e7f0fd, #192b40);
+    --pro: light-dark(#6b3fa0, #c9a6f5);
+    --pro-soft: light-dark(#f1e9fb, #2c2238);
+    --shadow: 0 1px 2px light-dark(rgb(20 30 60 / 0.06), rgb(0 0 0 / 0.4)),
+      0 8px 20px light-dark(rgb(20 30 60 / 0.05), rgb(0 0 0 / 0.4));
+  }
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"] { color-scheme: dark; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+    line-height: 1.5;
+    padding-inline: max(16px, calc((100vw - 920px) / 2));
+    padding-block: 2.5rem 4rem;
+  }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+  main { max-width: 920px; margin: 0 auto; display: flex; flex-direction: column; gap: 2.25rem; }
+
+  /* ---------- header ---------- */
+  header { display: flex; flex-direction: column; gap: 1.25rem; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  h1 { margin: 0; font-size: clamp(1.7rem, 1.2rem + 1.6vw, 2.3rem); font-weight: 650; letter-spacing: -0.01em; text-wrap: balance; }
+  .subtitle { margin: 0; color: var(--muted); max-width: 62ch; }
+  .meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.25rem; font-size: 0.85rem; color: var(--muted); }
+  .meta-row b { color: var(--text); font-weight: 600; }
+
+  .theme-toggle {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem 0.35rem 0.6rem;
+    cursor: pointer;
+  }
+  .theme-toggle:hover { border-color: var(--accent); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .theme-toggle .icon { font-size: 0.95rem; line-height: 1; }
+
+  /* Fixed column counts rather than auto-fit: six tiles then always land as two rows of
+     three (or three of two, or six of one), never five-and-an-orphan. */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+  @media (max-width: 820px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .stats { grid-template-columns: 1fr; } }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .stat .value { font-family: "IBM Plex Mono", monospace; font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  /* A date is longer than a count and must not wrap mid-tile. */
+  .stat .value.date { font-size: 1.15rem; white-space: nowrap; }
+  .stat .label { font-size: 0.78rem; color: var(--muted); }
+  .stat--danger { border-color: var(--danger); background: var(--danger-soft); }
+  .stat--market { border-color: var(--focus); background: var(--focus-soft); }
+
+  /* ---------- phase rail ---------- */
+  /* Column count comes from the data, not a literal: adding Phase 7 on 30 Oct would
+     otherwise have left one step wrapped alone on a second row. */
+  .rail { display: grid; grid-template-columns: repeat(var(--phase-count, 6), 1fr); gap: 6px; }
+  .rail a { text-decoration: none; color: inherit; }
+  .rail-step {
+    border-radius: 10px;
+    padding: 0.55rem 0.5rem;
+    text-align: center;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    transition: transform 0.12s ease;
+  }
+  .rail-step:hover { transform: translateY(-2px); }
+  .rail-step .num { font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; color: var(--muted); }
+  .rail-step .name { font-size: 0.74rem; font-weight: 600; line-height: 1.2; }
+  .rail-step[data-state="done"] { border-color: var(--accent); background: var(--accent-soft); }
+  .rail-step[data-state="done"] .num { color: var(--accent); }
+  .rail-step[data-state="progress"] { border-color: var(--focus); background: var(--focus-soft); }
+  .rail-step[data-state="progress"] .num { color: var(--focus); }
+  .rail-step[data-state="pending"] { opacity: 0.75; }
+  @media (max-width: 640px) { .rail { grid-template-columns: repeat(3, 1fr); } }
+
+  /* ---------- pills ---------- */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    font-family: "IBM Plex Mono", monospace;
+    letter-spacing: 0.01em;
+  }
+  .pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; flex: none; }
+  .pill-done { background: var(--accent-soft); color: var(--accent); }
+  .pill-done::before { background: var(--accent); }
+  .pill-progress { background: var(--focus-soft); color: var(--focus); }
+  .pill-progress::before { background: var(--focus); }
+  .pill-pending { background: var(--surface-2); color: var(--muted); }
+  .pill-pending::before { background: var(--muted); }
+  .pill-external { background: var(--warning-soft); color: var(--warning); }
+  .pill-external::before { background: var(--warning); }
+
+  /* ---------- phase panels ---------- */
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem 1.4rem;
+    scroll-margin-top: 1rem;
+    box-shadow: var(--shadow);
+  }
+  .phase-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; }
+  .phase-head h2 { margin: 0; font-size: 1.05rem; font-weight: 650; display: flex; align-items: baseline; gap: 0.5rem; }
+  .phase-head .phase-num { font-family: "IBM Plex Mono", monospace; color: var(--muted); font-size: 0.85rem; }
+  .phase-head .phase-effort {
+    margin-left: auto;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .phase-summary { margin: 0.4rem 0 1rem; color: var(--muted); font-size: 0.92rem; max-width: 70ch; }
+
+  .items { display: flex; flex-direction: column; border-top: 1px solid var(--border); }
+  .item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .item .item-num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    background: var(--surface-2);
+    border-radius: 6px;
+    padding: 0.1rem 0.4rem;
+    white-space: nowrap;
+  }
+  .item .name { font-size: 0.92rem; }
+  .item .estimate { font-size: 0.8rem; color: var(--muted); font-family: "IBM Plex Mono", monospace; text-align: right; white-space: nowrap; }
+  @media (max-width: 560px) {
+    .item { grid-template-columns: auto 1fr; gap: 0.3rem 0.6rem; }
+    .item .estimate { grid-column: 2; text-align: left; }
+  }
+
+  /* ---------- scope ---------- */
+  .scope-bar {
+    display: flex;
+    gap: 3px;
+    height: 14px;
+    margin-bottom: 0.9rem;
+  }
+  .scope-seg { border-radius: 3px; min-width: 6px; }
+  .scope-key { display: flex; flex-direction: column; }
+  .scope-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .scope-row:first-child { border-top: 1px solid var(--border); }
+  .scope-dot { width: 9px; height: 9px; border-radius: 2px; }
+  .scope-label { font-size: 0.9rem; }
+  .scope-count { font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
+
+  /* ---------- timeline ---------- */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-row {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr auto;
+    gap: 0.5rem 1rem;
+    align-items: baseline;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tl-row:first-child { border-top: 1px solid var(--border); }
+  .tl-date { font-family: "IBM Plex Mono", monospace; font-size: 0.82rem; font-weight: 600; }
+  .tl-what { font-size: 0.9rem; }
+  .tl-what span { color: var(--muted); }
+  .tl-count { font-family: "IBM Plex Mono", monospace; font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
+  .tl-row[data-gap="true"] .tl-date,
+  .tl-row[data-gap="true"] .tl-what { color: var(--muted); font-style: italic; }
+  @media (max-width: 560px) {
+    .tl-row { grid-template-columns: 1fr; gap: 0.15rem; }
+  }
+
+  /* ---------- verdict ---------- */
+  .verdict {
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    background: var(--surface);
+    padding: 1.2rem 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .verdict h3 { margin: 0; font-size: 0.95rem; }
+  .verdict p { margin: 0; font-size: 0.9rem; color: var(--muted); max-width: 72ch; }
+  .verdict .headline { color: var(--text); font-weight: 600; }
+
+  /* ---------- pending-from-owner ---------- */
+  .owner-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+  .owner-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.1rem 1.2rem;
+  }
+  .owner-card h3 {
+    margin: 0 0 0.6rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--pro);
+    font-family: "IBM Plex Mono", monospace;
+  }
+  .owner-card ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .owner-card li { font-size: 0.88rem; padding-left: 1.1rem; position: relative; }
+  .owner-card li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0.42em;
+    width: 7px; height: 7px;
+    border: 1.5px solid var(--pro);
+    border-radius: 2px;
+  }
+
+  /* ---------- launch estimate ---------- */
+  .launch {
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--accent-soft), var(--surface) 60%);
+    padding: 1.4rem 1.5rem;
+  }
+  .launch h2 { margin: 0 0 0.75rem; font-size: 1.05rem; }
+  .launch-paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-top: 0.9rem; }
+  .path { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; }
+  .path .path-label { font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  .path .path-range { font-size: 1.3rem; font-weight: 650; margin: 0.25rem 0 0.4rem; font-variant-numeric: tabular-nums; }
+  .path p { margin: 0; font-size: 0.85rem; color: var(--muted); }
+
+  footer { text-align: center; font-size: 0.78rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<main>
+  <header>
+    <span class="eyebrow">Internal · build tracker</span>
+    <h1>LeafLock PDF — where the build stands</h1>
+    <p class="subtitle">A local mirror of <span class="mono">docs/roadmap.md</span>. Edited in place whenever something ships — not published, not fetched, just a file to reopen. Each row carries a fixed <span class="mono">phase.item</span> id — point at one, e.g. “start 4.3”, to pick where I work next. Ids are written into the data, not counted from position, so inserting a row can’t renumber the ones below it.</p>
+    <div class="meta-row">
+      <span>Last verified <b id="lastVerified">30 Oct 2026</b></span>
+      <span>Repo: <b class="mono" id="repoState">0 commits · no remote</b></span>
+      <span>Free tier: <b class="mono" id="freeTier">—</b></span>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle colour theme">
+        <span class="icon" id="themeIcon">🖥️</span><span id="themeLabel">System</span>
+      </button>
+    </div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Jump to phase"></nav>
+
+  <section>
+    <h2 style="margin:0 0 0.3rem; font-size:1.05rem;">What's actually left</h2>
+    <p style="margin:0 0 0.9rem; color:var(--muted); font-size:0.9rem; max-width:72ch;">
+      Counted from the rows below every time this page opens, so it cannot disagree with them.
+      Most of what is open does not gate the launch.
+    </p>
+    <div class="scope-bar" id="scopeBar"></div>
+    <div class="scope-key" id="scopeKey"></div>
+    <p style="margin:1rem 0 0; color:var(--muted); font-size:0.88rem; max-width:72ch;">
+      <b style="color:var(--text)">Why <span id="marketCountInline">—</span> is the number to beat them:</b> it is not a guess at what winning
+      takes. Every phase in <span class="mono">docs/roadmap.md</span> carries a “Done when” clause written
+      against the competitors in its comparison table — the ten highest-volume queries each best-in-class,
+      100+ indexable URLs, an extension, teams and SSO for the buyers who ask — so finishing the plan <i>is</i>
+      the definition of beating them. Two gaps that no number of items closes, both deliberate: we will have
+      <b style="color:var(--text)">2 locales against their 21–30</b>, scoped that way on purpose because real
+      translation is a bill and a review burden, not a build; and domain age, which cannot be bought back
+      and is the reason the first date above matters more than the second.
+    </p>
+  </section>
+
+  <section id="phases" style="display:flex; flex-direction:column; gap:1.1rem;"></section>
+
+  <section>
+    <h2 style="margin:0 0 0.3rem; font-size:1.05rem;">Pricing — settled 30 Oct</h2>
+    <p style="margin:0 0 0.9rem; color:var(--muted); font-size:0.9rem; max-width:72ch;">
+      Priced per category against the cheapest credible rival in each, not against the market's single
+      lowest price. Decided, but <b style="color:var(--text)">not yet implemented</b> — the code has no
+      third tier (item 4.9).
+    </p>
+    <div class="scroller" id="pricingTable"></div>
+  </section>
+
+  <section>
+    <h2 style="margin:0 0 0.9rem; font-size:1.05rem;">Pending from your side</h2>
+    <div class="owner-grid" id="ownerGrid"></div>
+  </section>
+
+  <section class="launch">
+    <h2>When can we launch?</h2>
+    <p style="margin:0; color:var(--muted); max-width:72ch;">Both dates are computed from the item estimates and the observed cadence, not typed in. Only the <span id="blockerCountInline">—</span> blockers listed below can move the first one.</p>
+    <div class="launch-paths" id="launchPaths"></div>
+    <h3 style="margin:1.4rem 0 0.2rem; font-size:0.9rem;">The launch blockers<span id="blockerCountHeading"></span></h3>
+    <div class="timeline" id="blockers"></div>
+  </section>
+
+  <section class="verdict" id="verdict"></section>
+
+  <section>
+    <h2 style="margin:0 0 0.3rem; font-size:1.05rem;">What shipped when</h2>
+    <p style="margin:0 0 0.9rem; color:var(--muted); font-size:0.9rem; max-width:72ch;">
+      Dates come from the dated entries in <span class="mono">docs/roadmap.md</span> and
+      <span class="mono">docs/shipped.md</span> — day granularity, which is all that was ever
+      recorded. There are no commit timestamps to check against: the repo still has no commits.
+    </p>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <footer>docs/status.html — reopen (or refresh the tab) any time; updated alongside docs/roadmap.md, not on a schedule.</footer>
+</main>
+
+<script>
+  // Three-way theme toggle: system → light → dark → system. Persisted so it survives
+  // a reopen; wrapped in try/catch since a local file:// page can have storage blocked.
+  const THEME_KEY = "leaflock-status-theme";
+  const THEME_CYCLE = { system: "light", light: "dark", dark: "system" };
+  const THEME_META = {
+    system: { icon: "🖥️", label: "System" },
+    light: { icon: "☀️", label: "Light" },
+    dark: { icon: "🌙", label: "Dark" },
+  };
+
+  function readTheme() {
+    try { return localStorage.getItem(THEME_KEY) || "system"; } catch { return "system"; }
+  }
+  function writeTheme(theme) {
+    try { localStorage.setItem(THEME_KEY, theme); } catch { /* ignore */ }
+  }
+  function applyTheme(theme) {
+    if (theme === "system") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", theme);
+    document.getElementById("themeIcon").textContent = THEME_META[theme].icon;
+    document.getElementById("themeLabel").textContent = THEME_META[theme].label;
+  }
+
+  const initialTheme = readTheme();
+  applyTheme(initialTheme);
+  document.getElementById("themeToggle").addEventListener("click", () => {
+    const next = THEME_CYCLE[readTheme()];
+    writeTheme(next);
+    applyTheme(next);
+  });
+
+  /**
+   * Written by `pnpm counts` — never edit by hand.
+   *
+   * This page derives everything it can from its own item data, but a few figures live in
+   * the codebase instead: how many tools exist, how many tests run, what the server
+   * actually grants. They used to be typed into the markup, which is how the free-tier
+   * cap came to advertise a third of the real allowance (`docs/process.md` §8). One block
+   * the script rewrites means adding a metric is a field here plus a line there, and no
+   * figure on this page is ever a copy someone has to remember to update.
+   */
+  const COUNTS = {
+    tools: 43,
+    pro: 0,
+    practice: 6,
+    ops: 29,
+    landings: 5,
+    guides: 6,
+    compares: 2,
+    unit: 490,
+    browser: 275,
+    browserFiles: 27,
+    anonymousDaily: 20,
+    freeAccountDaily: 60,
+  };
+
+  const PHASES = [
+    {
+      num: 1, name: "Foundations", state: "done",
+      summary: "Offline PWA, SEO/AI-rank generators, performance budget, category hubs. Nothing here is retrofit work — everything later inherits it.",
+      items: [
+        { id: "1.1", name: "Installable / offline (service worker + manifest)", state: "done", when: "by 28 Oct" },
+        { id: "1.2", name: "SEO & AI-rank generators (HowTo/ItemList/Product, llms.txt)", state: "done", when: "by 28 Oct" },
+        { id: "1.3", name: "Performance budget enforced in CI", state: "done", when: "by 28 Oct", note: "written, never run — no remote yet" },
+        { id: "1.4", name: "Related-tools + category hub pages", state: "done", when: "by 28 Oct" },
+      ],
+    },
+    {
+      num: 2, name: "Features", state: "progress",
+      summary: "Every tool and decoder planned across organize/convert/edit/secure is shipped, and device-local retention (2.11) with it. What is left is 2.12, the server half of retention, which is explicitly after launch — and a confirmatory HEVC legal read, which is not engineering. Id 4.8 was retired into 2.12 so server retention is one item, not two.",
+      items: [
+        { id: "2.1", name: "Depth pass — merge bookmarks, metadata/links/forms survival", state: "done", when: "28 Oct" },
+        { id: "2.2", name: "Hard conversions — PDF→Word, PDF→Excel", state: "done", when: "28 Oct" },
+        { id: "2.3", name: "Office→PDF — Word, Excel, CSV, RTF", state: "done", when: "28–29 Oct" },
+        { id: "2.4", name: "Privacy-native — remove metadata, edit metadata, remove annotations", state: "done", when: "28 Oct" },
+        { id: "2.5", name: "Cheap wins — mix pages, reverse/blank landings, N-up, booklet", state: "done", when: "28 Oct" },
+        { id: "2.6", name: "Commercial-intent — Bates numbering, PDF/A, extract tables", state: "done", when: "29 Oct" },
+        { id: "2.7", name: "Page labels", state: "done", when: "29 Oct" },
+        { id: "2.8", name: "Extract embedded images", state: "done", when: "29 Oct" },
+        { id: "2.9", name: "PDF→Markdown", state: "done", when: "29 Oct" },
+        { id: "2.10", name: "HEIC decoding via libheif-wasm", state: "done", when: "29 Oct", note: "built; a confirmatory HEVC legal read stays open in TODO §6a" },
+        { id: "2.11", name: "Device-local recent work (IndexedDB, 5 min / 1 hour / 24 hours, custom on Pro)", state: "done", when: "30 Oct", note: "nothing leaves the device — the CSP claim is untouched" },
+        { id: "2.12", name: "Server-backed retention for Pro (R2 + browser AES-GCM, key in fragment)", state: "pending", estimate: "~4–5 days", days: 5, note: "replaces the retired 4.8; lifts 2.11's 7-day device ceiling", after: "after launch — and after demand proves it" },
+      ],
+    },
+    {
+      num: 3, name: "Page surface & content", state: "progress",
+      summary: "The dominant cost in the whole plan — 6,000+ lines of prose no test can verify. Barely begun.",
+      items: [
+        { id: "3.1", name: `Programmatic landings — ${COUNTS.landings} of 40+`, state: "pending", estimate: `~${40 - COUNTS.landings} pages`, days: 5, after: "additive after launch" },
+        { id: "3.2", name: `Comparison pages — ${COUNTS.compares} of 7`, state: "pending", estimate: `~${7 - COUNTS.compares} pages`, days: 3, after: "additive after launch" },
+        { id: "3.3", name: `Guides — ${COUNTS.guides} of ~${COUNTS.tools} (one per tool)`, state: "pending", estimate: `~${COUNTS.tools - COUNTS.guides} pages`, days: 7, after: "additive after launch" },
+        { id: "3.4", name: "Verifiability page (live demo)", state: "done", when: "30 Oct", note: "/verify proves it without DevTools: the browser lists its own requests via Resource Timing, refuses a cross-origin fetch in front of you and reports the directive that blocked it, and the offline line changes by itself. Probed first — a CSP-blocked request fires securitypolicyviolation but leaves no timing entry, which is why the two panels answer different questions. 5 browser tests; WCAG clean" },
+        { id: "3.5", name: "Citable claims page", state: "done", when: "30 Oct", note: "/claims ships the 2.12-proof wording (nothing leaves your device *unless you ask it to*), the five things we receive, and a questionnaire table — which is also the trust page Practice is sold on. Writing it found three claims already falsified by shipped features: security.md promised no cookies and no account, and said files were kept neither on your device nor ours, after the recent-work shelf started keeping them on the device. statedClaims.test.ts now fails on the absolute phrasings" },
+        { id: "3.6", name: "Browser extension", state: "pending", estimate: "~2–3 days", days: 3, after: "additive after launch" },
+      ],
+    },
+    {
+      num: 4, name: "Monetisation & accounts", state: "progress",
+      summary: "Pricing, tiering and provider choice are decided on paper. Almost none of it is built yet.",
+      items: [
+        { id: "4.1", name: "Re-tier whole catalogue", state: "done", when: "30 Oct", note: "owner confirmed the Pro set stays at six — no tool changed tier; the work was the copy, which named 2 of 6 gated tools" },
+        { id: "4.2", name: "Teams / seats", state: "pending", estimate: "~2–3 days", days: 3, after: "after launch" },
+        { id: "4.3", name: "Dual-provider billing (Paddle + region router)", state: "pending", estimate: "~3–5 days", note: "net new — only Dodo exists", days: 5, after: "after launch — Dodo already works" },
+        { id: "4.4", name: "SSO (SAML/OIDC) for Business", state: "pending", estimate: "~3–4 days", days: 4, after: "after launch — Business tier" },
+        { id: "4.5", name: "Free-tier caps", state: "done", when: "28 Oct" },
+        { id: "4.6", name: "Saved workflows (on batch)", state: "pending", estimate: "~2–3 days", days: 3, after: "after launch" },
+        { id: "4.7", name: "Simple API (Business edition)", state: "pending", estimate: "~2–3 days", days: 3, after: "after launch — category 6, lowest priority" },
+        { id: "4.9", name: "Practice tier — the legal/compliance bundle, packaged", state: "done", when: "30 Oct", note: "the six professional tools moved Pro —> Practice and every price reset to the 30 Oct decision; access now ranks tiers against plans instead of toggling on any paid plan. Reached four places the estimate missed: the plan column's CHECK constraint (migration 0004), planCache's allow-list, the dashboard card offering batch to Pro, and CheckoutButton's drifted copy of the plan union. Still open, not code: the click-through DPA (6.3) and the trust page", after: "right after the price decision — do before Phase 3's landings" },
+        { id: "4.10", name: "Self-host deployment guide (air-gapped, PUBLIC_USAGE_LIMITS=off)", state: "pending", estimate: "~1 day", days: 1, note: "category 5 — 'nothing to deploy' only beats Stirling if the deployment is written down. Was unscoped before 30 Oct", after: "after launch — category 5" },
+        { id: "4.11", name: "Audit logging for admin actions (seats, plan changes)", state: "pending", estimate: "~2 days", days: 2, note: "procurement asks for it; also a Phase 7 precondition. Was unscoped before 30 Oct", after: "after launch — category 5" },
+      ],
+    },
+    {
+      num: 5, name: "Locales (es, de)", state: "external",
+      summary: "i18n infrastructure exists; zero translated pages. Real human translators, not an engineering estimate.",
+      items: [
+        { id: "5.1", name: "Spanish (es) — UI, tools, landings", state: "external", lead: 30, owner: "translator", after: "additive — no retrofit" },
+        { id: "5.2", name: "German (de) — UI, tools, landings", state: "external", lead: 30, owner: "translator", after: "additive — no retrofit" },
+      ],
+    },
+    {
+      num: 6, name: "Launch", state: "progress",
+      summary: "The engineering side is done: 6.4's accessibility audit closed 30 Oct, so zero blocking build days remain. Every remaining blocker waits on a person — credentials, the repo push, and the legal review that sets the date.",
+      items: [
+        { id: "6.1", name: "Credentials (Google, Resend, Dodo, Paddle, D1)", state: "external", note: "leaflockpdf.com bought 30 Oct, which was its first gate — the OAuth redirect URIs and the email sending domain can now be registered. Still open: Google, Resend, Dodo, Paddle, D1, and a mailbox for hello@ (TODO §0)", lead: 5,  owner: "you", blocker: true },
+        { id: "6.2", name: "GitHub repo, first commit, CI run", state: "external", note: "verified ready 30 Oct: workflow correct, CI already retries flakes, 500 files with no secrets and .dev.vars ignored — waiting only on repo creation and push", lead: 1,  owner: "you", blocker: true },
+        { id: "6.3", name: "Legal review of policy pages", state: "external", note: "brief ready to send (docs/legal-brief.md) — but it needs six answers only you have first: entity name/address, governing law + courts, DPDP grievance officer, minimum age, hosting, email provider", lead: 21, owner: "lawyer", blocker: true },
+        { id: "6.4", name: "Accessibility audit", state: "done", when: "30 Oct", note: "20 checks in accessibility.spec.ts, WCAG A/AA clean on 10 page kinds; fixed one real 1.4.10 Reflow failure (tables overflowed at 320px)" },
+        { id: "6.5", name: "SOC 2 / ISO pursuit", state: "external", note: "post-launch, 6–12mo, not a blocker", lead: 270, owner: "auditor", afterLaunch: true, after: "after launch" },
+        { id: "6.6", name: "Native wrapper (Capacitor/Tauri)", state: "pending", note: "post-launch", days: 3, afterLaunch: true, after: "after launch" },
+      ],
+    },
+    {
+      num: 7, name: "Enterprise (deferred)", state: "pending",
+      summary: "Added 30 Oct. Bespoke enterprise is deferred, not declined — one person cannot serve negotiated contracts and per-prospect security reviews. Entered only when all three below hold, plus SOC 2 (6.5) underway and deals above ~$10k/yr.",
+      items: [
+        { id: "7.1", name: "Cyber liability + E&O insurance", state: "external", note: "signing indemnities without it is the one genuinely dangerous move for a solo entity; needs a broker quote", lead: 14, owner: "broker", afterLaunch: true, after: "Phase 7 — before any enterprise deal" },
+        { id: "7.2", name: "Pre-drafted MSA, reusable without redlines", state: "external", note: "written once with the lawyer; redlining per deal is what makes enterprise unservable solo", lead: 14, owner: "lawyer", afterLaunch: true, after: "Phase 7 — before any enterprise deal" },
+        { id: "7.3", name: "Enterprise motion (procurement, questionnaires, deal desk)", state: "pending", note: "gated on 7.1, 7.2, 6.5 and a second pair of hands", days: 5, afterLaunch: true, after: "Phase 7 — only when all preconditions hold" },
+      ],
+    },
+  ];
+
+  const OWNER_PENDING = [
+    {
+      title: "Accounts & credentials",
+      items: [
+        "Google OAuth client + redirect URIs",
+        "Resend API key + verified sending domain",
+        "Dodo: confirm product IDs, webhook, go live",
+        "A Paddle account — new, nothing built yet",
+        "Cloudflare D1: create + apply migrations remotely",
+      ],
+    },
+    {
+      title: "GitHub / CI",
+      items: [
+        "Create the repo, push the first commit",
+        "Set it as origin, watch Actions go green",
+        "Branch protection once main exists on GitHub",
+      ],
+    },
+    {
+      title: "Legal",
+      items: [
+        "Entity name, address, governing law",
+        "DPDP grievance officer, minimum age policy",
+        "Name both Dodo and Paddle in privacy/terms",
+        "Paid-plan terms: refunds, liability, lifetime count",
+        "Trademark clearance search for “LeafLock”",
+        "DPA draft, reviewed",
+      ],
+    },
+    {
+      title: "Decisions only you can make",
+      items: [
+        "Launch all-at-once, or stage the home + policy pages early",
+        "Who translates es / de — a real translator, not a tool",
+        "SOC 2 / ISO auditor + budget ($10–50k+, 6–12mo)",
+        "After launch: whether 4.8 is earned — it needs real demand, an R2 account and a second legal pass",
+      ],
+    },
+  ];
+
+  /** Only what the docs actually record. No invented durations: day granularity is all
+   * that exists, and nothing was ever given a target date to be measured against. */
+  const TIMELINE = [
+    { date: "21 Oct 2026", what: "Legal checklist prepared — <span>earliest dated artefact in the repo</span>", count: "" },
+    { date: "23 Oct 2026", what: "Roadmap written, <span class='mono'>TODO.md</span> started — <span>day zero of the plan, with the base catalogue already working</span>", count: "~24 tools" },
+    { date: "24–27 Oct 2026", what: "No dated artefacts — <span>no record either way of what happened here</span>", count: "", gap: true },
+    { date: "28 Oct 2026", what: "Depth pass, PDF→Word, PDF→Excel, the three metadata tools, mix pages, reverse/blank landings, N-up, booklet; competitive + cost review", count: "+10 tools" },
+    { date: "29 Oct 2026", what: "Office→PDF finished (Word, Excel, CSV, RTF), Bates, PDF/A, extract tables, page labels, extract images, PDF→Markdown", count: "+9 tools" },
+    { date: "29 Oct 2026", what: "Process pass — <span>ship log split out, counts moved to one command, flake rule written down</span>", count: "" },
+    { date: "29 Oct 2026", what: "Retention decided — <span>device-local shelf into Phase 2 (2.11), zero-knowledge share links into Phase 4 (4.8); readable server storage declined outright, recorded in design.md §13</span>", count: "+7 days scope" },
+    { date: "29 Oct 2026", what: "Stated-limits pass — <span>the free-tier cap was advertised as 5/30 against a real 20/60 in six user-facing strings; fixed, and a test now reads the shipped prose</span>", count: "" },
+    { date: "30 Oct 2026", what: "Device-local recent work (2.11) — <span>opt-in 5 min / 1 hour / 24 hours, custom on Pro; IndexedDB rather than OPFS, and server retention moved to 2.12</span>", count: "" },
+    { date: "30 Oct 2026", what: "Blockers started — <span>6.2 verified push-ready and <span class='mono'>pnpm tracker</span> added to CI; 4.1 found the Pro feature list naming 2 of 6 gated tools and promising two shipped things as “coming”, both fixed behind a guard test</span>", count: "" },
+    { date: "30 Oct 2026", what: "4.1 closed — <span>owner confirmed the Pro set stays at six, so no tool changed tier; Sign PDF deliberately stays free. Blockers 5 → 4, blocking engineering 1.5 → 1 day</span>", count: "" },
+    { date: "30 Oct 2026", what: "6.4 accessibility audit closed — <span>WCAG A/AA clean across 10 page kinds plus the new retention UI; found and fixed a real 1.4.10 Reflow failure where tables pushed the page sideways at 320px. Blocking engineering now zero</span>", count: "+20 checks" },
+    { date: "30 Oct 2026", what: "Name reviewed and kept — <span>ContraPDF proposed; Contra, Hush, Opaque and Charta each hit live marks in or beside software, Intra had no domain. No code changed. Turned up that <span class='mono'>leaflockpdf.com</span> was never registered</span>", count: "" },
+    { date: "30 Oct 2026", what: "Legal brief written for 6.3 — <span><span class='mono'>docs/legal-brief.md</span>: the ask, the data we actually hold mapped to all six database tables, and the six owner answers that gate it. The critical path can start as soon as those are filled in</span>", count: "" },
+    { date: "30 Oct 2026", what: "Second competitive review — <span>18 players. Four new client-side rivals (PDFCraft 90+ tools, free) end tool count as a differentiator; a rival's privacy claim contradicts its own pricing page, which promoted 3.4/3.5; and $59/yr is the cheapest professional PDF product found anywhere, reopening the Pro price</span>", count: "+11 players" },
+    { date: "30 Oct 2026", what: "Strategy set — <span>market split into 7 categories; 2, 4 and 5 are winnable solo and 1 is not. Self-serve only, bespoke enterprise deferred to a new Phase 7 with five entry conditions. Three paid tiers priced per category. Phase 3's 19.5 days of prose resequenced behind ~8 days that open three revenue categories</span>", count: "+4 items" },
+    { date: "30 Oct 2026", what: "Verifiability page shipped (3.4) — <span>the demo rivals copying our wording cannot copy: <span class='mono'>/verify</span> has the browser list every request it has made, refuse a cross-origin fetch while you watch and name the rule that stopped it, and report going offline by itself. Platform probed before designing: a blocked request fires <span class='mono'>securitypolicyviolation</span> but leaves no Resource Timing entry. Phase 3 is now 2/6</span>", count: "+5 browser tests" },
+    { date: "30 Oct 2026", what: "Claims page shipped (3.5) — <span>a page written to be quoted: the wording that survives 2.12, everything we receive (the metering request carries <strong>no body at all</strong>), what is kept on the device, and the security-questionnaire answers category 4 asks for. It doubles as Practice's trust page. Found three claims that shipped features had already falsified — no cookies, no account, nothing stored on your device — and <span class='mono'>statedClaims.test.ts</span> now guards the phrasings that expire</span>", count: "+3 tests" },
+    { date: "30 Oct 2026", what: "Practice tier shipped (4.9) — <span>the six professional tools moved out of Pro, every price reset to the 30 Oct decision (Pro $4/$24, ten years $120, Practice $249, Business $499), and tool access now ranks plans against tiers rather than unlocking everything for any paid plan. <span class='mono'>statedPrices.test.ts</span> was added for the same reason the allowances got one, and caught the Business page still advertising $299 in its frontmatter</span>", count: "+8 tests" },
+    { date: "30 Oct 2026", what: "<span class='mono'>leaflockpdf.com</span> bought — <span>the domain the whole product already assumed, found unregistered that morning and registered the same day. Closes the first gate under 6.1: the Google OAuth redirect URIs and the email sending domain can now be registered against a real host. Still open in TODO §0 — auto-renew, registrar 2FA, and a mailbox for <span class='mono'>hello@</span>, which Resend does not provide</span>", count: "" },
+  ];
+
+  /**
+   * The schedule model. Every date below is computed from this one number plus each
+   * item's own estimate — none is typed in — so changing the cadence or an estimate moves
+   * everything that depends on it, and nothing can go stale on its own.
+   *
+   * `workingDaysPerWeek: 3` is the observed cadence, not an aspiration: in the seven days
+   * to 29 October the repo records work on three of them (23rd, 28th, 29th). Raise it and
+   * every projection pulls in proportionally.
+   */
+  const PLAN = { workingDaysPerWeek: 3 };
+
+  /**
+   * Today, read off the clock rather than stored — the one thing on this page that cannot
+   * be hand-kept. It was pinned to "2026-10-29" and was wrong by a day on the 30th, which
+   * made every projection above quietly a day optimistic while the comment overhead
+   * promised nothing could go stale on its own.
+   *
+   * A projection that recedes while no work happens is not a bug here: every remaining
+   * blocker is a lead time that starts when a person starts it, so an untouched blocker
+   * genuinely does push the launch out by a day each day. The fixed counterpart is
+   * `docs/roadmap.md`'s 29 October baseline table, which is frozen on purpose so the two
+   * can be compared — which only works if this one keeps moving.
+   *
+   * Local date parts, not `toISOString()`: UTC would read as yesterday for the first
+   * 5.5 hours of every IST day.
+   */
+  const today = () => {
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  };
+
+  const DAY = 86400000;
+  const addDays = (date, n) => new Date(date.getTime() + Math.round(n) * DAY);
+  const fmt = (date) => date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  /** Working days → calendar days at the observed cadence. */
+  const calendar = (workingDays) => workingDays * (7 / PLAN.workingDaysPerWeek);
+
+  const start = new Date(today());
+  const allItems = PHASES.flatMap((p) => p.items);
+
+  // Launch blockers only. Engineering runs one item at a time (one pair of hands);
+  // anything waiting on another person runs in parallel from today, since none of it
+  // needs us to finish first.
+  let cursor = 0;
+  const dates = new Map();
+  for (const item of allItems.filter((i) => i.blocker)) {
+    if (item.days) {
+      cursor += calendar(item.days);
+      dates.set(item.id, addDays(start, cursor));
+    } else {
+      dates.set(item.id, addDays(start, item.lead ?? 0));
+    }
+  }
+  const launchDate = new Date(Math.max(...[...dates.values()].map((d) => d.getTime())));
+  const blockerCritical = allItems.find((i) => i.blocker && dates.get(i.id)?.getTime() === launchDate.getTime());
+
+  // The other number: every remaining item in the roadmap, same cadence, excluding the
+  // explicitly post-launch ones.
+  const remainingDays = allItems.filter((i) => i.days && !i.afterLaunch).reduce((sum, i) => sum + i.days, 0);
+  const longestExternal = Math.max(...allItems.filter((i) => i.lead && !i.afterLaunch).map((i) => i.lead));
+  const fullPlanDate = addDays(start, Math.max(calendar(remainingDays), longestExternal));
+
+  /** Working days still to do in a phase, and its own finish date in the full-plan run. */
+  function phaseTotals() {
+    let running = 0;
+    return new Map(PHASES.map((phase) => {
+      const days = phase.items.filter((i) => i.days && !i.afterLaunch).reduce((sum, i) => sum + i.days, 0);
+      running += days;
+      return [phase.num, { days, finish: days > 0 ? addDays(start, calendar(running)) : null }];
+    }));
+  }
+  const PHASE_TOTALS = phaseTotals();
+
+  const VERDICT = () => ({
+    headline: `Nothing is late yet — there was no date to be late against. From today, this is the baseline: <b>launch-ready ${fmt(launchDate)}</b>.`,
+    paragraphs: [
+      `<span class='mono'>docs/roadmap.md</span> set an <i>order</i>, never a schedule, and says outright that the site launches when the whole thing is done with no revenue clock running. So no past item can be judged late. The dates on this page are the first baseline the project has had — estimates, not commitments — and from here on actual ship dates can be measured against them.`,
+      `<b>Only ${SCOPE.blocking.length} things actually gate the launch</b>, and ${SCOPE.blocking.filter((i) => i.owner).length} of them are not engineering: ${SCOPE.blocking.map((i) => i.name.toLowerCase()).join(", ")}. Everything else in Phases 3, 4 and 5 is additive — the roadmap says so itself about locales ("purely additive after launch — no retrofit"), and the same is true of guides, landings and the Business-tier features.`,
+      `<b>The critical path is the lawyer, not the code.</b> The blocking engineering is ${allItems.filter((i) => i.blocker && i.days).reduce((s, i) => s + i.days, 0)} working days; the legal review is a ${allItems.find((i) => i.id === "6.3").lead}-day wait that can start today and finishes ${fmt(dates.get("6.3"))}. Writing code faster moves nothing until that is underway.`,
+      `Working the whole roadmap instead — every guide, landing, Business feature and locale before going live — projects to <b>${fmt(fullPlanDate)}</b> at the same cadence: ${remainingDays} working days of build. That gap, roughly three months, is the real cost of launching complete rather than staged.`,
+      `Both numbers assume <b>${PLAN.workingDaysPerWeek} working days a week</b>, which is what the last seven days actually contained. At five days a week the full plan lands near ${fmt(addDays(start, remainingDays * (7 / 5)))} instead. The cadence, not the estimates, is what moves these dates most.`,
+      `One clock does run, and the roadmap already records it: domain and page age is the single ranking input that cannot be bought back later. Every pre-launch day spends some of it — which is the argument for the ${fmt(launchDate)} path over the ${fmt(fullPlanDate)} one.`,
+    ],
+  });
+
+  const stateLabel = { done: "Done", progress: "In progress", pending: "Pending", external: "External" };
+  const pillClass = { done: "pill-done", progress: "pill-progress", pending: "pill-pending", external: "pill-external" };
+
+  function pill(state) {
+    return `<span class="pill ${pillClass[state]}">${stateLabel[state]}</span>`;
+  }
+
+  /** Working days left in a phase, and where that lands if the phases are worked in
+   * order. A finished phase says so instead of showing a zero. */
+  function phaseEffort(phase) {
+    const open = phase.items.filter((i) => i.state !== "done").length;
+    const blocking = phase.items.filter((i) => i.blocker).length;
+    const counts = `${phase.items.length - open}/${phase.items.length} done${blocking ? ` · ${blocking} blocking` : ""}`;
+    const { days, finish } = PHASE_TOTALS.get(phase.num);
+    if (days === 0) {
+      const waiting = phase.items.some((i) => i.state === "external" && !i.afterLaunch);
+      return `${counts} · ${waiting ? "waiting on other people" : "no work left"}`;
+    }
+    return `${counts} · ${days} working day${days === 1 ? "" : "s"} · ends ${fmt(finish)}`;
+  }
+
+  /**
+   * One rule for the right-hand column: a finished item shows when it actually shipped,
+   * a launch blocker shows its computed target, and everything else shows a word rather
+   * than a date — because a date on work that does not gate the launch invites planning
+   * around a deadline nothing depends on.
+   */
+  function rightColumn(item) {
+    if (item.when) return item.when;
+    if (item.blocker) {
+      const effort = item.days ? `${item.days}d` : `${item.lead}d wait`;
+      return `<span style="color:var(--danger); font-weight:600">${effort} → ${fmt(dates.get(item.id))}</span>`;
+    }
+    if (item.after) return `<span style="color:var(--warning); font-style:italic">${item.after}</span>`;
+    return item.estimate ?? "";
+  }
+
+  /**
+   * Every figure below is counted from the item data at render time, so none of it can
+   * drift from the rows underneath it. The two exceptions are labelled: tool and test
+   * totals come from `pnpm counts`, which a static page cannot run.
+   */
+  const SCOPE = {
+    total: allItems.length,
+    done: allItems.filter((i) => i.state === "done").length,
+    blocking: allItems.filter((i) => i.blocker),
+    additive: allItems.filter((i) => i.after && !i.afterLaunch),
+    postLaunch: allItems.filter((i) => i.afterLaunch),
+  };
+  SCOPE.blockingDays = SCOPE.blocking.filter((i) => i.days).reduce((s, i) => s + i.days, 0);
+  SCOPE.additiveDays = SCOPE.additive.filter((i) => i.days).reduce((s, i) => s + i.days, 0);
+
+  /**
+   * "Best in market" is not a judgement invented here — it is what this project's own
+   * plan already defines as finished. Every phase in `docs/roadmap.md` carries a
+   * "Done when" clause written against the competitors in the comparison table: the ten
+   * highest-volume queries each served best-in-class, 100+ indexable URLs, an extension,
+   * teams and SSO for the buyers who ask for them, and the procurement items. So the
+   * count is simply every item still open — nothing in the plan is there for decoration.
+   */
+  SCOPE.open = allItems.filter((i) => i.state !== "done");
+  SCOPE.openDays = SCOPE.open.filter((i) => i.days).reduce((s, i) => s + i.days, 0);
+
+  /**
+   * Pages Phase 3 still has to write, on the same basis the roadmap used — landings plus
+   * comparison pages plus one guide per tool, not counting 3.4 and 3.5. Derived, because
+   * "one guide per tool" moves with the tool count: typed as ~74 against 40 tools, it was
+   * already short by three the moment the catalogue reached 43.
+   */
+  const PAGES_LEFT =
+    40 - COUNTS.landings + (7 - COUNTS.compares) + (COUNTS.tools - COUNTS.guides);
+
+  // What the server actually grants, straight from the constants, so this page can never
+  // show a cap the product does not honour — which is the bug that prompted all of this.
+  document.getElementById("freeTier").textContent =
+    `${COUNTS.anonymousDaily}/day anon · ${COUNTS.freeAccountDaily}/day account`;
+
+  // The prose above quotes this count too, so it reads from the same figure rather than
+  // carrying a typed copy that goes stale the moment an item is added (process.md §8 —
+  // which this page had already broken once: the sentence said 21 while the tile said 20).
+  document.getElementById("marketCountInline").textContent = SCOPE.open.length;
+
+  // The launch section quotes the blocker count in two more places. Computed for the same
+  // reason: 4.1 closing on 30 Oct turned three hand-typed "five"s into three wrong numbers.
+  document.getElementById("blockerCountInline").textContent = SCOPE.blocking.length;
+  document.getElementById("blockerCountHeading").textContent = ` — ${SCOPE.blocking.length} left`;
+
+  document.getElementById("stats").innerHTML = `
+    <div class="stat"><span class="value mono">${SCOPE.done} / ${SCOPE.total}</span><span class="label">Items done</span></div>
+    <div class="stat stat--danger"><span class="value mono" style="color:var(--danger)">${SCOPE.blocking.length}</span><span class="label">Block the launch — ${SCOPE.blockingDays} days of build</span></div>
+    <div class="stat stat--market"><span class="value mono" style="color:var(--focus)">${SCOPE.open.length}</span><span class="label">items from market-leading — ${SCOPE.openDays} days of build</span></div>
+    <div class="stat"><span class="value mono date">${fmt(launchDate)}</span><span class="label">Launch-ready, blockers only</span></div>
+    <div class="stat"><span class="value mono date">${fmt(fullPlanDate)}</span><span class="label">If the whole roadmap ships first</span></div>
+    <div class="stat"><span class="value mono">${COUNTS.tools} · ${COUNTS.unit}/${COUNTS.browser}</span><span class="label">Tools · unit/browser tests — written by <span class="mono">pnpm counts</span></span></div>
+  `;
+
+  // Scope split: one bar, four segments, counted from the same data as the rows below.
+  const SEGMENTS = [
+    { key: "done", label: "Done", count: SCOPE.done, days: null, colour: "var(--accent)" },
+    { key: "blocking", label: "Blocks launch", count: SCOPE.blocking.length, days: SCOPE.blockingDays, colour: "var(--danger)" },
+    { key: "additive", label: "Additive after launch", count: SCOPE.additive.length, days: SCOPE.additiveDays, colour: "var(--warning)" },
+    { key: "post", label: "Explicitly post-launch", count: SCOPE.postLaunch.length, days: null, colour: "var(--muted)" },
+  ];
+  document.getElementById("scopeBar").innerHTML = SEGMENTS.filter((s) => s.count > 0)
+    .map((s) => `<span class="scope-seg" style="flex:${s.count}; background:${s.colour}" title="${s.label}: ${s.count}"></span>`)
+    .join("");
+  document.getElementById("scopeKey").innerHTML = SEGMENTS.map((s) => `
+    <div class="scope-row">
+      <span class="scope-dot" style="background:${s.colour}"></span>
+      <span class="scope-label">${s.label}</span>
+      <span class="scope-count mono">${s.count} item${s.count === 1 ? "" : "s"}${s.days ? ` · ${s.days} working days` : ""}</span>
+    </div>
+  `).join("");
+
+  const verdict = VERDICT();
+  document.getElementById("verdict").innerHTML = `
+    <h3>Are we late?</h3>
+    <p class="headline">${verdict.headline}</p>
+    ${verdict.paragraphs.map((text) => `<p>${text}</p>`).join("")}
+  `;
+
+  document.getElementById("timeline").innerHTML = TIMELINE.map((row) => `
+    <div class="tl-row"${row.gap ? ' data-gap="true"' : ""}>
+      <span class="tl-date">${row.date}</span>
+      <span class="tl-what">${row.what}</span>
+      <span class="tl-count">${row.count}</span>
+    </div>
+  `).join("");
+
+  const rail = document.getElementById("rail");
+  rail.style.setProperty("--phase-count", PHASES.length);
+  rail.innerHTML = PHASES.map(p => `
+    <a href="#phase-${p.num}">
+      <div class="rail-step" data-state="${p.state}">
+        <span class="num">PHASE ${p.num}</span>
+        <span class="name">${p.name}</span>
+      </div>
+    </a>
+  `).join("");
+
+  const phasesEl = document.getElementById("phases");
+  phasesEl.innerHTML = PHASES.map(p => `
+    <article class="phase" id="phase-${p.num}">
+      <div class="phase-head">
+        <h2><span class="phase-num">PHASE ${p.num}</span> ${p.name}</h2>
+        <span class="phase-effort">${phaseEffort(p)}</span>
+        ${pill(p.state)}
+      </div>
+      <p class="phase-summary">${p.summary}</p>
+      <div class="items">
+        ${p.items.map((i) => `
+          <div class="item">
+            <span class="item-num">${i.id}</span>
+            <span class="name">${i.name}${i.note ? ` <span style="color:var(--muted); font-size:0.82rem;">— ${i.note}</span>` : ""}</span>
+            ${pill(i.state)}
+            <span class="estimate">${rightColumn(i)}</span>
+          </div>
+        `).join("")}
+      </div>
+    </article>
+  `).join("");
+
+  /**
+   * The pricing architecture settled 30 October 2026, and item 4.9 put it in the code the
+   * same day. Kept here as data rather than prose so the tracker shows the ladder next to
+   * the item that implements it. The numbers themselves live in `src/lib/pricing.ts`, and
+   * `tests/unit/statedPrices.test.ts` fails if any shipped page states a different one.
+   */
+  const PRICING = [
+    { tier: "Free", price: "$0", adds: "37 tools, no size limit, 20/day anon · 60/day account, retention 5 min–24 h", beats: "nothing is cheaper than free" },
+    { tier: "Pro", price: "$24/yr · $4/mo", adds: "no daily cap, custom retention length", beats: "iLovePDF ~$35–48" },
+    { tier: "Pro, 10 years", price: "$120 once", adds: "Pro for a defined ten-year term", beats: "$1/month equivalent" },
+    { tier: "Practice", price: "$249/yr", adds: "the six professional tools, click-through DPA, trust page", beats: "SealedPDF $468" },
+    { tier: "Business", price: "$499/yr → $750", adds: "self-hosted & air-gapped, SSO, invoicing, audit log", beats: "Stirling-PDF $1,188 team" },
+  ];
+  document.getElementById("pricingTable").innerHTML = `
+    <table style="border-collapse:collapse; width:100%; font-size:0.86rem;">
+      <thead><tr>
+        ${["Tier", "Price", "What it adds", "Undercuts"].map((h) => `<th style="text-align:left; padding:0.55rem 0.8rem; border-bottom:1px solid var(--border); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); white-space:nowrap;">${h}</th>`).join("")}
+      </tr></thead>
+      <tbody>
+        ${PRICING.map((row, index) => `
+          <tr${index === 3 ? ' style="background:var(--accent-soft)"' : ""}>
+            <td style="padding:0.55rem 0.8rem; border-bottom:1px solid var(--border); font-weight:600; white-space:nowrap;">${row.tier}</td>
+            <td style="padding:0.55rem 0.8rem; border-bottom:1px solid var(--border); white-space:nowrap;" class="mono">${row.price}</td>
+            <td style="padding:0.55rem 0.8rem; border-bottom:1px solid var(--border); color:var(--muted);">${row.adds}</td>
+            <td style="padding:0.55rem 0.8rem; border-bottom:1px solid var(--border); color:var(--muted); white-space:nowrap;">${row.beats}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+
+  document.getElementById("ownerGrid").innerHTML = OWNER_PENDING.map(group => `
+    <div class="owner-card">
+      <h3>${group.title}</h3>
+      <ul>${group.items.map(i => `<li>${i}</li>`).join("")}</ul>
+    </div>
+  `).join("");
+
+  const LAUNCH_PATHS = [
+    {
+      label: "Staged launch — blockers only",
+      range: fmt(launchDate),
+      note: `Every tool live, policies reviewed, payments working. Guides, landings, locales and Business features follow afterwards, which the roadmap already allows for. Gated by ${blockerCritical ? blockerCritical.name.toLowerCase() : "the longest wait"}, not by code.`,
+    },
+    {
+      label: "Whole roadmap before going live",
+      range: fmt(fullPlanDate),
+      note: `${remainingDays} working days of build at ${PLAN.workingDaysPerWeek} days a week — mostly Phase 3's ~${PAGES_LEFT} pages of prose, which no tools-per-day figure predicts.`,
+    },
+  ];
+
+  document.getElementById("blockers").innerHTML = allItems
+    .filter((i) => i.blocker)
+    .sort((a, b) => dates.get(a.id) - dates.get(b.id))
+    .map((i) => `
+      <div class="tl-row">
+        <span class="tl-date" style="color:var(--danger)">${fmt(dates.get(i.id))}</span>
+        <span class="tl-what"><span class="mono" style="color:var(--muted)">${i.id}</span> ${i.name}${i.owner ? ` — <span>${i.owner}</span>` : ""}</span>
+        <span class="tl-count">${i.days ? `${i.days}d work` : `${i.lead}d wait`}</span>
+      </div>
+    `).join("");
+
+  document.getElementById("launchPaths").innerHTML = LAUNCH_PATHS.map(l => `
+    <div class="path">
+      <div class="path-label">${l.label}</div>
+      <div class="path-range mono">${l.range}</div>
+      <p>${l.note}</p>
+    </div>
+  `).join("");
+</script>
+</body>
+</html>

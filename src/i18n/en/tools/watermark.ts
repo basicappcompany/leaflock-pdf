@@ -1,0 +1,67 @@
+export default {
+  title: 'Add watermark',
+  metaTitle: 'Add a text or image watermark to a PDF, privately | LeafLock PDF',
+  metaDescription:
+    'Stamp text or a logo over your PDF pages. Set position, size, angle and transparency. Runs entirely in your browser.',
+  summary: 'Stamp text or a logo across your pages.',
+  howTo: [
+    'Choose a PDF.',
+    'Type your watermark text or pick an image, then style it.',
+    'Select Add watermark and download the result.',
+  ],
+  faq: [
+    {
+      q: 'Is it safe to watermark confidential PDFs here?',
+      a: 'Yes. The watermark is added in your browser, on your device, and the document is never uploaded.',
+    },
+    {
+      q: 'Can I use a logo instead of text?',
+      a: 'Yes. Choose Image and pick your logo. A PNG with a transparent background works best.',
+    },
+    {
+      q: 'Can I make the watermark faint or diagonal?',
+      a: 'Yes. Set the opacity and the angle, and place it once in the center or repeat it across the page.',
+    },
+    {
+      q: 'Should the watermark go over or under the content?',
+      a: 'Over is the default and always visible. Under puts it behind the text and images, which looks subtler but hides it behind scanned pages and solid backgrounds.',
+    },
+    {
+      q: 'Can I watermark only some pages?',
+      a: 'Yes. Choose Chosen pages and type the page numbers.',
+    },
+    {
+      q: 'Can someone remove the watermark?',
+      a: 'It’s drawn into the page content rather than added as a comment, but someone with PDF editing software could still take it out. Keep your original without the watermark.',
+    },
+  ],
+  previewLabel: 'Preview of page {number} with the watermark',
+  kindLabel: 'Watermark',
+  kinds: { text: 'Text', image: 'Image' },
+  textLabel: 'Watermark text',
+  defaultText: 'CONFIDENTIAL',
+  sizeLabel: 'Text size',
+  colorLabel: 'Color',
+  imageLabel: 'Image',
+  chooseImage: 'Choose an image',
+  changeImage: 'Change image',
+  imageHint: 'PNG with a transparent background works best.',
+  scaleLabel: 'Width: {percent}% of the page',
+  opacityLabel: 'Opacity: {percent}%',
+  angleLabel: 'Angle: {degrees}°',
+  placementLabel: 'Placement',
+  placements: { center: 'Once, in the center', tile: 'Repeated across the page' },
+  layerLabel: 'Layer',
+  layers: { over: 'Over the content', under: 'Under the content' },
+  underHint: 'Under the content hides the watermark behind scanned pages and solid backgrounds.',
+  pagesLabel: 'Pages',
+  pagesMode: { all: 'All pages', custom: 'Chosen pages' },
+  needText: 'Type the watermark text.',
+  needImage: 'Choose an image for the watermark.',
+  action: 'Add watermark',
+  outputSuffix: 'watermarked',
+  errors: {
+    'empty-text': 'Type the watermark text.',
+    'bad-image': 'That image couldn’t be read. Try a PNG or JPG file.',
+  },
+};

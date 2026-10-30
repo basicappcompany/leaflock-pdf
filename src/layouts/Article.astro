@@ -1,0 +1,97 @@
+---
+import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
+import Base from './Base.astro';
+import { format, getMessages } from '../i18n';
+import { article, breadcrumbs } from '../lib/seo';
+import { tools, type ToolId } from '../tools/registry';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Page path without locale prefix, e.g. "guides/redact-pdf-properly". */
+  path: string;
+  /** Breadcrumb trail between Home and this page. */
+  trail?: { name: string; path: string }[];
+  published?: Date | undefined;
+  updated?: Date | undefined;
+  /** Mark as article (guides, comparisons) rather than a plain page. */
+  isArticle?: boolean;
+  awaitingLegalReview?: boolean;
+  relatedTools?: readonly ToolId[];
+  /** Shown before the related-tools list; e.g. sources for comparisons. */
+  extraJsonLd?: Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  path,
+  trail = [],
+  published,
+  updated,
+  isArticle = false,
+  awaitingLegalReview = false,
+  relatedTools = [],
+  extraJsonLd = [],
+} = Astro.props;
+const locale = Astro.currentLocale ?? 'en';
+const messages = getMessages(locale);
+const common = messages.common;
+const site = Astro.site!;
+const url = getAbsoluteLocaleUrl(locale, path);
+const dateFormat = new Intl.DateTimeFormat(locale, { dateStyle: 'long' });
+
+const crumbs = [{ name: common.site.name, path: '' }, ...trail, { name: title, path }];
+const jsonLd = [
+  breadcrumbs(crumbs.map((crumb) => ({ name: crumb.name, url: getAbsoluteLocaleUrl(locale, crumb.path) }))),
+  ...(isArticle && published ? [article({ headline: title, description, url, locale, published, updated, site })] : []),
+  ...extraJsonLd,
+];
+const related = tools.filter((tool) => relatedTools.includes(tool.id));
+---
+
+<Base title={`${title} | ${common.site.name}`} description={description} path={path} ogType={isArticle ? 'article' : 'website'} jsonLd={jsonLd}>
+  <nav class="breadcrumb" aria-label={common.nav.breadcrumb}>
+    {
+      crumbs.slice(0, -1).map((crumb) => (
+        <>
+          <a href={getRelativeLocaleUrl(locale, crumb.path)}>{crumb.name}</a>
+          <span aria-hidden="true">/</span>
+        </>
+      ))
+    }
+    <span aria-current="page">{title}</span>
+  </nav>
+  <article class="prose">
+    <h1>{title}</h1>
+    {
+      (published || updated) && (
+        <p class="muted article-dates">
+          {published && <time datetime={published.toISOString().slice(0, 10)}>{format(common.article.published, { date: dateFormat.format(published) })}</time>}
+          {published && updated && ' · '}
+          {updated && <time datetime={updated.toISOString().slice(0, 10)}>{format(common.article.updated, { date: dateFormat.format(updated) })}</time>}
+        </p>
+      )
+    }
+    {awaitingLegalReview && <p class="draft-notice" role="note">{common.article.legalDraft}</p>}
+    <slot />
+  </article>
+  <slot name="after" />
+  {
+    related.length > 0 && (
+      <section class="related">
+        <h2>{common.article.relatedTools}</h2>
+        <ul class="tool-grid tool-grid--small">
+          {related.map((tool) => (
+            <li>
+              <a href={getRelativeLocaleUrl(locale, tool.slug)}>
+                <strong>{messages.tools[tool.id].title}</strong>
+                <span>{messages.tools[tool.id].summary}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Base>

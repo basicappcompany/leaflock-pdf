@@ -1,0 +1,48 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Article from '../layouts/Article.astro';
+import { NetworkProof } from '../components/verify/NetworkProof';
+import { getMessages } from '../i18n';
+
+const locale = Astro.currentLocale ?? 'en';
+const t = getMessages(locale).verify;
+---
+
+<Article title={t.title} description={t.metaDescription} path="verify">
+  <p class="lead">{t.intro}</p>
+  <p>{t.lead}</p>
+
+  {/*
+    client:only rather than client:load: every panel reports something only a browser can
+    know — its own request record, a policy violation, the network state — so there is
+    nothing true to render on the server. A server-rendered "0 requests" would be the one
+    false statement on a page about not taking our word for it.
+  */}
+  <NetworkProof client:only="react" t={t} />
+
+  <section>
+    <h2>{t.honest.heading}</h2>
+    <p>{t.honest.intro}</p>
+    <ul>
+      {t.honest.points.map((point) => <li>{point}</li>)}
+    </ul>
+    <p>
+      <a href={getRelativeLocaleUrl(locale, 'claims')}>{t.honest.claims}</a>
+    </p>
+  </section>
+
+  <section>
+    <h2>{t.next.heading}</h2>
+    <p>{t.next.intro}</p>
+    <ul>
+      <li>
+        <a href={getRelativeLocaleUrl(locale, 'guides/how-to-check-if-a-pdf-site-uploads-your-files')}>
+          {t.next.guide}
+        </a>
+      </li>
+      <li>
+        <a href={getRelativeLocaleUrl(locale, 'merge-pdf')}>{t.next.tool}</a>
+      </li>
+    </ul>
+  </section>
+</Article>

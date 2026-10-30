@@ -1,0 +1,45 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import DashboardApp from '../components/dashboard/DashboardApp';
+import Base from '../layouts/Base.astro';
+import { getMessages } from '../i18n';
+import { toolById, tools, type ToolId } from '../tools/registry';
+
+const locale = Astro.currentLocale ?? 'en';
+const messages = getMessages(locale);
+const t = messages.common.dashboard;
+
+// Titles and URLs for every tool, so the panel can name a recent run without reaching
+// for the registry or the slug rules itself.
+const toolLinks = Object.fromEntries(
+  tools.map((tool) => [
+    tool.id,
+    { title: messages.tools[tool.id].title, href: getRelativeLocaleUrl(locale, tool.slug) },
+  ]),
+) as Record<ToolId, { title: string; href: string }>;
+
+const links = {
+  account: getRelativeLocaleUrl(locale, 'account'),
+  pricing: getRelativeLocaleUrl(locale, 'pricing'),
+  batch: getRelativeLocaleUrl(locale, toolById('batch').slug),
+  login: getRelativeLocaleUrl(locale, 'login'),
+  tools: getRelativeLocaleUrl(locale, ''),
+};
+
+// The most-reached-for tools, so the page can be used without going via the home grid.
+// Curated rather than taken in registry order: the two image conversions are among the
+// most searched for, and sit a long way down that list.
+const quickTools = ['merge', 'split', 'compress', 'imagesToPdf', 'pdfToImages', 'sign'] as const;
+---
+
+<!-- noindex: the page is specific to one signed-in person and has nothing for a crawler. -->
+<Base title={t.metaTitle} description={t.metaDescription} path="dashboard" noindex>
+  <DashboardApp
+    client:only="react"
+    t={t}
+    locale={locale}
+    toolLinks={toolLinks}
+    links={links}
+    quickTools={quickTools}
+  />
+</Base>

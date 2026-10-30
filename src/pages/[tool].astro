@@ -1,0 +1,160 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
+import ToolApp from '../components/ToolApp';
+import Base from '../layouts/Base.astro';
+import { getMessages, type ToolMessagesBase } from '../i18n';
+import { guidesFor, slugOf } from '../lib/content';
+import { prices, proToolsGated } from '../lib/pricing';
+import { breadcrumbs, faqPage, howTo, webApplication } from '../lib/seo';
+import { landings, tools, type LandingId, type ToolId } from '../tools/registry';
+
+export const getStaticPaths = (() => [
+  ...tools.map((tool) => ({ params: { tool: tool.slug }, props: { toolId: tool.id as ToolId } })),
+  ...landings.map((landing) => ({
+    params: { tool: landing.slug },
+    props: { toolId: landing.toolId as ToolId, landingId: landing.id as LandingId },
+  })),
+]) satisfies GetStaticPaths;
+
+const { toolId, landingId } = Astro.props as { toolId: ToolId; landingId?: LandingId };
+const locale = Astro.currentLocale ?? 'en';
+const messages = getMessages(locale);
+const common = messages.common;
+/** UI strings for the tool itself. */
+const t = messages.tools[toolId];
+const landing = landingId ? landings.find((item) => item.id === landingId) : undefined;
+/** Page text: the landing page's own wording, or the tool's. */
+const page: ToolMessagesBase = landingId ? messages.landings[landingId] : t;
+const faq = page.faq ?? [];
+const tool = tools.find((item) => item.id === toolId)!;
+const slug = landing?.slug ?? tool.slug;
+const preset = landing && 'preset' in landing ? landing.preset : undefined;
+const related = tools.filter((item) => item.category === tool.category && (landing ? true : item.id !== tool.id));
+const variants = landing ? [] : landings.filter((item) => item.toolId === toolId);
+const guides = (await guidesFor(locale)).filter((guide) => (guide.data.tools as string[]).includes(toolId));
+const site = Astro.site!;
+const url = getAbsoluteLocaleUrl(locale, slug);
+
+const jsonLd = [
+  webApplication({
+    name: page.title,
+    description: page.metaDescription,
+    url,
+    locale,
+    site,
+    tier: tool.tier,
+    gated: proToolsGated,
+    tierPrice: tool.tier === 'practice' ? prices.practiceYearly : prices.proMonthly,
+  }),
+  // The same steps the page shows below, so the markup can never describe a different
+  // procedure from the one a reader follows.
+  howTo({ name: page.title, description: page.summary, url, steps: page.howTo }),
+  breadcrumbs([
+    { name: common.site.name, url: getAbsoluteLocaleUrl(locale, '') },
+    { name: common.categories[tool.category], url: getAbsoluteLocaleUrl(locale, `tools/${tool.category}`) },
+    { name: page.title, url },
+  ]),
+  ...(faq.length > 0 ? [faqPage(faq)] : []),
+];
+---
+
+<Base title={page.metaTitle} description={page.metaDescription} path={slug} ogImage={slug} jsonLd={jsonLd}>
+  <nav class="breadcrumb" aria-label={common.nav.breadcrumb}>
+    <a href={getRelativeLocaleUrl(locale, '')}>{common.site.allTools}</a>
+    <span aria-hidden="true">/</span>
+    <a href={getRelativeLocaleUrl(locale, `tools/${tool.category}`)}>{common.categories[tool.category]}</a>
+  </nav>
+  <h1>
+    {page.title}
+    {tool.tier !== 'free' && <span class="badge-pro">{common.toolPage.tiers[tool.tier].label}</span>}
+  </h1>
+  <p class="lead">{page.summary}</p>
+  {
+    tool.tier !== 'free' && (
+      <p class="notice">
+        {proToolsGated ? common.toolPage.tiers[tool.tier].noteGated : common.toolPage.tiers[tool.tier].note}
+      </p>
+    )
+  }
+
+  <div class="tool-mount">
+    <ToolApp client:only="react" toolId={toolId} tier={tool.tier} locale={locale} common={common} t={t} preset={preset} />
+  </div>
+
+  <section class="tool-info">
+    <div>
+      <h2>{common.toolPage.howItWorks}</h2>
+      <ol>{page.howTo.map((step) => <li>{step}</li>)}</ol>
+    </div>
+    <div>
+      <h2>{common.toolPage.privacyHeading}</h2>
+      <p>{common.toolPage.privacyBody}</p>
+      <p><a href={getRelativeLocaleUrl(locale, 'security')}>{common.pageLinks.security}</a></p>
+    </div>
+  </section>
+
+  {
+    variants.length > 0 && (
+      <p class="variants">
+        {common.toolPage.variants}{' '}
+        {variants.map((item, index) => (
+          <>
+            {index > 0 && ' · '}
+            <a href={getRelativeLocaleUrl(locale, item.slug)}>{messages.landings[item.id].title}</a>
+          </>
+        ))}
+      </p>
+    )
+  }
+
+  {
+    faq.length > 0 && (
+      <section class="faq">
+        <h2>{common.toolFaq.heading}</h2>
+        {faq.map(({ q, a }) => (
+          <details>
+            <summary>{q}</summary>
+            <p>{a}</p>
+          </details>
+        ))}
+      </section>
+    )
+  }
+
+  {
+    guides.length > 0 && (
+      <section>
+        <h2>{common.article.relatedGuides}</h2>
+        <ul class="card-list">
+          {guides.map((guide) => (
+            <li>
+              <a href={getRelativeLocaleUrl(locale, `guides/${slugOf(guide)}`)}>
+                <strong>{guide.data.title}</strong>
+                <span>{guide.data.description}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    related.length > 0 && (
+      <section>
+        <h2>{common.toolPage.related}</h2>
+        <ul class="tool-grid tool-grid--small">
+          {related.map((item) => (
+            <li>
+              <a href={getRelativeLocaleUrl(locale, item.slug)}>
+                <strong>{messages.tools[item.id].title}</strong>
+                <span>{messages.tools[item.id].summary}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Base>

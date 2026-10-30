@@ -1,0 +1,9 @@
+registry: https://registry.npmjs.org/
+allowBuilds:
+  # Only prints a donation message.
+  tesseract.js: false
+  # Needed by wrangler: downloads esbuild's/the Cloudflare runtime's native binary.
+  esbuild: true
+  workerd: true
+minimumReleaseAgeExclude:
+  - '@cloudflare/workers-types@5.20261022.1'

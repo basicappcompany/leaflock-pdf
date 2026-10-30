@@ -1,0 +1,33 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Base from '../layouts/Base.astro';
+import { getMessages } from '../i18n';
+import { categories, tools } from '../tools/registry';
+
+const locale = Astro.currentLocale ?? 'en';
+const messages = getMessages(locale);
+const common = messages.common;
+---
+
+<Base title={common.notFound.metaTitle} description={common.notFound.body} path="404" noindex>
+  <h1>{common.notFound.title}</h1>
+  <p class="lead">{common.notFound.body}</p>
+  {
+    categories.map((category) => (
+      <section>
+        <h2>{common.categories[category]}</h2>
+        <ul class="tool-grid tool-grid--small">
+          {tools
+            .filter((tool) => tool.category === category)
+            .map((tool) => (
+              <li>
+                <a href={getRelativeLocaleUrl(locale, tool.slug)}>
+                  <strong>{messages.tools[tool.id].title}</strong>
+                </a>
+              </li>
+            ))}
+        </ul>
+      </section>
+    ))
+  }
+</Base>

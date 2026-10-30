@@ -1,0 +1,50 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render, type CollectionEntry } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Article from '../../layouts/Article.astro';
+import { getMessages } from '../../i18n';
+import { guidesFor, slugOf } from '../../lib/content';
+import type { ToolId } from '../../tools/registry';
+
+export const getStaticPaths = (async () => {
+  const guides = await guidesFor('en');
+  return guides.map((guide) => ({ params: { slug: slugOf(guide) }, props: { guide } }));
+}) satisfies GetStaticPaths;
+
+const { guide } = Astro.props as { guide: CollectionEntry<'guides'> };
+const locale = Astro.currentLocale ?? 'en';
+const common = getMessages(locale).common;
+const { Content } = await render(guide);
+const others = (await guidesFor(locale)).filter((other) => other.id !== guide.id).slice(0, 4);
+---
+
+<Article
+  title={guide.data.title}
+  description={guide.data.description}
+  path={`guides/${slugOf(guide)}`}
+  trail={[{ name: common.guidesIndex.title, path: 'guides' }]}
+  published={guide.data.published}
+  updated={guide.data.updated}
+  isArticle
+  relatedTools={guide.data.tools as ToolId[]}
+>
+  <Content />
+  {
+    others.length > 0 && (
+      <section slot="after" class="related">
+        <h2>{common.article.moreGuides}</h2>
+        <ul class="card-list">
+          {others.map((other) => (
+            <li>
+              <a href={getRelativeLocaleUrl(locale, `guides/${slugOf(other)}`)}>
+                <strong>{other.data.title}</strong>
+                <span>{other.data.description}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Article>

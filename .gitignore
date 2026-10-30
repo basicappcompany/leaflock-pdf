@@ -1,0 +1,21 @@
+node_modules/
+dist/
+dist-*/
+.astro/
+test-results/
+test-results-*/
+playwright-report/
+*.log
+.env
+.env.*
+!.env.example
+.dev.vars
+.wrangler/
+.DS_Store
+
+# Machine-specific preview config
+.claude/launch.json
+.idea/
+
+# Copied from node_modules at build time (integrations/vendor-assets.mjs)
+public/vendor/

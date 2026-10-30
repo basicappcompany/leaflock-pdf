@@ -1,0 +1,116 @@
+---
+import '../styles/global.css';
+import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
+import AuthNavLink from '../components/auth/AuthNavLink';
+import SiteFooter from '../components/SiteFooter.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import ToolsMenu from '../components/ToolsMenu.astro';
+import { getMessages, locales } from '../i18n';
+import { graph, organization, siteName, website } from '../lib/seo';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path of this page without the locale prefix, e.g. "merge-pdf". Empty for the home page. */
+  path: string;
+  /** Share image under /og/, without extension; defaults to the site-wide one. */
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  /** Extra schema.org items for this page; Organization and WebSite are always included. */
+  jsonLd?: Record<string, unknown>[];
+  /** Keep the page out of search results (e.g. the 404 page). */
+  noindex?: boolean;
+}
+
+const { title, description, path, ogImage = 'default', ogType = 'website', jsonLd = [], noindex = false } = Astro.props;
+const locale = Astro.currentLocale ?? 'en';
+const t = getMessages(locale).common;
+const site = Astro.site!;
+const canonical = getAbsoluteLocaleUrl(locale, path);
+const image = new URL(`/og/${ogImage}.png`, site).href;
+const structuredData = graph([organization(site), website(site, locale), ...jsonLd]);
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {!noindex && <link rel="canonical" href={canonical} />}
+    {
+      !noindex &&
+        Object.keys(locales).map((code) => <link rel="alternate" hreflang={code} href={getAbsoluteLocaleUrl(code, path)} />)
+    }
+    {!noindex && <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl('en', path)} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <meta name="theme-color" content="#2a7548" />
+
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={locale} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={structuredData} />
+    <script is:inline>
+      // Apply a saved light/dark choice before first paint, so the page doesn't flash.
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">{t.nav.skipToContent}</a>
+    <header class="site-header">
+      <a href={getRelativeLocaleUrl(locale, '')} class="brand">
+        <img src="/favicon.svg" alt="" width="24" height="24" />
+        {t.site.name}
+      </a>
+      <nav class="site-nav" aria-label={t.nav.label}>
+        <ToolsMenu />
+        <a class="nav-link" href={getRelativeLocaleUrl(locale, 'guides')}>{t.nav.guides}</a>
+        <a class="nav-link" href={getRelativeLocaleUrl(locale, 'security')}>{t.nav.security}</a>
+        <a class="nav-link" href={getRelativeLocaleUrl(locale, 'pricing')}>{t.nav.pricing}</a>
+        <a class="nav-link" href={getRelativeLocaleUrl(locale, 'business')}>{t.nav.business}</a>
+        <AuthNavLink
+          client:only="react"
+          loginLabel={t.nav.login}
+          loginHref={getRelativeLocaleUrl(locale, 'login')}
+          accountLabel={t.nav.dashboard}
+          accountHref={getRelativeLocaleUrl(locale, 'dashboard')}
+        />
+      </nav>
+      <ThemeToggle t={t.theme} />
+    </header>
+    <p class="privacy-strip">{t.site.privacyNote}</p>
+    <main id="content">
+      <slot />
+    </main>
+    <SiteFooter />
+    <script>
+      // Offline and installable (public/sw.js, filled in by integrations/service-worker.mjs).
+      // Deliberately not `is:inline`: Astro bundles this into a file of its own, which the
+      // CSP already allows as 'self'. An inline script here would need a hash, and only the
+      // theme script in <head> gets one — that one has to be inline to beat first paint.
+      // Registered after load so it never competes with the page's own requests, and
+      // skipped silently where service workers don't exist or are blocked.
+      if ('serviceWorker' in navigator) {
+        addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+name: CI
+
+# Runs on every push and PR. No deploy step here: Cloudflare Pages builds and deploys
+# on its own git integration. This workflow exists purely as the gate — type check,
+# unit tests, and the browser suite, which since Phase 1 includes the performance
+# budget (tests/e2e/performance.spec.ts) and the offline/CSP checks (offline.spec.ts,
+# watchPage().assertClean() throughout). A PR that fails any of these should not merge.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A newer push on the same branch cancels an in-flight run rather than queuing behind it.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Reads the exact version from package.json's "packageManager" field and puts it
+      # on PATH. Has to come before setup-node: its pnpm cache option shells out to
+      # `pnpm store path`, which fails if pnpm isn't already installed yet.
+      - uses: pnpm/action-setup@v4
+
+      # Matches the portable toolchain in ~/tools/leaflock-env.sh: package.json requires
+      # >=22.22.0, and the owner develops against Node 24.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Fails in seconds on a type error, before Playwright's browser install and the
+      # several minutes the full e2e suite takes — astro build also runs this, but
+      # waiting for it to fail there is slower feedback for the common case.
+      - run: pnpm check
+
+      # Sub-second, and it is the only thing that can catch a tracker edit that left
+      # docs/status.html inconsistent — a duplicate item id, an open item with no
+      # estimate, a phase state that disagrees with its own items. See process.md §9.
+      - run: pnpm tracker
+
+      - run: pnpm test
+
+      # Chromium only: playwright.config.ts uses Playwright's bundled Chromium in CI
+      # (local runs drive the Edge already on the machine instead, so no download there).
+      - run: pnpm exec playwright install --with-deps chromium
+
+      # Builds and serves the production output itself (playwright.config.ts's
+      # webServer); this is deliberate — the CSP is only emitted in that build, which is
+      # exactly what offline.spec.ts and every watchPage().assertClean() call verifies.
+      - run: pnpm test:e2e
+
+      # playwright.config.ts sets `trace: 'retain-on-failure'`, which lands traces here
+      # per failed test — `reporter: 'github'` in CI annotates the PR directly but keeps
+      # no HTML report, so this is the only way to get a trace back off the runner.
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 14

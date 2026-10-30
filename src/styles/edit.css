@@ -1,0 +1,246 @@
+/* Shared by the Edit and sign tools (overlay editor, signature pad, previews). Colours come from global.css. */
+
+.overlay-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.overlay-surface {
+  position: absolute;
+  inset: 0;
+}
+
+.overlay-surface.is-drawing {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.overlay-surface.is-placing {
+  cursor: copy;
+}
+
+.overlay-item {
+  position: absolute;
+  outline: 1px dashed transparent;
+  cursor: move;
+  touch-action: none;
+}
+
+.overlay-item:hover {
+  outline-color: var(--color-focus);
+}
+
+.overlay-item.is-selected {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.overlay-item:focus-visible {
+  outline: 3px solid var(--color-focus);
+}
+
+.overlay-item__handle {
+  position: absolute;
+  right: -7px;
+  bottom: -7px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--color-focus);
+  cursor: nwse-resize;
+}
+
+.overlay-item__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.overlay-item__text {
+  /* Matches the PDF output: text starts at the box's top-left, 1.2 line height. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  line-height: 1.2;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.overlay-item--highlight .overlay-item__fill {
+  mix-blend-mode: multiply;
+  opacity: 0.4;
+}
+
+.overlay-item__fill {
+  width: 100%;
+  height: 100%;
+}
+
+.overlay-item--whiteout .overlay-item__fill {
+  background: #fff;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.15);
+}
+
+.overlay-item--redaction .overlay-item__fill {
+  background: repeating-linear-gradient(-45deg, #000 0 8px, #222 8px 16px);
+  opacity: 0.85;
+}
+
+.overlay-draft {
+  position: absolute;
+  border: 2px dashed var(--color-focus);
+  background: rgb(29 111 216 / 0.12);
+  pointer-events: none;
+}
+
+/* Live previews (page numbers, watermark) drawn over a PagePreview. */
+.stamp-preview {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.stamp-preview__mark {
+  position: absolute;
+  font-family: Helvetica, Arial, sans-serif;
+  line-height: 1.2;
+  white-space: pre;
+  transform-origin: center;
+}
+
+.stamp-preview__image {
+  position: absolute;
+  transform-origin: center;
+}
+
+/* Signature creation. */
+.signature-pad {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  /* Always white: the signature is drawn as it will look on paper. */
+  background: #fff;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.signature-pad canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.signature-pad__line {
+  position: absolute;
+  right: 8%;
+  bottom: 22%;
+  left: 8%;
+  border-bottom: 1px solid #c8c8c8;
+  pointer-events: none;
+}
+
+.signature-styles {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.signature-style {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: #fff;
+  color: #111;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.signature-style.is-selected {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+.signature-style input {
+  accent-color: var(--color-accent);
+}
+
+.signature-preview {
+  display: grid;
+  place-items: center;
+  min-height: 5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: #fff;
+}
+
+.signature-preview img {
+  max-width: 100%;
+  max-height: 6rem;
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.swatch {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.swatch[aria-pressed='true'] {
+  border-color: var(--color-text);
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
+}
+
+.form-fields {
+  display: grid;
+  gap: var(--space);
+}
+
+.form-fields .field__name {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.radio-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.redact-explainer ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.redact-explainer li + li {
+  margin-top: 0.3rem;
+}
+
+.panel__heading {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}

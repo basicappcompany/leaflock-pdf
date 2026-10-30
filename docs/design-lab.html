@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en" data-design="1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LeafLock PDF — design lab</title>
+    <style>
+      /* ============================================================
+         DESIGN LAB — not part of the site build.
+         Pick a design by number in the bar at the top. The demo
+         content below is identical in every one, so the only thing
+         changing is the design itself.
+         ============================================================ */
+
+      *,
+      *::before,
+      *::after { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: #0f1115;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+
+      /* ---------- the chooser ---------- */
+      .lab {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        padding: 14px 18px 12px;
+        background: #0f1115;
+        border-bottom: 1px solid #262b33;
+      }
+      .lab__title {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 10px;
+        margin: 0 0 10px;
+        color: #e7ecf2;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .lab__title span { color: #7f8b9c; font-weight: 400; }
+      .lab__current { color: #6ee7a0; }
+      .lab__list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .lab__btn {
+        padding: 6px 10px;
+        border: 1px solid #2d333d;
+        border-radius: 7px;
+        background: #171b21;
+        color: #aab6c6;
+        font: inherit;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .lab__btn:hover { border-color: #46505e; color: #e7ecf2; }
+      .lab__btn[aria-pressed="true"] {
+        border-color: #6ee7a0;
+        background: #15291e;
+        color: #6ee7a0;
+        font-weight: 600;
+      }
+      .lab__btn b { font-weight: 700; opacity: 0.65; margin-right: 5px; }
+
+      .stage { padding: 26px 18px 60px; }
+
+      /* ============================================================
+         DEMO — one markup, themed by the variables below.
+         ============================================================ */
+      .demo {
+        --bg: #fff;
+        --surface: #fff;
+        --surface-2: #f4f6f4;
+        --fg: #161c18;
+        --muted: #5d6a62;
+        --accent: #2a7548;
+        --accent-fg: #fff;
+        --accent-soft: #e3f1e8;
+        --border: #dce2dd;
+        --radius: 12px;
+        --radius-sm: 8px;
+        --shadow: 0 1px 3px rgb(0 0 0 / 0.07);
+        --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        --font-head: var(--font);
+        --head-weight: 700;
+        --head-size: 40px;
+        --head-spacing: -0.02em;
+        --body-size: 15px;
+        --card-pad: 20px;
+        --grid-min: 210px;
+        --eyebrow-display: block;
+
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 0 36px;
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--font);
+        font-size: var(--body-size);
+        line-height: 1.55;
+      }
+
+      .demo__nav {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        padding: 16px 30px;
+        border-bottom: 1px solid var(--border);
+      }
+      .demo__brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-head);
+        font-weight: 700;
+        letter-spacing: var(--head-spacing);
+      }
+      .demo__brand svg { width: 22px; height: 22px; color: var(--accent); }
+      .demo__links { display: flex; gap: 18px; margin-left: auto; color: var(--muted); font-size: 14px; }
+      .demo__links span:first-child { color: var(--fg); font-weight: 600; }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border: 1px solid var(--accent);
+        border-radius: var(--radius-sm);
+        background: var(--accent);
+        color: var(--accent-fg);
+        font: inherit;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .btn--ghost {
+        border-color: var(--border);
+        background: transparent;
+        color: var(--fg);
+      }
+      .btn--sm { padding: 7px 13px; font-size: 13px; }
+
+      .demo__hero { padding: 46px 30px 10px; }
+      .eyebrow {
+        display: var(--eyebrow-display);
+        margin-bottom: 12px;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .demo__hero h1 {
+        max-width: 17ch;
+        margin: 0 0 14px;
+        font-family: var(--font-head);
+        font-size: var(--head-size);
+        font-weight: var(--head-weight);
+        letter-spacing: var(--head-spacing);
+        line-height: 1.1;
+      }
+      .demo__hero p {
+        max-width: 54ch;
+        margin: 0 0 22px;
+        color: var(--muted);
+        font-size: calc(var(--body-size) + 2px);
+      }
+      .demo__cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+      .demo__trust {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-top: 26px;
+        padding-top: 18px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .demo__trust b { color: var(--fg); }
+
+      .demo__section { padding: 34px 30px 0; }
+      .demo__section h2 {
+        margin: 0 0 16px;
+        font-family: var(--font-head);
+        font-size: 19px;
+        font-weight: var(--head-weight);
+        letter-spacing: var(--head-spacing);
+      }
+
+      .tools {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(var(--grid-min), 1fr));
+        gap: 14px;
+      }
+      .tool {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        padding: var(--card-pad);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+      .tool__icon {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-sm);
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+      .tool__icon svg { width: 20px; height: 20px; }
+      .tool__name { font-weight: 650; }
+      .tool__desc { color: var(--muted); font-size: 13.5px; line-height: 1.45; }
+      .tag {
+        display: inline-block;
+        margin-left: 7px;
+        padding: 1px 7px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        vertical-align: middle;
+      }
+
+      .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      .plan {
+        padding: var(--card-pad);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+      }
+      .plan--best { border-color: var(--accent); }
+      .plan__name { color: var(--muted); font-size: 13px; }
+      .plan__price { font-family: var(--font-head); font-size: 26px; font-weight: var(--head-weight); }
+      .plan__price small { color: var(--muted); font-size: 13px; font-weight: 400; }
+      .plan ul { margin: 10px 0 14px; padding-left: 17px; color: var(--muted); font-size: 13px; }
+
+      .demo__foot {
+        margin-top: 34px;
+        padding: 18px 30px 0;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+
+      @media (max-width: 720px) {
+        .demo__links { display: none; }
+        .plans { grid-template-columns: 1fr; }
+        .demo { --head-size: 30px; }
+      }
+
+      /* ============================================================
+         1 — NORDIC CALM
+         ============================================================ */
+      [data-design="1"] .demo {
+        --bg: #fbfcfb; --surface: #fff; --fg: #1d2420; --muted: #67736c;
+        --accent: #3f7d5e; --accent-soft: #e8f1ec; --border: #e2e8e4;
+        --radius: 14px; --head-size: 42px; --head-weight: 600;
+        --shadow: 0 1px 2px rgb(20 40 30 / 0.05);
+      }
+
+      /* ============================================================
+         2 — EDITORIAL SERIF
+         ============================================================ */
+      [data-design="2"] .demo {
+        --bg: #fffdf9; --surface: #fffdf9; --fg: #1a1714; --muted: #6b6257;
+        --accent: #8a3a1f; --accent-soft: #f6ebe4; --border: #e6ddd1;
+        --font-head: Georgia, "Times New Roman", serif;
+        --head-size: 46px; --head-weight: 400; --head-spacing: -0.01em;
+        --radius: 4px; --radius-sm: 3px; --shadow: none;
+      }
+      [data-design="2"] .demo__hero h1 { font-style: italic; }
+      [data-design="2"] .tool { border-width: 0 0 1px; border-radius: 0; }
+
+      /* ============================================================
+         3 — SWISS GRID
+         ============================================================ */
+      [data-design="3"] .demo {
+        --bg: #fff; --surface: #fff; --fg: #000; --muted: #6b6b6b;
+        --accent: #d8232a; --accent-soft: #fdecec; --border: #000;
+        --radius: 0; --radius-sm: 0; --shadow: none;
+        --head-size: 48px; --head-weight: 700; --head-spacing: -0.035em;
+        --font-head: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      [data-design="3"] .tool { border-width: 2px 0 0; padding-left: 0; padding-right: 0; }
+      [data-design="3"] .demo__nav { border-bottom-width: 2px; }
+      [data-design="3"] .tool__icon { background: transparent; border: 1px solid var(--border); }
+
+      /* ============================================================
+         4 — CORPORATE TRUST
+         ============================================================ */
+      [data-design="4"] .demo {
+        --bg: #f7f9fc; --surface: #fff; --fg: #10203a; --muted: #5a6b84;
+        --accent: #14477d; --accent-fg: #fff; --accent-soft: #e4ecf6; --border: #d8e1ed;
+        --radius: 6px; --radius-sm: 5px; --head-size: 38px; --head-weight: 700;
+        --shadow: 0 1px 2px rgb(16 32 58 / 0.08);
+        --card-pad: 18px;
+      }
+
+      /* ============================================================
+         5 — DARK PRO
+         ============================================================ */
+      [data-design="5"] .demo {
+        --bg: #0f1216; --surface: #161b21; --surface-2: #1c222a; --fg: #e8eef5;
+        --muted: #93a1b2; --accent: #4ade80; --accent-fg: #06130c;
+        --accent-soft: #15301f; --border: #242c36;
+        --radius: 12px; --head-size: 42px;
+        --shadow: 0 1px 3px rgb(0 0 0 / 0.5);
+      }
+
+      /* ============================================================
+         6 — WARM PAPER
+         ============================================================ */
+      [data-design="6"] .demo {
+        --bg: #f5f0e6; --surface: #fbf7ef; --fg: #2b2620; --muted: #6f6557;
+        --accent: #9a6b2f; --accent-soft: #efe4d0; --border: #ddd2bf;
+        --radius: 10px; --head-size: 40px; --head-weight: 600;
+        --shadow: 0 1px 0 rgb(120 100 70 / 0.08);
+      }
+
+      /* ============================================================
+         7 — BRUTALIST MONO
+         ============================================================ */
+      [data-design="7"] .demo {
+        --bg: #f2f2ec; --surface: #fff; --fg: #0b0b0b; --muted: #4a4a4a;
+        --accent: #0b0b0b; --accent-fg: #f2f2ec; --accent-soft: #e4e4dc; --border: #0b0b0b;
+        --radius: 0; --radius-sm: 0; --shadow: 5px 5px 0 #0b0b0b;
+        --font: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        --head-size: 38px; --head-spacing: -0.04em;
+      }
+      [data-design="7"] .tool { border-width: 2px; }
+      [data-design="7"] .btn { box-shadow: 4px 4px 0 var(--border); border-width: 2px; }
+
+      /* ============================================================
+         8 — GLASS FROST
+         ============================================================ */
+      [data-design="8"] .demo {
+        --bg: linear-gradient(140deg, #e8f0ff 0%, #f3e9ff 45%, #e6fbf4 100%);
+        --surface: rgb(255 255 255 / 0.62); --fg: #17203a; --muted: #5a6587;
+        --accent: #5b5bd6; --accent-soft: rgb(91 91 214 / 0.12); --border: rgb(255 255 255 / 0.85);
+        --radius: 18px; --head-size: 42px;
+        --shadow: 0 8px 28px rgb(70 80 140 / 0.14);
+      }
+      [data-design="8"] .tool,
+      [data-design="8"] .plan { backdrop-filter: blur(12px); }
+
+      /* ============================================================
+         9 — SOFT NEUMORPHIC
+         ============================================================ */
+      [data-design="9"] .demo {
+        --bg: #eef1f6; --surface: #eef1f6; --fg: #2a3142; --muted: #76809a;
+        --accent: #5a74d8; --accent-soft: #e2e7f7; --border: transparent;
+        --radius: 18px; --radius-sm: 12px; --head-size: 40px; --head-weight: 600;
+        --shadow: 7px 7px 16px rgb(163 177 198 / 0.5), -7px -7px 16px rgb(255 255 255 / 0.9);
+      }
+      [data-design="9"] .tool__icon { box-shadow: inset 3px 3px 7px rgb(163 177 198 / 0.5), inset -3px -3px 7px #fff; }
+      [data-design="9"] .btn { box-shadow: 5px 5px 12px rgb(163 177 198 / 0.5), -5px -5px 12px rgb(255 255 255 / 0.9); }
+
+      /* ============================================================
+         10 — GRADIENT MESH
+         ============================================================ */
+      [data-design="10"] .demo {
+        --bg: radial-gradient(900px 420px at 8% -8%, #ffe3f1 0%, transparent 60%),
+              radial-gradient(760px 400px at 96% 4%, #dcefff 0%, transparent 62%),
+              radial-gradient(700px 500px at 48% 100%, #e6ffe9 0%, transparent 60%), #fff;
+        --surface: #fff; --fg: #1b1b2b; --muted: #656585;
+        --accent: #7c3aed; --accent-soft: #f0e9ff; --border: #ebe7f5;
+        --radius: 16px; --head-size: 44px;
+        --shadow: 0 6px 22px rgb(80 60 140 / 0.09);
+      }
+
+      /* ============================================================
+         11 — MINIMAL OUTLINE
+         ============================================================ */
+      [data-design="11"] .demo {
+        --bg: #fff; --surface: #fff; --fg: #111; --muted: #777;
+        --accent: #111; --accent-fg: #fff; --accent-soft: transparent; --border: #e6e6e6;
+        --radius: 10px; --shadow: none; --head-size: 40px; --head-weight: 500;
+        --card-pad: 18px;
+      }
+      [data-design="11"] .tool__icon { border: 1px solid var(--border); }
+
+      /* ============================================================
+         12 — BENTO MODERN
+         ============================================================ */
+      [data-design="12"] .demo {
+        --bg: #f6f7f9; --surface: #fff; --fg: #15171c; --muted: #6a7080;
+        --accent: #111827; --accent-soft: #eef0f4; --border: #e7e9ee;
+        --radius: 18px; --head-size: 42px;
+        --shadow: 0 2px 6px rgb(15 20 35 / 0.05);
+        --grid-min: 180px;
+      }
+      [data-design="12"] .tools { grid-auto-rows: 1fr; }
+      [data-design="12"] .tool:nth-child(1),
+      [data-design="12"] .tool:nth-child(6) { grid-column: span 2; background: var(--accent-soft); }
+
+      /* ============================================================
+         13 — TERMINAL PRIVACY
+         ============================================================ */
+      [data-design="13"] .demo {
+        --bg: #07100b; --surface: #0b1710; --fg: #c9f7d8; --muted: #6f9a80;
+        --accent: #37d67a; --accent-fg: #04120a; --accent-soft: #10251a; --border: #1a3324;
+        --radius: 6px; --radius-sm: 4px; --shadow: none;
+        --font: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        --head-size: 34px; --head-spacing: 0;
+      }
+      [data-design="13"] .demo__hero h1::before { content: "> "; color: var(--accent); }
+
+      /* ============================================================
+         14 — LUXURY NOIR
+         ============================================================ */
+      [data-design="14"] .demo {
+        --bg: #0c0c0d; --surface: #141416; --fg: #f2ece2; --muted: #9b9389;
+        --accent: #c9a227; --accent-fg: #14120b; --accent-soft: #2a2415; --border: #272627;
+        --radius: 3px; --radius-sm: 2px; --shadow: none;
+        --font-head: Georgia, "Times New Roman", serif;
+        --head-size: 46px; --head-weight: 400; --head-spacing: 0.01em;
+      }
+      [data-design="14"] .eyebrow { letter-spacing: 0.22em; }
+
+      /* ============================================================
+         15 — LEGAL CHAMBERS
+         ============================================================ */
+      [data-design="15"] .demo {
+        --bg: #fbfaf7; --surface: #fff; --fg: #15241c; --muted: #5c6b60;
+        --accent: #14472f; --accent-soft: #e7efe9; --border: #ddd9cd;
+        --font-head: Georgia, "Times New Roman", serif;
+        --radius: 2px; --radius-sm: 2px; --shadow: none;
+        --head-size: 40px; --head-weight: 400;
+      }
+      [data-design="15"] .demo__nav { border-bottom: 2px solid var(--accent); }
+      [data-design="15"] .eyebrow { letter-spacing: 0.18em; }
+
+      /* ============================================================
+         16 — CLINICAL CLEAN
+         ============================================================ */
+      [data-design="16"] .demo {
+        --bg: #f8fbfd; --surface: #fff; --fg: #0f2733; --muted: #5a7585;
+        --accent: #0a7ea4; --accent-soft: #e2f2f8; --border: #dbe8ef;
+        --radius: 10px; --head-size: 38px; --head-weight: 650;
+        --shadow: 0 1px 2px rgb(10 40 55 / 0.06);
+      }
+
+      /* ============================================================
+         17 — HIGH CONTRAST
+         ============================================================ */
+      [data-design="17"] .demo {
+        --bg: #fff; --surface: #fff; --fg: #000; --muted: #333;
+        --accent: #00407a; --accent-fg: #fff; --accent-soft: #dce9f7; --border: #000;
+        --radius: 6px; --shadow: none; --body-size: 17px;
+        --head-size: 42px; --head-weight: 800;
+      }
+      [data-design="17"] .tool { border-width: 2px; }
+      [data-design="17"] .btn { border-width: 2px; }
+
+      /* ============================================================
+         18 — DENSE WORKBENCH
+         ============================================================ */
+      [data-design="18"] .demo {
+        --bg: #fcfcfd; --surface: #fff; --fg: #1a1d23; --muted: #6b7280;
+        --accent: #3b5bdb; --accent-soft: #e7ebfd; --border: #e4e6eb;
+        --radius: 7px; --radius-sm: 5px; --card-pad: 12px;
+        --grid-min: 150px; --body-size: 13.5px; --head-size: 30px;
+        --shadow: none;
+      }
+      [data-design="18"] .tool__icon { width: 26px; height: 26px; }
+      [data-design="18"] .tool__icon svg { width: 15px; height: 15px; }
+      [data-design="18"] .demo__hero { padding-top: 30px; }
+
+      /* ============================================================
+         19 — ELEVATED CARDS
+         ============================================================ */
+      [data-design="19"] .demo {
+        --bg: #f4f5f7; --surface: #fff; --fg: #1b1f27; --muted: #666e7d;
+        --accent: #0b6bcb; --accent-soft: #e6f1fd; --border: transparent;
+        --radius: 14px; --head-size: 40px;
+        --shadow: 0 10px 24px rgb(20 30 50 / 0.1), 0 2px 5px rgb(20 30 50 / 0.06);
+      }
+
+      /* ============================================================
+         20 — SPLIT FEATURE
+         ============================================================ */
+      [data-design="20"] .demo {
+        --bg: #fff; --surface: #fbfbfa; --fg: #16181d; --muted: #646a76;
+        --accent: #1f6f50; --accent-soft: #e7f2ec; --border: #e8e9ec;
+        --radius: 12px; --head-size: 40px;
+        --shadow: none;
+      }
+      [data-design="20"] .demo__hero {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 30px;
+        align-items: center;
+        padding-right: 0;
+      }
+      [data-design="20"] .demo__trust {
+        grid-column: 1 / -1;
+        margin-right: 30px;
+      }
+      [data-design="20"] .hero__art { display: block; padding-right: 30px; }
+      @media (max-width: 760px) {
+        [data-design="20"] .demo__hero { grid-template-columns: 1fr; padding-right: 30px; }
+      }
+
+      /* ============================================================
+         21 — TONAL INDIGO
+         ============================================================ */
+      [data-design="21"] .demo {
+        --bg: #f6f6fb; --surface: #fff; --fg: #1d1b3a; --muted: #6c6a94;
+        --accent: #4338ca; --accent-soft: #e8e6fa; --border: #e4e2f2;
+        --radius: 12px; --head-size: 41px;
+        --shadow: 0 2px 8px rgb(50 45 120 / 0.07);
+      }
+      [data-design="21"] .demo__nav { background: #fff; }
+
+      /* ============================================================
+         22 — AMBER CRT
+         ============================================================ */
+      [data-design="22"] .demo {
+        --bg: #16120a; --surface: #1d1810; --fg: #f3c88a; --muted: #a78a5d;
+        --accent: #e8a33d; --accent-fg: #1a1409; --accent-soft: #2a2113; --border: #352b19;
+        --radius: 4px; --radius-sm: 3px; --shadow: none;
+        --font: "SFMono-Regular", Consolas, monospace;
+        --head-size: 34px; --head-spacing: 0.01em;
+      }
+
+      /* ============================================================
+         23 — APP SHELL
+         ============================================================ */
+      [data-design="23"] .demo {
+        --bg: #fff; --surface: #fff; --fg: #15181d; --muted: #6a7280;
+        --accent: #16a34a; --accent-soft: #e6f6ec; --border: #e8eaee;
+        --radius: 10px; --head-size: 34px; --shadow: none;
+        display: grid;
+        grid-template-columns: 208px 1fr;
+      }
+      [data-design="23"] .demo__nav {
+        grid-row: 1 / 4;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        border-right: 1px solid var(--border);
+        border-bottom: 0;
+        background: #fafbfc;
+      }
+      [data-design="23"] .demo__links { flex-direction: column; gap: 9px; margin-left: 0; }
+      [data-design="23"] .demo__hero { padding-top: 32px; }
+      [data-design="23"] .demo__foot { grid-column: 2; }
+      @media (max-width: 760px) {
+        [data-design="23"] .demo { grid-template-columns: 1fr; }
+        [data-design="23"] .demo__nav { grid-row: auto; flex-direction: row; align-items: center; }
+        [data-design="23"] .demo__foot { grid-column: auto; }
+      }
+
+      /* ============================================================
+         24 — MAGAZINE
+         ============================================================ */
+      [data-design="24"] .demo {
+        --bg: #fffefb; --surface: #fff; --fg: #121212; --muted: #5f5f5f;
+        --accent: #b3421f; --accent-soft: #fbeae3; --border: #ebe6dd;
+        --font-head: Georgia, "Times New Roman", serif;
+        --head-size: 58px; --head-weight: 700; --head-spacing: -0.03em;
+        --radius: 0; --radius-sm: 0; --shadow: none;
+      }
+      [data-design="24"] .demo__hero h1 { max-width: 13ch; line-height: 0.98; }
+      [data-design="24"] .demo__section h2 {
+        padding-bottom: 8px;
+        border-bottom: 3px solid var(--fg);
+        font-size: 15px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      [data-design="24"] .tool { border-width: 0 0 1px; }
+
+      /* Hidden unless a design asks for it (20 — Split feature). */
+      .hero__art { display: none; }
+      .hero__art svg { width: 100%; height: auto; }
+    </style>
+  </head>
+
+  <body>
+    <div class="lab">
+      <p class="lab__title">
+        LeafLock PDF — design lab
+        <span>Pick a number, then tell me which to build.</span>
+        <span class="lab__current" id="current">1 · Nordic Calm</span>
+      </p>
+      <div class="lab__list" id="list"></div>
+    </div>
+
+    <div class="stage">
+      <div class="demo">
+        <nav class="demo__nav">
+          <span class="demo__brand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21c-5 0-8-3-8-7 0-5 4-9 9-11 1 6-1 10-5 12" />
+              <path d="M12 21c4 0 7-2 8-6" />
+            </svg>
+            LeafLock PDF
+          </span>
+          <span class="demo__links">
+            <span>Tools</span><span>Guides</span><span>Security</span><span>Pricing</span><span>Business</span>
+          </span>
+          <span class="btn btn--sm">Log in</span>
+        </nav>
+
+        <header class="demo__hero">
+          <div>
+            <p class="eyebrow">Private by design</p>
+            <h1>Private PDF tools. Your files never leave your device.</h1>
+            <p>Merge, split, sign, redact and convert PDFs entirely in your browser. Nothing is uploaded — not even the file name.</p>
+            <div class="demo__cta">
+              <span class="btn">Open the tools</span>
+              <span class="btn btn--ghost">How it works</span>
+            </div>
+          </div>
+
+          <div class="hero__art">
+            <svg viewBox="0 0 320 180" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="6" y="28" width="232" height="120" rx="10" fill="var(--surface-2)" stroke="var(--border)" />
+              <g stroke="var(--fg)">
+                <path d="M38 62h20l9 9v30a3 3 0 0 1-3 3H38a3 3 0 0 1-3-3V65a3 3 0 0 1 3-3Z" />
+                <path d="M58 62v9h9" />
+                <rect x="104" y="56" width="86" height="52" rx="6" />
+                <path d="M104 69h86" />
+                <circle cx="113" cy="62.5" r="2" /><circle cx="121" cy="62.5" r="2" />
+                <path d="M206 62h18l8 8v30a3 3 0 0 1-3 3h-23a3 3 0 0 1-3-3V65a3 3 0 0 1 3-3Z" />
+                <path d="M224 62v8h8" />
+              </g>
+              <g stroke="var(--accent)">
+                <path d="M80 82h14m0 0-5-5m5 5-5 5" /><path d="M196 82h-4m-10 0h-2m16 0-5-5m5 5-5 5" />
+                <path d="m210 88 5 5 9-9" stroke-width="2" />
+              </g>
+              <g stroke="var(--muted)" opacity="0.6">
+                <rect x="258" y="58" width="54" height="38" rx="5" /><path d="M258 77h54" />
+                <path d="M267 67h5M267 87h5" /><path d="m253 52 64 50" />
+              </g>
+            </svg>
+          </div>
+
+          <div class="demo__trust">
+            <span><b>No uploads.</b> Enforced by the browser, not a promise.</span>
+            <span><b>No account needed</b> to start.</span>
+            <span><b>Works offline</b> once loaded.</span>
+          </div>
+        </header>
+
+        <section class="demo__section">
+          <h2>Organise and convert</h2>
+          <div class="tools">
+            <div class="tool">
+              <span class="tool__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="9" height="11" rx="1.5"/><path d="M12 7h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2v-5"/></svg></span>
+              <span class="tool__name">Merge PDF</span>
+              <span class="tool__desc">Combine several PDFs into one, in the order you choose.</span>
+            </div>
+            <div class="tool">
+              <span class="tool__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h5"/><path d="M15 3h3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-3"/><path d="M13 2v20"/></svg></span>
+              <span class="tool__name">Split PDF</span>
+              <span class="tool__desc">Break a PDF into several files by page range.</span>
+            </div>
+            <div class="tool">
+              <span class="tool__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h7l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M13 3v5h5"/><path d="M8.5 12h7M8.5 15.5h7M8.5 19h4"/></svg></span>
+              <span class="tool__name">PDF to text</span>
+              <span class="tool__desc">Pull all the text out of a PDF, page by page.</span>
+            </div>
+            <div class="tool">
+              <span class="tool__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c3.5 0 4-10 7-10s2 9 5 9c2 0 3-2 3-2"/><path d="M3 21h18"/></svg></span>
+              <span class="tool__name">Sign PDF</span>
+              <span class="tool__desc">Draw or type a signature and place it anywhere.</span>
+            </div>
+            <div class="tool">
+              <span class="tool__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14.5v2.5"/></svg></span>
+              <span class="tool__name">Protect PDF</span>
+              <span class="tool__desc">Add a password so only the right people can open it.</span>
+            </div>
+            <div class="tool">
+              <span class="tool__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h7l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M13 3v5h5"/><rect x="8" y="12.5" width="8" height="3.5" rx="0.5" fill="currentColor" stroke="none"/></svg></span>
+              <span class="tool__name">Redact PDF<span class="tag">Pro</span></span>
+              <span class="tool__desc">Remove sensitive content for good, not just cover it.</span>
+            </div>
+            <div class="tool">
+              <span class="tool__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h4v4"/><path d="m3 3 5 5"/><path d="M20 4h-4v4"/><path d="m21 3-5 5"/><path d="M4 20h4v-4"/><path d="m3 21 5-5"/><path d="M20 20h-4v-4"/><path d="m21 21-5-5"/></svg></span>
+              <span class="tool__name">Compress PDF</span>
+              <span class="tool__desc">Make a PDF small enough to email, without wrecking it.</span>
+            </div>
+            <div class="tool">
+              <span class="tool__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="8" height="16" rx="1.5"/><rect x="13.5" y="4" width="8" height="16" rx="1.5"/><path d="M5 9h3M5 12h3"/><path d="M16 9h3M16 12h3M16 15h3"/></svg></span>
+              <span class="tool__name">Compare PDF<span class="tag">Pro</span></span>
+              <span class="tool__desc">See exactly what changed between two versions.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="demo__section">
+          <h2>Plans</h2>
+          <div class="plans">
+            <div class="plan">
+              <p class="plan__name">Free</p>
+              <p class="plan__price">$0</p>
+              <ul><li>Every core tool</li><li>No file-size limit</li><li>30 tools a day</li></ul>
+              <span class="btn btn--ghost btn--sm">Use the tools</span>
+            </div>
+            <div class="plan plan--best">
+              <p class="plan__name">Pro</p>
+              <p class="plan__price">$8 <small>/ month</small></p>
+              <ul><li>No daily limit</li><li>Redact and Compare</li><li>Batch processing</li></ul>
+              <span class="btn btn--sm">Get Pro</span>
+            </div>
+            <div class="plan">
+              <p class="plan__name">Business</p>
+              <p class="plan__price">$750 <small>/ year</small></p>
+              <ul><li>Self-hosted</li><li>Works air-gapped</li><li>For firms and clinics</li></ul>
+              <span class="btn btn--ghost btn--sm">Talk to us</span>
+            </div>
+          </div>
+        </section>
+
+        <footer class="demo__foot">LeafLock PDF processes every file on your device. We never see your documents.</footer>
+      </div>
+    </div>
+
+    <script>
+      const designs = [
+        'Nordic Calm', 'Editorial Serif', 'Swiss Grid', 'Corporate Trust',
+        'Dark Pro', 'Warm Paper', 'Brutalist Mono', 'Glass Frost',
+        'Soft Neumorphic', 'Gradient Mesh', 'Minimal Outline', 'Bento Modern',
+        'Terminal Privacy', 'Luxury Noir', 'Legal Chambers', 'Clinical Clean',
+        'High Contrast', 'Dense Workbench', 'Elevated Cards', 'Split Feature',
+        'Tonal Indigo', 'Amber CRT', 'App Shell', 'Magazine',
+      ];
+
+      const list = document.getElementById('list');
+      const current = document.getElementById('current');
+
+      function choose(n) {
+        document.documentElement.dataset.design = String(n);
+        current.textContent = `${n} · ${designs[n - 1]}`;
+        for (const button of list.children) {
+          button.setAttribute('aria-pressed', String(Number(button.dataset.n) === n));
+        }
+        try { localStorage.setItem('leaflock-design', String(n)); } catch {}
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      designs.forEach((name, index) => {
+        const n = index + 1;
+        const button = document.createElement('button');
+        button.className = 'lab__btn';
+        button.dataset.n = String(n);
+        button.type = 'button';
+        button.innerHTML = `<b>${n}</b>${name}`;
+        button.addEventListener('click', () => choose(n));
+        list.append(button);
+      });
+
+      let start = 1;
+      try { start = Number(localStorage.getItem('leaflock-design')) || 1; } catch {}
+      choose(Math.min(Math.max(start, 1), designs.length));
+
+      // Left/right arrows step through the designs.
+      document.addEventListener('keydown', (event) => {
+        if (event.target !== document.body && event.target.tagName !== 'BUTTON') return;
+        const now = Number(document.documentElement.dataset.design);
+        if (event.key === 'ArrowRight') choose(now === designs.length ? 1 : now + 1);
+        if (event.key === 'ArrowLeft') choose(now === 1 ? designs.length : now - 1);
+      });
+    </script>
+  </body>
+</html>

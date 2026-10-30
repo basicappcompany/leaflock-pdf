@@ -1,0 +1,49 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { format, getMessages } from '../i18n';
+import { footerGroups } from '../lib/siteLinks';
+import { categories, tools } from '../tools/registry';
+
+const locale = Astro.currentLocale ?? 'en';
+const messages = getMessages(locale);
+const common = messages.common;
+---
+
+<footer class="site-footer">
+  <div class="site-footer__columns">
+    {
+      categories.map((category) => (
+        <nav class="site-footer__group" aria-label={common.categories[category]}>
+          <p class="site-footer__heading">{common.categories[category]}</p>
+          <ul>
+            {tools
+              .filter((tool) => tool.category === category)
+              .map((tool) => (
+                <li>
+                  <a href={getRelativeLocaleUrl(locale, tool.slug)}>{messages.tools[tool.id].title}</a>
+                </li>
+              ))}
+          </ul>
+        </nav>
+      ))
+    }
+    {
+      footerGroups.map((group) => (
+        <nav class="site-footer__group" aria-label={common.footer[group.heading]}>
+          <p class="site-footer__heading">{common.footer[group.heading]}</p>
+          <ul>
+            {group.pages.map((page) => (
+              <li>
+                <a href={getRelativeLocaleUrl(locale, page.path)}>{common.pageLinks[page.key]}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
+  </div>
+  <div class="site-footer__bottom">
+    <p>{common.site.footer}</p>
+    <p>{format(common.footer.copyright, { year: new Date().getFullYear() })}</p>
+  </div>
+</footer>

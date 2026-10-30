@@ -1,0 +1,47 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getMessages } from '../i18n';
+import { categories, tools } from '../tools/registry';
+
+const locale = Astro.currentLocale ?? 'en';
+const messages = getMessages(locale);
+const common = messages.common;
+---
+
+<details class="tools-menu">
+  <summary>{common.nav.allTools}</summary>
+  <div class="tools-menu__panel">
+    {
+      categories.map((category) => (
+        <div class="tools-menu__group">
+          <p class="tools-menu__heading">{common.categories[category]}</p>
+          <ul>
+            {tools
+              .filter((tool) => tool.category === category)
+              .map((tool) => (
+                <li>
+                  <a href={getRelativeLocaleUrl(locale, tool.slug)}>{messages.tools[tool.id].title}</a>
+                </li>
+              ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</details>
+
+<script>
+  // Close the menu on Escape or a click outside it; it opens and closes natively otherwise.
+  const menu = document.querySelector<HTMLDetailsElement>('.tools-menu');
+  if (menu) {
+    document.addEventListener('click', (event) => {
+      if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    });
+  }
+</script>

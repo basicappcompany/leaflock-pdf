@@ -1,0 +1,2026 @@
+/*
+ * Theme: every colour is defined once with light-dark(). The browser picks the side from
+ * `color-scheme`, which follows the system unless the user chose light or dark
+ * (html[data-theme], set by ThemeToggle).
+ */
+:root {
+  color-scheme: light dark;
+  --color-bg: light-dark(#f6f7f4, #121513);
+  --color-surface: light-dark(#ffffff, #1b201c);
+  --color-surface-2: light-dark(#eef1ec, #242a25);
+  --color-text: light-dark(#1b221e, #e5ebe6);
+  --color-muted: light-dark(#5a655e, #a0aca4);
+  --color-border: light-dark(#d4dbd5, #343c36);
+  --color-accent: light-dark(#2a7548, #5fc58a);
+  --color-accent-hover: light-dark(#1f5d38, #7bd7a1);
+  --color-on-accent: light-dark(#ffffff, #0b1a11);
+  --color-accent-soft: light-dark(#e3f1e8, #1c3326);
+  --color-error: light-dark(#b3261e, #ff8f86);
+  --color-warning: light-dark(#8a5a00, #f2c065);
+  --color-pro: light-dark(#6b3fa0, #c9a6f5);
+  --color-pro-soft: light-dark(#f1e9fb, #2c2238);
+  --color-focus: light-dark(#1d6fd8, #7fb3ff);
+  --shadow: light-dark(0 1px 3px rgb(0 0 0 / 0.08), 0 1px 3px rgb(0 0 0 / 0.5));
+  /* Tool cards lean on depth rather than an outline, so they read as liftable.
+     A tight contact shadow plus a wide ambient one; the hover pair is stronger. */
+  --shadow-card: 0 2px 4px light-dark(rgb(20 30 60 / 0.05), rgb(0 0 0 / 0.4)),
+    0 10px 22px light-dark(rgb(20 30 60 / 0.06), rgb(0 0 0 / 0.45));
+  --shadow-card-hover: 0 6px 10px light-dark(rgb(20 30 60 / 0.07), rgb(0 0 0 / 0.45)),
+    0 18px 34px light-dark(rgb(20 30 60 / 0.1), rgb(0 0 0 / 0.5));
+  /* Light mode gets no card outline at all; dark mode still needs a hairline,
+     because shadow alone cannot separate a dark surface from a dark ground. */
+  --color-card-border: light-dark(transparent, #343c36);
+  --radius: 16px;
+  --radius-small: 10px;
+  --space: 1rem;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: calc(var(--space) * 2) var(--space);
+}
+
+a {
+  color: var(--color-accent);
+}
+
+h1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Site chrome ---------- */
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space);
+  padding: 0.75rem calc(var(--space) * 1.5);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.privacy-strip {
+  margin: 0;
+  padding: 0.35rem var(--space);
+  background: var(--color-accent-soft);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.skip-link {
+  position: absolute;
+  top: -10rem;
+  left: var(--space);
+  z-index: 10;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.skip-link:focus {
+  top: var(--space);
+}
+
+.site-nav {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.35rem;
+}
+
+/* A real touch target rather than bare underlined text — shared with AuthNavLink's
+   anchor (src/components/auth/AuthNavLink.tsx), which sits one level deeper inside its
+   <astro-island> wrapper, so a `.site-nav > a` selector would miss it; this is why both
+   carry the class explicitly instead. */
+.nav-link {
+  padding: 0.5rem 0.5rem;
+  border-radius: var(--radius-small);
+  color: var(--color-text);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  background: var(--color-surface-2);
+  color: var(--color-accent);
+}
+
+@media (max-width: 48rem) {
+  /* Without this, ThemeToggle (the header's last flex child) lands on whatever line
+     .site-nav's own wrapping happens to leave unfinished — sometimes shared, sometimes
+     its own lonely row, depending on how many nav links fit above it. Forcing .site-nav
+     onto a full-width line of its own makes the header a predictable two-row shape
+     instead: brand and ThemeToggle together, then every nav link below. */
+  .site-nav {
+    order: 2;
+    flex-basis: 100%;
+  }
+
+  .theme-toggle {
+    order: 1;
+    margin-left: auto;
+  }
+}
+
+.tools-menu {
+  position: relative;
+}
+
+.tools-menu summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface-2);
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.tools-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.tools-menu summary::after {
+  content: '▾';
+  font-size: 0.8em;
+}
+
+.tools-menu[open] summary::after {
+  content: '▴';
+}
+
+.tools-menu__panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(10rem, 1fr));
+  gap: var(--space) calc(var(--space) * 1.5);
+  width: min(52rem, calc(100vw - 2rem));
+  padding: calc(var(--space) * 1.25);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.18);
+}
+
+@media (max-width: 48rem) {
+  .tools-menu__panel {
+    position: fixed;
+    top: 4rem;
+    left: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: calc(100vh - 5rem);
+    overflow-y: auto;
+  }
+}
+
+.tools-menu__heading {
+  margin: 0 0 0.4rem;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tools-menu ul,
+.site-footer ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tools-menu li a {
+  display: block;
+  padding: 0.2rem 0;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+@media (max-width: 48rem) {
+  /* Same trade-off as .site-footer li a: 25 tools in one panel has to stay scannable,
+     so this stops short of the header's comfortable, non-dense standard — just enough
+     to turn a 30px row into one a thumb can land on reliably. Must come after the base
+     rule above: equal selector specificity, so cascade order decides. */
+  .tools-menu li a {
+    padding: 0.45rem 0;
+  }
+}
+
+.tools-menu li a:hover {
+  color: var(--color-accent);
+}
+
+.theme-toggle {
+  display: inline-flex;
+  margin: 0;
+  padding: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface-2);
+}
+
+.theme-toggle__option {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--color-muted);
+}
+
+@media (max-width: 48rem) {
+  /* 32px suits a cursor; a thumb wants closer to 36-40px. Three of these sit edge to
+     edge in one track, so the increase has to come from the option itself, not spacing. */
+  .theme-toggle__option {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+.theme-toggle__option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.theme-toggle__option:has(input:checked) {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow);
+}
+
+.theme-toggle__option:has(input:focus-visible) {
+  outline: 2px solid var(--color-focus);
+}
+
+.site-footer {
+  padding: calc(var(--space) * 2) calc(var(--space) * 1.5) var(--space);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.site-footer__columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: calc(var(--space) * 1.5);
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.site-footer__heading {
+  margin: 0 0 0.5rem;
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.site-footer li a {
+  display: inline-block;
+  padding: 0.15rem 0;
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+@media (max-width: 48rem) {
+  /* The footer is dense by design — every tool, one line each — so it stays compact
+     here; this is only enough to turn a cramped 24px row into a comfortable one. */
+  .site-footer li a {
+    padding: 0.4rem 0;
+  }
+}
+
+.site-footer li a:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.site-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  max-width: 64rem;
+  margin: calc(var(--space) * 2) auto 0;
+  padding-top: var(--space);
+  border-top: 1px solid var(--color-border);
+}
+
+.site-footer__bottom p {
+  margin: 0;
+}
+
+.breadcrumb {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: var(--space);
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.lead {
+  margin-top: 0;
+  color: var(--color-muted);
+  font-size: 1.1rem;
+}
+
+.muted {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.badge-pro {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--color-pro-soft);
+  color: var(--color-pro);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+/* ---------- Home ---------- */
+
+/* The diagram sits beside the headline, not under it: the promise the whole
+   product rests on should be visible without reading a word. */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: calc(var(--space) * 2);
+  margin-bottom: calc(var(--space) * 2.5);
+}
+
+.hero__eyebrow {
+  margin: 0 0 0.6rem;
+  color: var(--color-accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* A column of text as wide as the hero grid allows is hard to read and breaks the
+   headline at awkward points. Both are held to a comfortable measure instead. */
+.hero__text h1 {
+  max-width: 24ch;
+}
+
+.hero__text .lead {
+  max-width: 46ch;
+  margin-bottom: 0;
+}
+
+/* Straight into the most-used tool, or into the explanation of the promise. */
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: var(--space) 0 0;
+}
+
+@media (max-width: 52rem) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: var(--space);
+  }
+}
+
+.privacy-diagram {
+  display: block;
+  width: 100%;
+  max-width: 34rem;
+  height: auto;
+}
+
+.privacy-diagram__frame {
+  fill: var(--color-surface-2);
+  stroke: var(--color-border);
+}
+
+.privacy-diagram__ink {
+  fill: none;
+  stroke: var(--color-text);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.privacy-diagram__arrow {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.privacy-diagram__tick {
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+
+.privacy-diagram__never {
+  fill: none;
+  stroke: var(--color-muted);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0.65;
+}
+
+.privacy-diagram__caption,
+.privacy-diagram__label {
+  fill: var(--color-muted);
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.privacy-diagram__label {
+  text-anchor: middle;
+}
+
+.privacy-diagram__caption--never {
+  text-anchor: middle;
+}
+
+.category h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: calc(var(--space) * 2);
+}
+
+.category h2 .tool-icon {
+  color: var(--color-accent);
+}
+
+/* Reads as a heading, not a stray green link; the hub it points to is a secondary
+   path (every tool below is already one click away), so an underline on hover is
+   enough of a hint. */
+.category h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.category h2 a:hover {
+  text-decoration: underline;
+}
+
+/* Hairline carrying the eye across to the right of each section heading. */
+.category__rule {
+  flex: 1;
+  height: 1px;
+  min-width: 2rem;
+  background: var(--color-border);
+}
+
+/* Takes its colour from the text around it, so both themes are handled already. */
+.tool-icon {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.tool-grid__icon {
+  display: grid;
+  place-items: center;
+  width: 2.625rem;
+  height: 2.625rem;
+  margin-bottom: 0.35rem;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* Smaller glyph inside the larger disc, so the tint reads as a badge. */
+.tool-grid__icon .tool-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.tool-grid a:hover .tool-grid__icon {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--space);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tool-grid--small {
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+}
+
+.tool-grid a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  height: 100%;
+  padding: calc(var(--space) * 1.25);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.15s;
+}
+
+.tool-grid a:hover,
+.tool-grid a:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* The lift is decoration; the colour change alone carries the affordance. */
+@media (prefers-reduced-motion: reduce) {
+  .tool-grid a {
+    transition: border-color 0.15s;
+  }
+
+  .tool-grid a:hover,
+  .tool-grid a:focus-visible {
+    transform: none;
+  }
+}
+
+.tool-grid strong {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* The summary line only: the Pro badge and the icon bring their own colours. */
+.tool-grid span:not(.badge-pro):not(.tool-grid__icon) {
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+/* ---------- Home dashboard (signed in) ---------- */
+
+/* Stands in for the hero once someone is signed in: the same job, different answer.
+   The tool grid below is left alone and serves as the "quick tools" panel. */
+.dashboard {
+  margin-bottom: calc(var(--space) * 2.5);
+}
+
+.dashboard__head {
+  margin-bottom: calc(var(--space) * 1.25);
+}
+
+.dashboard__head .lead {
+  max-width: 46ch;
+  margin-bottom: 0;
+}
+
+.dashboard__panels {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space);
+}
+
+.dashboard__main,
+.dashboard__side {
+  display: grid;
+  align-content: start;
+  gap: var(--space);
+}
+
+.dashboard__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: calc(var(--space) * 1.25);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.dashboard__card h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.dashboard__card p {
+  margin: 0;
+}
+
+.dashboard__card .hint {
+  font-size: 0.8rem;
+}
+
+/* Full width so the heading and its "Clear list" button sit at the two edges. */
+.dashboard__card .list-header {
+  width: 100%;
+  align-items: baseline;
+}
+
+.dashboard__recent {
+  display: grid;
+  gap: 0.6rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Three columns rather than a flex row: the icon and the action keep their own
+   widths, so the buttons line up down the list whatever a tool is called. */
+.dashboard__recent li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dashboard__recent .tool-grid__icon {
+  margin-bottom: 0;
+}
+
+.dashboard__recent-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.dashboard__recent-text .muted {
+  font-size: 0.85rem;
+}
+
+/* Tiles inside a panel, so they drop the card shadow: a card within a card reads as
+   two levels of depth for one level of meaning. The hover lift is kept. */
+.dashboard__quick .tool-grid {
+  gap: 0.6rem;
+}
+
+.dashboard__quick .tool-grid a {
+  padding: var(--space);
+  border-color: var(--color-border);
+  box-shadow: none;
+}
+
+.dashboard__quick .tool-grid a:hover,
+.dashboard__quick .tool-grid a:focus-visible {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-card);
+}
+
+/* Today's allowance. The fill is set inline from the count, through the CSSOM. */
+.meter {
+  width: 100%;
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-surface-2);
+}
+
+.meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-accent);
+}
+
+@media (max-width: 52rem) {
+  .dashboard__panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The quick tiles get their own column count: the panel is narrower than the page, so
+   the home grid's 12rem minimum would leave a single column on a laptop. */
+.dashboard__quick .tool-grid {
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+}
+
+/* ---------- Tool page ---------- */
+
+.tool-mount {
+  min-height: 12rem;
+  margin: calc(var(--space) * 1.5) 0;
+}
+
+.tool-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: calc(var(--space) * 2);
+  margin-top: calc(var(--space) * 3);
+  padding-top: var(--space);
+  border-top: 1px solid var(--color-border);
+}
+
+.tool {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+/* Heading above one of several file slots, for tools that take more than one file. */
+.tool__slot-title {
+  margin: 0 0 calc(var(--space) / 2);
+  font-size: 1rem;
+}
+
+.tool__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space);
+}
+
+@media (max-width: 48rem) {
+  /* Same breakpoint as .tool__workspace above, which is already single-column by
+     here — a full-width action reads as the natural conclusion of that stack rather
+     than a separate change. Every tool puts at most one button in .tool__actions
+     (plus an optional hint paragraph above it — see e.g. MergeTool.tsx,
+     BatchTool.tsx), so this is a safe, general change: the one button people need to
+     tap becomes the easiest thing on the page to reach with a thumb, instead of a
+     small target floating at the trailing edge. */
+  .tool__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tool__actions .primary-button {
+    width: 100%;
+  }
+}
+
+/* Two-column layout: preview on the left, options on the right. */
+.tool__workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem);
+  gap: calc(var(--space) * 1.5);
+  align-items: start;
+}
+
+@media (max-width: 48rem) {
+  .tool__workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  padding: var(--space);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ---------- Picking files ---------- */
+
+.dropzone {
+  padding: calc(var(--space) * 3) var(--space);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.dropzone--compact {
+  padding: 0.75rem var(--space);
+}
+
+.dropzone--active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.dropzone p {
+  margin: 0;
+}
+
+.selected-file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem var(--space);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.selected-file__name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.selected-file .link-button {
+  margin-left: auto;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-muted);
+}
+
+.file-list {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.file-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space);
+  padding: 0.5rem var(--space);
+}
+
+.file-list__item + .file-list__item {
+  border-top: 1px solid var(--color-border);
+}
+
+.file-list__name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Buttons ---------- */
+
+.primary-button,
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  /* The small radius: the card radius on a control this short reads as a lozenge. */
+  border-radius: var(--radius-small);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.primary-button {
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.primary-button:hover {
+  border-color: var(--color-accent-hover);
+  background: var(--color-accent-hover);
+}
+
+.secondary-button {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.secondary-button:hover {
+  border-color: var(--color-accent);
+}
+
+.secondary-button--small {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.875rem;
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-accent);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link-button:disabled {
+  color: var(--color-muted);
+  cursor: default;
+}
+
+.icon-buttons {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 48rem) {
+  /* Reorder/rotate/remove controls on a file list or a page-grid card: several of
+     these sit in a row, close together, and are tapped far more carelessly with a
+     thumb than a cursor. */
+  .icon-button {
+    min-width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+.icon-button:hover:not(:disabled) {
+  border-color: var(--color-accent);
+}
+
+.icon-button[aria-pressed='true'] {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.icon-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ---------- Form controls ---------- */
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--space);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.field > label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.field__hint {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.field__error {
+  color: var(--color-error);
+  font-size: 0.85rem;
+}
+
+input[type='text'],
+input[type='number'],
+input[type='password'],
+input[type='email'],
+input[type='date'],
+select,
+textarea {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+input[aria-invalid='true'] {
+  border-color: var(--color-error);
+}
+
+input[type='color'] {
+  width: 3rem;
+  height: 2.4rem;
+  padding: 0.15rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+}
+
+input[type='range'] {
+  width: 100%;
+  accent-color: var(--color-accent);
+}
+
+textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.segmented {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.segmented legend {
+  margin-bottom: 0.3rem;
+  padding: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.segmented__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 3px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface-2);
+}
+
+.segmented__option {
+  flex: 1;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-small);
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.segmented__option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented__option.is-selected {
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
+  font-weight: 600;
+}
+
+.segmented__option:has(input:focus-visible) {
+  outline: 2px solid var(--color-focus);
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.checkbox input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--color-accent);
+}
+
+/* ---------- Pages ---------- */
+
+.page-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--space);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-grid__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
+}
+
+.page-grid__item[draggable='true'] {
+  cursor: grab;
+}
+
+.page-grid__item.is-selected {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.page-grid__item.is-dimmed .thumbnail {
+  opacity: 0.3;
+}
+
+.page-grid__item.is-drop-target {
+  border-color: var(--color-focus);
+  border-style: dashed;
+}
+
+.page-grid__page {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+}
+
+button.page-grid__page {
+  cursor: pointer;
+}
+
+.page-grid__label {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.page-grid__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.thumbnail {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-small);
+  background: var(--color-surface-2);
+}
+
+.thumbnail__image {
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: 0 0 0 1px var(--color-border);
+  transition: transform 0.2s;
+}
+
+.thumbnail__image.rotate-90 {
+  transform: rotate(90deg);
+}
+
+.thumbnail__image.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.thumbnail__image.rotate-270 {
+  transform: rotate(270deg);
+}
+
+.thumbnail__placeholder {
+  width: 70%;
+  aspect-ratio: 0.7071;
+  border-radius: 2px;
+  background: var(--color-border);
+  opacity: 0.4;
+}
+
+.page-preview {
+  width: 100%;
+}
+
+.page-preview__page {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--color-border), var(--shadow);
+  user-select: none;
+}
+
+.page-preview__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.page-preview__overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* ---------- Status and results ---------- */
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space);
+}
+
+.progress progress {
+  flex: 1;
+  height: 0.6rem;
+  accent-color: var(--color-accent);
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: var(--space);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-accent-soft);
+}
+
+.result__heading {
+  margin: 0;
+  font-weight: 600;
+}
+
+.result__files {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 20rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.result__files li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.result__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space);
+}
+
+/* Keeping a result on this device: a quiet row inside the result panel, deliberately
+   not styled as a promoted action — the default is not keeping anything. */
+.retention {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.retention__choices {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.retention__heading {
+  padding: 0;
+  font-weight: 600;
+}
+
+.retention__note {
+  margin: 0.25rem 0 0.5rem;
+}
+
+.retention__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.retention__options label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.retention__custom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.retention__custom input[type='number'] {
+  width: 7rem;
+}
+
+.retention__custom p {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.retention__saved {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* The shelf itself, under the tool. Separated from the result panel's accent border so
+   it reads as a different thing: what is already kept, not what was just produced. */
+.shelf {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: var(--space);
+  padding: var(--space);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.shelf__heading {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.shelf__files {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shelf__files li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hint,
+.notice {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.warning {
+  margin: 0;
+  color: var(--color-warning);
+}
+
+.error {
+  margin: 0;
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Articles, guides and site pages ---------- */
+
+.prose {
+  max-width: 46rem;
+  font-size: 1.05rem;
+}
+
+.prose h2 {
+  margin-top: 2.2rem;
+}
+
+.prose h3 {
+  margin-top: 1.6rem;
+}
+
+.prose p,
+.prose li {
+  line-height: 1.7;
+}
+
+.prose li + li {
+  margin-top: 0.3rem;
+}
+
+.prose code {
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  background: var(--color-surface-2);
+  font-size: 0.9em;
+}
+
+/* A comparison table has more columns than a 320px screen can hold, and `width: 100%`
+   does not stop cells' min-content widths pushing it past the container — which took the
+   page 5px over at 320px and failed WCAG 1.4.10 Reflow (found by the 6.4 audit).
+   `display: block` gives the table its own horizontal scroll box, which is the only way
+   to get a scroll container around a Markdown-rendered table without a rehype wrapper.
+   Wide enough to fit, no scrollbar appears, so nothing changes on a desktop. */
+.prose table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.prose th,
+.prose td {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  background: var(--color-surface-2);
+}
+
+.prose blockquote {
+  margin: 1.5rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid var(--color-accent);
+  background: var(--color-surface);
+}
+
+.article-dates {
+  margin-top: -0.25rem;
+}
+
+.draft-notice {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-warning);
+  border-radius: var(--radius);
+  color: var(--color-warning);
+  font-weight: 600;
+}
+
+.card-list {
+  display: grid;
+  gap: var(--space);
+  margin: var(--space) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card-list a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: var(--space);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.card-list a:hover {
+  border-color: var(--color-accent);
+}
+
+.card-list span {
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.related,
+.sources {
+  margin-top: calc(var(--space) * 2.5);
+}
+
+.faq {
+  margin-top: calc(var(--space) * 2.5);
+}
+
+.faq details {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.faq summary {
+  padding: 0.85rem 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.faq details p {
+  margin: 0 0 1rem;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Pricing ---------- */
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space);
+  margin: calc(var(--space) * 1.5) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pricing-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: calc(var(--space) * 1.25);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
+}
+
+.pricing-card--pro {
+  border-color: var(--color-accent);
+}
+
+.pricing-card h2 {
+  margin: 0;
+}
+
+.pricing-card__price {
+  margin: 0;
+}
+
+.pricing-card__price strong {
+  font-size: 2rem;
+}
+
+.pricing-card__features {
+  flex: 1;
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.pricing-card .primary-button,
+.pricing-card .secondary-button {
+  align-self: stretch;
+}
+
+.secondary-button.is-disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.promises ul {
+  padding-left: 1.2rem;
+}
+
+/* ---------- Batch ---------- */
+
+.batch-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.batch-rows__row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  font-size: 0.95rem;
+}
+
+.batch-rows__name {
+  overflow-wrap: anywhere;
+}
+
+.batch-rows__state {
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: var(--color-surface-2);
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.batch-rows__state--working {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.batch-rows__state--done {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.batch-rows__state--failed {
+  background: var(--color-surface-2);
+  color: var(--color-error);
+}
+
+/* Spans the row so a long explanation doesn't squash the columns above it. */
+.batch-rows__problem {
+  grid-column: 1 / -1;
+  color: var(--color-error);
+  font-size: 0.85rem;
+}
+
+/* ---------- Pro gate ---------- */
+
+.pro-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: calc(var(--space) * 2) calc(var(--space) * 1.5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.pro-gate h2 {
+  margin: 0;
+}
+
+.pro-gate p {
+  margin: 0;
+}
+
+.pro-gate__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* ---------- Log in and account ---------- */
+
+/* Narrow, centred column: a single email field shouldn't span the whole page. */
+.auth {
+  max-width: 26rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.auth h1 {
+  justify-content: center;
+}
+
+.auth .lead {
+  margin-bottom: calc(var(--space) * 1.5);
+}
+
+.auth-card {
+  padding: calc(var(--space) * 1.5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.auth-form .primary-button {
+  width: 100%;
+}
+
+.auth-note {
+  margin: var(--space) 0 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.auth-sent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  text-align: center;
+}
+
+.auth-sent__to {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.account-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  margin: 0;
+}
+
+.account-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.account-row dt {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.account-row dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: calc(var(--space) * 1.5);
+  padding-top: calc(var(--space) * 1.25);
+  border-top: 1px solid var(--color-border);
+}
+
+.account-actions > * {
+  flex: 1 1 8rem;
+}
+
+.auth-google {
+  width: 100%;
+  margin-bottom: var(--space);
+}
+
+/* "or" with a rule either side. */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 var(--space);
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+  content: '';
+}
+
+.account-password {
+  margin-top: calc(var(--space) * 1.5);
+  padding: calc(var(--space) * 1.5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.account-password h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.account-password > p {
+  margin: 0 0 var(--space);
+  font-size: 0.9rem;
+}
+
+/* Deleting an account can't be undone, so it's set apart rather than sitting
+   next to the ordinary settings. */
+.account-danger {
+  margin-top: calc(var(--space) * 1.5);
+  padding: calc(var(--space) * 1.5);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  text-align: left;
+}
+
+.account-danger h2 {
+  margin: 0 0 0.25rem;
+  color: var(--color-error);
+  font-size: 1.1rem;
+}
+
+.account-danger > p {
+  margin: 0 0 var(--space);
+  font-size: 0.9rem;
+}
+
+.danger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-error);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.danger-button:hover {
+  background: var(--color-error);
+  color: var(--color-surface);
+}
+
+.danger-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ---------- Verifiability demo (/verify) ---------- */
+
+.verify {
+  display: grid;
+  gap: calc(var(--space) * 1.5);
+  margin: calc(var(--space) * 1.5) 0;
+}
+
+.verify__panel {
+  padding: calc(var(--space) * 1.25);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.verify__panel > h2 {
+  margin-top: 0;
+}
+
+.verify__count {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The verdict lines carry the whole point of the page, so they are stated in text as well
+   as colour: never colour alone (WCAG 1.4.1), which the accessibility audit checks. */
+.verify__verdict {
+  font-weight: 600;
+}
+
+.verify__verdict--good {
+  color: var(--color-accent);
+}
+
+.verify__verdict--bad {
+  color: var(--color-error);
+}
+
+.verify__list {
+  max-height: 18rem;
+  overflow-y: auto;
+  margin: 0.75rem 0 0;
+  padding-left: 1.5rem;
+}
+
+.verify__list code {
+  overflow-wrap: anywhere;
+}
+
+.verify__result {
+  margin-top: 1rem;
+}
+
+.verify__rows {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.verify__rows > div {
+  display: grid;
+  grid-template-columns: minmax(10rem, 14rem) 1fr;
+  gap: 0.75rem;
+}
+
+.verify__rows dt {
+  color: var(--color-muted);
+}
+
+.verify__rows dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 34rem) {
+  .verify__rows > div {
+    grid-template-columns: 1fr;
+    gap: 0.125rem;
+  }
+}
