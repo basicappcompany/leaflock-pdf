@@ -1,0 +1,38 @@
+# Line endings belong to the repository, not to each machine's git config.
+#
+# Added before the first push. The initial commit was made on Windows with
+# core.autocrlf=true, which printed "LF will be replaced by CRLF" for ~500 files: with no
+# .gitattributes, what lands in a working copy depends on whoever checked it out. That is
+# how a whole-file diff appears later for no reason, and it would also split this repo
+# from CI, which checks out on Linux.
+#
+# text=auto eol=lf: git normalises to LF in the object store and checks out LF everywhere,
+# including Windows. Every editor in use here handles LF, and the toolchain is Node.
+* text=auto eol=lf
+
+# Windows-only scripts that genuinely need CRLF. cmd.exe mis-parses LF-only batch files.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binaries: never normalised, never diffed as text.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.gif binary
+*.heic binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.wasm binary
+*.zip binary
+*.docx binary
+*.xlsx binary
+*.traineddata binary
+
+# Generated and vendored, so a diff is noise rather than review.
+pnpm-lock.yaml -diff linguist-generated
