@@ -17,6 +17,25 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 1 November 2026 — Self-host deployment guide (roadmap 4.10)
+
+`docs/self-hosting.md`: what a Business licensee actually deploys (the static build and
+nothing else), both build-time flags and why each one matters, the five `_headers` rules a
+non-Cloudflare server has to reproduce, and a five-step verification that ends by pulling
+the network cable.
+
+**The finding worth keeping:** the two flags are not tidiness. `PUBLIC_USAGE_LIMITS=off`
+exists because on a network with no internet a metering call does not fail fast — every
+job would wait out a connection timeout first. Same for `PUBLIC_ERROR_REPORTING=off`. And
+nothing else needs removing: `useSession` already catches its failed request and treats
+everyone as signed out, so a static-only deploy degrades correctly on its own.
+
+**Stated limit:** no install has been run on a real air-gapped network, because there is
+no licensee yet. The document says so at the top and lists what the first deployment
+should correct, rather than reading as tested.
+
+---
+
 ## 31 October 2026 — On GitHub, CI green (roadmap 6.2)
 
 `basicappcompany/leaflock-pdf`, private. Two commits, 512 files. First Actions run green

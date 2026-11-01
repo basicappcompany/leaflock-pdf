@@ -927,6 +927,8 @@ category 1**, the one category that cannot be won. So the order is:
    is the trust page it is sold on (item 3.5, `/claims`). The click-through DPA is the one
    piece still open, in the 6.3 lawyer engagement.
 5. **Self-host deployment guide, SSO, audit logging** — category 5. ~7 days total.
+   The guide is **done 1 November 2026** (item 4.10, `docs/self-hosting.md`); SSO and audit
+   logging remain.
 6. **The API** (4.7), then **Phase 7** when its conditions hold.
 7. **Phase 3's landings and guides last** — they still get built, because domain age and
    coverage compound, but they stop blocking the categories that pay.
