@@ -208,6 +208,15 @@ stale on its own", and by the 30th every projected date on the page was a day op
 It now reads the clock, and `scripts/tracker-check.mjs` computes the same local-midnight
 date so the two models still agree. Two things this one teaches that a tool count does not:
 
+- **Two skins of the status page, one source of data.** `docs/status2.html` is the design
+  before the 1 November reskin, kept to compare against. Both are deliberately single files
+  that open with no tooling, so the data cannot be factored into a shared module without
+  giving that up — instead `pnpm counts` mirrors the canonical page's whole `<script>` block
+  into the other, and `pnpm tracker` fails if they have drifted. This is not belt and
+  braces: they drifted within minutes of the copy being taken, one `pnpm counts` run leaving
+  status.html saying 7 commits and status2.html saying 6. A second tracker that quietly
+  disagrees with the first is worse than having only one. **Edit the data in
+  `docs/status.html` only**, then run `pnpm counts`.
 - **"Today" is the only figure that goes stale with no edit at all**, so it is the last
   thing that should ever be typed. The pin survived three sessions of pressing the rule on
   every other number on that page.

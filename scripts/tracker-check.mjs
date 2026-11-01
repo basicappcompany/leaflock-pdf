@@ -168,11 +168,42 @@ console.log(
 const assigned = new Set(
   [...html.matchAll(/getElementById\(["'](\w+)["']\)\s*\.\s*(?:textContent|innerHTML)\s*=/g)].map((m) => m[1]),
 );
-for (const [, id, rest, literal] of html.matchAll(/<[^>]*id="(\w+)"([^>]*)>([^<]*)</g)) {
-  const text = literal.trim();
-  // A dash, a blank, or a declared default is fine; anything else reads as a claim.
-  if (assigned.has(id) && text.length > 2 && !rest.includes('data-default')) {
-    problems.push(`#${id} ships the literal "${text}" but the script overwrites it — use a dash placeholder`);
+
+/**
+ * Both skins, not just the canonical one.
+ *
+ * `docs/status2.html` is the pre-reskin design kept alongside this one. `pnpm counts`
+ * mirrors the canonical page's whole <script> block into it, so their data cannot drift —
+ * but their markup is edited by hand and can, and a placeholder left unfilled is exactly the
+ * bug that had the header reading "0 commits, no remote" through five commits.
+ */
+const SKINS = [PATH, 'docs/status2.html'];
+for (const skin of SKINS) {
+  let markup;
+  try {
+    markup = await readFile(skin, 'utf8');
+  } catch {
+    continue; // skin deleted; nothing to check
+  }
+  const where = skin === PATH ? '' : ` (${skin.replace('docs/', '')})`;
+
+  for (const [, id, rest, literal] of markup.matchAll(/<[^>]*id="(\w+)"([^>]*)>([^<]*)</g)) {
+    const text = literal.trim();
+    // A dash, a blank, or a declared default is fine; anything else reads as a claim.
+    if (assigned.has(id) && text.length > 2 && !rest.includes('data-default')) {
+      problems.push(`#${id}${where} ships the literal "${text}" but the script overwrites it — use a dash placeholder`);
+    }
+  }
+
+  // And the mirror must actually have run: a skin whose script differs is a second tracker
+  // telling a different story, which is worse than having only one.
+  if (skin !== PATH) {
+    const block = /<script>[\s\S]*<\/script>/;
+    const mine = markup.match(block);
+    const canonical = html.match(block);
+    if (mine && canonical && mine[0] !== canonical[0]) {
+      problems.push(`${skin} has drifted from ${PATH} — run 'pnpm counts' to mirror it`);
+    }
   }
 }
 

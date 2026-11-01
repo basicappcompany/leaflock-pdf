@@ -125,6 +125,44 @@ const freeAccountDaily = constant('FREE_ACCOUNT_DAILY_JOBS');
  * A figure Playwright could not supply keeps its previous value instead of being written
  * as `null`, and the output says the block was left alone.
  */
+/**
+ * Keep every skin's data identical by copying, not by remembering.
+ *
+ * `docs/status2.html` is the pre-reskin design, kept alongside the neo-brutalist one. Both
+ * are deliberately single files that open with no tooling (see `scripts/tracker-check.mjs`),
+ * so the data cannot be factored into a shared module without giving that up. Instead the
+ * canonical page's whole <script> block is mirrored into the other: the two differ only in
+ * CSS and in where the theme toggle sits, and their scripts are meant to be byte-identical.
+ *
+ * This exists because they drifted within minutes of the copy being made — one `pnpm counts`
+ * run left status.html saying 7 commits and status2.html saying 6. A second tracker that
+ * quietly disagrees with the first is worse than no second tracker.
+ */
+async function mirrorSkins() {
+  const source = 'docs/status.html';
+  const skins = ['docs/status2.html'];
+  const block = /<script>[\s\S]*<\/script>/;
+
+  const canonical = (await read(source)).match(block);
+  if (!canonical) return 'skipped \u2014 no <script> block in ' + source;
+
+  const updated = [];
+  for (const skin of skins) {
+    let html;
+    try {
+      html = await read(skin);
+    } catch {
+      continue; // the skin was deleted; nothing to mirror into
+    }
+    if (!block.test(html)) continue;
+    const next = html.replace(block, () => canonical[0]);
+    if (next === html) continue;
+    await writeFile(skin, next, 'utf8');
+    updated.push(skin.replace('docs/', ''));
+  }
+  return updated.length ? `mirrored into ${updated.join(', ')}` : 'already identical';
+}
+
 async function syncStatusHtml() {
   const path = 'docs/status.html';
   const html = await read(path);
@@ -158,6 +196,8 @@ async function syncStatusHtml() {
 }
 
 const statusNote = await syncStatusHtml();
+// After, not before: the mirror has to carry the COUNTS block that was just rewritten.
+const mirrorNote = await mirrorSkins();
 
 console.log(
   [
@@ -172,6 +212,7 @@ console.log(
     `free-tier cap    ${anonymousDaily}/day anonymous, ${freeAccountDaily}/day free account`,
     '',
     `status.html COUNTS ${statusNote}`,
+    `other skins       ${mirrorNote}`,
     'Pages: `pnpm build` prints "N page(s) built" — the only count that needs a build.',
   ].join('\n'),
 );

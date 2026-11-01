@@ -380,13 +380,12 @@
 <body>
 
 <main>
-  <div style="border:2px solid #b3261e; padding:0.7rem 0.9rem; margin-bottom:1.25rem; font-size:0.85rem; line-height:1.45;">
-    <b>Frozen snapshot &mdash; not maintained.</b> This is <span style="font-family:monospace">docs/status.html</span> as it looked on
-    1 November 2026, kept only to compare against the neo-brutalist reskin. <b>Every figure here stops updating:</b>
-    <span style="font-family:monospace">pnpm counts</span> rewrites the COUNTS block in <span style="font-family:monospace">status.html</span>
-    only, and <span style="font-family:monospace">pnpm tracker</span> validates that file only &mdash; so this copy drifts from the
-    moment anything ships. Read <span style="font-family:monospace">docs/status.html</span> for the real state; delete this file once
-    the comparison is done.
+  <div style="border:2px solid #000; padding:0.7rem 0.9rem; margin-bottom:1.25rem; font-size:0.85rem; line-height:1.45;">
+    <b>Previous design, kept on purpose.</b> This is <span style="font-family:monospace">docs/status.html</span> as it looked before the
+    1 November reskin. <b>Its data is mirrored, not maintained by hand:</b> <span style="font-family:monospace">pnpm counts</span> copies
+    the canonical page&rsquo;s whole script block into this file, and <span style="font-family:monospace">pnpm tracker</span> fails if the two
+    have drifted. So the figures here are always current &mdash; but <b>edit the data in
+    <span style="font-family:monospace">docs/status.html</span> only</b>, or the next mirror will overwrite you.
   </div>
 
   <header>
@@ -515,7 +514,7 @@
     tools: 43,
     pro: 0,
     practice: 6,
-    commits: 6,
+    commits: 8,
     ops: 29,
     landings: 5,
     guides: 6,

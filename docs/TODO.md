@@ -190,8 +190,13 @@ suite including the performance budget) now runs where it was always meant to.
       local equivalent — `playwright install --with-deps chromium` on a fresh
       `ubuntu-latest` runner — is now tested rather than assumed, and the two flakes seen
       locally did not recur, which says they were parallel load rather than the suite.
-- [ ] **Branch protection:** require this workflow to pass before merging to `main`. Worth
-      doing now there is a `main` to protect, and it is the only part of 6.2 left.
+- [x] **Branch protection — declined, because GitHub will not sell it here.** Asking for it
+      returns `Upgrade to GitHub Pro or make this repository public to enable this feature`
+      (403). Public is not an option: the product is closed source (`docs/design.md` §13).
+      So the choice is GitHub Pro or nothing, and for a solo repo where CI already runs on
+      every push it buys little — the rule would only stop a mistake nobody else can make.
+      Revisit when someone else commits here, which is also when Pro starts paying for
+      itself. Recorded as decided rather than left as a box nobody can tick.
 - [ ] **Three actions target the deprecated Node 20** and are being force-run on Node 24:
       `actions/checkout@v4`, `actions/setup-node@v4`, `pnpm/action-setup@v4`. A
       warning, not a failure. Bump each to v5 when the workflow is next touched.
