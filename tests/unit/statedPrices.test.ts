@@ -57,6 +57,12 @@ describe('stated prices', () => {
 
     const wrong: string[] = [];
     for (const file of files) {
+      // Comparison pages quote competitors' prices on purpose, and the collection schema
+      // already makes those accountable: each carries a `checkedOn` date and a `sources`
+      // list. Allow-listing their figures here would be the worse fix, because a bare 99
+      // in ALLOWED would then silently permit a stale 99 of ours anywhere on the site.
+      // The test below covers the gap this skip opens.
+      if (relative(repoRoot, file).split(sep).join('/').startsWith('src/content/compare/')) continue;
       // Legal placeholders are not product prices: terms.md carries an unsettled
       // liability cap written as "[TO CONFIRM: minimum amount, e.g. US$50]", which is
       // owned by docs/legal-checklist.md and roadmap 6.3, not by src/lib/pricing.ts.
@@ -79,6 +85,40 @@ describe('stated prices', () => {
       'These state a price that src/lib/pricing.ts does not hold ' +
         `(allowed: ${[...ALLOWED].sort((a, b) => a - b).join(', ')}):\n  ${wrong.join('\n  ')}\n`,
     ).toEqual([]);
+  });
+
+  it('states none of our own prices on a comparison page', async () => {
+    // The other half of the skip above. A competitor page is the worst place for one of
+    // our prices to sit: it is written to be read beside someone else's, it is dated by
+    // `checkedOn` rather than rebuilt from the constants, and nothing on it recomputes.
+    // So those pages must link to /pricing or /business instead of quoting a figure.
+    const repoRoot = new URL('../../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+    const files = (await walk(join(repoRoot, 'src/content/compare'))).filter((file) => file.endsWith('.md'));
+    expect(files.length, 'found no comparison pages to check').toBeGreaterThan(0);
+
+    // Typed as a plain number set: `prices` is `as const`, so Object.values() gives a
+    // union of literals and `.has(someNumber)` would not type-check against it.
+    const ours = new Set<number>(Object.values(prices));
+    const wrong: string[] = [];
+    for (const file of files) {
+      const text = await readFile(file, 'utf8');
+      // The negative lookahead matters more than it looks: without it this matched the
+      // "$24" inside Adobe's "$24.99/mo" and reported our own Pro yearly price as having
+      // leaked onto a competitor page. A rival's decimal price can share a prefix with
+      // one of ours, so a bare digit run is not a price.
+      for (const match of text.matchAll(/(?:US)?\$(\d[\d,]*)(?!\d|\.\d)/g)) {
+        const captured = match[1];
+        if (!captured) continue;
+        const amount = Number(captured.replace(/,/g, ''));
+        if (!ours.has(amount)) continue;
+        const line = text.slice(0, match.index).split('\n').length;
+        wrong.push(
+          `${relative(repoRoot, file).split(sep).join('/')}:${line} states our own ${match[0]}`,
+        );
+      }
+    }
+
+    expect(wrong, `Link to /pricing instead of quoting our own price here:\n  ${wrong.join('\n  ')}\n`).toEqual([]);
   });
 
   it('keeps a year of Pro cheaper than twelve months of it', () => {

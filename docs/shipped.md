@@ -17,6 +17,34 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 1 November 2026 — Comparison pages, all seven (roadmap 3.2)
+
+Added PDF24, Sejda, pdfFiller, Stirling-PDF and Adobe to the existing two. Each claim is
+quoted from the rival's own pages, linked per section, with a `checkedOn` date.
+
+**The finding worth keeping: what you cannot source is itself the deliverable.** Two of the
+five were written around gaps rather than guesses. Sejda's free-tier figures are not on any
+page an automated read reaches, and one price that page did return was mangled badly enough
+to be obvious ("$750 per user per month"), so both that page and pdfFiller's describe the
+shape and link out. Adobe's help pages answer 403 and its trust pages 404, so that page
+makes **no claim at all** about where Adobe processes files or how long it keeps them, says
+so in its opening, and teaches the reader to check with the network panel instead. A page
+that admits what it could not verify is worth more than one that quietly asserts it.
+
+**The guard that came out of it.** Quoting a rival's price trips `statedPrices`, which is
+correct. The fix was not to allow-list their figures — a bare 99 in ALLOWED would then
+permit a stale 99 of ours anywhere. Comparison pages are skipped instead, because the
+collection schema already dates and sources them, and a new inverted test bans **our own**
+prices from those pages, since a competitor page is the worst place for our figure to rot.
+Writing it immediately caught a false positive of its own: `$24` inside Adobe's `$24.99`
+matched our Pro yearly price, so the pattern now refuses to match a prefix of a decimal.
+
+**Stated limit:** every page says plainly what the competitor is better at. Adobe's section
+on features we do not have is there because a comparison that only lists the other side's
+weaknesses is an advertisement, not a comparison.
+
+---
+
 ## 1 November 2026 — Self-host deployment guide (roadmap 4.10)
 
 `docs/self-hosting.md`: what a Business licensee actually deploys (the static build and

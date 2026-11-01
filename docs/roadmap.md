@@ -100,9 +100,9 @@ while the rest is built.
 
 | | LeafLock | iLovePDF | Smallpdf | Adobe online | Sejda | Stirling-PDF | ihatepdf.cv |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Tools | **43** (37 free, 6 Pro) | ~30 | ~40 | ~25 | 40+ | 50+ | 28–60 (claims differ) |
+| Tools | **43** (37 free, 6 Practice) | ~30 | ~40 | ~25 | 40+ | 50+ | 28–60 (claims differ) |
 | Landing variants | 5 | many | many | many | many | — | — |
-| Comparison pages | 2 | — | — | — | — | — | 3 |
+| Comparison pages | **7** | — | — | — | — | — | 3 |
 | Guides | 6 | large library | large library | large library | — | — | 40+ |
 | Locales live | 1 (`en`, i18n built for more) | 21+ | 24 | ~30 | — | — | 1 |
 | Processing | on device | server | server | server | server (desktop app offline) | customer's own server | **on device** |
@@ -949,7 +949,8 @@ is free, and working it out afterwards means re-reading a hundred pages.
 - **Programmatic landings.** 3 today → 40+. Extend the `landings` array: every image
   format in and out, every "A to B" pair we can genuinely do, every phrasing people
   search for. Distinct copy, not thin duplicates.
-- **Comparison pages.** 2 today (iLovePDF, Smallpdf) → add Adobe, Sejda, PDF24,
+- **Comparison pages. Done 1 November 2026** (item 3.2) — all seven, the last five
+  written that day. 2 before (iLovePDF, Smallpdf) → add Adobe, Sejda, PDF24,
   pdfFiller. These rank for "X alternative" — high intent, low competition — and ours
   write themselves on the ads, CSP and offline arguments.
 - **Guides.** 6 today → one per tool minimum, each answering its query in the first two
