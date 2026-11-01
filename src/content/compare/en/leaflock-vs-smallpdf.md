@@ -58,7 +58,7 @@ This page compares the two on facts you can check. Everything we say about Small
 
 **Smallpdf.** Its pricing page lists a Free plan with access to its tools but limited document downloads and limited mobile app access, with daily download limits shown for many tools. The Pro plan adds unlimited downloads and tool use, text editing, OCR, strong compression and unlimited AI tools. Smallpdf offers a 7-day free trial of its paid features.
 
-**LeafLock.** All tools are free, including [OCR PDF](/ocr-pdf) and every [Compress PDF](/compress-pdf) level, and we set no file-size limit: because the work happens on your device, the only limit is your device's memory and speed. We do limit how many tools you can use per day on the free plan: 20 a day without an account, 60 a day with a free account, and no daily limit on Pro. Tools marked Pro, such as [Redact PDF](/redact-pdf) and [Compare PDF](/compare-pdf), are free during early access.
+**LeafLock.** All tools are free, including [OCR PDF](/ocr-pdf) and every [Compress PDF](/compress-pdf) level, and we set no file-size limit: because the work happens on your device, the only limit is your device's memory and speed. We do limit how many tools you can use per day on the free plan: 20 a day without an account, 60 a day with a free account, and no daily limit on Pro. Tools marked Practice, such as [Redact PDF](/redact-pdf) and [Compare PDF](/compare-pdf), are free during early access.
 
 ## Tools
 

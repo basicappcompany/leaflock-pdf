@@ -13,7 +13,7 @@ By using the Service, you agree to these Terms. If you don't agree, please don't
 
 LeafLock PDF provides tools for working with PDF files and images. The tools run in your web browser and process files on your device. Your files are not uploaded to us. How we handle personal data is described in the [Privacy policy](/privacy).
 
-You don't need an account to use the Service. Some tools are marked Pro; see section 5.
+You don't need an account to use the Service. Some tools are marked Pro or Practice; see section 5.
 
 The Business edition, a self-hosted copy of the Service for organizations, is licensed under a separate agreement. [TO CONFIRM: Business edition licence terms]
 

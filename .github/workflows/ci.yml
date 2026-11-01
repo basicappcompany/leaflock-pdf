@@ -17,18 +17,21 @@ concurrency:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    # Pinned, not latest: the ubuntu-latest label migrated to Ubuntu 26 on
+    # 19 October 2026, so floating means the image can change under a green build with
+    # no commit of ours. Bump this deliberately, with a run to prove it.
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Reads the exact version from package.json's "packageManager" field and puts it
       # on PATH. Has to come before setup-node: its pnpm cache option shells out to
       # `pnpm store path`, which fails if pnpm isn't already installed yet.
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       # Matches the portable toolchain in ~/tools/leaflock-env.sh: package.json requires
       # >=22.22.0, and the owner develops against Node 24.
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: pnpm
@@ -60,7 +63,7 @@ jobs:
       # per failed test — `reporter: 'github'` in CI annotates the PR directly but keeps
       # no HTML report, so this is the only way to get a trace back off the runner.
       - if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-traces
           path: test-results/

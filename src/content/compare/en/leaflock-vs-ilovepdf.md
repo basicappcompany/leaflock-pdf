@@ -55,7 +55,7 @@ This page compares the two on facts you can check. Everything we say about iLove
 
 **iLovePDF.** Its pricing page lists a free Basic plan with access to essential tools and limited document processing. Limits are published per tool. For example, on the free plan Merge PDF accepts up to 25 files and 100 MB per task, Compress PDF accepts 200 MB, and OCR PDF and the Office conversions accept 15 MB. The paid Premium plan removes most of these limits and adds access across web, mobile and desktop, digital signatures, workflows, no ads and AI credits.
 
-**LeafLock.** All tools are free, and we set no file-size limit on any of them: because the work happens on your device, the only limit is your device's memory and speed. We do limit how many tools you can use per day on the free plan: 20 a day without an account, 60 a day with a free account, and no daily limit on Pro. Tools marked Pro, such as [Redact PDF](/redact-pdf) and [Compare PDF](/compare-pdf), are free during early access.
+**LeafLock.** All tools are free, and we set no file-size limit on any of them: because the work happens on your device, the only limit is your device's memory and speed. We do limit how many tools you can use per day on the free plan: 20 a day without an account, 60 a day with a free account, and no daily limit on Pro. Tools marked Practice, such as [Redact PDF](/redact-pdf) and [Compare PDF](/compare-pdf), are free during early access.
 
 ## Tools
 
