@@ -18,6 +18,7 @@ import { exec } from 'node:child_process';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
+import { mirrorInto } from './skins.mjs';
 
 const run = promisify(exec);
 const read = (path) => readFile(path, 'utf8');
@@ -141,12 +142,10 @@ const freeAccountDaily = constant('FREE_ACCOUNT_DAILY_JOBS');
 async function mirrorSkins() {
   const source = 'docs/status.html';
   const skins = ['docs/status2.html'];
-  const block = /<script>[\s\S]*<\/script>/;
-
-  const canonical = (await read(source)).match(block);
-  if (!canonical) return 'skipped \u2014 no <script> block in ' + source;
+  const canonical = await read(source);
 
   const updated = [];
+  const failed = [];
   for (const skin of skins) {
     let html;
     try {
@@ -154,13 +153,20 @@ async function mirrorSkins() {
     } catch {
       continue; // the skin was deleted; nothing to mirror into
     }
-    if (!block.test(html)) continue;
-    const next = html.replace(block, () => canonical[0]);
-    if (next === html) continue;
-    await writeFile(skin, next, 'utf8');
+    const result = mirrorInto(canonical, html, { source, skin });
+    // Reported, not skipped. A skin whose script tags are broken used to fall through
+    // both this and the drift check in tracker-check.mjs, so nothing noticed at all.
+    if (result.error) {
+      failed.push(result.error);
+      continue;
+    }
+    if (!result.changed) continue;
+    await writeFile(skin, result.html, "utf8");
     updated.push(skin.replace('docs/', ''));
   }
-  return updated.length ? `mirrored into ${updated.join(', ')}` : 'already identical';
+
+  if (failed.length) return `PROBLEM: ${failed.join("; ")}`;
+  return updated.length ? `mirrored into ${updated.join(", ")}` : "already identical";
 }
 
 async function syncStatusHtml() {

@@ -217,6 +217,15 @@ date so the two models still agree. Two things this one teaches that a tool coun
   status.html saying 7 commits and status2.html saying 6. A second tracker that quietly
   disagrees with the first is worse than having only one. **Edit the data in
   `docs/status.html` only**, then run `pnpm counts`.
+- **The tooling that enforces the rules needs the rules applied to it.** `pnpm counts` and
+  `pnpm tracker` write 13 figures, mirror a whole script block between the two skins, and
+  run the placeholder and drift guards — and until 1 November 2026 neither had a single
+  test. The circularity is the point: if the mirror silently stopped matching, the only
+  thing that would notice was the drift check, which lives in the other script. Both now
+  share `scripts/skins.mjs`, which `tests/unit/skins.test.ts` covers case by case.
+  Reviewing it found a real hole first: a skin whose `<script>` tags were broken returned
+  null from both the mirror and the drift check, and both read null as "nothing to do", so
+  a broken second tracker passed everything in silence. It is an error now, not a skip.
 - **"Today" is the only figure that goes stale with no edit at all**, so it is the last
   thing that should ever be typed. The pin survived three sessions of pressing the rule on
   every other number on that page.
