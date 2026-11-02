@@ -47,7 +47,7 @@ The Service, including its code, design, text and the LeafLock PDF name and logo
 
 Results you create with the tools are yours, subject to the rights of anyone else in the files you processed.
 
-Some parts of the Service use open-source software under its own licence terms. [TO CONFIRM: where open-source notices are published]
+Some parts of the Service use open-source software under its own licence terms, listed with the required notices on the [Open-source licenses](/licenses) page.
 
 ## 5. Paid plans
 
@@ -57,9 +57,9 @@ Tools marked Pro or Practice are currently in early access and free to use. We m
 
 ### Billing
 
-When paid plans launch, they will be sold by [TO CONFIRM: payment provider, Paddle or Dodo Payments], which acts as the merchant of record. The payment provider is the seller of the plan, handles payment, invoicing, sales tax and VAT, and its own terms of sale apply to your purchase. These Terms continue to apply to your use of the Service.
+When paid plans launch, they will be sold by Dodo Payments (for customers in India) or Paddle (for customers everywhere else), each acting as the merchant of record for the purchases it handles. The payment provider is the seller of the plan, handles payment, invoicing, sales tax and VAT, and its own terms of sale apply to your purchase. These Terms continue to apply to your use of the Service.
 
-Prices are shown clearly before you buy. Plans available at launch are expected to be monthly, yearly and a limited founding lifetime plan. [TO CONFIRM: number of founding lifetime plans offered, and what "lifetime" covers]
+Prices are shown clearly before you buy. Plans available at launch are expected to be monthly, yearly, and a limited founding ten-year Pro plan ($120 once) for early supporters. [TO CONFIRM: number of founding ten-year plans offered]
 
 ### Renewal and cancellation
 

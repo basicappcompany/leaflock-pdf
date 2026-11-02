@@ -123,6 +123,7 @@ export const common = {
     privacy: 'Privacy policy',
     terms: 'Terms of use',
     cookies: 'Cookies',
+    licenses: 'Open-source licenses',
     pricing: 'Pricing',
     guides: 'Guides',
     compare: 'Compare',

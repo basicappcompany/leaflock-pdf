@@ -18,29 +18,52 @@ brief does not duplicate it and is not updated as items close.
 
 ## 2. Service providers (decide, then name them)
 
-- [ ] Hosting provider, likely Cloudflare Pages (privacy.md, three places; cookies.md).
-- [ ] Whether the hosting provider sets any cookies of its own, e.g. bot protection (cookies.md).
-- [ ] Email provider for hello@leaflockpdf.com (privacy.md).
+- [x] Hosting provider: **Cloudflare** — named in privacy.md and cookies.md, 3 November
+      2026. This was always a fact, not a decision (`wrangler.toml`).
+- [ ] Whether the hosting provider sets any cookies of its own, e.g. bot protection
+      (cookies.md) — **researched, not confirmed for this account**: Cloudflare's own
+      docs say it sets no cookies by default, and only adds `__cf_bm`-style cookies if a
+      bot-protection feature is switched on in the dashboard. Needs a direct check of
+      the account's actual settings, not an assumption either way.
+- [x] Email provider: **Resend** — named in privacy.md, 3 November 2026. Already implied
+      by `RESEND_API_KEY` throughout `functions/`; also a fact, not a decision.
 - [x] Payment provider and merchant of record — **decided 28 October 2026: both,
       routed by region.** Dodo Payments as merchant of record for customers in India
       (cheaper domestic rate, confirmed UPI); Paddle as merchant of record for
       customers everywhere else (confirmed iDEAL and Pix, flat fee with no surcharge
       stacking). See `docs/roadmap.md` Phase 4 for the reasoning and the engineering
       cost accepted alongside it.
-- [ ] **privacy.md and terms.md must now name both providers**, each as merchant of
-      record for its own region, not one. This doubles the review in the two items
-      below — each needs doing once per provider.
+- [x] **privacy.md and terms.md now name both providers** — done 3 November 2026. The
+      text had still named only one, undecided, three days after the decision above.
+      **Still open: Paddle itself isn't wired into the code** — only Dodo exists in
+      `functions/` and `.dev.vars` (docs/TODO.md §3). The policy pages now promise
+      something the product doesn't do yet.
 - [ ] How each provider's international data transfers are covered (adequacy decision
       or Standard Contractual Clauses) (privacy.md) — **for both Dodo and Paddle**.
+      Researched for two of the three other providers: Resend ships a pre-signed DPA
+      with the EU SCCs built in, applying automatically to every account; Paddle's DPA
+      likewise incorporates the EU SCCs (Implementing Decision 2021/914) for its
+      sub-processors. Dodo's own transfer mechanism wasn't checked this pass.
 - [ ] Retention periods and refund/withdrawal terms may differ by provider — confirm
       whether Dodo's and Paddle's own terms agree closely enough to state one policy,
-      or whether `terms.md` needs a per-provider carve-out.
+      or whether `terms.md` needs a per-provider carve-out. **Researched:** Dodo's
+      refunds are discretionary and case-by-case, with a 60-day window to request one;
+      Paddle honours the EU's statutory 14-day digital-goods withdrawal right unless the
+      buyer expressly waived it by starting delivery, and is otherwise discretionary too
+      — close enough that one policy describing "14 days for EU/UK buyers, otherwise at
+      the provider's discretion" would likely cover both, but that's a drafting call for
+      the lawyer, not a conclusion to ship from this research alone.
 
 ## 3. Retention periods
 
-- [ ] Server access logs (privacy.md).
+- [ ] Server access logs (privacy.md). **Researched:** Cloudflare's Free-plan default is
+      24 hours (Workers logs: 3 days); longer retention needs Log Explorer or a paid
+      plan. Depends on which tier the account actually runs — not confirmed.
 - [ ] Emails sent to us (privacy.md).
-- [ ] Payment records under Indian tax law (privacy.md).
+- [ ] Payment records under Indian tax law (privacy.md). **Researched:** Income Tax Act
+      requires roughly 6–7 years from the relevant assessment year, the Companies Act 8
+      years, GST law 6 years — common practice is to retain 8 years to satisfy all
+      three at once. Per §0a, still "a CA question, not a lawyer one."
 - [ ] Crash reports, e.g. 90 days (privacy.md, "Error reports"). Reports contain no IP address and no file data; see `src/lib/errorReporting.ts`.
 
 **Zero-knowledge share links — added 29 October 2026, and this is a second pass, not part
@@ -77,11 +100,25 @@ own storage, which is the same category as the OCR model cache already covered i
 - [ ] Remedy if a paid feature is removed, or if we end a paid plan for a reason other than the user's breach.
 - [ ] Minimum liability amount, e.g. US$50.
 - [ ] Business edition licence terms (separate agreement).
-- [ ] Where open-source licence notices are published.
+- [x] Where open-source licence notices are published — **shipped 3 November 2026:**
+      `/licenses`, generated from the real runtime dependencies and their installed
+      versions. Includes the LGPL-3.0 note for `libheif-js` and a link to its shipped
+      LICENSE file. `terms.md` now points here instead of asking where notices live.
 
 ## 5. Cookies and consent (cookies.md)
 
-- [ ] Confirm no consent banner is needed: the site sets no cookies, stores only the theme choice in localStorage, and caches the OCR model in the browser after first use.
+- [ ] Confirm no consent banner is needed. **Corrected 3 November 2026: the site sets
+      three cookies, not zero** — `cookies.md` previously said "exactly one" and was
+      wrong even on its own terms; it now lists all three. Two (`__Host-leaflock_session`,
+      `leaflock_signed_in`) are session-identity cookies, squarely strictly-necessary.
+      The third, `leaflock_skin` (a year-long persistence for signed-in Pro/Practice
+      users, session-only for everyone else), is the one that actually needs a reading:
+      set only on an explicit user action and used only to return what was asked for,
+      but a long-lived preference cookie is the case general ePrivacy guidance singles
+      out as needing confirmation rather than assumption. Also stores the theme choice
+      in localStorage and caches the OCR model in the browser after first use, neither
+      of which is a cookie. (The hosting-provider-cookies question itself is tracked
+      once, in §2 above.)
 
 ## 6. Trademarks and comparison pages
 

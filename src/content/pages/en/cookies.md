@@ -9,11 +9,13 @@ This policy explains whether leaflockpdf.com uses cookies and similar technologi
 
 ## We don't use cookies
 
-leaflockpdf.com sets **no advertising cookies and no analytics or tracking cookies**, ever. Used signed out, it sets no cookies at all, which is why you see no cookie banner.
+leaflockpdf.com sets **no advertising cookies and no analytics or tracking cookies**, ever. There are three cookies in total, described below — none of them track you across sites, build a profile, or get sent to anyone but us.
 
-There is exactly one cookie, and only if you sign in: a session cookie named `__Host-leaflock_session`. It identifies your signed-in session so you don't have to log in on every page, and it carries nothing else — no profile, no record of which tools you used. It is strictly necessary for signing in, which is the category that needs no consent under the ePrivacy rules. Signing out removes it.
+- **`__Host-leaflock_session`** — set only if you sign in. Identifies your signed-in session so you don't have to log in on every page, and carries nothing else: no profile, no record of which tools you used. Strictly necessary for signing in, which is the category that needs no consent under the ePrivacy rules. Signing out removes it.
+- **`leaflock_signed_in`** — set only if you sign in, alongside the cookie above. A plain "yes" flag with no session data in it, so the page can tell at a glance whether you're signed in without asking our server first. Also strictly necessary for the same reason, and also removed on sign-out.
+- **`leaflock_skin`** — set only if you pick a visual skin other than the default from the appearance menu, and only remembered between visits (for a year) if you're signed in on a Pro or Practice plan; for everyone else it lasts only until you close the browser. Carries nothing but which of the fifteen skins you chose. We treat this as strictly necessary too: you have to take an explicit action to set it, it exists only to give you back the thing you just asked for, and nothing about it is used to track or profile you — but we're not the final word on that reading, so [TO CONFIRM: whether the skin-choice cookie needs consent under the ePrivacy Directive, particularly for the year-long case].
 
-[TO CONFIRM: that the hosting provider does not set any cookies of its own, such as bot-protection cookies]
+[TO CONFIRM: that the hosting provider does not set any cookies of its own, such as bot-protection cookies — Cloudflare's own documentation says it does not unless we turn on a bot-protection feature; confirm nothing of that kind is enabled before relying on this]
 
 ## What we store in your browser instead
 

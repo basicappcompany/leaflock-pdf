@@ -17,6 +17,31 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 3 November 2026 — A real open-source notices page, and a wrong cookie policy fixed
+
+Asked to list every `[TO CONFIRM: …]` placeholder before launch, then to resolve what
+didn't need the owner or a lawyer. Shipped `/licenses` (`src/content/pages/en/licenses.md`),
+generated from the actual installed runtime dependencies rather than a remembered list —
+13 MIT/BSD/Apache packages plus `libheif-js` (LGPL-3.0, already shipped as a separate,
+replaceable file for exactly this reason — see design.md §10a's neighbour). Named
+Cloudflare, Resend, and the already-decided Dodo+Paddle split directly in `privacy.md`
+and `terms.md`: these were facts the code already assumed, not open decisions, so filling
+them in wasn't a judgement call.
+
+**The finding worth keeping:** `cookies.md` claimed "exactly one cookie" and was wrong,
+not just incomplete — the skin picker's `leaflock_skin` cookie (shipped 2 November) and
+the sign-in hint cookie `leaflock_signed_in` were never added to it, despite the page's
+own promise to update before any cookie ships. A placeholder audit that only looks for
+`[TO CONFIRM: …]` brackets misses this kind of drift entirely; it only surfaced from
+actually reading the policy against `src/lib/server/session.ts` and `SkinPicker.astro`
+side by side. Fixed, all three cookies now described accurately.
+
+**Stated limit:** `terms.md` and `privacy.md` now promise Paddle handles non-India
+purchases, but Paddle isn't wired into the code yet — only Dodo exists in `functions/`.
+Not a problem today (paid plans aren't live), but it has to land before they are.
+
+---
+
 ## 3 November 2026 — A scroll-reveal fade for content sections, after a live-site UX pass
 
 Owner asked for a UX check against the live site and whether a fixed header and some

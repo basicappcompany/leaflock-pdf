@@ -142,9 +142,11 @@ Only `openid email` is requested, so the consent screen needs no sensitive-scope
 Each of these is read by a Pages Function but has no local value, so the feature behind it
 fails as soon as it is exercised locally.
 
-- [ ] `RESEND_API_KEY` — sending the magic-link and verification emails.
+- [ ] `RESEND_API_KEY` — sending the magic-link and verification emails. Resend is now
+      named as the email provider in `privacy.md` (3 November 2026) — this was a FACT-tier
+      blank, not a decision, since the code already assumed it everywhere.
 - [ ] `EMAIL_FROM` — the From address (hello@leaflockpdf.com once the domain is verified
-      with the email provider; the provider itself is still an open legal-checklist item).
+      with Resend).
 - [ ] `DODO_API_KEY` — creating checkout sessions.
 
 ## 3. Dodo Payments — values present but unverified
@@ -162,9 +164,14 @@ now sits in `.dev.vars` beside the other three, and needs a real id like them.
 - [ ] Confirm each product id against the Dodo test dashboard, or create the products.
 - [ ] Confirm the webhook secret belongs to a real endpoint pointed at
       `/api/billing/webhook`.
-- [ ] Decide Paddle vs Dodo for good — the choice is still open in the legal checklist,
-      and the merchant of record has to be named in the policy pages.
+- [x] ~~Decide Paddle vs Dodo for good~~ — already decided 28 October 2026 (both, split by
+      region; see legal-checklist.md §2) and now named in `privacy.md` and `terms.md`
+      (3 November 2026). What's still open is wiring Paddle into the code — only Dodo
+      exists in `functions/` and `.dev.vars` today.
 - [ ] Switch `DODO_MODE` to live and set the production secrets before launch.
+- [ ] **Paddle has no code yet.** The billing routes (`functions/api/billing/*`,
+      `src/lib/server/billing.ts`) only know Dodo. Policy pages now promise Paddle
+      handles non-India customers — that promise isn't true until Paddle is integrated.
 
 ## 4. Cloudflare D1 — not created
 
@@ -284,6 +291,67 @@ fallback for Safari/iOS and for any format the wasm decoder doesn't cover.
 - [ ] The header's signed-in link now goes to `/dashboard` instead of `/account`, so
       account settings are one click further away (reached from the dashboard's own
       link). Worth revisiting if people go looking for it.
+
+## 7. The 24 launch blanks — 3 November 2026 pass
+
+The owner asked for every `[TO CONFIRM: …]` placeholder across `privacy.md`, `terms.md`
+and `cookies.md` listed in one place; a questionnaire artifact was built for the owner to
+answer the ones only they can, and this session resolved everything that didn't need
+them. See `docs/legal-checklist.md` for the full tracked list — this section only records
+what changed and why.
+
+**Resolved directly from the code, no decision needed:**
+- [x] Hosting provider named as **Cloudflare** (`privacy.md`, three places).
+- [x] Email provider named as **Resend** (`privacy.md`, two places) — already implied by
+      `RESEND_API_KEY` everywhere in `functions/`; stating it was a formality, not a
+      choice.
+- [x] Payment providers named as **Dodo Payments (India) + Paddle (everywhere else)**
+      (`privacy.md` and `terms.md`) — the decision already existed in
+      `legal-checklist.md` §2 (28 October 2026); the pages just hadn't been updated to
+      match it. Paddle is **not yet wired into the code** — see §3 above.
+- [x] "Lifetime plan" wording in `terms.md` corrected to the real product: a limited
+      founding **ten-year** Pro plan, $120 once — `terms.md` still called it "lifetime"
+      after the 30 October rename landed everywhere else (pricing.ts, roadmap.md).
+- [x] Open-source notices now have a real home: `/licenses`
+      (`src/content/pages/en/licenses.md`), generated from the actual runtime
+      dependencies and their installed versions, not typed from memory. `terms.md`'s
+      blank now links to it instead of asking where notices would go.
+
+**A real bug, not a blank: `cookies.md` was wrong, not just incomplete.** It claimed
+"exactly one cookie" (`__Host-leaflock_session`), but the code sets three:
+that one, `leaflock_signed_in` (added earlier for the signed-in header hint), and
+`leaflock_skin` (added this week for the skin picker, 2 November). Neither addition
+updated the cookie policy, despite the policy's own promise to update before any cookie
+is added — the kind of drift that only shows up when someone actually reads the policy
+against the code. Fixed: all three are now described, including `leaflock_skin`'s
+session-only-vs-year-long split by plan.
+
+**Researched, not decided — findings recorded for the lawyer, pages left as `[TO
+CONFIRM: …]`:**
+- Cloudflare Pages sets no cookies of its own by default; `__cf_bm` and similar only
+  appear if a bot-protection feature (Bot Fight Mode, Bot Management, Super Bot Fight
+  Mode) is turned on in the dashboard — worth a five-minute check against the real
+  account rather than an assumption either way.
+- Cloudflare's own log retention is 24 hours on the Free plan (Workers logs: 3 days);
+  longer retention needs Log Explorer or a paid plan — depends on which tier the
+  account is actually on.
+- India's statutory retention for financial/payment records: Income Tax ~6–7 years,
+  Companies Act 8 years, GST 6 years from the relevant year-end — practice is to keep
+  8 years to satisfy all three at once. Still "a CA question, not a lawyer one" per §0a.
+- Resend ships a pre-signed DPA (EU Standard Contractual Clauses included) that applies
+  automatically to every account — nothing to negotiate, just cite it.
+- Paddle's DPA likewise incorporates the EU SCCs (Implementing Decision 2021/914) for
+  its sub-processors.
+- Dodo Payments: merchant of record, refunds discretionary and case-by-case, a 60-day
+  window to request one. Paddle: the EU's statutory 14-day digital-goods withdrawal
+  right applies unless the buyer has expressly waived it by starting delivery; beyond
+  that, refunds are Paddle's discretion.
+- The ePrivacy "strictly necessary" exemption plausibly covers `leaflock_skin` — it's
+  set only on an explicit user action and used only to give the user back what they
+  asked for, and the design already withholds the year-long version from anyone who
+  hasn't paid for persistence — but a long-lived preference cookie is exactly the case
+  one of the sources flagged as needing confirmation rather than assumption. Flagged in
+  `cookies.md` itself now, not left silent.
 
 ## Running the auth and billing routes at all
 

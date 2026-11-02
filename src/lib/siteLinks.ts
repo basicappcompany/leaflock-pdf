@@ -30,9 +30,10 @@ export const footerGroups: readonly { heading: keyof CommonMessages['footer']; p
       { key: 'privacy', path: 'privacy' },
       { key: 'terms', path: 'terms' },
       { key: 'cookies', path: 'cookies' },
+      { key: 'licenses', path: 'licenses' },
     ],
   },
 ];
 
 /** Pages rendered from src/content/pages, in no particular order. */
-export const contentPages = ['about', 'security', 'claims', 'contact', 'business', 'help', 'privacy', 'terms', 'cookies'] as const;
+export const contentPages = ['about', 'security', 'claims', 'contact', 'business', 'help', 'privacy', 'terms', 'cookies', 'licenses'] as const;

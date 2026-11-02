@@ -25,7 +25,7 @@ Because we never receive your files, we cannot recover, delete or provide copies
 
 ### Server access logs
 
-When your browser requests a page or file from leaflockpdf.com, our hosting provider, [TO CONFIRM: hosting provider, likely Cloudflare], receives the request and may keep technical logs. These typically contain your IP address, the date and time, the address of the page or file requested, your browser's user-agent string and the response status.
+When your browser requests a page or file from leaflockpdf.com, our hosting provider, Cloudflare, receives the request and may keep technical logs. These typically contain your IP address, the date and time, the address of the page or file requested, your browser's user-agent string and the response status.
 
 These logs never contain your documents, because documents are not sent in any request.
 
@@ -42,11 +42,11 @@ Please don't send us your documents. We never need them to help you.
 - **Purpose:** answering your question and providing support.
 - **Legal basis (GDPR):** our legitimate interest in responding to people who contact us (Article 6(1)(f)), or taking steps at your request before entering into a contract (Article 6(1)(b)) if you ask about buying a plan.
 - **Retention:** as long as needed to deal with your request, and then for up to [TO CONFIRM: email retention period] in case of follow-up questions.
-- **Email service:** [TO CONFIRM: email provider].
+- **Email service:** Resend.
 
 ### Payments (once paid plans launch)
 
-Paid plans are not yet available. When they launch, purchases will be handled by [TO CONFIRM: payment provider, Paddle or Dodo Payments], which will act as the merchant of record. This means the payment provider is the seller in the transaction, processes your payment details, and handles sales tax and VAT. The payment provider processes your payment data as an independent controller under its own privacy policy, which it will show you at checkout.
+Paid plans are not yet available. When they launch, purchases will be handled by Dodo Payments (for customers in India) or Paddle (for customers everywhere else), each acting as the merchant of record for the purchases it handles. This means the payment provider is the seller in the transaction, processes your payment details, and handles sales tax and VAT. The payment provider processes your payment data as an independent controller under its own privacy policy, which it will show you at checkout.
 
 We will receive from the payment provider the information we need to provide and support your plan, such as your name, email address, country, the plan you bought, and the status of your subscription or purchase. We will not receive your full card or bank details.
 
@@ -86,10 +86,10 @@ We cannot read this data; it never leaves your device. See the [Cookie policy](/
 
 We share personal data only with the service providers that help us run LeafLock PDF, and only as far as needed:
 
-- **Hosting:** [TO CONFIRM: hosting provider], for server access logs.
-- **Email:** [TO CONFIRM: email provider], for emails you send us.
-- **Payments:** [TO CONFIRM: payment provider], once paid plans launch.
-- **Error reports:** stored with our hosting provider, [TO CONFIRM: hosting provider], as part of our own systems.
+- **Hosting:** Cloudflare, for server access logs.
+- **Email:** Resend, for emails you send us.
+- **Payments:** Dodo Payments (India) and Paddle (everywhere else), once paid plans launch.
+- **Error reports:** stored with our hosting provider, Cloudflare, as part of our own systems.
 
 We may also disclose personal data if required by law, or to protect our rights, our users or the public.
 
