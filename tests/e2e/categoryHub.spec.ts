@@ -43,12 +43,18 @@ test('a tool page links back into its category hub, from both the breadcrumb and
   expect(trail.map((step) => step.name)).toEqual([en.common.site.name, en.common.categories.organize, en.tools.merge.title]);
 });
 
-test('the home page links each category heading into its hub', async ({ page, baseURL }) => {
+test('the home page links each category into its hub', async ({ page, baseURL }) => {
   const watch = watchPage(page, baseURL!);
   await page.goto('/');
   for (const category of categories) {
-    const heading = page.locator(`.category--${category} h2 a`);
-    await expect(heading).toHaveAttribute('href', new RegExp(`/tools/${category}/?$`));
+    // The category heading is a <details><summary> toggle now (collapsible sections),
+    // not a link itself — the hub link lives on the "See all" line inside the panel.
+    // The first category starts open; the rest need a click to reveal that link.
+    const section = page.locator(`.category--${category}`);
+    if (!(await section.evaluate((el) => (el as HTMLDetailsElement).open))) {
+      await section.locator('summary').click();
+    }
+    await expect(section.locator('.category__viewAll')).toHaveAttribute('href', new RegExp(`/tools/${category}/?$`));
   }
   watch.assertClean();
 });

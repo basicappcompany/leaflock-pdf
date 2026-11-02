@@ -119,8 +119,14 @@ interface Budget {
   cls: number;
 }
 
-const CONTENT_BUDGET: Budget = { html: 60_000, jsCss: 320_000, lcpMs: 1500, cls: 0.1 };
-const TOOL_BUDGET: Budget = { html: 70_000, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
+// Raised from 60_000/70_000: the persistent tools sidebar (src/components/
+// ToolsSidebar.astro) renders all ~43 tools across every category into every page's
+// HTML so it works with JS disabled and needs no client fetch, and the skin picker
+// (src/components/SkinPicker.astro) renders all 15 options the same way — a real,
+// deliberate cost of shipping both site-wide rather than a measurement regression.
+// Current weight sits around 93-98KB; the budget leaves headroom without being toothless.
+const CONTENT_BUDGET: Budget = { html: 105_000, jsCss: 320_000, lcpMs: 1500, cls: 0.1 };
+const TOOL_BUDGET: Budget = { html: 100_000, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
 
 /** One representative page per kind, not all 52: this is a real-browser measurement
  * with response-body capture, materially slower per page than site.spec.ts's "loads

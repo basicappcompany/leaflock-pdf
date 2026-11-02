@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/skins.css';
+import { createHash } from 'node:crypto';
 import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
 import AuthNavLink from '../components/auth/AuthNavLink';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -25,12 +26,18 @@ interface Props {
   noindex?: boolean;
   /**
    * Show the persistent, categorized tools sidebar (src/components/ToolsSidebar.astro)
-   * beside the content. Opt-in rather than site-wide: a marketing or content page's job
-   * is to convert or inform on one thing, and a 40-tool rail fighting for attention
-   * works against that — tool pages and the category hubs are where a visitor is
-   * already inside the product and benefits from jumping straight to another tool.
+   * beside the content. Opt-in rather than site-wide: a content page's job is to inform
+   * on one thing, and a 43-tool rail fighting for attention works against that — tool
+   * pages, the category hubs and the home page are where it earns its place. On by
+   * default (reachable via `data-sidebar-dock`'s reopen tab if hidden); see
+   * `toolsSidebarDefaultHidden` for a page that wants it opt-in-to-open instead.
    */
   toolsSidebar?: boolean;
+  /** Start the sidebar hidden on this page even on desktop, where it otherwise defaults
+   * to visible — the home page wants it reachable but not competing with its own hero
+   * and category sections on a first visit. No effect without `toolsSidebar`, and no
+   * effect once a visitor has made their own explicit choice (stored in localStorage). */
+  toolsSidebarDefaultHidden?: boolean;
 }
 
 const {
@@ -42,6 +49,7 @@ const {
   jsonLd = [],
   noindex = false,
   toolsSidebar = false,
+  toolsSidebarDefaultHidden = false,
 } = Astro.props;
 const locale = Astro.currentLocale ?? 'en';
 const t = getMessages(locale).common;
@@ -49,10 +57,68 @@ const site = Astro.site!;
 const canonical = getAbsoluteLocaleUrl(locale, path);
 const image = new URL(`/og/${ogImage}.png`, site).href;
 const structuredData = graph([organization(site), website(site, locale), ...jsonLd]);
+
+// `is:inline` opts these two scripts out of Astro's own bundling pipeline — which is
+// also how Astro discovers inline scripts to hash for its CSP meta tag, so it never
+// sees these and the browser blocks them as unlisted inline scripts. Astro.csp exposes
+// an API for exactly this case: compute the script's own hash from the same string
+// that's rendered (via set:html below, so the two can never drift) and register it.
+function cspInlineScript(source: string): string {
+  // A bare hash, not { kind: 'element' } — that scopes into its own script-src-elem
+  // directive instead of extending script-src, and script-src-elem doesn't inherit
+  // 'self'/'wasm-unsafe-eval' from script-src: every other script on the page (every
+  // React island's module chunk) got silently blocked until this was a bare string.
+  Astro.csp?.insertScriptHash(`sha256-${createHash('sha256').update(source).digest('base64')}`);
+  return source;
+}
+
+const preTheme = cspInlineScript(`
+      // Apply a saved light/dark choice before first paint, so the page doesn't flash.
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+        // Same reasoning, for the tools sidebar: apply a saved hidden choice and dock
+        // edge before first paint so a returning visitor doesn't see it flash open, or
+        // on the wrong edge, before settling. With nothing saved, a narrow viewport
+        // still needs a pre-paint default: a first mobile visit should not flash a
+        // full-screen overlay it never asked for — and so does a page that opted into
+        // starting hidden regardless of width (the home page) — matching
+        // ToolsSidebar.astro's own un-saved-choice defaults.
+        const sidebarVisible = localStorage.getItem('toolsSidebarVisible');
+        if (sidebarVisible === 'hidden' || sidebarVisible === 'visible') {
+          document.documentElement.dataset.sidebarState = sidebarVisible;
+        } else if (document.documentElement.dataset.sidebarDefaultHidden === 'true' || window.matchMedia('(max-width: 48rem)').matches) {
+          document.documentElement.dataset.sidebarState = 'hidden';
+        }
+        // No dock-specific CSS exists for the attribute being absent, so a first-ever
+        // visit (nothing stored yet) still needs an explicit default here, not just a
+        // fallback in ToolsSidebar.astro's own script — otherwise the sidebar briefly
+        // has no width or height at all, before that script runs.
+        const sidebarDock = localStorage.getItem('toolsSidebarDock');
+        document.documentElement.dataset.sidebarDock = sidebarDock === 'left' || sidebarDock === 'right' ? sidebarDock : 'left';
+        // Same reasoning, for the chosen skin (src/components/SkinPicker.astro): a
+        // cookie, not localStorage, so it's readable the same way whether or not the
+        // visitor is signed in, and matches the site's existing leaflock_* cookie
+        // convention (src/lib/server/session.ts). No cookie means the default skin —
+        // already the :root tokens in global.css — so there's nothing to apply in that
+        // case.
+        const skinMatch = document.cookie.match(/(?:^|; )leaflock_skin=([^;]+)/);
+        if (skinMatch) document.documentElement.dataset.skin = decodeURIComponent(skinMatch[1]);
+      } catch {}
+    `);
+
+const chromeHeightScript = cspInlineScript(`
+          (function () {
+            var header = document.querySelector('.site-header');
+            var strip = document.querySelector('.privacy-strip');
+            var h = (header ? header.offsetHeight : 0) + (strip ? strip.offsetHeight : 0);
+            document.documentElement.style.setProperty('--tools-chrome-h', h + 'px');
+          })();
+        `);
 ---
 
 <!doctype html>
-<html lang={locale}>
+<html lang={locale} data-sidebar-default-hidden={toolsSidebarDefaultHidden}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -83,39 +149,7 @@ const structuredData = graph([organization(site), website(site, locale), ...json
     <meta name="twitter:card" content="summary_large_image" />
 
     <script type="application/ld+json" set:html={structuredData} />
-    <script is:inline>
-      // Apply a saved light/dark choice before first paint, so the page doesn't flash.
-      try {
-        const theme = localStorage.getItem('theme');
-        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
-        // Same reasoning, for the tools sidebar: apply a saved hidden choice and dock
-        // edge before first paint so a returning visitor doesn't see it flash open, or
-        // on the wrong edge, before settling. With nothing saved, a narrow viewport
-        // still needs a pre-paint default: a first mobile visit should not flash a
-        // full-screen overlay it never asked for, so this matches ToolsSidebar.astro's
-        // own un-saved default of "hidden" below 48rem.
-        const sidebarVisible = localStorage.getItem('toolsSidebarVisible');
-        if (sidebarVisible === 'hidden' || sidebarVisible === 'visible') {
-          document.documentElement.dataset.sidebarState = sidebarVisible;
-        } else if (window.matchMedia('(max-width: 48rem)').matches) {
-          document.documentElement.dataset.sidebarState = 'hidden';
-        }
-        // No dock-specific CSS exists for the attribute being absent, so a first-ever
-        // visit (nothing stored yet) still needs an explicit default here, not just a
-        // fallback in ToolsSidebar.astro's own script — otherwise the sidebar briefly
-        // has no width or height at all, before that script runs.
-        const sidebarDock = localStorage.getItem('toolsSidebarDock');
-        document.documentElement.dataset.sidebarDock = sidebarDock === 'left' || sidebarDock === 'right' ? sidebarDock : 'left';
-        // Same reasoning, for the chosen skin (src/components/SkinPicker.astro): a
-        // cookie, not localStorage, so it's readable the same way whether or not the
-        // visitor is signed in, and matches the site's existing leaflock_* cookie
-        // convention (src/lib/server/session.ts). No cookie means the default skin —
-        // already the :root tokens in global.css — so there's nothing to apply in that
-        // case.
-        const skinMatch = document.cookie.match(/(?:^|; )leaflock_skin=([^;]+)/);
-        if (skinMatch) document.documentElement.dataset.skin = decodeURIComponent(skinMatch[1]);
-      } catch {}
-    </script>
+    <script is:inline set:html={preTheme} />
     <script>
       // The favicon and the mobile theme-color meta both ship a static default (the
       // link/meta tags above) so there's something correct before this runs — then this
@@ -207,20 +241,13 @@ const structuredData = graph([organization(site), website(site, locale), ...json
         // `top` reads — run here, inline, between the header and the sidebar in the
         // document so it executes (and triggers layout) before the sidebar first
         // paints, rather than after like a deferred script would.
-        <script is:inline>
-          (function () {
-            var header = document.querySelector('.site-header');
-            var strip = document.querySelector('.privacy-strip');
-            var h = (header ? header.offsetHeight : 0) + (strip ? strip.offsetHeight : 0);
-            document.documentElement.style.setProperty('--tools-chrome-h', h + 'px');
-          })();
-        </script>
+        <script is:inline set:html={chromeHeightScript} />
       )
     }
     {
       toolsSidebar ? (
         <div class="tools-layout">
-          <ToolsSidebar />
+          <ToolsSidebar defaultHidden={toolsSidebarDefaultHidden} />
           <main id="content" class="tools-layout__main">
             <slot />
           </main>

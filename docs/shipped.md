@@ -17,6 +17,48 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 3 November 2026 — Trust badges on every tool page, and the sidebar on home
+
+The four one-line claims (no upload, works offline, free to start, no file-size limit)
+from the style-lab demos are now real, on the home page and every tool page, in one
+line — initially wrapped mid-claim on the home page specifically because it sat inside
+`.hero__text`, a ~50%-width column shared with `PrivacyDiagram`; moved to a full-width
+sibling after `.hero` closes. Tool pages had no such column and needed no change beyond
+the row itself.
+
+The tools sidebar is now on the home page too, but `defaultHidden` there (it starts
+open everywhere else): a 43-tool rail competing with the hero and the category grid on
+a first visit was the wrong trade for a page whose job is to convert, not browse.
+
+---
+
+## 3 November 2026 — Why CI was red: a CSP gap, a contrast fail, and a label collision
+
+Six independent bugs, all from the sidebar/skin-picker work, found by actually reading
+`gh run view --log-failed` instead of re-pushing and hoping.
+
+**The big one:** `Astro.csp`'s automatic script hashing never sees an `is:inline`
+script — that directive's whole point is to skip Astro's pipeline, which is also how it
+discovers scripts to hash. Two pre-paint scripts in Base.astro were silently unlisted,
+blocking themselves (and, worse, a bad first fix scoped the manual hash to
+`script-src-elem`, which doesn't inherit `'self'` from `script-src` and broke every React
+island on every page). Fixed with `Astro.csp.insertScriptHash()`, hashing the exact
+string rendered via `set:html` so the two can never drift again.
+
+**Real regressions, not flakes:** the new coral accent failed WCAG AA as text at ~4.4:1
+on its own soft-tint background — darkened `--color-accent` until it cleared 4.5:1
+against every surface it's actually used on, not just the one axe happened to flag
+first. The sidebar's "Dock to the left edge" button and the crop tool's "Left edge"
+handle — unrelated controls on the same page — collided under Playwright's substring
+name match; renamed to "Dock sidebar to the left". A `grid-column: span 2` bento tile
+doesn't clamp to one column when the grid only has one — it adds an implicit column
+instead, overflowing the page at 320px; gated behind `min-width: 36rem`. The HTML
+performance budget (unchanged since before the sidebar existed) is now genuinely
+too tight for a sidebar that renders all 43 tools into every page; raised with a comment
+explaining why, not silently.
+
+---
+
 ## 2 November 2026 — Sidebar/skin follow-ups: gating, a live favicon, two layout bugs (design.md §10, §10a)
 
 Four owner-reported fixes on the same feature. Skin memory is now a Pro/Practice perk

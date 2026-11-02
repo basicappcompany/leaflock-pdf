@@ -586,7 +586,9 @@ never a hard-coded colour.
 original ("Soft Product", now an alternate skin, see below). Big soft radii
 (`--radius: 22px`, `--radius-small: 14px`), a chunky solid offset shadow rather than a
 blur (`--shadow-card: 0 4px 0 light-dark(#f0e7e2, #3a2a44)`), warm coral accent
-(`#e5533d` light / `#ff7a63` dark). `docs/style-lab.html` is where all fifteen directions
+(`#b93824` light / `#ff7a63` dark — the light value was darkened 3 November 2026 from
+the style-lab's brighter `#e5533d`, which read fine as a button fill but failed WCAG AA
+as text; see the CSP/contrast note below). `docs/style-lab.html` is where all fifteen directions
 were compared side by side before this one was picked; it still renders all fifteen,
 including the three ("Dashboard-style", "Paper & Ink", "Bold Editorial") built as full
 standalone demos first (`docs/dashboard-style-demo.html`, `docs/paper-ink-demo.html`,
@@ -626,7 +628,24 @@ as required.
 
 **No inline `style="…"` in `.astro` markup** — the CSP blocks it. React `style={{…}}` in
 a client-only island is fine, because it goes through the CSSOM; the dashboard's usage
-meter relies on exactly that.
+meter relies on exactly that. SkinPicker's swatch dot learned this the hard way: a
+`style={`background:${skin.swatch}`}` fired a CSP console error on every single page
+(the header renders everywhere), which broke the shared `assertClean()` e2e helper on
+~166 unrelated specs. Fixed with a plain `[data-skin-id="<id>"] .skin-picker__dot`
+attribute-selector rule per skin in `skins.css` instead.
+
+**`<script is:inline>` and Astro's CSP hashing don't mix.** `security.csp` in
+`astro.config.mjs` auto-hashes inline scripts so the browser will run them — but only
+the ones Astro's own bundling pipeline sees, and `is:inline`'s entire point is to skip
+that pipeline. The two pre-paint scripts in `Base.astro` (theme/sidebar/skin, and the
+one measuring header height) are `is:inline` for a real reason — they must run before
+first paint — and were silently unlisted, self-blocking on every page. Fixed with
+`Astro.csp.insertScriptHash()` in the frontmatter, hashing the exact string rendered via
+`set:html` so the two can never drift apart again. One trap in the API: pass a **bare**
+hash string, not `{ hash, kind: 'element' }` — `kind: 'element'` scopes into a separate
+`script-src-elem` directive that does not inherit `'self'`/`'wasm-unsafe-eval'` from
+`script-src`, which blocked every React island's module chunk on every page until
+caught.
 
 ## 10a. Navigation chrome
 

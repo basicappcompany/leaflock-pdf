@@ -4,6 +4,15 @@ import ToolIcon from './ToolIcon.astro';
 import { getMessages } from '../i18n';
 import { categories, tools } from '../tools/registry';
 
+interface Props {
+  /** Start hidden on this page even on desktop, where the sidebar would otherwise
+   * default to visible — the home page wants the sidebar reachable but not competing
+   * with its own hero/category sections on first visit. Only applies with nothing
+   * already stored: a visitor's own explicit choice always wins. */
+  defaultHidden?: boolean;
+}
+
+const { defaultHidden = false } = Astro.props;
 const locale = Astro.currentLocale ?? 'en';
 const messages = getMessages(locale);
 const common = messages.common;
@@ -39,7 +48,7 @@ const dockDirections = [
 ] as const;
 ---
 
-<aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label}>
+<aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label} data-default-hidden={defaultHidden}>
   <div class="tools-sidebar__head">
     <span class="tools-sidebar__title">{common.sidebar.allTools}</span>
     <div class="tools-sidebar__controls">
@@ -170,9 +179,12 @@ const dockDirections = [
 
   // With no saved choice: visible on desktop, where a docked panel costs nothing to
   // show; hidden on narrow viewports, where it would otherwise be a full-screen overlay
-  // a first-time visitor never asked for.
+  // a first-time visitor never asked for — and hidden on any page that opted into that
+  // regardless of width (the home page: the sidebar should be reachable there, not
+  // competing with the hero and category sections on a first visit).
   function initialVisibility(): Visibility {
-    return storedVisibility() ?? (window.matchMedia('(max-width: 48rem)').matches ? 'hidden' : 'visible');
+    const pageDefaultHidden = document.getElementById('toolsSidebar')?.dataset.defaultHidden === 'true';
+    return storedVisibility() ?? (pageDefaultHidden || window.matchMedia('(max-width: 48rem)').matches ? 'hidden' : 'visible');
   }
 
   function applyVisibility(state: Visibility) {

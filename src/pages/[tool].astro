@@ -70,6 +70,12 @@ const jsonLd = [
     {tool.tier !== 'free' && <span class="badge-pro">{common.toolPage.tiers[tool.tier].label}</span>}
   </h1>
   <p class="lead">{page.summary}</p>
+  <ul class="trust">
+    <li>{common.trust.noUpload}</li>
+    <li>{common.trust.worksOffline}</li>
+    <li>{common.trust.freeToStart}</li>
+    <li>{common.trust.noFileSizeLimit}</li>
+  </ul>
   {
     tool.tier !== 'free' && (
       <p class="notice">

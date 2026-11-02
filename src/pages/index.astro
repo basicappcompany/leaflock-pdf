@@ -32,6 +32,8 @@ const jsonLd = [
   description={common.site.metaDescription}
   path=""
   jsonLd={jsonLd}
+  toolsSidebar
+  toolsSidebarDefaultHidden
 >
   <section class="hero">
     <div class="hero__text">
@@ -55,6 +57,16 @@ const jsonLd = [
       server={common.diagram.server}
     />
   </section>
+  {/* Outside .hero__text, not inside it: that column is only ~half the page's width
+      (shared with PrivacyDiagram), too narrow to fit all four claims on the one line
+      they're meant to read as — full hero width has room to spare. Tool pages
+      ([tool].astro) have no such column to escape; their hero is already full width. */}
+  <ul class="trust">
+    <li>{common.trust.noUpload}</li>
+    <li>{common.trust.worksOffline}</li>
+    <li>{common.trust.freeToStart}</li>
+    <li>{common.trust.noFileSizeLimit}</li>
+  </ul>
 
   {
     categories.map((category, index) => {

@@ -18,8 +18,16 @@
   --color-text: light-dark(#221c2b, #f3e9f7);
   --color-muted: light-dark(#6d6480, #b29fc0);
   --color-border: light-dark(#f0e7e2, #3a2a44);
-  --color-accent: light-dark(#e5533d, #ff7a63);
-  --color-accent-hover: light-dark(#c23f2b, #ff9682);
+  /* The brighter #e5533d fails WCAG AA (axe-core: color-contrast, serious) as TEXT —
+     the eyebrow, link-button, and primary-button label all use this token directly —
+     against every background it actually appears on: --color-bg/--color-surface
+     (~4.9:1 needed 4.5), and --color-accent-soft specifically (the success-panel tint
+     12 components use), which is dimmer still and needed one shade darker again
+     (~4.43:1 at the old shade). --color-accent-hover moves a shade darker than this so
+     it stays visibly distinct on press/hover. Dark mode's lighter accent sits on a
+     near-black ground and already clears AA, so it's untouched. */
+  --color-accent: light-dark(#b93824, #ff7a63);
+  --color-accent-hover: light-dark(#96301e, #ff9682);
   --color-on-accent: light-dark(#ffffff, #200804);
   --color-accent-soft: light-dark(#ffe8e3, #3a1812);
   --color-error: light-dark(#b3261e, #ff8f86);
@@ -616,7 +624,7 @@ html[data-sidebar-state='hidden'] .tools-sidebar {
   font-size: 0.88rem;
 }
 
-.tools-sidebar__search-input:focus {
+.tools-sidebar__search-input:focus:not(:focus-visible) {
   outline: none;
 }
 
@@ -949,6 +957,50 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
   margin: var(--space) 0 0;
 }
 
+/* The trust-badge row under a hero's CTA — same shape across every skin (a small
+   accent-coloured square ahead of a short uppercase claim), styled through tokens so it
+   re-skins automatically rather than being one more hard-coded colour. Used on the home
+   page and every tool page ([tool].astro); the claims themselves are src/i18n/en/
+   common.ts's `trust` block. */
+.trust {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1.1rem;
+  margin: calc(var(--space) * 1.25) 0 0;
+  padding: 0;
+  list-style: none;
+  /* One line is the point (an easy claim to skim in a glance), so this never wraps —
+     on a width too narrow to fit all four, it scrolls horizontally within its own row
+     instead of breaking onto a second line or forcing the whole page to scroll sideways. */
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.trust::-webkit-scrollbar {
+  display: none;
+}
+
+.trust li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: none;
+  white-space: nowrap;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.trust li::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  flex: none;
+  background: var(--color-accent);
+}
+
 @media (max-width: 52rem) {
   .hero {
     grid-template-columns: 1fr;
@@ -1040,9 +1092,11 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
   color: var(--color-accent);
 }
 
-.category__name {
-  white-space: nowrap;
-}
+/* .category__name has no rules of its own: a flex item's default basis is its
+   content's max-content width, and "Protect and optimize" at that width doesn't leave
+   room for .category__rule and the chevron on a narrow phone. It used to force
+   `white-space: nowrap`, which pushed that full-width box instead of letting the name
+   wrap onto a second line — wrapping is already the default once nowrap is gone. */
 
 .category__count {
   padding: 0.05rem 0.5rem;
@@ -1131,6 +1185,14 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
   .tool-grid__icon {
     transition: none;
   }
+
+  .category__chevron {
+    transition: none;
+  }
+
+  .tools-sidebar__chevron {
+    transition: none;
+  }
 }
 
 .tool-grid {
@@ -1159,11 +1221,17 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
  * `.category` exists nowhere else (the category hub and a tool page's "related tools"
  * list use `.tool-grid` directly, with no `.category` wrapper), so this still cannot
  * leak onto any other page's grid.
- * `span 2` degrades harmlessly on a narrower grid that has fewer than two columns — the
- * browser just gives the tile the one column it has.
+ * `span 2` is gated behind a min-width: a grid that has room for only one auto-fill
+ * column (minmax(14rem, …) each) does NOT clamp a `span 2` item down to the column it
+ * has — the browser grows the grid with an extra implicit column to satisfy the span
+ * instead, pushing the whole page wider than the viewport. 36rem is comfortably past
+ * two 14rem columns plus their gap, so the span is only ever applied where it actually
+ * fits.
  */
-.category--first .tool-grid li:first-child {
-  grid-column: span 2;
+@media (min-width: 36rem) {
+  .category--first .tool-grid li:first-child {
+    grid-column: span 2;
+  }
 }
 
 .category--first .tool-grid li:first-child .tool-grid__icon {

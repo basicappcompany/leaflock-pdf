@@ -24,7 +24,12 @@ const { t } = Astro.props;
     {
       skins.map((skin) => (
         <button type="button" class="skin-picker__opt" data-skin-id={skin.id}>
-          <span class="skin-picker__dot" style={`background:${skin.swatch}`} />
+          {/* No inline style — the CSP's style-src blocks it (CLAUDE.md's own rule,
+              found the hard way: this one line broke console-error assertions on every
+              e2e spec, on every page, because the header renders everywhere). Each
+              skin's swatch colour is a plain attribute-selector rule in skins.css
+              instead, keyed off the same data-skin-id this button already carries. */}
+          <span class="skin-picker__dot" />
           <span class="skin-picker__name">{skin.name}</span>
           {skin.id === 'default' && <span class="skin-picker__badge">{t.defaultBadge}</span>}
         </button>

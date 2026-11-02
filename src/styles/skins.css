@@ -1,9 +1,10 @@
 /*
- * Skin picker — see src/lib/skins.ts for the picker UI's registry (names, blurbs) and
- * src/pages/appearance.astro for the page that lets a visitor choose one. Applying a
- * skin is just overriding the same tokens global.css already defines on :root, scoped
- * under `html[data-skin="<id>"]` — every component that already reads --color-*,
- * --radius* and --shadow* re-skins automatically, nothing here touches markup.
+ * Skin picker — see src/lib/skins.ts for the picker UI's registry (names, blurbs,
+ * swatches) and src/components/SkinPicker.astro for the header dropdown that lets a
+ * visitor choose one. Applying a skin is just overriding the same tokens global.css
+ * already defines on :root, scoped under `html[data-skin="<id>"]` — every component
+ * that already reads --color-*, --radius* and --shadow* re-skins automatically,
+ * nothing here touches markup.
  *
  * "default" has no attribute at all (data-skin unset) and lives on :root itself in
  * global.css, so a first-time visitor with nothing stored gets it with zero extra CSS
@@ -270,3 +271,25 @@ html[data-skin='bold-editorial'] {
   --radius: 4px;
   --radius-small: 4px;
 }
+
+/*
+ * SkinPicker's swatch dots. These can't be an inline style={} on the dot (the CSP's
+ * style-src blocks it — see SkinPicker.astro), so each skin's light-mode accent from
+ * src/lib/skins.ts gets a plain attribute-selector rule here instead, keyed off the
+ * same data-skin-id the picker button already carries.
+ */
+.skin-picker__opt[data-skin-id='default'] .skin-picker__dot { background: #e5533d; }
+.skin-picker__opt[data-skin-id='soft-product'] .skin-picker__dot { background: #2a7548; }
+.skin-picker__opt[data-skin-id='refined-minimal'] .skin-picker__dot { background: #1f6f50; }
+.skin-picker__opt[data-skin-id='editorial-press'] .skin-picker__dot { background: #8f3a1c; }
+.skin-picker__opt[data-skin-id='swiss-precision'] .skin-picker__dot { background: #d8232a; }
+.skin-picker__opt[data-skin-id='dark-studio'] .skin-picker__dot { background: #4ade80; }
+.skin-picker__opt[data-skin-id='warm-craft'] .skin-picker__dot { background: #96612a; }
+.skin-picker__opt[data-skin-id='enterprise-console'] .skin-picker__dot { background: #15528f; }
+.skin-picker__opt[data-skin-id='glass-depth'] .skin-picker__dot { background: #5a56d6; }
+.skin-picker__opt[data-skin-id='bold-brutal'] .skin-picker__dot { background: #0a0a0a; }
+.skin-picker__opt[data-skin-id='clinical-trust'] .skin-picker__dot { background: #0a7ea4; }
+.skin-picker__opt[data-skin-id='luxe-serif'] .skin-picker__dot { background: #c9a227; }
+.skin-picker__opt[data-skin-id='dashboard-style'] .skin-picker__dot { background: #4fbd81; }
+.skin-picker__opt[data-skin-id='paper-ink'] .skin-picker__dot { background: #a8431e; }
+.skin-picker__opt[data-skin-id='bold-editorial'] .skin-picker__dot { background: #1f7a3d; }

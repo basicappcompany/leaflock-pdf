@@ -1,12 +1,15 @@
 /**
- * The skin picker's registry (src/pages/appearance.astro). Each `id` matches an
+ * The skin picker's registry (src/components/SkinPicker.astro). Each `id` matches an
  * `html[data-skin="<id>"]` block in src/styles/skins.css — `'default'` is special: it
  * has no CSS block of its own (it *is* :root in global.css) and selecting it clears the
  * leaflock_skin cookie rather than setting one, so a visitor who picks it falls back to
  * the site's own default forever, including after a future default change.
  *
- * `swatch` is the skin's light-mode accent colour, used only for the small preview dot
- * on the picker page — not read by any CSS, safe to tweak without touching skins.css.
+ * `swatch` is the skin's light-mode accent colour, shown as a small preview dot per
+ * option in the picker. It cannot be applied as an inline `style` (the CSP's style-src
+ * blocks that — found the hard way, see SkinPicker.astro), so each value here has a
+ * matching `[data-skin-id="<id>"] .skin-picker__dot { background: ... }` rule in
+ * skins.css — change one, change the other.
  */
 export interface Skin {
   id: string;

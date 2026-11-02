@@ -36,6 +36,16 @@ export const common = {
     merge: 'Merge a PDF',
     howItWorks: 'How it works',
   },
+  /** The trust-badge row under a hero's call-to-action buttons (home page and every
+   * tool page). Each claim already exists elsewhere in the product's own copy —
+   * src/i18n/en/pricing.ts has "no file-size limit" verbatim — this just surfaces the
+   * same facts where a first-time visitor lands, not new claims of their own. */
+  trust: {
+    noUpload: 'No upload, ever',
+    worksOffline: 'Works offline',
+    freeToStart: 'Free to start',
+    noFileSizeLimit: 'No file-size limit',
+  },
   /** The signed-in dashboard (src/pages/dashboard.astro). */
   dashboard: {
     metaTitle: 'Your dashboard: LeafLock PDF',
@@ -181,8 +191,12 @@ export const common = {
     searchNoResults: 'No tools match "{query}".',
     reset: 'Reset to default position',
     dock: {
-      left: 'Dock to the left edge',
-      right: 'Dock to the right edge',
+      // Not "...left/right edge": the crop tool's own resize handles are already
+      // named "Left edge"/"Right edge" (CropOverlay.tsx), and Playwright's
+      // getByRole name match is substring, not exact — "edge" here made these two
+      // completely unrelated controls ambiguous on every tool page.
+      left: 'Dock sidebar to the left',
+      right: 'Dock sidebar to the right',
     },
     links: {
       heading: 'More',
