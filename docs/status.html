@@ -500,7 +500,7 @@
     tools: 43,
     pro: 0,
     practice: 6,
-    commits: 18,
+    commits: 20,
     ops: 29,
     landings: 5,
     guides: 6,
@@ -529,7 +529,7 @@
         { id: "1.2", name: "SEO & AI-rank generators (HowTo/ItemList/Product, llms.txt)", state: "done", when: "by 28 Oct" },
         { id: "1.3", name: "Performance budget enforced in CI", state: "done", when: "by 28 Oct", note: "and actually run since 31 Oct: it is part of the suite the first GitHub Actions run passed" },
         { id: "1.4", name: "Related-tools + category hub pages", state: "done", when: "by 28 Oct" },
-        { id: "1.5", name: "Tools sidebar and a 15-skin picker", state: "done", when: "2 Nov", note: "ToolsSidebar.astro — categorised, collapsible, dockable left/right, search — on every tool and category-hub page; SkinPicker.astro, a header dropdown (an earlier full-page /appearance route was replaced with this), 15 skins in src/styles/skins.css, default changed from \"Soft Product\" (kept as an alternate) to \"Playful Rounded\". Remembering a choice between visits is gated to Pro/Practice, checked only at the moment of picking; free/signed-out gets a session cookie instead. Not originally a roadmap item — a design-exploration session that ended with real shipped features, added here after the fact on owner instruction. Four follow-up fixes same day: a live-recolouring favicon/theme-color (found and fixed a light-dark() resolution bug along the way), a scroll gap above the sidebar, and a ragged footer/sidebar link grid. docs/design.md §10, §10a" },
+        { id: "1.5", name: "Tools sidebar and a 15-skin picker", state: "done", when: "2 Nov, extended 3 Nov", note: "ToolsSidebar.astro — categorised, collapsible, dockable left/right, search — on every tool page, category-hub page, and (since 3 Nov, hidden by default there) the home page; SkinPicker.astro, a header dropdown (an earlier full-page /appearance route was replaced with this), 15 skins in src/styles/skins.css, default changed from \"Soft Product\" (kept as an alternate) to \"Playful Rounded\". Remembering a choice between visits is gated to Pro/Practice, checked only at the moment of picking; free/signed-out gets a session cookie instead. Not originally a roadmap item — a design-exploration session that ended with real shipped features, added here after the fact on owner instruction. Follow-up fixes on 2 Nov: a live-recolouring favicon/theme-color (found and fixed a light-dark() resolution bug along the way), a scroll gap above the sidebar, and a ragged footer/sidebar link grid. On 3 Nov: one-line trust badges on every tool and the home page; six CI-breaking bugs found and fixed (a CSP gap around is:inline scripts, the coral accent failing WCAG AA contrast, a dock-button/crop-handle name collision, a 320px reflow, and the performance budget raised to match the sidebar's real weight). docs/design.md §10, §10a" },
       ],
     },
     {

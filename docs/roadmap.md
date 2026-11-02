@@ -446,13 +446,16 @@ what building it now does. No new tools, no new pages; the machinery under both.
   already exist on every tool page; the real gap was category hubs, now live at
   `/tools/<category>` (`src/pages/tools/[category].astro`) — one per entry in
   `categories`, each with its own `ItemList`/`BreadcrumbList` schema, linked from the
-  home page's category headings and from every tool page's breadcrumb (now a real
-  middle step, not plain text). `tests/e2e/categoryHub.spec.ts`.
-- **Tools sidebar and a 15-skin picker — done 2 November 2026.** Not originally planned
-  as a Phase 1 item — a design-exploration session (`ToolsSidebar.astro`,
-  `SkinPicker.astro`, `src/styles/skins.css`) that ended with real, shipped navigation
-  machinery every tool and category-hub page now carries, added here after the fact on
-  owner instruction rather than left undocumented. Default skin changed from the
+  home page's category sections (collapsible since 3 November 2026 — the heading is a
+  `<details><summary>` toggle, not a link; the hub link moved to its own "See all" line)
+  and from every tool page's breadcrumb (now a real middle step, not plain text).
+  `tests/e2e/categoryHub.spec.ts`.
+- **Tools sidebar and a 15-skin picker — done 2 November 2026, extended 3 November.**
+  Not originally planned as a Phase 1 item — a design-exploration session
+  (`ToolsSidebar.astro`, `SkinPicker.astro`, `src/styles/skins.css`) that ended with
+  real, shipped navigation machinery every tool page, category-hub page, and (since
+  3 November, hidden by default there) the home page now carries, added here after the
+  fact on owner instruction rather than left undocumented. Default skin changed from the
   original ("Soft Product") to "Playful Rounded"; remembering a choice between visits is
   a Pro/Practice perk. `docs/design.md` §10, §10a.
 
