@@ -17,6 +17,28 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 3 November 2026 — A scroll-reveal fade for content sections, after a live-site UX pass
+
+Owner asked for a UX check against the live site and whether a fixed header and some
+scroll motion would help it feel less static. The header was already `position: sticky`
+site-wide (shipped 2 November fixing the scroll-gap bug) — confirmed still correct, kept
+as-is. Added: a light fade-and-rise as `.tool-info` columns, FAQ items, and `.tool-grid`
+cards enter view (`.tool-grid` covers the home page, every tool page's "Related tools",
+and the category hubs — one selector, no per-page markup).
+
+**The finding worth keeping:** a naive version of this (opacity: 0 by default, JS reveals
+on intersect) risks exactly the two things CI already enforces — a flash of hidden
+content before JS runs, and a possible LCP hit if the largest element starts invisible.
+Fixed by only ever hiding elements the script can see are *already below the fold* at
+the moment it runs (`getBoundingClientRect().top > innerHeight`) — anything on screen at
+load is left at its default opacity from first paint, never touched. Caught a second,
+subtler bug the same way shipped.md keeps catching them: the `transition` declaration
+itself has to live inside `@media (prefers-reduced-motion: no-preference)`, not just the
+class that triggers it — the reduced-motion e2e probe fails on any element with a live
+transform transition whether or not it's ever actually used.
+
+---
+
 ## 3 November 2026 — Trust badges on every tool page, and the sidebar on home
 
 The four one-line claims (no upload, works offline, free to start, no file-size limit)

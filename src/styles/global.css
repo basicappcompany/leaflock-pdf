@@ -104,6 +104,35 @@ h2 {
   outline-offset: 2px;
 }
 
+/* ---------- Scroll reveal ---------- */
+
+/* Paired with the IntersectionObserver script at the bottom of Base.astro. Every
+   element it might reveal gets the transition queued up here regardless of whether
+   that element ever actually receives `.reveal-pending` — the class only gets added to
+   elements starting below the fold, so one already on screen never transitions at all,
+   just renders at its normal opacity/position from the first paint.
+   `no-preference`, not unconditional: the transition declaration itself must not exist
+   under reduced motion, not just go unused — tests/e2e/accessibility.spec.ts's motion
+   probe fails on any element with a live transform transition, whether or not it is
+   ever actually triggered. The script also skips adding `.reveal-pending` under the
+   same query, so there is no undeclared-but-still-jumping edge case either. */
+@media (prefers-reduced-motion: no-preference) {
+  .tool-info > div,
+  .faq > details,
+  .card-list li,
+  .tool-grid li,
+  .category {
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s ease;
+  }
+
+  .reveal-pending {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
 /* ---------- Site chrome ---------- */
 
 /* Pins the header and privacy strip together at the top of the viewport while

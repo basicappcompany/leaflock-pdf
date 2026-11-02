@@ -711,6 +711,32 @@ caught.
   ragged because nothing tied a group's position to what it was semantically next to.
   Split, with a hairline divider between them, each row now wraps on its own terms.
 
+## 10b. Scroll reveal
+
+A fade-and-rise for `.tool-info > div`, `.faq > details`, `.card-list li`, `.tool-grid
+li` and `.category` as they enter view — one selector list, no per-page markup, since
+`.tool-grid` alone already covers the home page's category grids, every tool page's
+"Related tools", and the category hub grids. Script at the bottom of `Base.astro`;
+CSS in global.css's "Scroll reveal" block.
+
+**The mechanism, and why it's shaped this way:** on `DOMContentLoaded`, the script
+checks each matching element's `getBoundingClientRect().top` against `innerHeight` —
+only elements **already below the fold** get `.reveal-pending` (`opacity: 0; transform:
+translateY(14px)`) and an `IntersectionObserver`; anything on screen at that moment is
+left alone, rendering at its normal opacity from first paint. A simpler version that
+hides everything matching the selector unconditionally would flash hidden content before
+the script runs, and risks LCP specifically if the page's largest element happens to
+match one of these selectors and starts invisible — `tests/e2e/performance.spec.ts`
+would have caught the second one, not the first.
+
+**Must live inside `@media (prefers-reduced-motion: no-preference)`, the `transition`
+declaration included, not just the class that triggers it.**
+`tests/e2e/accessibility.spec.ts`'s reduced-motion probe fails on any element with a
+live `transition-property: transform`, whether or not that transition is ever actually
+triggered — an unconditional `transition: opacity .5s, transform .5s` on these selectors
+failed the probe even though `.reveal-pending` itself was correctly gated in JS. Same
+trap the category and sidebar chevron icons hit when CI was fixed earlier the same day.
+
 ## 11. Testing and commands
 
 Run `source ~/tools/leaflock-env.sh` first in any new shell: the machine's default `node`
