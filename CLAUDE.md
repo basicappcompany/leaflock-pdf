@@ -112,9 +112,11 @@ What `copyPages` silently drops — bookmarks, form fields, metadata, every inte
 
 Before building a tool, check whether an existing one already does the job: a query that deserves its own page but no new behaviour is a **landing** (`landings` in `src/tools/registry.ts`, text in `src/i18n/en/landings.ts`), optionally with a `preset` the tool honours. Reverse pages and add-blank-page are landings on Organize for exactly this reason.
 
-## Theme
+## Theme and skins
 
-Colours are CSS variables defined once with `light-dark()` in `src/styles/global.css`. `html[data-theme]` (set by `ThemeToggle.astro`, applied before paint by an inline script in `Base.astro`) forces light or dark; otherwise the system setting wins. Use the variables, never hard-coded colours.
+Colours are CSS variables defined once with `light-dark()` on `:root` in `src/styles/global.css` — the default skin, "Playful Rounded". `html[data-theme]` (set by `ThemeToggle.astro`, applied before paint by an inline script in `Base.astro`) forces light or dark; otherwise the system setting wins. Use the variables, never hard-coded colours.
+
+Fourteen alternate skins live in `src/styles/skins.css`, each overriding the same token set under `html[data-skin="<id>"]` — picked from `SkinPicker.astro` (a header dropdown next to `ThemeToggle`, not a page), persisted in a `leaflock_skin` cookie. A new component styled only through the existing `--color-*`/`--radius*`/`--shadow*` tokens re-skins for free across all fifteen; one that hard-codes a colour or a pixel radius breaks under the other fourteen. Full list and the design reasoning: `docs/design.md` §10.
 
 ## Pro tools
 

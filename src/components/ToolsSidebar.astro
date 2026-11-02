@@ -1,0 +1,280 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import ToolIcon from './ToolIcon.astro';
+import { getMessages } from '../i18n';
+import { categories, tools } from '../tools/registry';
+
+const locale = Astro.currentLocale ?? 'en';
+const messages = getMessages(locale);
+const common = messages.common;
+const path = Astro.url.pathname;
+
+/**
+ * Which category starts open. The point of collapsing the rest is to keep the list
+ * short; if that hid the tool you're already looking at, it would fight itself. So the
+ * category containing the current tool opens (visible, with its item highlighted via
+ * aria-current below), and every other category starts collapsed. On a page with no
+ * active tool — a category hub, the home page — "organize" opens as the default start
+ * since it's the first and most commonly reached-for group.
+ */
+const activeCategory =
+  tools.find((tool) => {
+    const href = getRelativeLocaleUrl(locale, tool.slug);
+    return path === href || path === `${href}/`;
+  })?.category ?? 'organize';
+
+/** A handful of site links, not tools — where to find the rest of the site without
+ * leaving the sidebar. Kept short and useful rather than exhaustive: SiteFooter.astro
+ * already lists everything else. */
+const footerLinks: { key: keyof typeof common.pageLinks; slug: string }[] = [
+  { key: 'about', slug: 'about' },
+  { key: 'business', slug: 'business' },
+  { key: 'help', slug: 'help' },
+  { key: 'contact', slug: 'contact' },
+];
+
+const dockDirections = [
+  { dock: 'left', label: common.sidebar.dock.left, path: 'M14 6 8 12l6 6' },
+  { dock: 'right', label: common.sidebar.dock.right, path: 'M10 6l6 6-6 6' },
+] as const;
+---
+
+<aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label}>
+  <div class="tools-sidebar__head">
+    <span class="tools-sidebar__title">{common.sidebar.allTools}</span>
+    <div class="tools-sidebar__controls">
+      <div class="tools-sidebar__dock" role="group" aria-label={common.sidebar.label}>
+        {
+          dockDirections.map((d) => (
+            <button type="button" class="tools-sidebar__btn" data-dock-btn={d.dock} aria-label={d.label} title={d.label}>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d={d.path} />
+              </svg>
+            </button>
+          ))
+        }
+      </div>
+      <button type="button" class="tools-sidebar__btn" id="sidebarReset" aria-label={common.sidebar.reset} title={common.sidebar.reset}>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 11a8 8 0 1 0-2.3 5.7" />
+          <path d="M20 5v6h-6" />
+        </svg>
+      </button>
+      <button type="button" class="tools-sidebar__btn" id="sidebarHide" aria-label={common.sidebar.hide}>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 5l14 14M19 5 5 19" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="tools-sidebar__search">
+    <svg class="tools-sidebar__search-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" />
+    </svg>
+    <input type="search" id="sidebarSearch" class="tools-sidebar__search-input" placeholder={common.sidebar.search} aria-label={common.sidebar.search} autocomplete="off" />
+  </div>
+
+  <nav class="tools-sidebar__nav" id="toolsSidebarNav">
+    {
+      categories.map((category) => {
+        const inCategory = tools.filter((tool) => tool.category === category);
+        return (
+          <details class="tools-sidebar__group" data-category={category} open={category === activeCategory}>
+            <summary class="tools-sidebar__heading">
+              <ToolIcon category={category} class="tools-sidebar__heading-icon" />
+              <span class="tools-sidebar__heading-label">{common.categories[category]}</span>
+              <span class="tools-sidebar__heading-count">{inCategory.length}</span>
+              <svg
+                class="tools-sidebar__chevron"
+                viewBox="0 0 24 24"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m9 6 6 6-6 6" />
+              </svg>
+            </summary>
+            <ul>
+              {inCategory.map((tool) => {
+                const href = getRelativeLocaleUrl(locale, tool.slug);
+                const active = path === href || path === `${href}/`;
+                const title = messages.tools[tool.id].title;
+                return (
+                  <li data-tool-name={title.toLowerCase()}>
+                    <a href={href} aria-current={active ? 'page' : undefined}>
+                      <ToolIcon tool={tool.id} class="tools-sidebar__item-icon" />
+                      <span class="tools-sidebar__item-label">{title}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </details>
+        );
+      })
+    }
+    <p class="tools-sidebar__no-results" id="sidebarNoResults" data-template={common.sidebar.searchNoResults} hidden />
+  </nav>
+
+  <div class="tools-sidebar__footer">
+    <ul>
+      {
+        footerLinks.map((link) => (
+          <li>
+            <a href={getRelativeLocaleUrl(locale, link.slug)}>{common.pageLinks[link.key]}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</aside>
+
+<button type="button" class="tools-sidebar__reopen" id="sidebarReopen" aria-label={common.sidebar.show}>
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M9 5l6 7-6 7" />
+  </svg>
+</button>
+
+<script>
+  // Mirrors ThemeToggle's pattern: plain script, localStorage, data attributes on
+  // <html>. Both attributes are also set before first paint by the inline script in
+  // Base.astro, so there is no layout flash between the defaults and a saved choice.
+  const VISIBLE_KEY = 'toolsSidebarVisible';
+  const DOCK_KEY = 'toolsSidebarDock';
+  const VISIBILITY = ['visible', 'hidden'] as const;
+  const DOCKS = ['left', 'right'] as const;
+  type Visibility = (typeof VISIBILITY)[number];
+  type Dock = (typeof DOCKS)[number];
+  const DEFAULT_DOCK: Dock = 'left';
+
+  const hideBtn = document.getElementById('sidebarHide');
+  const reopenBtn = document.getElementById('sidebarReopen');
+  const resetBtn = document.getElementById('sidebarReset');
+  const dockBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-dock-btn]')];
+
+  function storedVisibility(): Visibility | null {
+    const value = localStorage.getItem(VISIBLE_KEY);
+    return (VISIBILITY as readonly string[]).includes(value ?? '') ? (value as Visibility) : null;
+  }
+  function storedDock(): Dock | null {
+    const value = localStorage.getItem(DOCK_KEY);
+    return (DOCKS as readonly string[]).includes(value ?? '') ? (value as Dock) : null;
+  }
+
+  // With no saved choice: visible on desktop, where a docked panel costs nothing to
+  // show; hidden on narrow viewports, where it would otherwise be a full-screen overlay
+  // a first-time visitor never asked for.
+  function initialVisibility(): Visibility {
+    return storedVisibility() ?? (window.matchMedia('(max-width: 48rem)').matches ? 'hidden' : 'visible');
+  }
+
+  function applyVisibility(state: Visibility) {
+    document.documentElement.dataset.sidebarState = state;
+  }
+  function applyDock(dock: Dock) {
+    document.documentElement.dataset.sidebarDock = dock;
+    for (const btn of dockBtns) btn.setAttribute('aria-current', String(btn.dataset.dockBtn === dock));
+  }
+
+  function setVisibility(state: Visibility) {
+    visibility = state;
+    localStorage.setItem(VISIBLE_KEY, state);
+    applyVisibility(state);
+  }
+  function setDock(dock: Dock) {
+    localStorage.setItem(DOCK_KEY, dock);
+    applyDock(dock);
+  }
+
+  let visibility = initialVisibility();
+  applyVisibility(visibility);
+  applyDock(storedDock() ?? DEFAULT_DOCK);
+
+  // Base.astro's inline script sets --tools-chrome-h once, synchronously, before first
+  // paint — necessarily from a measurement taken that early, which web fonts swapping
+  // in afterwards (changing text width, so the header's nav links wrap differently) can
+  // make stale: the sidebar would then start a few pixels above where the header
+  // actually ends, leaving a sliver of it hidden behind the sidebar's top edge instead
+  // of sitting below it. A ResizeObserver on the header and privacy strip catches that
+  // (and a plain viewport resize, and locale text length differences) by construction,
+  // rather than listening for each individual cause.
+  const header = document.querySelector<HTMLElement>('.site-header');
+  const strip = document.querySelector<HTMLElement>('.privacy-strip');
+  function updateChromeHeight() {
+    const h = (header?.offsetHeight ?? 0) + (strip?.offsetHeight ?? 0);
+    document.documentElement.style.setProperty('--tools-chrome-h', `${h}px`);
+  }
+  updateChromeHeight();
+  const chromeObserver = new ResizeObserver(updateChromeHeight);
+  if (header) chromeObserver.observe(header);
+  if (strip) chromeObserver.observe(strip);
+
+  hideBtn?.addEventListener('click', () => setVisibility('hidden'));
+  reopenBtn?.addEventListener('click', () => setVisibility('visible'));
+  for (const btn of dockBtns) {
+    btn.addEventListener('click', () => setDock(btn.dataset.dockBtn as Dock));
+  }
+  resetBtn?.addEventListener('click', () => {
+    setDock(DEFAULT_DOCK);
+    setVisibility('visible');
+  });
+
+  // On narrow viewports the sidebar is an overlay, so clicking the page behind it (or
+  // Escape) should close it the way a menu would — on desktop it's a persistent docked
+  // panel, so this is skipped there rather than fighting it.
+  const sidebar = document.getElementById('toolsSidebar');
+  const isNarrow = () => window.matchMedia('(max-width: 48rem)').matches;
+  document.addEventListener('click', (event) => {
+    if (!isNarrow() || visibility === 'hidden') return;
+    if (sidebar && !sidebar.contains(event.target as Node) && event.target !== reopenBtn) setVisibility('hidden');
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isNarrow() && visibility !== 'hidden') setVisibility('hidden');
+  });
+
+  // ---------------- search ----------------
+  // Filters the flat list of tools by a substring match on their title, opening every
+  // category that has a match (and closing the rest, so results stay scannable) while
+  // a query is active; clearing the search restores the normal single-category default.
+  const searchInput = document.getElementById('sidebarSearch') as HTMLInputElement | null;
+  const groups = [...document.querySelectorAll<HTMLDetailsElement>('.tools-sidebar__group')];
+  const noResults = document.getElementById('sidebarNoResults');
+  const defaultOpenCategory = document.querySelector<HTMLDetailsElement>('.tools-sidebar__group[open]')?.dataset.category;
+
+  searchInput?.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
+    if (!query) {
+      for (const group of groups) {
+        group.hidden = false;
+        group.open = group.dataset.category === defaultOpenCategory;
+        for (const li of group.querySelectorAll('li')) (li as HTMLLIElement).hidden = false;
+      }
+      if (noResults) noResults.hidden = true;
+      return;
+    }
+
+    let anyMatch = false;
+    for (const group of groups) {
+      let groupMatch = false;
+      for (const li of group.querySelectorAll('li')) {
+        const match = (li.getAttribute('data-tool-name') ?? '').includes(query);
+        (li as HTMLLIElement).hidden = !match;
+        if (match) groupMatch = true;
+      }
+      group.hidden = !groupMatch;
+      group.open = groupMatch;
+      if (groupMatch) anyMatch = true;
+    }
+    if (noResults) {
+      noResults.hidden = anyMatch;
+      noResults.textContent = noResults.dataset.template?.replace('{query}', searchInput.value.trim()) ?? '';
+    }
+  });
+</script>

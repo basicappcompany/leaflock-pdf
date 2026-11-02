@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LeafLock PDF — paper &amp; ink demo</title>
+    <style>
+      /* ============================================================
+         PAPER & INK — a second, deliberately different direction from
+         dashboard-style-demo.html, which read too close to its
+         ihatepdf.cv reference. The idea taken from that reference was
+         "sidebar-first app, not a marketing landing page" — everything
+         else here is built from what's actually unique to a PDF tool
+         (paper, pages, ink, a fold) instead of a generic dark-SaaS skin:
+
+         - Warm paper tones, not pure black/gray.
+         - A serif display headline (one weight, used nowhere else) —
+           instantly reads as a different product from the sea of
+           identical geometric-sans AI-tool UIs.
+         - A folded-corner page shape reused everywhere a "this is a
+           document" signal helps: the logo mark, tool cards, the
+           active sidebar item — one consistent motif instead of
+           borrowed dashboard chrome (pill filters, quick-start row).
+         - A single hero built around an actual page-stack visual
+           instead of a big search bar as the hero's focal point.
+
+         Demo only — not wired to the real build, no real PDF handling.
+         ============================================================ */
+      *, *::before, *::after { box-sizing: border-box; }
+      html { color-scheme: light dark; }
+
+      :root {
+        --bg: #f3ede1; --surface: #fbf8f1; --surface-2: #ece4d3; --surface-3: #e1d6bd;
+        --ink: #241f16; --muted: #786f5c; --border: #ddd1b4;
+        --accent: #a8431e; --accent-fg: #fbf8f1; --accent-soft: #f3ddce;
+        --fold: #e1d6bd;
+        --shadow: 0 1px 2px rgba(60,45,10,.06);
+        --radius: 3px;
+        --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+      }
+      html[data-theme='dark'] {
+        --bg: #171310; --surface: #1f1a15; --surface-2: #28221b; --surface-3: #332b22;
+        --ink: #efe6d4; --muted: #a79a80; --border: #3a3228;
+        --accent: #e2783f; --accent-fg: #1c1209; --accent-soft: #3a2415;
+        --fold: #332b22;
+        --shadow: 0 1px 2px rgba(0,0,0,.5);
+      }
+
+      body {
+        margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans);
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; }
+      button { font: inherit; }
+      svg { display: block; flex: none; }
+      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+
+      .demoBar {
+        position: sticky; top: 0; z-index: 200;
+        display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        padding: 8px 14px; background: var(--ink); color: var(--bg);
+        font-size: 12.5px; font-family: var(--sans);
+      }
+      .demoBar b { font-weight: 800; }
+      .demoBar span.note { opacity: .65; }
+
+      /* ---------- the page-fold motif, reused three places ---------- */
+      .fold {
+        position: relative;
+        clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+      }
+      .fold::after {
+        content: ''; position: absolute; top: 0; right: 0; width: 16px; height: 16px;
+        background: linear-gradient(135deg, transparent 50%, var(--fold) 50%);
+      }
+
+      /* ---------- layout ---------- */
+      .shell { display: flex; align-items: stretch; min-height: 100vh; }
+
+      .side {
+        flex: none; width: 260px; position: sticky; top: 0; align-self: flex-start;
+        height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+        background: var(--surface); border-right: 1px solid var(--border);
+      }
+
+      .side__brand { display: flex; align-items: center; gap: 10px; padding: 20px 18px 16px; font-weight: 700; font-size: 15px; }
+      .side__mark { width: 24px; height: 22px; background: var(--accent); flex: none; }
+      .side__mark.fold::after { background: linear-gradient(135deg, transparent 50%, var(--accent-soft) 50%); }
+
+      .side__search {
+        margin: 0 18px 18px; display: flex; align-items: center; gap: 8px;
+        padding: 0 0 7px; border-bottom: 1px solid var(--border); color: var(--muted);
+      }
+      .side__search input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 13.5px; }
+      .side__search input:focus { outline: none; }
+
+      .side__nav { flex: 1; overflow-y: auto; padding: 0 10px 10px; }
+      .side__group { margin-bottom: 2px; }
+      .side__heading {
+        display: flex; align-items: center; gap: 9px; width: 100%; padding: 9px 8px;
+        border: 0; background: transparent; color: var(--muted); cursor: pointer; list-style: none;
+        font-size: 11.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+      }
+      .side__heading::-webkit-details-marker { display: none; }
+      .side__heading-label { flex: 1; }
+      .side__heading-count { font-size: 11px; font-weight: 600; }
+      .side__chevron { width: 12px; height: 12px; transition: transform .12s ease; }
+      details[open] > .side__heading .side__chevron { transform: rotate(90deg); }
+
+      .side__list { list-style: none; margin: 1px 0 10px; padding: 0; }
+      .side__list a {
+        display: flex; align-items: center; gap: 10px; padding: 7px 8px; margin: 0 0 1px;
+        border-radius: var(--radius); text-decoration: none; color: var(--ink);
+        font-size: 13.5px; font-weight: 500; white-space: nowrap; border-left: 2px solid transparent;
+      }
+      .side__list a:hover { background: var(--surface-2); }
+      .side__list a[aria-current="true"] { background: var(--accent-soft); border-left-color: var(--accent); color: var(--accent); font-weight: 700; }
+      .side__list svg { width: 15px; height: 15px; opacity: .7; flex: none; }
+      .side__list a[aria-current="true"] svg { opacity: 1; }
+
+      .side__foot { flex: none; padding: 12px 18px 16px; border-top: 1px solid var(--border); }
+      .side__theme {
+        display: flex; gap: 10px; margin-bottom: 12px; font-size: 12.5px; color: var(--muted);
+      }
+      .side__theme button {
+        display: flex; align-items: center; gap: 5px; border: 0; background: transparent;
+        color: var(--muted); cursor: pointer; padding: 0;
+      }
+      .side__theme button[aria-current="true"] { color: var(--accent); font-weight: 700; }
+      .side__theme svg { width: 13px; height: 13px; }
+      .side__links { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+      .side__links a { font-size: 11.5px; color: var(--muted); text-decoration: none; }
+      .side__links a:hover { color: var(--accent); }
+
+      /* ---------- main ---------- */
+      .main { flex: 1; min-width: 0; padding: 0 44px 60px; }
+      .crumb { padding: 20px 0 0; font-size: 12.5px; color: var(--muted); }
+      .crumb a { text-decoration: none; }
+      .crumb a:hover { color: var(--accent); }
+
+      .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding: 26px 0 40px; max-width: 1100px; }
+      .hero__eyebrow {
+        display: inline-flex; align-items: center; gap: 7px; margin: 0 0 14px;
+        color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      }
+      .hero__eyebrow::before { content: ''; width: 16px; height: 1px; background: var(--accent); }
+      .hero h1 {
+        margin: 0 0 16px; font-family: var(--serif); font-weight: 400;
+        font-size: clamp(32px, 4vw, 48px); line-height: 1.12; letter-spacing: -.005em;
+      }
+      .hero p { margin: 0 0 24px; max-width: 46ch; font-size: 16px; line-height: 1.6; color: var(--muted); }
+      .hero__cta { display: flex; flex-wrap: wrap; gap: 12px; }
+      .btn {
+        display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px;
+        border: 1px solid var(--accent); border-radius: var(--radius);
+        background: var(--accent); color: var(--accent-fg); font-weight: 700; font-size: 14px; cursor: pointer;
+      }
+      .btn--outline { background: transparent; color: var(--ink); border-color: var(--border); }
+
+      /* page-stack visual */
+      .stack { position: relative; height: 230px; }
+      .stack .fold {
+        position: absolute; width: 170px; height: 220px; background: var(--surface);
+        border: 1px solid var(--border); box-shadow: var(--shadow);
+      }
+      .stack .fold:nth-child(1) { left: 36px; top: 20px; transform: rotate(-6deg); }
+      .stack .fold:nth-child(2) { left: 70px; top: 6px; transform: rotate(2deg); }
+      .stack .fold:nth-child(3) { left: 104px; top: 0; transform: rotate(9deg); background: var(--accent-soft); border-color: var(--accent); }
+      .stack .fold__lines { position: absolute; left: 18px; right: 18px; top: 28px; display: grid; gap: 8px; }
+      .stack .fold__lines span { display: block; height: 3px; background: var(--border); border-radius: 2px; }
+      .stack .fold__lines span:nth-child(3) { width: 60%; }
+
+      .section { max-width: 1100px; padding: 10px 0 30px; }
+      .section__head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+      .section__head h2 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 21px; }
+      .section__head span { font-size: 12.5px; color: var(--muted); }
+
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+      .tile {
+        position: relative; display: flex; flex-direction: column; gap: 16px; padding: 18px;
+        background: var(--surface); border: 1px solid var(--border);
+        text-align: left; cursor: pointer; color: inherit;
+      }
+      .tile:hover { border-color: var(--accent); }
+      .tile__ico { width: 20px; height: 20px; color: var(--accent); }
+      .tile__name { font-weight: 700; font-size: 14px; }
+      .tile__desc { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+
+      footer.pageFoot {
+        max-width: 1100px; padding: 24px 0 10px; border-top: 1px solid var(--border);
+        display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted);
+      }
+
+      @media (max-width: 900px) {
+        .hero { grid-template-columns: 1fr; }
+        .stack { height: 180px; }
+      }
+      @media (max-width: 760px) {
+        .side { position: fixed; top: 0; left: 0; z-index: 60; height: 100vh; }
+        [data-sidebar="hidden"] .side { width: 0; border-right: 0; }
+        .main { padding: 0 18px 60px; }
+      }
+    </style>
+  </head>
+  <body data-sidebar="visible">
+    <div class="demoBar">
+      <b>Paper &amp; ink demo</b>
+      <span class="note">A second, intentionally different direction from dashboard-style-demo.html — warm paper tones, a serif headline, a recurring folded-corner page motif instead of borrowed dark-dashboard chrome. Toggle light/dark in the sidebar footer. Demo only, no real PDF handling.</span>
+    </div>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <div class="side__brand">
+          <span class="side__mark fold"></span>
+          LeafLockPDF
+        </div>
+        <div class="side__search">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="sideSearch" placeholder="Search tools" autocomplete="off" />
+        </div>
+        <nav class="side__nav" id="sideNav"></nav>
+        <div class="side__foot">
+          <div class="side__theme" id="themeToggle">
+            <button type="button" data-theme-btn="light" aria-current="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.5 12H2M22 12h-2.5M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/></svg>
+              Light
+            </button>
+            <button type="button" data-theme-btn="dark">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/></svg>
+              Dark
+            </button>
+          </div>
+          <div class="side__links">
+            <a href="#">About</a><a href="#">Business</a><a href="#">Help</a><a href="#">Contact</a>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main">
+        <nav class="crumb"><a href="#">All tools</a> / <a href="#">Organize</a></nav>
+
+        <section class="hero">
+          <div>
+            <span class="hero__eyebrow">Private by design</span>
+            <h1>Merge PDFs without uploading them anywhere</h1>
+            <p>Combine, reorder and download in your browser. The files never leave your device — nothing to configure, nothing to trust us about.</p>
+            <div class="hero__cta">
+              <button type="button" class="btn">Merge PDF now</button>
+              <button type="button" class="btn btn--outline">See how it works</button>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="fold"><div class="fold__lines"><span></span><span></span><span></span></div></div>
+            <div class="fold"><div class="fold__lines"><span></span><span></span><span></span></div></div>
+            <div class="fold"><div class="fold__lines"><span></span><span></span><span></span></div></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section__head"><h2>Organize</h2><span id="gridCount">7 tools</span></div>
+          <div class="grid" id="grid"></div>
+        </section>
+
+        <footer class="pageFoot">
+          <span>© LeafLock PDF</span>
+          <span style="margin-left:auto; display:flex; gap:16px;">
+            <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a><a href="#">Contact</a>
+          </span>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      const ICONS = {
+        merge: '<rect x="3" y="3" width="9" height="11" rx="1.5"/><path d="M12 7h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2v-5"/>',
+        split: '<path d="M11 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h5"/><path d="M15 3h3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-3"/><path d="M13 2v20"/>',
+        removePages: '<path d="M6 3h7l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M13 3v5h5"/><path d="M8.5 15h7"/>',
+        extractPages: '<path d="M6 3h7l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M13 3v5h5"/><path d="M9 15h6m0 0-2.5-2.5M15 15l-2.5 2.5"/>',
+        organize: '<rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/>',
+        rotate: '<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/>',
+        crop: '<path d="M7 2v15a1 1 0 0 0 1 1h14"/><path d="M2 7h15a1 1 0 0 1 1 1v14"/>',
+        wordToPdf: '<rect x="2" y="3" width="10" height="13" rx="1.5"/><path d="M5 7h4M5 10h4M5 13h2"/><path d="M15 12h7m0 0-2.5-2.5M22 12l-2.5 2.5"/>',
+        imagesToPdf: '<rect x="2" y="4" width="10" height="9" rx="1.5"/><path d="m4 11 2.5-2.5L9 11"/><path d="M14 16h7m0 0-2.5-2.5M21 16l-2.5 2.5"/>',
+        ocr: '<path d="M6 3h7l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M13 3v5h5"/><circle cx="13" cy="14" r="3.5"/><path d="m16 17 2.5 2.5"/>',
+        watermark: '<path d="M6 3h7l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M13 3v5h5"/><path d="m8 18 8-8"/><path d="M8 13.5 11.5 10"/><path d="m12.5 18 3.5-3.5"/>',
+        sign: '<path d="M3 17c3.5 0 4-10 7-10s2 9 5 9c2 0 3-2 3-2"/><path d="M3 21h18"/>',
+        protect: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14.5v2.5"/>',
+        compress: '<path d="M4 4h4v4"/><path d="m3 3 5 5"/><path d="M20 4h-4v4"/><path d="m21 3-5 5"/><path d="M4 20h4v-4"/><path d="m3 21 5-5"/><path d="M20 20h-4v-4"/><path d="m21 21-5-5"/>',
+      };
+      const TOOLS = [
+        ['Merge PDF', 'Combine several PDFs into one, in order.', 'merge', 'organize'],
+        ['Split PDF', 'Break one PDF into several files.', 'split', 'organize'],
+        ['Remove pages', 'Delete the pages you don’t need.', 'removePages', 'organize'],
+        ['Extract pages', 'Copy selected pages into a new PDF.', 'extractPages', 'organize'],
+        ['Organize PDF', 'Reorder, rotate or delete pages at once.', 'organize', 'organize'],
+        ['Rotate PDF', 'Fix sideways or upside-down pages.', 'rotate', 'organize'],
+        ['Crop PDF', 'Trim margins down to the part you need.', 'crop', 'organize'],
+        ['Word to PDF', 'Turn a .docx document into a PDF.', 'wordToPdf', 'convert'],
+        ['JPG to PDF', 'Turn photos and images into a PDF.', 'imagesToPdf', 'convert'],
+        ['OCR PDF', 'Make a scan searchable and selectable.', 'ocr', 'convert'],
+        ['Add watermark', 'Stamp text or a logo across pages.', 'watermark', 'edit'],
+        ['Sign PDF', 'Draw or type a signature, no upload.', 'sign', 'edit'],
+        ['Protect PDF', 'Add a password, lock permissions.', 'protect', 'secure'],
+        ['Compress PDF', 'Shrink file size with no visible loss.', 'compress', 'secure'],
+      ];
+      const CATS = [
+        ['organize', 'Organize'],
+        ['convert', 'Convert'],
+        ['edit', 'Edit and sign'],
+        ['secure', 'Protect and optimize'],
+      ];
+      const svg = (d, cls) => `<svg class="${cls || ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+
+      const nav = document.getElementById('sideNav');
+      nav.innerHTML = CATS.map(([key, label], i) => {
+        const items = TOOLS.filter(t => t[3] === key);
+        return `<details class="side__group" data-cat="${key}" ${i === 0 ? 'open' : ''}>
+          <summary class="side__heading">
+            <span class="side__heading-label">${label}</span>
+            <span class="side__heading-count">${items.length}</span>
+            ${svg('<path d="m9 6 6 6-6 6"/>', 'side__chevron')}
+          </summary>
+          <ul class="side__list">
+            ${items.map(([name, , icon], j) => `<li><a href="#" data-tool-name="${name.toLowerCase()}" ${key === 'organize' && j === 0 ? 'aria-current="true"' : ''}>${svg(ICONS[icon], '')}<span>${name}</span></a></li>`).join('')}
+          </ul>
+        </details>`;
+      }).join('');
+
+      const grid = document.getElementById('grid');
+      const organize = TOOLS.filter(t => t[3] === 'organize');
+      grid.innerHTML = organize.map(([name, desc, icon]) => `
+        <button type="button" class="tile fold">
+          <span class="tile__ico">${svg(ICONS[icon], '')}</span>
+          <span class="tile__name">${name}</span>
+          <span class="tile__desc">${desc}</span>
+        </button>`).join('');
+      document.getElementById('gridCount').textContent = `${organize.length} tools`;
+
+      const sideSearch = document.getElementById('sideSearch');
+      const groups = () => [...document.querySelectorAll('.side__group')];
+      sideSearch.addEventListener('input', () => {
+        const q = sideSearch.value.trim().toLowerCase();
+        if (!q) {
+          groups().forEach((g, i) => { g.hidden = false; g.open = i === 0; g.querySelectorAll('li').forEach(li => li.hidden = false); });
+          return;
+        }
+        groups().forEach(g => {
+          let any = false;
+          g.querySelectorAll('li').forEach(li => {
+            const match = li.querySelector('a').dataset.toolName.includes(q);
+            li.hidden = !match;
+            if (match) any = true;
+          });
+          g.hidden = !any;
+          g.open = any;
+        });
+      });
+
+      const root = document.documentElement;
+      const themeBtns = [...document.querySelectorAll('[data-theme-btn]')];
+      function applyTheme(mode) {
+        root.setAttribute('data-theme', mode);
+        themeBtns.forEach(b => b.setAttribute('aria-current', String(b.dataset.themeBtn === mode)));
+      }
+      applyTheme('light');
+      themeBtns.forEach(b => b.addEventListener('click', () => applyTheme(b.dataset.themeBtn)));
+    </script>
+  </body>
+</html>

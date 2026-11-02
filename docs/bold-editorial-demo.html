@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LeafLock PDF — bold editorial demo</title>
+    <style>
+      /* ============================================================
+         BOLD EDITORIAL — a third direction, distinct from both prior
+         demos: not dark-SaaS-gray (dashboard-style-demo.html), not
+         warm-paper-serif (paper-ink-demo.html). This one borrows from
+         the confident fintech/"funded startup" register (Mercury,
+         Ramp, early Linear): near-white + near-black, ONE saturated
+         accent used boldly (solid fills, not soft tints), oversized
+         tight-tracked type, hairline-to-thick rules instead of
+         shadows or rounded cards. Reads as trustworthy to a business
+         buyer and current to a younger consumer audience at once —
+         it's the register a lot of fast-growing B2B/B2C hybrids use.
+
+         Demo only — not wired to the real build, no real PDF handling.
+         ============================================================ */
+      *, *::before, *::after { box-sizing: border-box; }
+      html { color-scheme: light dark; }
+
+      :root {
+        --bg: #ffffff; --surface: #ffffff; --surface-2: #f4f4f2; --surface-3: #e9e9e6;
+        --ink: #0c0d0b; --muted: #6b6b66; --border: #0c0d0b;
+        --accent: #1f7a3d; --accent-ink: #ffffff; --accent-soft: #e6f3ea;
+        --radius: 4px;
+        --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      html[data-theme='dark'] {
+        --bg: #0a0b09; --surface: #0a0b09; --surface-2: #131410; --surface-3: #1c1e18;
+        --ink: #f6f6f2; --muted: #93938c; --border: #f6f6f2;
+        --accent: #3fd16e; --accent-ink: #061409; --accent-soft: #10291a;
+      }
+
+      body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+      a { color: inherit; }
+      button { font: inherit; }
+      svg { display: block; flex: none; }
+      @media (prefers-reduced-motion: reduce) { *, *::before, *::as { transition: none !important; } }
+
+      .demoBar {
+        position: sticky; top: 0; z-index: 200;
+        display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        padding: 8px 14px; background: var(--ink); color: var(--bg); font-size: 12.5px;
+      }
+      .demoBar b { font-weight: 800; }
+      .demoBar span.note { opacity: .65; }
+
+      .shell { display: flex; align-items: stretch; min-height: 100vh; }
+
+      .side {
+        flex: none; width: 252px; position: sticky; top: 0; align-self: flex-start;
+        height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+        background: var(--surface); border-right: 2px solid var(--border);
+      }
+      .side__brand { display: flex; align-items: center; gap: 9px; padding: 20px 18px 18px; font-weight: 800; font-size: 15px; letter-spacing: -.01em; }
+      .side__mark { width: 20px; height: 20px; background: var(--accent); flex: none; }
+
+      .side__search {
+        margin: 0 18px 20px; display: flex; align-items: center; gap: 8px;
+        padding: 9px 10px; border: 2px solid var(--border); color: var(--muted);
+      }
+      .side__search input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 13px; font-weight: 600; }
+      .side__search input:focus { outline: none; }
+      .side__search input::placeholder { color: var(--muted); font-weight: 500; }
+
+      .side__nav { flex: 1; overflow-y: auto; padding: 0 10px 10px; }
+      .side__group { margin-bottom: 1px; }
+      .side__heading {
+        display: flex; align-items: center; gap: 9px; width: 100%; padding: 9px 8px;
+        border: 0; background: transparent; color: var(--ink); cursor: pointer; list-style: none;
+        font-size: 11.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+      }
+      .side__heading::-webkit-details-marker { display: none; }
+      .side__heading-label { flex: 1; }
+      .side__heading-count {
+        min-width: 18px; padding: 1px 5px; text-align: center; background: var(--surface-3);
+        font-size: 10.5px; font-weight: 800; letter-spacing: normal;
+      }
+      .side__chevron { width: 12px; height: 12px; transition: transform .12s ease; }
+      details[open] > .side__heading .side__chevron { transform: rotate(90deg); }
+
+      .side__list { list-style: none; margin: 1px 0 10px; padding: 0; }
+      .side__list a {
+        display: flex; align-items: center; gap: 10px; padding: 7px 8px; margin: 0 0 1px;
+        text-decoration: none; color: var(--ink); font-size: 13.5px; font-weight: 600; white-space: nowrap;
+      }
+      .side__list a:hover { background: var(--surface-2); }
+      .side__list a[aria-current="true"] { background: var(--accent); color: var(--accent-ink); }
+      .side__list svg { width: 15px; height: 15px; opacity: .75; flex: none; }
+      .side__list a[aria-current="true"] svg { opacity: 1; }
+
+      .side__foot { flex: none; padding: 12px 18px 18px; border-top: 2px solid var(--border); }
+      .side__theme { display: flex; gap: 0; margin-bottom: 14px; border: 2px solid var(--border); width: max-content; }
+      .side__theme button {
+        display: grid; place-items: center; width: 30px; height: 28px; border: 0;
+        background: transparent; color: var(--muted); cursor: pointer;
+      }
+      .side__theme button + button { border-left: 2px solid var(--border); }
+      .side__theme button[aria-current="true"] { background: var(--ink); color: var(--bg); }
+      .side__theme svg { width: 14px; height: 14px; }
+      .side__links { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+      .side__links a { font-size: 11.5px; font-weight: 600; color: var(--muted); text-decoration: none; }
+      .side__links a:hover { color: var(--ink); }
+
+      /* ---------- main ---------- */
+      .main { flex: 1; min-width: 0; }
+      .crumb { padding: 22px 40px 0; font-size: 12.5px; font-weight: 700; color: var(--muted); }
+      .crumb a { text-decoration: none; }
+      .crumb a:hover { color: var(--ink); }
+
+      .hero { padding: 20px 40px 36px; max-width: 920px; border-bottom: 2px solid var(--border); }
+      .hero__eyebrow {
+        display: inline-flex; align-items: center; gap: 8px; margin: 0 0 16px;
+        padding: 5px 10px; background: var(--ink); color: var(--bg);
+        font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+      }
+      .hero h1 {
+        margin: 0 0 18px; font-weight: 800; letter-spacing: -.03em;
+        font-size: clamp(36px, 5vw, 60px); line-height: 1.0;
+      }
+      .hero p { margin: 0 0 26px; max-width: 48ch; font-size: 16.5px; line-height: 1.55; color: var(--muted); font-weight: 500; }
+      .hero p b { color: var(--ink); }
+      .hero__cta { display: flex; flex-wrap: wrap; gap: 12px; }
+      .btn {
+        display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px;
+        border: 2px solid var(--ink); background: var(--ink); color: var(--bg);
+        font-weight: 800; font-size: 14px; cursor: pointer;
+      }
+      .btn--outline { background: transparent; color: var(--ink); }
+      .trust { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 26px; }
+      .trust span { display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+      .trust span::before { content: ''; width: 7px; height: 7px; background: var(--accent); }
+
+      .section { max-width: 1120px; padding: 32px 40px; }
+      .section__head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 18px; }
+      .section__head h2 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -.01em; }
+      .section__head span { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+
+      .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+      .pill {
+        padding: 8px 15px; border: 2px solid var(--border); background: var(--surface);
+        color: var(--ink); font-size: 13px; font-weight: 700; cursor: pointer;
+      }
+      .pill[aria-current="true"] { background: var(--ink); color: var(--bg); }
+
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 0; border-top: 2px solid var(--border); border-left: 2px solid var(--border); }
+      .tile {
+        display: flex; flex-direction: column; gap: 20px; padding: 20px;
+        background: var(--surface); border-right: 2px solid var(--border); border-bottom: 2px solid var(--border);
+        text-align: left; cursor: pointer; color: inherit;
+      }
+      .tile:hover { background: var(--surface-2); }
+      .tile__ico { width: 20px; height: 20px; color: var(--ink); }
+      .tile__name { font-weight: 800; font-size: 14.5px; letter-spacing: -.005em; }
+      .tile__desc { font-size: 12.5px; color: var(--muted); line-height: 1.45; font-weight: 500; }
+
+      footer.pageFoot {
+        max-width: 1120px; padding: 26px 40px 40px; border-top: 2px solid var(--border); margin: 0 auto;
+        display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; font-weight: 600; color: var(--muted);
+      }
+
+      @media (max-width: 760px) {
+        .side { position: fixed; top: 0; left: 0; z-index: 60; height: 100vh; }
+        [data-sidebar="hidden"] .side { width: 0; border-right: 0; }
+        .crumb, .hero, .section, footer.pageFoot { padding-left: 18px; padding-right: 18px; }
+      }
+    </style>
+  </head>
+  <body data-sidebar="visible">
+    <div class="demoBar">
+      <b>Bold editorial demo</b>
+      <span class="note">Third direction — confident fintech/startup register: near-white + near-black, one saturated accent used as a solid fill (not a soft tint), thick rules instead of shadows or rounded cards. Toggle light/dark bottom-left. Demo only, no real PDF handling.</span>
+    </div>
+
+    <div class="shell">
+      <aside class="side" id="side">
+        <div class="side__brand"><span class="side__mark"></span>LeafLockPDF</div>
+        <div class="side__search">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="sideSearch" placeholder="Search tools" autocomplete="off" />
+        </div>
+        <nav class="side__nav" id="sideNav"></nav>
+        <div class="side__foot">
+          <div class="side__theme" id="themeToggle">
+            <button type="button" data-theme-btn="light" aria-current="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.5 12H2M22 12h-2.5M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/></svg>
+            </button>
+            <button type="button" data-theme-btn="dark">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/></svg>
+            </button>
+          </div>
+          <div class="side__links"><a href="#">About</a><a href="#">Business</a><a href="#">Help</a><a href="#">Contact</a></div>
+        </div>
+      </aside>
+
+      <div class="main">
+        <nav class="crumb"><a href="#">All tools</a> / <a href="#">Organize</a></nav>
+
+        <section class="hero">
+          <span class="hero__eyebrow">Private PDF tools</span>
+          <h1>Merge PDFs without uploading them anywhere.</h1>
+          <p>Combine, reorder and download <b>in your browser</b>. The files never leave your device — nothing to configure, nothing to trust us about.</p>
+          <div class="hero__cta">
+            <button type="button" class="btn">Merge PDF now</button>
+            <button type="button" class="btn btn--outline">See how it works</button>
+          </div>
+          <div class="trust">
+            <span>No upload, ever</span><span>Works offline</span><span>Free to start</span><span>No file-size limit</span>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section__head"><h2>Every tool, same promise</h2><span id="gridCount">19 of 43</span></div>
+          <div class="pills" id="pills"></div>
+          <div class="grid" id="grid"></div>
+        </section>
+
+        <footer class="pageFoot">
+          <span>© LeafLock PDF</span>
+          <span style="margin-left:auto; display:flex; gap:16px;"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a><a href="#">Contact</a></span>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      const ICONS = {
+        merge: '<rect x="3" y="3" width="9" height="11" rx="1.5"/><path d="M12 7h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2v-5"/>',
+        split: '<path d="M11 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h5"/><path d="M15 3h3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-3"/><path d="M13 2v20"/>',
+        removePages: '<path d="M6 3h7l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M13 3v5h5"/><path d="M8.5 15h7"/>',
+        extractPages: '<path d="M6 3h7l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M13 3v5h5"/><path d="M9 15h6m0 0-2.5-2.5M15 15l-2.5 2.5"/>',
+        organize: '<rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/>',
+        rotate: '<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/>',
+        crop: '<path d="M7 2v15a1 1 0 0 0 1 1h14"/><path d="M2 7h15a1 1 0 0 1 1 1v14"/>',
+        wordToPdf: '<rect x="2" y="3" width="10" height="13" rx="1.5"/><path d="M5 7h4M5 10h4M5 13h2"/><path d="M15 12h7m0 0-2.5-2.5M22 12l-2.5 2.5"/>',
+        imagesToPdf: '<rect x="2" y="4" width="10" height="9" rx="1.5"/><path d="m4 11 2.5-2.5L9 11"/><path d="M14 16h7m0 0-2.5-2.5M21 16l-2.5 2.5"/>',
+        pdfToImages: '<path d="M4 3h6l4 4v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M10 3v4h4"/><rect x="13" y="13" width="9" height="8" rx="1.5"/>',
+        ocr: '<path d="M6 3h7l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M13 3v5h5"/><circle cx="13" cy="14" r="3.5"/><path d="m16 17 2.5 2.5"/>',
+        pdfToWord: '<path d="M6 3h7l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M13 3v5h5"/><path d="m7.5 12 1.5 6 2-4 2 4 1.5-6"/>',
+        watermark: '<path d="M6 3h7l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M13 3v5h5"/><path d="m8 18 8-8"/><path d="M8 13.5 11.5 10"/><path d="m12.5 18 3.5-3.5"/>',
+        sign: '<path d="M3 17c3.5 0 4-10 7-10s2 9 5 9c2 0 3-2 3-2"/><path d="M3 21h18"/>',
+        edit: '<path d="M11 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-6"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L13 14l-4 1 1-4Z"/>',
+        protect: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14.5v2.5"/>',
+        unlock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 7.5-2"/><path d="M12 14.5v2.5"/>',
+        compress: '<path d="M4 4h4v4"/><path d="m3 3 5 5"/><path d="M20 4h-4v4"/><path d="m21 3-5 5"/><path d="M4 20h4v-4"/><path d="m3 21 5-5"/><path d="M20 20h-4v-4"/><path d="m21 21-5-5"/>',
+        repair: '<path d="M14.5 5.5a4.5 4.5 0 0 0 5.8 5.8l-8.3 8.3a2.5 2.5 0 0 1-3.5-3.5Z"/><path d="m16 4 4 4"/>',
+      };
+      const TOOLS = [
+        ['Merge PDF', 'Combine several PDFs into one, in order.', 'merge', 'organize'],
+        ['Split PDF', 'Break one PDF into several files.', 'split', 'organize'],
+        ['Remove pages', 'Delete the pages you don’t need.', 'removePages', 'organize'],
+        ['Extract pages', 'Copy selected pages into a new PDF.', 'extractPages', 'organize'],
+        ['Organize PDF', 'Reorder, rotate or delete pages at once.', 'organize', 'organize'],
+        ['Rotate PDF', 'Fix sideways or upside-down pages.', 'rotate', 'organize'],
+        ['Crop PDF', 'Trim margins down to the part you need.', 'crop', 'organize'],
+        ['Word to PDF', 'Turn a .docx document into a PDF.', 'wordToPdf', 'convert'],
+        ['JPG to PDF', 'Turn photos and images into a PDF.', 'imagesToPdf', 'convert'],
+        ['PDF to JPG', 'Save each page of a PDF as an image.', 'pdfToImages', 'convert'],
+        ['OCR PDF', 'Make a scan searchable and selectable.', 'ocr', 'convert'],
+        ['PDF to Word', 'Editable .docx, formatting kept.', 'pdfToWord', 'convert'],
+        ['Add watermark', 'Stamp text or a logo across pages.', 'watermark', 'edit'],
+        ['Sign PDF', 'Draw or type a signature, no upload.', 'sign', 'edit'],
+        ['Edit PDF', 'Add text, images or shapes to a page.', 'edit', 'edit'],
+        ['Protect PDF', 'Add a password, lock permissions.', 'protect', 'secure'],
+        ['Unlock PDF', 'Remove a password you own the rights to.', 'unlock', 'secure'],
+        ['Compress PDF', 'Shrink file size with no visible loss.', 'compress', 'secure'],
+        ['Repair PDF', 'Try to rebuild a damaged PDF.', 'repair', 'secure'],
+      ];
+      const CATS = [['organize','Organize'],['convert','Convert'],['edit','Edit and sign'],['secure','Protect and optimize']];
+      const svg = (d, cls) => `<svg class="${cls||''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+
+      const nav = document.getElementById('sideNav');
+      nav.innerHTML = CATS.map(([key, label], i) => {
+        const items = TOOLS.filter(t => t[3] === key);
+        return `<details class="side__group" data-cat="${key}" ${i===0?'open':''}>
+          <summary class="side__heading">
+            <span class="side__heading-label">${label}</span>
+            <span class="side__heading-count">${items.length}</span>
+            ${svg('<path d="m9 6 6 6-6 6"/>','side__chevron')}
+          </summary>
+          <ul class="side__list">
+            ${items.map(([name,,icon],j)=>`<li><a href="#" data-tool-name="${name.toLowerCase()}" ${key==='organize'&&j===0?'aria-current="true"':''}>${svg(ICONS[icon],'')}<span>${name}</span></a></li>`).join('')}
+          </ul>
+        </details>`;
+      }).join('');
+
+      const pills = document.getElementById('pills');
+      const grid = document.getElementById('grid');
+      const gridCount = document.getElementById('gridCount');
+      let activeCat = 'all';
+      pills.innerHTML = ['<button type="button" class="pill" data-cat="all" aria-current="true">All</button>']
+        .concat(CATS.map(([key,label])=>`<button type="button" class="pill" data-cat="${key}">${label}</button>`)).join('');
+
+      function renderGrid(q) {
+        const query = (q||'').trim().toLowerCase();
+        const items = TOOLS.filter(([name,,,cat]) => (activeCat==='all'||cat===activeCat) && name.toLowerCase().includes(query));
+        grid.innerHTML = items.map(([name,desc,icon]) => `
+          <button type="button" class="tile">
+            <span class="tile__ico">${svg(ICONS[icon],'')}</span>
+            <span class="tile__name">${name}</span>
+            <span class="tile__desc">${desc}</span>
+          </button>`).join('');
+        gridCount.textContent = `${items.length} of ${TOOLS.length}`;
+      }
+      renderGrid('');
+
+      pills.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-cat]');
+        if (!btn) return;
+        activeCat = btn.dataset.cat;
+        pills.querySelectorAll('.pill').forEach(p => p.setAttribute('aria-current', String(p===btn)));
+        renderGrid(document.getElementById('sideSearch').value);
+      });
+
+      const sideSearch = document.getElementById('sideSearch');
+      const groups = () => [...document.querySelectorAll('.side__group')];
+      sideSearch.addEventListener('input', () => {
+        const q = sideSearch.value.trim().toLowerCase();
+        if (!q) {
+          groups().forEach((g,i) => { g.hidden=false; g.open = i===0; g.querySelectorAll('li').forEach(li=>li.hidden=false); });
+          renderGrid('');
+          return;
+        }
+        groups().forEach(g => {
+          let any = false;
+          g.querySelectorAll('li').forEach(li => {
+            const match = li.querySelector('a').dataset.toolName.includes(q);
+            li.hidden = !match;
+            if (match) any = true;
+          });
+          g.hidden = !any; g.open = any;
+        });
+        renderGrid(sideSearch.value);
+      });
+
+      const root = document.documentElement;
+      const themeBtns = [...document.querySelectorAll('[data-theme-btn]')];
+      function applyTheme(mode) {
+        root.setAttribute('data-theme', mode);
+        themeBtns.forEach(b => b.setAttribute('aria-current', String(b.dataset.themeBtn === mode)));
+      }
+      applyTheme('light');
+      themeBtns.forEach(b => b.addEventListener('click', () => applyTheme(b.dataset.themeBtn)));
+    </script>
+  </body>
+</html>

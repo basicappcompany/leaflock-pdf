@@ -38,7 +38,8 @@ and Google · D1-backed usage metering · `/dashboard` · Dodo checkout and webh
 scrubbed crash reporting · OG image generation · sitemap, canonicals, hreflang, nine
 JSON-LD types · **installable and offline** (§4a) · **llms.txt and llms-full.txt** (§4b) ·
 **a CI-enforced performance budget** (§4c) · **category hub pages** at `/tools/<category>`
-with their own schema (§4d) · **the device-local recent-work shelf** (§4e).
+with their own schema (§4d) · **the device-local recent-work shelf** (§4e) · **the tools
+sidebar and a 15-skin picker** (§10, §10a).
 
 **Counts are not kept here.** Run `pnpm counts`. This paragraph used to open "25 tools
 (22 free, 3 Pro) … 215 unit tests, 177 browser tests" against a real 43 and 475/246 — it
@@ -574,22 +575,85 @@ addresses.
 `GET /api/account/export` and `POST /api/account/delete` exist for the data-subject rights
 the policy pages promise.
 
-## 10. Theme and styling
+## 10. Theme and skins
 
 Every colour is defined once with `light-dark()` on `:root` in `src/styles/global.css`.
 `html[data-theme]` (set by `ThemeToggle.astro`, applied before paint by an inline script
 in `Base.astro`) forces one side; otherwise the system setting wins. Use the variables,
 never a hard-coded colour.
 
-Visual system is "Soft Product" from `docs/style-lab.html` — card depth over outlines
-(`--shadow-card`, `--shadow-card-hover`, with `light-dark()` wrapping each *colour* rather
-than the whole shadow, since the branches contain commas), `--radius: 16px`,
-`--radius-small: 10px` for controls, round 42px tinted icon discs, a 3px hover lift that a
-`prefers-reduced-motion` block removes while keeping the accent-border change.
+**Default visual system is "Playful Rounded" — changed 2 November 2026** from the
+original ("Soft Product", now an alternate skin, see below). Big soft radii
+(`--radius: 22px`, `--radius-small: 14px`), a chunky solid offset shadow rather than a
+blur (`--shadow-card: 0 4px 0 light-dark(#f0e7e2, #3a2a44)`), warm coral accent
+(`#e5533d` light / `#ff7a63` dark). `docs/style-lab.html` is where all fifteen directions
+were compared side by side before this one was picked; it still renders all fifteen,
+including the three ("Dashboard-style", "Paper & Ink", "Bold Editorial") built as full
+standalone demos first (`docs/dashboard-style-demo.html`, `docs/paper-ink-demo.html`,
+`docs/bold-editorial-demo.html`) and folded back into the lab afterwards. `docs/
+landing-gallery.html` (24 thumbnails, not all shipped as skins) is the wider visual survey
+that preceded narrowing to fifteen.
+
+**Fourteen alternate skins** — `src/styles/skins.css`, each overriding the exact same
+token set as `:root` under `html[data-skin="<id>"]`, so any component already built
+against `--color-*`/`--radius*`/`--shadow*` re-skins automatically; nothing here touches
+markup. Picked from `SkinPicker.astro`, a compact dropdown in the header next to
+`ThemeToggle` — **a dropdown, not a page**: an earlier `/appearance` route was replaced
+with this after the first version shipped, on the owner's instruction that a full page
+was too much for what is a quick preference. The choice persists in a `leaflock_skin`
+cookie (1 year, matching the `leaflock_*` convention `src/lib/server/session.ts` already
+used for session cookies), applied before first paint by the same inline-script technique
+`ThemeToggle` uses, with the roster listed in `src/lib/skins.ts`. Selecting "Playful
+Rounded" (marked default) **clears** the cookie rather than writing `skin=default`, so
+the reset stays correct even if the default changes again later. One skin, `glass-depth`,
+is a flat approximation of the original gradient-and-blur mockup: `light-dark()` only
+accepts plain colours, so a true CSS gradient can't go through it.
+
+**Known gap:** the cookie is per-browser. A signed-in visitor's skin choice does not
+follow them to a second device — that would need a small D1 column and an API route,
+not built, because it was never confirmed as required.
 
 **No inline `style="…"` in `.astro` markup** — the CSP blocks it. React `style={{…}}` in
 a client-only island is fine, because it goes through the CSSOM; the dashboard's usage
 meter relies on exactly that.
+
+## 10a. Navigation chrome
+
+- **The tools sidebar** — `src/components/ToolsSidebar.astro`, opt-in via `Base.astro`'s
+  `toolsSidebar` prop (tool pages and the category hubs only; marketing pages stay
+  uncluttered). Categorised, collapsible tool list (one `<details>` per category, the
+  active tool's category open by default, others collapsed), a search box that filters
+  the list and auto-opens matching categories, dockable to the left or right edge
+  (`html[data-sidebar-dock]`), hide/show (`html[data-sidebar-state]`), and footer
+  quick-links (About/Business/Help/Contact). `position: fixed`, not `sticky` — pinned to
+  the viewport from the first frame, genuinely unaffected by scroll. Both the dock and
+  visibility choice persist in `localStorage` (not a cookie, unlike the skin picker:
+  there is no reason for this one to be readable from a non-JS context). Its header
+  starts below the site header's real rendered height, not a guessed constant —
+  `--tools-chrome-h`, measured by a `ResizeObserver` on `.site-header`/`.privacy-strip`
+  so a web-font swap or a locale's longer nav text can't leave a sliver of header
+  visually behind the sidebar's top edge.
+  - **z-index 30, deliberately above ordinary content but below the header's own
+    dropdowns (40).** The tools menu's and skin picker's panels learned this the hard
+    way: both originally sat at z-index 20, so a visitor with the sidebar docked right
+    would see the sidebar paint over either dropdown, making skin-picking look like it
+    "only worked on the home page" (the one page type with no sidebar). Any future
+    header dropdown needs a z-index above 30 for the same reason.
+- **The "All tools" mega-menu** (`ToolsMenu.astro`) grid is `repeat(auto-fit,
+  minmax(10rem, 1fr))`, not a fixed column count — it used to be exactly 4 columns above
+  48rem and exactly 2 below as two hard breakpoints, which overflowed or left dead space
+  at in-between widths.
+- **The home page's category sections** (`src/pages/index.astro`) are `<details>`, not
+  plain `<section>` — the first category starts open, the rest collapsed, each with a
+  tool-count badge, so a first-time visitor sees one full category and three headings
+  instead of all 43 tools in one scroll. A "See all `<category>` tools" link into the
+  category hub remains for the tools that stay collapsed.
+- **The header brand mark is inline SVG, not `<img src="/favicon.svg">`** — its two
+  fills are `var(--color-accent)` and `var(--color-on-accent)`, so it recolours with
+  whichever skin is active. The actual browser-tab favicon (`<link rel="icon">`) and the
+  `Organization.logo` in structured data (`src/lib/seo.ts`) stay pointed at the static
+  file: neither can react to a runtime choice, and a tab icon that changed per skin
+  would make a browser's tab bar an unreliable way to find the right tab back.
 
 ## 11. Testing and commands
 

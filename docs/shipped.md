@@ -17,6 +17,26 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 2 November 2026 — Tools sidebar and a 15-skin picker (design.md §10, §10a)
+
+Not a roadmap item — a design-exploration session (`docs/style-lab.html` and five other
+`docs/*.html` demos) that ended with two real features: a persistent, categorised,
+collapsible tools sidebar on every tool page and category hub, and a 15-skin picker
+(dropdown in the header, not a page — the first version was a full `/appearance` route,
+replaced after shipping on the owner's instruction that a dropdown was the right size for
+the decision). Default skin changed from "Soft Product" to "Playful Rounded".
+
+**The finding worth keeping:** a header dropdown's z-index has to beat the sidebar's (30)
+or a right-docked sidebar paints over it — found because the skin picker looked broken on
+every page except the sidebar-free home page, not because anyone reasoned about stacking
+order in advance. Fixed by raising both header dropdowns to 40; anything added to the
+header later needs the same headroom.
+
+**Stated limit:** the skin cookie is per-browser, not per-account — it does not follow a
+signed-in visitor to a second device.
+
+---
+
 ## 1 November 2026 — Comparison pages, all seven (roadmap 3.2)
 
 Added PDF24, Sejda, pdfFiller, Stirling-PDF and Adobe to the existing two. Each claim is

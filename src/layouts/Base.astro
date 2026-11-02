@@ -1,10 +1,13 @@
 ---
 import '../styles/global.css';
+import '../styles/skins.css';
 import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
 import AuthNavLink from '../components/auth/AuthNavLink';
 import SiteFooter from '../components/SiteFooter.astro';
+import SkinPicker from '../components/SkinPicker.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import ToolsMenu from '../components/ToolsMenu.astro';
+import ToolsSidebar from '../components/ToolsSidebar.astro';
 import { getMessages, locales } from '../i18n';
 import { graph, organization, siteName, website } from '../lib/seo';
 
@@ -20,9 +23,26 @@ interface Props {
   jsonLd?: Record<string, unknown>[];
   /** Keep the page out of search results (e.g. the 404 page). */
   noindex?: boolean;
+  /**
+   * Show the persistent, categorized tools sidebar (src/components/ToolsSidebar.astro)
+   * beside the content. Opt-in rather than site-wide: a marketing or content page's job
+   * is to convert or inform on one thing, and a 40-tool rail fighting for attention
+   * works against that — tool pages and the category hubs are where a visitor is
+   * already inside the product and benefits from jumping straight to another tool.
+   */
+  toolsSidebar?: boolean;
 }
 
-const { title, description, path, ogImage = 'default', ogType = 'website', jsonLd = [], noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  path,
+  ogImage = 'default',
+  ogType = 'website',
+  jsonLd = [],
+  noindex = false,
+  toolsSidebar = false,
+} = Astro.props;
 const locale = Astro.currentLocale ?? 'en';
 const t = getMessages(locale).common;
 const site = Astro.site!;
@@ -68,6 +88,31 @@ const structuredData = graph([organization(site), website(site, locale), ...json
       try {
         const theme = localStorage.getItem('theme');
         if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+        // Same reasoning, for the tools sidebar: apply a saved hidden choice and dock
+        // edge before first paint so a returning visitor doesn't see it flash open, or
+        // on the wrong edge, before settling. With nothing saved, a narrow viewport
+        // still needs a pre-paint default: a first mobile visit should not flash a
+        // full-screen overlay it never asked for, so this matches ToolsSidebar.astro's
+        // own un-saved default of "hidden" below 48rem.
+        const sidebarVisible = localStorage.getItem('toolsSidebarVisible');
+        if (sidebarVisible === 'hidden' || sidebarVisible === 'visible') {
+          document.documentElement.dataset.sidebarState = sidebarVisible;
+        } else if (window.matchMedia('(max-width: 48rem)').matches) {
+          document.documentElement.dataset.sidebarState = 'hidden';
+        }
+        // No dock-specific CSS exists for the attribute being absent, so a first-ever
+        // visit (nothing stored yet) still needs an explicit default here, not just a
+        // fallback in ToolsSidebar.astro's own script — otherwise the sidebar briefly
+        // has no width or height at all, before that script runs.
+        const sidebarDock = localStorage.getItem('toolsSidebarDock');
+        document.documentElement.dataset.sidebarDock = sidebarDock === 'left' || sidebarDock === 'right' ? sidebarDock : 'left';
+        // Same reasoning, for the chosen skin (src/pages/appearance.astro): a cookie,
+        // not localStorage, so it's readable the same way whether or not the visitor is
+        // signed in, and matches the site's existing leaflock_* cookie convention
+        // (src/lib/server/session.ts). No cookie means the default skin — already the
+        // :root tokens in global.css — so there's nothing to apply in that case.
+        const skinMatch = document.cookie.match(/(?:^|; )leaflock_skin=([^;]+)/);
+        if (skinMatch) document.documentElement.dataset.skin = decodeURIComponent(skinMatch[1]);
       } catch {}
     </script>
   </head>
@@ -75,7 +120,14 @@ const structuredData = graph([organization(site), website(site, locale), ...json
     <a class="skip-link" href="#content">{t.nav.skipToContent}</a>
     <header class="site-header">
       <a href={getRelativeLocaleUrl(locale, '')} class="brand">
-        <img src="/favicon.svg" alt="" width="24" height="24" />
+        {/* Inline, not <img src="/favicon.svg">: the browser tab icon can't react to a
+            runtime skin/theme choice, but this mark is DOM we control, so it reads its
+            colours from the same --color-accent/--color-on-accent tokens every skin
+            already overrides — it re-skins for free, same as everything else. */}
+        <svg class="brand__mark" viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
+          <path fill="var(--color-accent)" d="M16 3C8 7 5 14 6 24c0 2 1 4 3 5 9 0 16-6 18-14 1-4 0-8-2-12-3 0-6 0-9 0z" />
+          <path fill="var(--color-on-accent)" d="M11 17h10v9H11zm2-4a3 3 0 0 1 6 0v4h-2v-4a1 1 0 0 0-2 0v4h-2z" />
+        </svg>
         {t.site.name}
       </a>
       <nav class="site-nav" aria-label={t.nav.label}>
@@ -92,12 +144,46 @@ const structuredData = graph([organization(site), website(site, locale), ...json
           accountHref={getRelativeLocaleUrl(locale, 'dashboard')}
         />
       </nav>
+      <SkinPicker t={t.appearance} />
       <ThemeToggle t={t.theme} />
     </header>
     <p class="privacy-strip">{t.site.privacyNote}</p>
-    <main id="content">
-      <slot />
-    </main>
+    {
+      toolsSidebar && (
+        // The fixed sidebar needs to start below the header and privacy strip, not
+        // under them — otherwise its own title/search/dock controls render behind that
+        // chrome at the top of the page (only revealed once the page is scrolled and
+        // the non-fixed header scrolls away, which is backwards: those controls should
+        // always be reachable). Header height isn't knowable at build time (it wraps
+        // to two rows under ~48rem, and locale text length varies it further), so this
+        // measures the real rendered height and exposes it as a CSS var the sidebar's
+        // `top` reads — run here, inline, between the header and the sidebar in the
+        // document so it executes (and triggers layout) before the sidebar first
+        // paints, rather than after like a deferred script would.
+        <script is:inline>
+          (function () {
+            var header = document.querySelector('.site-header');
+            var strip = document.querySelector('.privacy-strip');
+            var h = (header ? header.offsetHeight : 0) + (strip ? strip.offsetHeight : 0);
+            document.documentElement.style.setProperty('--tools-chrome-h', h + 'px');
+          })();
+        </script>
+      )
+    }
+    {
+      toolsSidebar ? (
+        <div class="tools-layout">
+          <ToolsSidebar />
+          <main id="content" class="tools-layout__main">
+            <slot />
+          </main>
+        </div>
+      ) : (
+        <main id="content">
+          <slot />
+        </main>
+      )
+    }
     <SiteFooter />
     <script>
       // Offline and installable (public/sw.js, filled in by integrations/service-worker.mjs).

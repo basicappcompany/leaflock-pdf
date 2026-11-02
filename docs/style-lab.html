@@ -7,7 +7,11 @@
     <style>
       /* ============================================================
          STYLE LAB — one information architecture (the classic grid
-         you picked), twelve visual design systems.
+         you picked), fifteen visual design systems: the original
+         twelve, plus three built later as full standalone demos
+         (docs/dashboard-style-demo.html, docs/paper-ink-demo.html,
+         docs/bold-editorial-demo.html) and folded back in here so
+         every direction lives in one click-through comparison.
 
          The markup below is written ONCE. Every style re-composes it:
          card anatomy, hero layout, grid rhythm, type pairing, depth.
@@ -24,8 +28,13 @@
       .lab__b:hover { border-color: #4a586b; color: #fff; }
       .lab__b[aria-pressed=true] { border-color: #4ade80; background: #14291d; color: #7df0a7; font-weight: 600; }
       .lab__b b { margin-right: 6px; opacity: .6; }
+      .themeSw { display: flex; gap: 1px; border: 1px solid #2e3744; border-radius: 8px; overflow: hidden; }
+      .themeSw button { border: 0; padding: 7px 12px; background: #171c24; color: #aebacb; font: inherit; font-size: 12.5px; cursor: pointer; }
+      .themeSw button[aria-pressed=true] { background: #4ade80; color: #06230f; font-weight: 700; }
+      .colorPick { display: flex; align-items: center; gap: 8px; padding: 6px 11px; border: 1px solid #2e3744; border-radius: 8px; color: #aebacb; font-size: 12.5px; }
+      .colorPick input[type=color] { width: 26px; height: 22px; padding: 0; border: 0; background: none; cursor: pointer; }
       .stage { padding: 18px 18px 70px; }
-      .wrap { max-width: 1020px; margin: 0 auto; }
+      .wrap { max-width: 1240px; margin: 0 auto; }
       .note { margin: 0 0 11px; color: #94a1b3; font-size: 13.5px; }
       .note b { color: #e9eef5; }
 
@@ -38,9 +47,34 @@
         --display: var(--font); --h1: 34px; --h1w: 700; --h1ls: -.022em;
         --gridMin: 208px; --gap: 12px; --pad: 16px;
 
+        display: flex; align-items: stretch;
         border-radius: 13px; overflow: hidden; background: var(--bg); color: var(--fg);
         font-family: var(--font); box-shadow: 0 18px 44px rgb(0 0 0 / .34);
       }
+
+      /* ---------- the tools sidebar, real feature shipped on the actual
+         site (src/components/ToolsSidebar.astro) — shown here under
+         every skin via the same tokens everything else uses, not
+         bespoke per style. ---------- */
+      .side { flex: none; width: 228px; display: flex; flex-direction: column; background: var(--surf); border-right: 1px solid var(--bd); }
+      .side__brand { display: flex; align-items: center; gap: 8px; padding: 16px 16px 12px; font-family: var(--display); font-weight: 700; font-size: 14px; letter-spacing: var(--h1ls); }
+      .side__search { display: flex; align-items: center; gap: 7px; margin: 0 16px 14px; padding: 7px 9px; border: 1px solid var(--bd); border-radius: var(--radSm); color: var(--muted); font-size: 12.5px; }
+      .side__search svg { width: 13px; height: 13px; flex: none; }
+      .side__nav { flex: 1; overflow: hidden; padding: 0 9px; }
+      .side__group { margin-bottom: 1px; }
+      .side__heading { display: flex; align-items: center; gap: 8px; width: 100%; padding: 7px 7px; border: 0; background: none; color: var(--muted); cursor: pointer; list-style: none; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+      .side__heading::-webkit-details-marker { display: none; }
+      .side__heading b { flex: 1; font-weight: 700; }
+      .side__list { list-style: none; margin: 1px 0 8px; padding: 0; }
+      .side__list a { display: flex; align-items: center; gap: 9px; padding: 6px 7px; border-radius: var(--radSm); text-decoration: none; color: var(--fg); font-size: 13px; font-weight: 500; }
+      .side__list a:hover { background: var(--surf2); }
+      .side__list a[aria-current] { background: var(--accSoft); color: var(--acc); font-weight: 700; }
+      .side__list svg { width: 14px; height: 14px; opacity: .7; flex: none; }
+      .side__list a[aria-current] svg { opacity: 1; }
+      .side__foot { padding: 10px 16px 14px; border-top: 1px solid var(--bd); display: flex; flex-wrap: wrap; gap: 3px 10px; }
+      .side__foot a { font-size: 11px; color: var(--muted); text-decoration: none; }
+
+      .mainCol { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 
       .nav { display: flex; align-items: center; gap: 20px; padding: 15px 26px; border-bottom: 1px solid var(--bd); }
       .nav__brand { display: flex; align-items: center; gap: 8px; font-family: var(--display); font-weight: 700; letter-spacing: var(--h1ls); }
@@ -103,6 +137,7 @@
          1 · REFINED MINIMAL — hairlines, air, nothing shouts
          ============================================================ */
       [data-style="1"] .site { --bd: #e9ebed; --shadow: none; --rad: 8px; --gap: 1px; --pad: 20px; --gridMin: 220px; --h1: 36px; --h1w: 600; }
+      [data-style="1"][data-theme="dark"] .site { --bg: #121416; --surf: #121416; --surf2: #1a1d20; --fg: #eef1f3; --muted: #92a0ab; --bd: #262b2f; --acc: #35c98f; --accFg: #06140c; --accSoft: #163428; }
       [data-style="1"] .grid { border: 1px solid var(--bd); border-radius: 10px; overflow: hidden; background: var(--bd); }
       [data-style="1"] .t { border: 0; border-radius: 0; }
       [data-style="1"] .t:hover { background: var(--surf2); }
@@ -113,6 +148,7 @@
          2 · EDITORIAL PRESS — serif, numbered index, no cards
          ============================================================ */
       [data-style="2"] .site { --display: "Iowan Old Style", Georgia, serif; --h1: 46px; --h1w: 400; --h1ls: -.015em; --acc: #8f3a1c; --accSoft: #f7ece6; --bd: #e4ddd2; --bg: #fffdf9; --surf: #fffdf9; --shadow: none; --gap: 0; --gridMin: 100%; --pad: 15px 2px; }
+      [data-style="2"][data-theme="dark"] .site { --bg: #15120f; --surf: #15120f; --surf2: #1e1a16; --fg: #f3ece3; --muted: #a89a89; --bd: #352c23; --acc: #e2835a; --accFg: #1c0f06; --accSoft: #3a2015; }
       [data-style="2"] .hero h1 { font-style: italic; }
       [data-style="2"] .grid { grid-template-columns: 1fr; }
       [data-style="2"] .t { flex-direction: row; align-items: baseline; gap: 16px; border: 0; border-top: 1px solid var(--bd); border-radius: 0; }
@@ -128,6 +164,7 @@
          3 · SOFT PRODUCT — pillowy cards, tinted icons, friendly
          ============================================================ */
       [data-style="3"] .site { --rad: 18px; --radSm: 12px; --bd: transparent; --surf2: #f3f5f8; --bg: #f7f8fb; --acc: #3d63dd; --accSoft: #e8edfd; --shadow: 0 2px 4px rgb(20 30 60 / .05), 0 10px 22px rgb(20 30 60 / .06); --pad: 20px; --gap: 14px; --h1: 38px; }
+      [data-style="3"][data-theme="dark"] .site { --bg: #11131a; --surf: #171a22; --surf2: #1e222c; --fg: #eef0f6; --muted: #9aa2b4; --bd: #262b38; --acc: #7c93ff; --accFg: #0a0e1c; --accSoft: #1c2340; }
       [data-style="3"] .t:hover { transform: translateY(-3px); box-shadow: 0 6px 10px rgb(20 30 60 / .07), 0 18px 34px rgb(20 30 60 / .1); }
       [data-style="3"] .t__icon { width: 42px; height: 42px; border-radius: 999px; }
       [data-style="3"] .t__icon svg { width: 21px; height: 21px; }
@@ -137,6 +174,7 @@
          4 · SWISS PRECISION — rules, numerals, red, no curves
          ============================================================ */
       [data-style="4"] .site { --rad: 0; --radSm: 0; --shadow: none; --bd: #111; --acc: #d8232a; --accSoft: #fdecec; --muted: #5f5f5f; --display: "Helvetica Neue", Helvetica, Arial, sans-serif; --h1: 44px; --h1ls: -.035em; --gap: 0 18px; --pad: 14px 0 18px; }
+      [data-style="4"][data-theme="dark"] .site { --bg: #0c0c0c; --surf: #0c0c0c; --fg: #f2f2f2; --muted: #9a9a9a; --bd: #f2f2f2; --acc: #ff5a61; --accFg: #1a0506; --accSoft: #331012; }
       [data-style="4"] .nav { border-bottom-width: 2px; }
       [data-style="4"] .t { border: 0; border-top: 2px solid var(--bd); }
       [data-style="4"] .t:hover .t__name { color: var(--acc); }
@@ -149,6 +187,7 @@
          5 · DARK STUDIO — luminous accent on near-black
          ============================================================ */
       [data-style="5"] .site { --bg: #0d1013; --surf: #14181d; --surf2: #1b2026; --fg: #e9eef4; --muted: #93a0ae; --bd: #222930; --acc: #4ade80; --accFg: #06140c; --accSoft: #16301f; --shadow: 0 1px 2px rgb(0 0 0 / .5); --h1: 40px; }
+      [data-style="5"][data-theme="light"] .site { --bg: #f7faf8; --surf: #fff; --surf2: #eef3ef; --fg: #13231b; --muted: #54685e; --bd: #dbe6df; --acc: #1f8a52; --accFg: #fff; --accSoft: #e1f3e8; }
       [data-style="5"] .t:hover { box-shadow: 0 0 0 1px var(--acc), 0 10px 28px rgb(74 222 128 / .12); }
       [data-style="5"] .btn--g { background: var(--surf2); }
 
@@ -156,6 +195,7 @@
          6 · WARM CRAFT — paper, mixed type, dotted rules
          ============================================================ */
       [data-style="6"] .site { --bg: #f6f1e7; --surf: #fcf9f3; --surf2: #efe8db; --fg: #2a251e; --muted: #6e6354; --acc: #96612a; --accSoft: #efe2cd; --bd: #ded3c0; --rad: 7px; --display: "Iowan Old Style", Georgia, serif; --h1: 40px; --h1w: 400; --shadow: 0 1px 0 rgb(130 110 80 / .09); --pad: 18px; }
+      [data-style="6"][data-theme="dark"] .site { --bg: #1a1611; --surf: #211c16; --surf2: #2a241c; --fg: #ede4d4; --muted: #ab9d85; --bd: #3a3226; --acc: #d99a4e; --accFg: #1d1206; --accSoft: #3c2a14; }
       [data-style="6"] .t { border-style: dashed; }
       [data-style="6"] .t:hover { background: var(--surf2); }
       [data-style="6"] .t__icon { border-radius: 999px; }
@@ -165,6 +205,7 @@
          7 · ENTERPRISE CONSOLE — dense rows, data-first
          ============================================================ */
       [data-style="7"] .site { --bg: #f7f9fb; --surf: #fff; --fg: #0f1f33; --muted: #5d7085; --acc: #15528f; --accSoft: #e4edf7; --bd: #dbe3ec; --rad: 5px; --radSm: 4px; --shadow: none; --h1: 28px; --gap: 8px; --pad: 11px 13px; --gridMin: 100%; font-size: 14px; }
+      [data-style="7"][data-theme="dark"] .site { --bg: #0c1420; --surf: #101a28; --fg: #e6edf5; --muted: #7f93a8; --bd: #1f2d3e; --acc: #5ba6ef; --accFg: #06111d; --accSoft: #152a3f; }
       [data-style="7"] .grid { grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--bd); border-radius: 6px; overflow: hidden; background: var(--surf); }
       [data-style="7"] .t { flex-direction: row; align-items: center; gap: 11px; border: 0; border-bottom: 1px solid var(--bd); border-radius: 0; }
       [data-style="7"] .t:nth-child(odd) { border-right: 1px solid var(--bd); }
@@ -179,6 +220,7 @@
          8 · GLASS DEPTH — gradient ground, frosted panes
          ============================================================ */
       [data-style="8"] .site { --bg: linear-gradient(150deg, #e9f0ff 0%, #f4eaff 48%, #e6fbf3 100%); --surf: rgb(255 255 255 / .6); --surf2: rgb(255 255 255 / .45); --fg: #19203a; --muted: #5b6689; --acc: #5a56d6; --accSoft: rgb(90 86 214 / .13); --bd: rgb(255 255 255 / .9); --rad: 17px; --shadow: 0 7px 26px rgb(70 80 140 / .13); --h1: 40px; }
+      [data-style="8"][data-theme="dark"] .site { --bg: radial-gradient(circle at 20% 0%, rgb(90 86 214 / .2), transparent 50%), radial-gradient(circle at 100% 20%, rgb(60 150 180 / .16), transparent 50%), #0c0e16; --surf: rgb(255 255 255 / .06); --surf2: rgb(255 255 255 / .04); --fg: #eceeff; --muted: #a6acc9; --bd: rgb(255 255 255 / .14); --acc: #9b97ff; --accFg: #0d0b1f; --accSoft: rgb(155 151 255 / .2); }
       [data-style="8"] .t, [data-style="8"] .nav, [data-style="8"] .drop { backdrop-filter: blur(13px); }
       [data-style="8"] .t:hover { transform: translateY(-2px); }
 
@@ -186,6 +228,7 @@
          9 · BOLD BRUTAL — thick ink, offset blocks, mono
          ============================================================ */
       [data-style="9"] .site { --bg: #f3f2ec; --surf: #fff; --fg: #0a0a0a; --muted: #4c4c4c; --acc: #0a0a0a; --accFg: #f3f2ec; --accSoft: #e5e4dc; --bd: #0a0a0a; --rad: 0; --radSm: 0; --shadow: 5px 5px 0 #0a0a0a; --font: "SFMono-Regular", Consolas, monospace; --h1: 36px; --h1ls: -.04em; --pad: 17px; --gap: 16px; }
+      [data-style="9"][data-theme="dark"] .site { --bg: #121212; --surf: #1a1a1a; --fg: #f3f2ec; --muted: #b7b4a8; --acc: #f3f2ec; --accFg: #0a0a0a; --accSoft: #2a2a26; --bd: #f3f2ec; --shadow: 5px 5px 0 #000; }
       [data-style="9"] .t { border-width: 2px; }
       [data-style="9"] .t:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 #0a0a0a; }
       [data-style="9"] .btn { border-width: 2px; box-shadow: 4px 4px 0 #0a0a0a; }
@@ -196,6 +239,7 @@
          10 · CLINICAL TRUST — blue, labelled, diagram up front
          ============================================================ */
       [data-style="10"] .site { --bg: #f7fbfd; --surf: #fff; --fg: #0e2735; --muted: #567688; --acc: #0a7ea4; --accSoft: #e1f2f8; --bd: #d9e8ef; --rad: 9px; --shadow: 0 1px 2px rgb(10 40 55 / .07); --h1: 33px; }
+      [data-style="10"][data-theme="dark"] .site { --bg: #0a141c; --surf: #0f1b26; --fg: #e4eef5; --muted: #7e97a8; --bd: #1c2e3c; --acc: #4db8e8; --accFg: #06131b; --accSoft: #163142; }
       [data-style="10"] .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 26px; align-items: center; }
       [data-style="10"] .hero__art { display: block; }
       [data-style="10"] .hero__cta { grid-column: 1; }
@@ -205,6 +249,7 @@
          11 · LUXE SERIF — black, gold, letter-spaced, quiet
          ============================================================ */
       [data-style="11"] .site { --bg: #0b0b0c; --surf: #121214; --surf2: #1a1a1d; --fg: #f0eae0; --muted: #9b948a; --acc: #c9a227; --accFg: #15120a; --accSoft: #262014; --bd: #26262a; --rad: 2px; --radSm: 2px; --shadow: none; --display: "Iowan Old Style", Georgia, serif; --h1: 44px; --h1w: 400; --h1ls: .005em; --pad: 20px; }
+      [data-style="11"][data-theme="light"] .site { --bg: #faf7f0; --surf: #fff; --surf2: #f1ebdd; --fg: #1d1a12; --muted: #746c57; --bd: #e3d9c2; --acc: #a07f1e; --accFg: #fff; --accSoft: #f3e9cd; }
       [data-style="11"] .hero__eyebrow { letter-spacing: .26em; }
       [data-style="11"] .t__name { font-family: var(--display); font-weight: 400; font-size: 16.5px; }
       [data-style="11"] .t__icon { background: transparent; border: 1px solid var(--bd); border-radius: 0; }
@@ -215,13 +260,49 @@
          12 · PLAYFUL ROUNDED — big shapes, chunky, cheerful
          ============================================================ */
       [data-style="12"] .site { --bg: #fffaf3; --surf: #fff; --fg: #221c2b; --muted: #6d6480; --acc: #e5533d; --accSoft: #ffe8e3; --bd: #f0e7e2; --rad: 22px; --radSm: 14px; --shadow: 0 4px 0 #f0e7e2; --h1: 40px; --h1w: 800; --pad: 20px; --gap: 14px; }
+      [data-style="12"][data-theme="dark"] .site { --bg: #1c1420; --surf: #241a2c; --surf2: #2c2034; --fg: #f3e9f7; --muted: #b29fc0; --bd: #3a2a44; --acc: #ff7a63; --accFg: #200804; --accSoft: #3a1812; --shadow: 0 4px 0 #3a2a44; }
       [data-style="12"] .t:hover { transform: translateY(-3px); box-shadow: 0 8px 0 var(--accSoft); border-color: var(--acc); }
       [data-style="12"] .t__icon { width: 46px; height: 46px; border-radius: 16px; }
       [data-style="12"] .t__icon svg { width: 23px; height: 23px; }
       [data-style="12"] .btn { padding: 12px 20px; }
 
+      /* ============================================================
+         13 · DASHBOARD-STYLE — flat dark app chrome, monochrome icons
+         ============================================================ */
+      [data-style="13"] .site { --bg: #0b0b0c; --surf: #141415; --surf2: #1b1b1d; --fg: #f2f2f0; --muted: #96969b; --acc: #4fbd81; --accFg: #06130b; --accSoft: #163424; --bd: #242426; --rad: 12px; --radSm: 8px; --shadow: none; --h1: 38px; --h1w: 800; --h1ls: -.02em; --pad: 16px; --gap: 12px; }
+      [data-style="13"][data-theme="light"] .site { --bg: #f7f8f6; --surf: #fff; --surf2: #eef0ed; --fg: #15171a; --muted: #5a5f63; --bd: #dfe2df; --acc: #1f7a4d; --accFg: #fff; --accSoft: #e3f2e9; }
+      [data-style="13"] .t__icon { background: transparent; border: 1px solid var(--bd); color: var(--fg); }
+      [data-style="13"] .t:hover { border-color: var(--acc); }
+      [data-style="13"] .t:hover .t__icon { color: var(--acc); border-color: var(--acc); }
+      [data-style="13"] .nav__cta { background: var(--fg); color: var(--bg); border-color: var(--fg); font-weight: 700; }
+
+      /* ============================================================
+         14 · PAPER & INK — warm paper, serif, folded-corner cards
+         ============================================================ */
+      [data-style="14"] .site { --bg: #f3ede1; --surf: #fbf8f1; --surf2: #ece4d3; --fg: #241f16; --muted: #786f5c; --acc: #a8431e; --accFg: #fbf8f1; --accSoft: #f3ddce; --bd: #ddd1b4; --rad: 3px; --radSm: 3px; --shadow: 0 1px 2px rgb(60 45 10 / .06); --display: "Iowan Old Style", Georgia, serif; --h1: 40px; --h1w: 400; --pad: 18px; }
+      [data-style="14"][data-theme="dark"] .site { --bg: #171310; --surf: #1f1a15; --surf2: #28221b; --fg: #efe6d4; --muted: #a79a80; --bd: #3a3228; --acc: #e2783f; --accFg: #1c1209; --accSoft: #3a2415; }
+      [data-style="14"] .t { clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%); }
+      [data-style="14"] .t::after { content: ''; position: absolute; top: 0; right: 0; width: 14px; height: 14px; background: linear-gradient(135deg, transparent 50%, var(--bd) 50%); }
+      [data-style="14"] .t__icon { background: transparent; color: var(--acc); width: 20px; height: 20px; }
+      [data-style="14"] .t__name { font-family: var(--display); font-size: 16px; }
+      [data-style="14"] .hero__eyebrow::before { content: '— '; }
+
+      /* ============================================================
+         15 · BOLD EDITORIAL — near-white/near-black, one solid accent
+         ============================================================ */
+      [data-style="15"] .site { --bg: #fff; --surf: #fff; --surf2: #f4f4f2; --fg: #0c0d0b; --muted: #6b6b66; --acc: #1f7a3d; --accFg: #fff; --accSoft: #e6f3ea; --bd: #0c0d0b; --rad: 4px; --radSm: 4px; --shadow: none; --h1w: 800; --h1ls: -.03em; --pad: 18px; --gap: 0; }
+      [data-style="15"][data-theme="dark"] .site { --bg: #0a0b09; --surf: #0a0b09; --surf2: #131410; --fg: #f6f6f2; --muted: #93938c; --bd: #f6f6f2; --acc: #3fd16e; --accFg: #061409; --accSoft: #10291a; }
+      [data-style="15"] .grid { border-top: 2px solid var(--bd); border-left: 2px solid var(--bd); }
+      [data-style="15"] .t { border: 0; border-right: 2px solid var(--bd); border-bottom: 2px solid var(--bd); border-radius: 0; }
+      [data-style="15"] .t:hover { background: var(--surf2); }
+      [data-style="15"] .t__icon { background: transparent; border-radius: 0; color: var(--fg); }
+      [data-style="15"] .nav { border-bottom-width: 2px; }
+      [data-style="15"] .nav__cta { border-radius: 0; background: var(--fg); color: var(--bg); border-color: var(--fg); font-weight: 700; }
+      [data-style="15"] .btn { border-radius: var(--radSm); }
+
       @media (max-width: 700px) {
         .site { --h1: 28px; --gridMin: 100%; }
+        .side { display: none; }
         [data-style="7"] .grid { grid-template-columns: 1fr; }
         [data-style="7"] .t:nth-child(odd) { border-right: 0; }
       }
@@ -232,9 +313,20 @@
     <div class="lab">
       <p class="lab__h">
         LeafLock PDF — style lab
-        <span>Classic grid throughout. Twelve design systems over the same markup — card anatomy, hero, rhythm and type all change, not just colour. <b style="color:#7df0a7">Merge PDF</b> is clickable in every one.</span>
+        <span>Classic grid throughout. Fifteen design systems over the same markup — card anatomy, hero, rhythm and type all change, not just colour. <b style="color:#7df0a7">Merge PDF</b> is clickable in every one.</span>
       </p>
       <div class="lab__l" id="list"></div>
+      <div class="lab__l" style="margin-top:7px;align-items:center">
+        <div class="themeSw" id="themeSw">
+          <button type="button" data-mode="light">☀ Light</button>
+          <button type="button" data-mode="dark">☾ Dark</button>
+        </div>
+        <label class="colorPick">
+          Prominent colour
+          <input type="color" id="accentPick" value="#1f6f50" />
+        </label>
+        <button type="button" class="lab__b" id="resetAccent">Reset colour</button>
+      </div>
     </div>
 
     <div class="stage">
@@ -242,6 +334,19 @@
         <p class="note" id="note"></p>
 
         <div class="site" id="site">
+          <aside class="side">
+            <span class="side__brand"><span class="nav__mark"></span>LeafLock PDF</span>
+            <span class="side__search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              Search tools
+            </span>
+            <nav class="side__nav" id="sideNav"></nav>
+            <div class="side__foot">
+              <a href="#">About</a><a href="#">Business</a><a href="#">Help</a><a href="#">Contact</a>
+            </div>
+          </aside>
+
+          <div class="mainCol">
           <nav class="nav">
             <span class="nav__brand"><span class="nav__mark"></span>LeafLock PDF</span>
             <span class="nav__links"><span>Tools</span><span>Guides</span><span>Security</span><span>Pricing</span><span>Business</span></span>
@@ -303,6 +408,7 @@
               <div id="out" style="margin-top:13px"></div>
             </div>
           </main>
+          </div>
         </div>
       </div>
     </div>
@@ -321,6 +427,9 @@
         ['Clinical Trust', 'Blue and white with the privacy diagram beside the headline. Aimed at clinics and firms.'],
         ['Luxe Serif', 'Black and gold, wide letter-spacing, very quiet. Premium, suits the Business edition.'],
         ['Playful Rounded', 'Big radii, chunky solid shadow, warm red. Friendliest and least corporate.'],
+        ['Dashboard-style', 'Flat dark app chrome, monochrome icons, no tinted badges — sidebar-app register inspired by ihatepdf.cv, kept distinct with a green accent.'],
+        ['Paper & Ink', 'Warm paper tones, serif headline, folded-corner cards — the most distinctive identity, editorial rather than generic-SaaS.'],
+        ['Bold Editorial', 'Near-white/near-black, one solid accent, thick rules. Confident fintech register — reads current to a consumer, trustworthy to a business buyer.'],
       ];
 
       const TOOLS = [
@@ -356,7 +465,15 @@
         const n = i + 1, b = document.createElement('button');
         b.className = 'lab__b'; b.type = 'button'; b.dataset.n = String(n);
         b.innerHTML = `<b>${n}</b>${name}`;
-        b.addEventListener('click', () => choose(n));
+        b.addEventListener('click', () => {
+          choose(n);
+          // applyAccent/accentInput/accentActive are defined further down this same
+          // script, but by the time a click can happen the whole script has already
+          // run once, so all three are safely initialized here.
+          if (typeof applyAccent !== 'function') return;
+          if (accentActive) applyAccent(accentInput.value); // re-mix accSoft for the new style's light/dark default
+          else accentInput.value = getComputedStyle(site).getPropertyValue('--acc').trim() || accentInput.value; // show this style's own accent
+        });
         list.append(b);
       });
 
@@ -373,6 +490,21 @@
             <span class="t__arrow">→</span></button>`;
         }).join('');
       });
+
+      /* sidebar — same TOOLS/ICONS data, grouped the way the real
+         ToolsSidebar.astro groups them (categories, counts, one open
+         by default, first item marked active) */
+      const CAT_NAMES = ['Organize', 'Convert'];
+      document.getElementById('sideNav').innerHTML = TOOLS.map((group, gi) => `
+        <details class="side__group" ${gi === 0 ? 'open' : ''}>
+          <summary class="side__heading"><b>${CAT_NAMES[gi]}</b><span>${group.length}</span></summary>
+          <ul class="side__list">
+            ${group.map(([name, , live], ti) => {
+              const icon = ICONS[gi * 4 + ti];
+              return `<li><a href="#" ${gi === 0 && ti === 0 ? 'aria-current="true"' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${icon}</svg>${name}</a></li>`;
+            }).join('')}
+          </ul>
+        </details>`).join('');
 
       /* merge demo */
       const pool = [['Contract.pdf', 4, '1.2 MB'], ['Appendix-A.pdf', 2, '0.4 MB'], ['Signatures.pdf', 1, '0.2 MB'],
@@ -417,6 +549,79 @@
       let start = 1;
       try { start = Number(localStorage.getItem('leaflock-style')) || 1; } catch {}
       choose(Math.min(Math.max(start, 1), styles.length));
+
+      /* ---------------- light / dark toggle ----------------
+         No attribute at all = the style's own natural default (five
+         styles are dark by design, the rest light) — so the two
+         buttons only need to represent "force light" / "force dark",
+         not a third "natural" state. */
+      const DARK_BY_DEFAULT = [5, 11, 13];
+      const themeBtns = [...document.querySelectorAll('#themeSw [data-mode]')];
+      function applyThemeMode(mode) {
+        if (mode) document.documentElement.dataset.theme = mode; else delete document.documentElement.dataset.theme;
+        themeBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+        try { if (mode) localStorage.setItem('leaflock-theme', mode); else localStorage.removeItem('leaflock-theme'); } catch {}
+      }
+      themeBtns.forEach((b) => b.addEventListener('click', () => {
+        applyThemeMode(document.documentElement.dataset.theme === b.dataset.mode ? '' : b.dataset.mode);
+        // accentActive/applyAccent/accentInput are defined further down this same
+        // script; safe by click time, same reasoning as the style buttons above.
+        if (typeof applyAccent === 'function' && accentActive) applyAccent(accentInput.value);
+      }));
+      try {
+        const savedTheme = localStorage.getItem('leaflock-theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') applyThemeMode(savedTheme);
+      } catch {}
+
+      /* ---------------- prominent-colour picker ----------------
+         Overrides --acc (and the derived --accFg/--accSoft) as an
+         inline style on #site, which beats any [data-style] rule's
+         specificity automatically — works identically across all
+         fifteen styles and either theme without per-style wiring. */
+      const accentInput = document.getElementById('accentPick');
+      function hexToRgb(hex) {
+        const n = parseInt(hex.slice(1), 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+      }
+      function mix([r, g, b], [r2, g2, b2], amt) {
+        const m = (a, c) => Math.round(a + (c - a) * amt);
+        return `rgb(${m(r, r2)} ${m(g, g2)} ${m(b, b2)})`;
+      }
+      function currentStyleN() { return Number(document.documentElement.dataset.style) || 1; }
+      function effectiveDark() {
+        const t = document.documentElement.dataset.theme;
+        if (t === 'dark') return true;
+        if (t === 'light') return false;
+        return DARK_BY_DEFAULT.includes(currentStyleN());
+      }
+      // Tracks whether a custom accent is active, separate from the <input> value
+      // (which stays populated with a colour to show even after reset, so the swatch
+      // never goes blank) — the style-switch handler reads this flag, not the input's
+      // mere presence, to decide whether to reapply an override.
+      let accentActive = false;
+      function applyAccent(hex) {
+        accentActive = true;
+        const rgb = hexToRgb(hex);
+        const lum = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255;
+        const accFg = lum > 0.62 ? '#0c0d0b' : '#fff';
+        const accSoft = effectiveDark() ? mix(rgb, [16, 16, 16], 0.78) : mix(rgb, [255, 255, 255], 0.85);
+        site.style.setProperty('--acc', hex);
+        site.style.setProperty('--accFg', accFg);
+        site.style.setProperty('--accSoft', accSoft);
+        try { localStorage.setItem('leaflock-accent', hex); } catch {}
+      }
+      accentInput.addEventListener('input', () => applyAccent(accentInput.value));
+      document.getElementById('resetAccent').addEventListener('click', () => {
+        accentActive = false;
+        site.style.removeProperty('--acc'); site.style.removeProperty('--accFg'); site.style.removeProperty('--accSoft');
+        accentInput.value = getComputedStyle(site).getPropertyValue('--acc').trim() || '#1f6f50';
+        try { localStorage.removeItem('leaflock-accent'); } catch {}
+      });
+      try {
+        const savedAccent = localStorage.getItem('leaflock-accent');
+        if (savedAccent) { accentInput.value = savedAccent; applyAccent(savedAccent); }
+        else accentInput.value = getComputedStyle(site).getPropertyValue('--acc').trim() || '#1f6f50';
+      } catch {}
     </script>
   </body>
 </html>

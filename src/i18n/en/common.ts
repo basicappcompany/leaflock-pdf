@@ -79,9 +79,9 @@ export const common = {
     label: 'Main',
     allTools: 'All tools',
     guides: 'Guides',
+    security: 'Security',
     pricing: 'Pricing',
     business: 'Business',
-    security: 'Security',
     login: 'Log in',
     account: 'Account',
     dashboard: 'Dashboard',
@@ -95,6 +95,11 @@ export const common = {
     legal: 'Legal',
     compare: 'Compare',
     copyright: '© {year} LeafLock PDF',
+  },
+  /** The home page's collapsible category sections (src/pages/index.astro). */
+  home: {
+    /** `{category}` is one of the common.categories labels, e.g. "Organize". */
+    viewAll: 'See all {category} tools',
   },
   /** Titles of site pages, used in navigation and footers. Keys match src/content/pages/<locale>/<key>.md. */
   pageLinks: {
@@ -111,6 +116,11 @@ export const common = {
     pricing: 'Pricing',
     guides: 'Guides',
     compare: 'Compare',
+  },
+  /** The skin picker dropdown in the header (src/components/SkinPicker.astro). */
+  appearance: {
+    heading: 'Appearance',
+    defaultBadge: 'Default',
   },
   article: {
     published: 'Published {date}',
@@ -155,6 +165,24 @@ export const common = {
     convert: 'Convert',
     edit: 'Edit and sign',
     secure: 'Protect and optimize',
+  },
+  /** The persistent tools sidebar on tool and category pages (src/components/ToolsSidebar.astro). */
+  sidebar: {
+    label: 'All tools',
+    allTools: 'All tools',
+    hide: 'Hide sidebar',
+    show: 'Show tools',
+    search: 'Search tools',
+    searchClear: 'Clear search',
+    searchNoResults: 'No tools match "{query}".',
+    reset: 'Reset to default position',
+    dock: {
+      left: 'Dock to the left edge',
+      right: 'Dock to the right edge',
+    },
+    links: {
+      heading: 'More',
+    },
   },
   /** The category hub pages at /tools/<category> (src/pages/tools/[category].astro). */
   categoryHub: {
