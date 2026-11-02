@@ -448,9 +448,17 @@ what building it now does. No new tools, no new pages; the machinery under both.
   `categories`, each with its own `ItemList`/`BreadcrumbList` schema, linked from the
   home page's category headings and from every tool page's breadcrumb (now a real
   middle step, not plain text). `tests/e2e/categoryHub.spec.ts`.
+- **Tools sidebar and a 15-skin picker — done 2 November 2026.** Not originally planned
+  as a Phase 1 item — a design-exploration session (`ToolsSidebar.astro`,
+  `SkinPicker.astro`, `src/styles/skins.css`) that ended with real, shipped navigation
+  machinery every tool and category-hub page now carries, added here after the fact on
+  owner instruction rather than left undocumented. Default skin changed from the
+  original ("Soft Product") to "Playful Rounded"; remembering a choice between visits is
+  a Pro/Practice perk. `docs/design.md` §10, §10a.
 
-**Done when:** the site installs, works with the network off, and a new tool page arrives
-with complete structured data and internal links for free. All four.
+**Done when:** the site installs, works with the network off, a new tool page arrives
+with complete structured data and internal links for free, and every tool/category page
+carries the same navigation chrome. All five.
 
 ## Phase 2 — Features
 

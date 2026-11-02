@@ -17,6 +17,27 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 2 November 2026 — Sidebar/skin follow-ups: gating, a live favicon, two layout bugs (design.md §10, §10a)
+
+Four owner-reported fixes on the same feature. Skin memory is now a Pro/Practice perk
+(checked against `/api/auth/me` only at the moment of picking, never from opening the
+panel) — free/signed-out gets a session cookie instead of the year-long one. The browser
+tab favicon and mobile `theme-color` now recolour with the active skin.
+
+**The finding worth keeping:** `getPropertyValue('--color-accent')` returns the literal
+`light-dark(...)` text, not a resolved colour — custom properties are untyped, so the
+function inside one is never evaluated. Shipped broken once already from assuming it
+would be; fixed by reading `.color` off a throwaway element the property was applied to
+instead, which *is* typed.
+
+**Two real layout bugs, not just polish:** the sidebar's `top` offset matched the
+header's height, but the header wasn't sticky, so scrolling past it opened a gap above
+the sidebar the same height as the header. And the footer's seven column-groups shared
+one `auto-fill` grid, so the three site-link groups wrapped raggedly under just the first
+two tool categories. Both fixed — see design.md §10a for the mechanism.
+
+---
+
 ## 2 November 2026 — Tools sidebar and a 15-skin picker (design.md §10, §10a)
 
 Not a roadmap item — a design-exploration session (`docs/style-lab.html` and five other

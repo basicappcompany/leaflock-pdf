@@ -121,6 +121,10 @@ export const common = {
   appearance: {
     heading: 'Appearance',
     defaultBadge: 'Default',
+    /** Remembering a choice between visits is a Pro/Practice perk (see the component's
+     * own comment for why); everyone else gets it applied for the current browser
+     * session only. */
+    freeNote: 'Remembered on this browser with Pro or Practice. Otherwise, for this session only.',
   },
   article: {
     published: 'Published {date}',

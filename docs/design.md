@@ -601,17 +601,28 @@ markup. Picked from `SkinPicker.astro`, a compact dropdown in the header next to
 `ThemeToggle` — **a dropdown, not a page**: an earlier `/appearance` route was replaced
 with this after the first version shipped, on the owner's instruction that a full page
 was too much for what is a quick preference. The choice persists in a `leaflock_skin`
-cookie (1 year, matching the `leaflock_*` convention `src/lib/server/session.ts` already
-used for session cookies), applied before first paint by the same inline-script technique
-`ThemeToggle` uses, with the roster listed in `src/lib/skins.ts`. Selecting "Playful
-Rounded" (marked default) **clears** the cookie rather than writing `skin=default`, so
-the reset stays correct even if the default changes again later. One skin, `glass-depth`,
-is a flat approximation of the original gradient-and-blur mockup: `light-dark()` only
-accepts plain colours, so a true CSS gradient can't go through it.
+cookie, applied before first paint by the same inline-script technique `ThemeToggle`
+uses, with the roster listed in `src/lib/skins.ts`. Selecting "Playful Rounded" (marked
+default) **clears** the cookie rather than writing `skin=default`, so the reset stays
+correct even if the default changes again later. One skin, `glass-depth`, is a flat
+approximation of the original gradient-and-blur mockup: `light-dark()` only accepts
+plain colours, so a true CSS gradient can't go through it.
 
-**Known gap:** the cookie is per-browser. A signed-in visitor's skin choice does not
-follow them to a second device — that would need a small D1 column and an API route,
-not built, because it was never confirmed as required.
+**Remembering it between visits is a Pro/Practice perk, by owner instruction.** Picking a
+skin always applies it; whether the cookie survives the browser closing depends on plan,
+checked only at the moment of picking (never just from opening the panel, to avoid a
+request on every page view):
+- **Pro, Lifetime, Practice or Business** (`isPaidPlan`-equivalent check against
+  `/api/auth/me`'s `plan` field) → a 1-year cookie, same as before this gate existed.
+- **Free or signed out** → the `Max-Age` is omitted entirely, making it a session cookie —
+  applied for every page view until the browser closes, then gone. The check is skipped
+  outright (treated as free, no request made) when `leaflock_signed_in` — the same
+  non-HttpOnly hint `useSession.ts` reads — is absent, which is the common case.
+
+**Known gap:** even the persistent cookie is per-browser. A Pro/Practice visitor's skin
+choice does not follow them to a second device — that would need a small D1 column and an
+API route in addition to the plan check above, not built, because it was never confirmed
+as required.
 
 **No inline `style="…"` in `.astro` markup** — the CSP blocks it. React `style={{…}}` in
 a client-only island is fine, because it goes through the CSSOM; the dashboard's usage
@@ -650,10 +661,36 @@ meter relies on exactly that.
   category hub remains for the tools that stay collapsed.
 - **The header brand mark is inline SVG, not `<img src="/favicon.svg">`** — its two
   fills are `var(--color-accent)` and `var(--color-on-accent)`, so it recolours with
-  whichever skin is active. The actual browser-tab favicon (`<link rel="icon">`) and the
-  `Organization.logo` in structured data (`src/lib/seo.ts`) stay pointed at the static
-  file: neither can react to a runtime choice, and a tab icon that changed per skin
-  would make a browser's tab bar an unreliable way to find the right tab back.
+  whichever skin is active.
+- **The browser-tab favicon and the mobile `theme-color` meta also recolour**, by owner
+  instruction — a small script in `Base.astro`'s `<head>` rebuilds the same leaf-and-lock
+  SVG as a `data:image/svg+xml,` URI and rewrites `#siteFavicon`'s `href` and
+  `#siteThemeColor`'s `content`. Both tags ship a static default first (the plain
+  `/favicon.svg` file, `#e5533d`, also updated — it used to be the old green) so there's
+  something correct before the script runs or if it's ever blocked. The
+  `Organization.logo` in structured data (`src/lib/seo.ts`) and the PWA manifest's
+  `theme_color`/`background_color` (`src/pages/manifest.webmanifest.ts`) stay static too:
+  the first is read by crawlers, not a live browser tab; the second paints a launcher
+  splash screen before any JS runs, so it can only ever reflect the default skin.
+  - **`getComputedStyle(docEl).getPropertyValue('--color-accent')` does not work for
+    this** — a custom property is untyped, so the browser hands back the literal
+    `light-dark(#e5533d, #ff7a63)` text instead of resolving it, and that text is simply
+    invalid as an SVG `fill` or a `theme-color`, silently. First version of this script
+    shipped with exactly that bug. The fix: apply the custom property to a throwaway
+    element's real `color` (a typed property) and read `.color` back off *that* —
+    `light-dark()`, and `var()` generally, only resolves through a property that isn't
+    itself a custom property.
+- **The header and privacy strip are `position: sticky` together**
+  (`.site-chrome` wraps both) — not for their own sake, but because the sidebar's `top`
+  offset (`--tools-chrome-h`, above) is only correct while this chrome is actually still
+  at the top of the viewport. Before this wrapper existed, header and strip scrolled away
+  normally while the sidebar kept reserving that same height, opening a visible gap above
+  it the moment a page scrolled past where the header used to be.
+- **The site footer's tool-category columns and its Product/Company/Legal columns are
+  two separate grids**, not one — put in one `auto-fill` grid together, the three link
+  groups wrapped into a short second row under only the first two category columns,
+  ragged because nothing tied a group's position to what it was semantically next to.
+  Split, with a hairline divider between them, each row now wraps on its own terms.
 
 ## 11. Testing and commands
 

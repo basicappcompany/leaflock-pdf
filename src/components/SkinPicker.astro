@@ -30,6 +30,7 @@ const { t } = Astro.props;
         </button>
       ))
     }
+    <p class="skin-picker__note" id="skinPickerNote">{t.freeNote}</p>
   </div>
 </details>
 
@@ -38,8 +39,31 @@ const { t } = Astro.props;
   // Escape) and the leaflock_* cookie convention (src/lib/server/session.ts) — picking a
   // skin reloads rather than live-swapping, same as before this was a dropdown instead
   // of a full page.
+  //
+  // Remembering the choice browser-to-browser is a Pro/Practice perk: a free or
+  // signed-out visitor still gets their pick applied, but as a session cookie (no
+  // Max-Age — the browser drops it when it closes), not the year-long one. Checking
+  // plan costs a request, so it's only made on an actual pick, never just from opening
+  // the panel, and skipped entirely when `leaflock_signed_in` (the non-HttpOnly hint
+  // src/components/ui/useSession.ts also reads) says there's no session to check —
+  // mirrors that hook's own "don't hit the backend for the default signed-out visitor"
+  // rule rather than importing React just for this.
   const KEY = 'leaflock_skin';
   const YEAR = 60 * 60 * 24 * 365;
+  const PAID_PLANS = ['pro', 'lifetime', 'practice', 'business'];
+
+  async function isPaidPlan(): Promise<boolean> {
+    const hinted = document.cookie.split('; ').some((entry) => entry.startsWith('leaflock_signed_in='));
+    if (!hinted) return false;
+    try {
+      const response = await fetch('/api/auth/me');
+      const data = response.ok ? ((await response.json()) as { plan?: string } | null) : null;
+      return !!data?.plan && PAID_PLANS.includes(data.plan);
+    } catch {
+      return false;
+    }
+  }
+
   const menu = document.querySelector<HTMLDetailsElement>('.skin-picker');
   if (menu) {
     const match = document.cookie.match(/(?:^|; )leaflock_skin=([^;]+)/);
@@ -47,12 +71,17 @@ const { t } = Astro.props;
     for (const opt of menu.querySelectorAll<HTMLButtonElement>('[data-skin-id]')) {
       opt.setAttribute('aria-current', String(opt.dataset.skinId === current));
     }
-    menu.querySelector('.skin-picker__panel')?.addEventListener('click', (event) => {
+    menu.querySelector('.skin-picker__panel')?.addEventListener('click', async (event) => {
       const opt = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-skin-id]');
       if (!opt) return;
       const id = opt.dataset.skinId!;
-      document.cookie =
-        id === 'default' ? `${KEY}=; Path=/; Max-Age=0; SameSite=Lax` : `${KEY}=${encodeURIComponent(id)}; Path=/; Max-Age=${YEAR}; SameSite=Lax`;
+      if (id === 'default') {
+        document.cookie = `${KEY}=; Path=/; Max-Age=0; SameSite=Lax`;
+      } else {
+        const remember = await isPaidPlan();
+        const persistence = remember ? `Max-Age=${YEAR}` : ''; // omitted Max-Age = session cookie
+        document.cookie = `${KEY}=${encodeURIComponent(id)}; Path=/; ${persistence}; SameSite=Lax`.replace('; ; ', '; ');
+      }
       location.reload();
     });
     document.addEventListener('click', (event) => {

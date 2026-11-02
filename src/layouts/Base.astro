@@ -65,11 +65,11 @@ const structuredData = graph([organization(site), website(site, locale), ...json
         Object.keys(locales).map((code) => <link rel="alternate" hreflang={code} href={getAbsoluteLocaleUrl(code, path)} />)
     }
     {!noindex && <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl('en', path)} />}
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" id="siteFavicon" />
     <link rel="sitemap" href="/sitemap.xml" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-    <meta name="theme-color" content="#2a7548" />
+    <meta name="theme-color" content="#e5533d" id="siteThemeColor" />
 
     <meta property="og:site_name" content={siteName} />
     <meta property="og:type" content={ogType} />
@@ -106,18 +106,64 @@ const structuredData = graph([organization(site), website(site, locale), ...json
         // has no width or height at all, before that script runs.
         const sidebarDock = localStorage.getItem('toolsSidebarDock');
         document.documentElement.dataset.sidebarDock = sidebarDock === 'left' || sidebarDock === 'right' ? sidebarDock : 'left';
-        // Same reasoning, for the chosen skin (src/pages/appearance.astro): a cookie,
-        // not localStorage, so it's readable the same way whether or not the visitor is
-        // signed in, and matches the site's existing leaflock_* cookie convention
-        // (src/lib/server/session.ts). No cookie means the default skin — already the
-        // :root tokens in global.css — so there's nothing to apply in that case.
+        // Same reasoning, for the chosen skin (src/components/SkinPicker.astro): a
+        // cookie, not localStorage, so it's readable the same way whether or not the
+        // visitor is signed in, and matches the site's existing leaflock_* cookie
+        // convention (src/lib/server/session.ts). No cookie means the default skin —
+        // already the :root tokens in global.css — so there's nothing to apply in that
+        // case.
         const skinMatch = document.cookie.match(/(?:^|; )leaflock_skin=([^;]+)/);
         if (skinMatch) document.documentElement.dataset.skin = decodeURIComponent(skinMatch[1]);
       } catch {}
     </script>
+    <script>
+      // The favicon and the mobile theme-color meta both ship a static default (the
+      // link/meta tags above) so there's something correct before this runs — then this
+      // repaints both from whichever skin and light/dark mode are actually active. Same
+      // leaf-and-lock shape as the header brand mark (below, in <body>): one more place
+      // that would silently go stale if a colour were hard-coded instead of read from
+      // the tokens.
+      //
+      // Reading a custom property's resolved value needs an indirection:
+      // getComputedStyle(docEl).getPropertyValue('--color-accent') returns the raw,
+      // *unresolved* `light-dark(#e5533d, #ff7a63)` text — custom properties are
+      // untyped, so the browser never evaluates the function inside one the way it does
+      // for an actual <color> property. Setting that raw text as an SVG fill or a
+      // theme-color is simply invalid, silently. The fix is the standard one: apply the
+      // custom property to a real `color` on a throwaway element and read `.color` back
+      // off *that* — a typed property, so light-dark() (and var() generally) resolves.
+      function resolveColor(varName: string): string {
+        const probe = document.createElement('span');
+        probe.style.cssText = `position:absolute;visibility:hidden;color:var(${varName})`;
+        document.documentElement.appendChild(probe);
+        const resolved = getComputedStyle(probe).color;
+        probe.remove();
+        return resolved;
+      }
+      const accent = resolveColor('--color-accent');
+      const onAccent = resolveColor('--color-on-accent');
+      if (accent && onAccent) {
+        const svg =
+          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">` +
+          `<path fill="${accent}" d="M16 3C8 7 5 14 6 24c0 2 1 4 3 5 9 0 16-6 18-14 1-4 0-8-2-12-3 0-6 0-9 0z"/>` +
+          `<path fill="${onAccent}" d="M11 17h10v9H11zm2-4a3 3 0 0 1 6 0v4h-2v-4a1 1 0 0 0-2 0v4h-2z"/>` +
+          `</svg>`;
+        const favicon = document.getElementById('siteFavicon');
+        if (favicon) favicon.setAttribute('href', 'data:image/svg+xml,' + encodeURIComponent(svg));
+        const themeColor = document.getElementById('siteThemeColor');
+        if (themeColor) themeColor.setAttribute('content', accent);
+      }
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#content">{t.nav.skipToContent}</a>
+    {/* Sticky as one unit, not just the sidebar offset by its measured height: the
+        sidebar is `position: fixed; top: var(--tools-chrome-h)` (ToolsSidebar.astro),
+        which is only correct while this chrome is actually still at the top of the
+        viewport. Without this wrapper the header/strip scroll away normally, leaving a
+        gap the height of --tools-chrome-h above the sidebar once they have — the
+        sidebar held the reserved space open for chrome that was no longer there. */}
+    <div class="site-chrome">
     <header class="site-header">
       <a href={getRelativeLocaleUrl(locale, '')} class="brand">
         {/* Inline, not <img src="/favicon.svg">: the browser tab icon can't react to a
@@ -148,6 +194,7 @@ const structuredData = graph([organization(site), website(site, locale), ...json
       <ThemeToggle t={t.theme} />
     </header>
     <p class="privacy-strip">{t.site.privacyNote}</p>
+    </div>
     {
       toolsSidebar && (
         // The fixed sidebar needs to start below the header and privacy strip, not

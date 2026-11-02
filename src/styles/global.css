@@ -98,6 +98,18 @@ h2 {
 
 /* ---------- Site chrome ---------- */
 
+/* Pins the header and privacy strip together at the top of the viewport while
+   scrolling. Needed for more than its own sake: the tools sidebar is `position: fixed;
+   top: var(--tools-chrome-h)` (ToolsSidebar.astro measures this element's real height),
+   which is only correct for as long as this chrome is actually still at the top — if it
+   scrolled away normally, the sidebar would go on reserving that height for chrome that
+   was no longer there, opening a gap above it the moment the page scrolled past it. */
+.site-chrome {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
 .site-header {
   display: flex;
   flex-wrap: wrap;
@@ -440,6 +452,15 @@ h2 {
   color: var(--color-accent);
 }
 
+.skin-picker__note {
+  margin: 0.4rem 0 0.2rem;
+  padding: 0.5rem 0.6rem 0.1rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
 /* ---------- Tools sidebar ---------- */
 /* Opt-in (Base.astro's `toolsSidebar` prop) on tool pages and category hubs only — see
    that prop's doc comment. Visibility is driven by `data-sidebar-state` on <html>
@@ -718,15 +739,16 @@ html[data-sidebar-state='hidden'] .tools-sidebar {
 }
 
 .tools-sidebar__footer ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem 0.8rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.4rem 0.8rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .tools-sidebar__footer a {
+  display: block;
   color: var(--color-muted);
   text-decoration: none;
   font-size: 0.82rem;
@@ -800,6 +822,13 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
   gap: calc(var(--space) * 1.5);
   max-width: 64rem;
   margin: 0 auto;
+}
+
+.site-footer__columns--meta {
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 12rem));
+  margin-top: calc(var(--space) * 1.5);
+  padding-top: calc(var(--space) * 1.5);
+  border-top: 1px solid var(--color-border);
 }
 
 .site-footer__heading {

@@ -10,6 +10,12 @@ const common = messages.common;
 ---
 
 <footer class="site-footer">
+  {/* Two separate grids, not one flowing list: with all seven groups (four tool
+      categories plus product/company/legal) in a single auto-fill grid, the categories
+      filled exactly five columns at common widths and the three link groups wrapped
+      into a short, ragged second row under only the first two of them — ragged because
+      nothing ties where a group lands to what's semantically next to it. Splitting
+      "tools" from "site" gives each its own row that wraps on its own terms. */}
   <div class="site-footer__columns">
     {
       categories.map((category) => (
@@ -27,6 +33,8 @@ const common = messages.common;
         </nav>
       ))
     }
+  </div>
+  <div class="site-footer__columns site-footer__columns--meta">
     {
       footerGroups.map((group) => (
         <nav class="site-footer__group" aria-label={common.footer[group.heading]}>
