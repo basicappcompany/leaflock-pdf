@@ -431,6 +431,11 @@ h2 {
    headline at awkward points. Both are held to a comfortable measure instead. */
 .hero__text h1 {
   max-width: 24ch;
+  /* Bigger than the shared h1 rule above, deliberately: that rule also sizes every
+     tool page's heading, which sits inline with a badge and a breadcrumb trail and
+     has to stay modest. The home hero has the whole width to itself and nothing else
+     competing for size, so it gets its own scale rather than inheriting the shared one. */
+  font-size: clamp(2.25rem, 5.5vw, 3.25rem);
 }
 
 .hero__text .lead {
@@ -547,26 +552,46 @@ h2 {
   height: 1.5rem;
 }
 
+/*
+ * Was a filled, fully-tinted circle at rest — the single most dated element on the
+ * page: that exact tinted-disc badge is the signature of the 2019-era SaaS-template
+ * wave, and it was doing that whether or not the tile was being looked at. Quiet at
+ * rest now (a thin-bordered square, muted icon colour, same surface as the card), and
+ * picks up colour only on hover/focus — so the attention it asks for is earned by
+ * interaction rather than spent on every tile all the time.
+ */
 .tool-grid__icon {
   display: grid;
   place-items: center;
-  width: 2.625rem;
-  height: 2.625rem;
-  margin-bottom: 0.35rem;
-  border-radius: 999px;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-bottom: 0.5rem;
+  border-radius: var(--radius-small);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-muted);
+  transition:
+    border-color 0.15s,
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.tool-grid__icon .tool-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.tool-grid a:hover .tool-grid__icon,
+.tool-grid a:focus-visible .tool-grid__icon {
+  border-color: var(--color-accent);
   background: var(--color-accent-soft);
   color: var(--color-accent);
 }
 
-/* Smaller glyph inside the larger disc, so the tint reads as a badge. */
-.tool-grid__icon .tool-icon {
-  width: 1.3rem;
-  height: 1.3rem;
-}
-
-.tool-grid a:hover .tool-grid__icon {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+@media (prefers-reduced-motion: reduce) {
+  .tool-grid__icon {
+    transition: none;
+  }
 }
 
 .tool-grid {
@@ -580,6 +605,40 @@ h2 {
 
 .tool-grid--small {
   grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+}
+
+/*
+ * One bento moment, home page only: the first tile of the first section is Merge PDF —
+ * the same tool the hero's own primary button already points at — and it was rendering
+ * as one of an undifferentiated grid of identical cards.
+ *
+ * `.category--first` is an explicit class (index.astro), not a `:first-of-type` guess —
+ * that was tried first and silently matched nothing, because `:first-of-type` counts by
+ * tag name only: `.hero` is also a `<section>` and comes first, so every `.category`
+ * section was actually second-of-type-or-later and the rule never fired. An explicit
+ * class is one line in the markup and isn't fooled by an unrelated earlier sibling.
+ * `.category` exists nowhere else (the category hub and a tool page's "related tools"
+ * list use `.tool-grid` directly, with no `.category` wrapper), so this still cannot
+ * leak onto any other page's grid.
+ * `span 2` degrades harmlessly on a narrower grid that has fewer than two columns — the
+ * browser just gives the tile the one column it has.
+ */
+.category--first .tool-grid li:first-child {
+  grid-column: span 2;
+}
+
+.category--first .tool-grid li:first-child .tool-grid__icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.category--first .tool-grid li:first-child .tool-grid__icon .tool-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.category--first .tool-grid li:first-child strong {
+  font-size: 1.1rem;
 }
 
 .tool-grid a {

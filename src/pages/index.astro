@@ -57,8 +57,8 @@ const jsonLd = [
   </section>
 
   {
-    categories.map((category) => (
-      <section class={`category category--${category}`}>
+    categories.map((category, index) => (
+      <section class={`category category--${category}${index === 0 ? ' category--first' : ''}`}>
         <h2>
           <ToolIcon category={category} />
           <a href={getRelativeLocaleUrl(locale, `tools/${category}`)}>{common.categories[category]}</a>
