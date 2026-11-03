@@ -710,6 +710,17 @@ caught.
   groups wrapped into a short second row under only the first two category columns,
   ragged because nothing tied a group's position to what it was semantically next to.
   Split, with a hairline divider between them, each row now wraps on its own terms.
+- **The header condenses to just the brand mark once scrolled past a small threshold**
+  (`.site-chrome--condensed`, toggled by a scroll listener at the bottom of
+  `Base.astro`) — reported from an actual phone, where the full header permanently ate
+  a real share of the viewport on every page. Nav, the skin picker and the theme toggle
+  collapse away; the privacy strip (`.privacy-strip`) deliberately doesn't, on the
+  owner's instruction — it stays visible through the whole scroll, not just at the top.
+  The same listener re-measures `--tools-chrome-h` on every toggle, for the same reason
+  the sticky-chrome wrapper above exists: that variable is set once before first paint
+  for the *uncondensed* height, and condensing without re-measuring it would reopen the
+  exact gap-above-the-sidebar bug the wrapper was built to close, just from a different
+  trigger.
 
 ## 10b. Scroll reveal
 

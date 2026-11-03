@@ -157,6 +157,31 @@ h2 {
   background: var(--color-surface);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .site-header {
+    transition: padding-block 0.2s ease;
+  }
+}
+
+/* Condensed once the page has scrolled a little — brand plus the privacy strip, nav
+   and the rest collapsed away. On a phone, the full header ate a real share of the
+   viewport on every single page, permanently, for chrome a visitor only actually needs
+   at the top — the privacy strip stays, on the owner's instruction, since "nothing is
+   uploaded" is the one line worth keeping visible the whole time someone's using a
+   tool. A scroll listener at the bottom of Base.astro toggles this class and keeps
+   --tools-chrome-h (the sidebar's `top` offset) in step with the shorter height —
+   without that second part, the sidebar would hold open a gap sized for the header's
+   full, uncondensed height. */
+.site-chrome--condensed .site-nav,
+.site-chrome--condensed .skin-picker,
+.site-chrome--condensed .theme-toggle {
+  display: none;
+}
+
+.site-chrome--condensed .site-header {
+  padding-block: 0.5rem;
+}
+
 .brand {
   display: inline-flex;
   align-items: center;

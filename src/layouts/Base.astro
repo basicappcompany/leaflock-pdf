@@ -315,5 +315,39 @@ const chromeHeightScript = cspInlineScript(`
         }
       }
     </script>
+    <script>
+      // Shrinks the sticky header to just the brand mark once the page has scrolled a
+      // little — on a phone, the full header permanently ate a real share of the
+      // viewport, on every page, for chrome a visitor only actually needs at the very
+      // top. The privacy strip ("Everything happens in your browser...") stays put
+      // through this, on the owner's instruction — it's the one line worth keeping
+      // visible the whole time someone's using a tool, not just at the top of the
+      // page. Site-wide, not gated behind `toolsSidebar`: the crowding applies to
+      // every page, sidebar or not.
+      //
+      // Threshold-gated, not a plain `scrollY > 0` check, so the tiniest scroll (or a
+      // sub-pixel rounding jitter some browsers report at rest) doesn't flip it.
+      const chrome = document.querySelector('.site-chrome');
+      if (chrome) {
+        const THRESHOLD = 24;
+        let condensed = false;
+        // Only pages with a sidebar read --tools-chrome-h, but setting it unconditionally
+        // is simpler than branching on `toolsSidebar`, and costs nothing on pages without one.
+        const updateChromeHeight = () => {
+          const header = chrome.querySelector<HTMLElement>('.site-header');
+          const strip = chrome.querySelector<HTMLElement>('.privacy-strip');
+          const h = (header ? header.offsetHeight : 0) + (strip ? strip.offsetHeight : 0);
+          document.documentElement.style.setProperty('--tools-chrome-h', h + 'px');
+        };
+        const onScroll = () => {
+          const shouldCondense = window.scrollY > THRESHOLD;
+          if (shouldCondense === condensed) return;
+          condensed = shouldCondense;
+          chrome.classList.toggle('site-chrome--condensed', condensed);
+          updateChromeHeight();
+        };
+        addEventListener('scroll', onScroll, { passive: true });
+      }
+    </script>
   </body>
 </html>

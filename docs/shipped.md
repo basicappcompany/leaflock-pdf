@@ -17,6 +17,25 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 3 November 2026 — A condensing header, reported from a real phone
+
+Owner reported the header eating too much of a phone's viewport, permanently, on every
+page — found while checking the live `leaflockpdf.com` deployment on an actual device
+rather than a desktop emulation. Shrinks to just the brand mark once scrolled past a
+small threshold (`.site-chrome--condensed`), nav/skin-picker/theme-toggle collapsing
+away; the privacy strip stays, on explicit instruction — "nothing is uploaded" is the
+one line worth keeping visible the whole time someone's using a tool, not just at the
+top of the page.
+
+**The finding worth keeping:** the sidebar's `top` offset reads `--tools-chrome-h`,
+set once before first paint for the *uncondensed* height. Condensing the header without
+also re-measuring that variable would leave the sidebar holding open a gap sized for
+chrome that's no longer there — same bug class as the scroll-gap fix from 2 November,
+different trigger. The same scroll listener that toggles the condensed class now
+re-measures and updates the variable in the same tick.
+
+---
+
 ## 3 November 2026 — The same stale claim was duplicated across six pages, not one
 
 Asked to check for stale or placeholder values across the UI after the previous pass only
