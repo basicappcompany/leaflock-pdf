@@ -5,8 +5,7 @@ compatibility_date = "2026-10-21"
 [[d1_databases]]
 binding = "DB"
 database_name = "leaflock-pdf"
-# Filled in once the database is created with `wrangler d1 create leaflock-pdf`.
-database_id = ""
+database_id = "75b792bb-eef2-4a99-8090-56b77cb55e4d"
 migrations_dir = "migrations"
 
 # Secrets (RESEND_API_KEY, EMAIL_FROM, SESSION_IP_SALT) are set with

@@ -186,16 +186,17 @@ now sits in `.dev.vars` beside the other three, and needs a real id like them.
       stale, and needs rewording (likely to vary by the buyer's region), only once
       Paddle is actually wired in.
 
-## 4. Cloudflare D1 — not created
+## 4. Cloudflare D1 — created 3 November 2026
 
-`wrangler.toml` still has `database_id = ""`, so there is no remote database; only the
-local Miniflare one under `.wrangler/state` exists.
-
-- [ ] `wrangler d1 create leaflock-pdf`, then paste the id into `wrangler.toml`.
-- [ ] Apply the three migrations remotely:
-      `wrangler d1 migrations apply leaflock-pdf --remote`.
-- [ ] Set `SESSION_IP_SALT` as a production secret — the local value is the literal
-      `dev-only…` string and must not be reused.
+- [x] `wrangler d1 create leaflock-pdf` — database id `75b792bb-eef2-4a99-8090-56b77cb55e4d`
+      (APAC region), now in `wrangler.toml`.
+- [x] All four migrations applied remotely (`0001_auth` through `0004_practice_plan`).
+- [x] `SESSION_IP_SALT` set as a production Pages secret (a fresh random value, not the
+      `dev-only…` placeholder `.dev.vars` still uses locally).
+- [ ] Trigger the next Cloudflare Pages build (push to `main` is enough) and confirm the
+      Functions bundle now actually publishes — the first deploy failed specifically on
+      the empty `database_id` (`Error 8000022: Invalid database UUID`), so this is the
+      thing to verify, not assume.
 
 ## 4a. CI runs on GitHub — done 31 October 2026 (item 6.2)
 
