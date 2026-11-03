@@ -151,6 +151,14 @@ fails as soon as it is exercised locally.
 
 ## 3. Dodo Payments — values present but unverified
 
+**Merchant account submitted for review — 3 November 2026.** Dodo's Product Information
+onboarding form is filled in and submitted (integration method: API/SDK, their
+Checkout Sessions API; fulfilment: instant access + ongoing subscription, no email/manual
+step; acquisition channel: Website & SEO). Outcome not yet known — once approved, the
+real product ids and a live `DODO_API_KEY` become available, which unblocks everything
+below. The `dodopayments@dodopayments` Claude Code plugin (official MCP + skills) is
+installed and available for the verification work once that happens.
+
 `DODO_MODE=test`, `DODO_WEBHOOK_SECRET=whsec_…` and three of the four product ids
 (`DODO_PRODUCT_PRO_MONTHLY`, `…_PRO_YEARLY`, `…_LIFETIME`) read as made-up stand-ins
 rather than ids copied from a real dashboard.

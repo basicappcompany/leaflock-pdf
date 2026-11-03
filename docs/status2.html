@@ -514,7 +514,7 @@
     tools: 43,
     pro: 0,
     practice: 6,
-    commits: 22,
+    commits: 24,
     ops: 29,
     landings: 5,
     guides: 6,
@@ -605,7 +605,7 @@
       num: 6, name: "Launch", state: "progress",
       summary: "6.4's accessibility audit closed 30 Oct and 6.2 pushed to GitHub with CI green on 31 Oct, so this phase has no build work left at all. Its remaining blockers wait entirely on other people — credentials and the legal review that sets the date.",
       items: [
-        { id: "6.1", name: "Credentials (Google, Resend, Dodo, Paddle, D1)", state: "external", note: "leaflockpdf.com bought 30 Oct, which was its first gate — the OAuth redirect URIs and the email sending domain can now be registered. Still open: Google, Resend, Dodo, Paddle, D1, and a mailbox for hello@ (TODO §0)", lead: 5,  owner: "you", blocker: true },
+        { id: "6.1", name: "Credentials (Google, Resend, Dodo, Paddle, D1)", state: "external", note: "leaflockpdf.com bought 30 Oct, which was its first gate — the OAuth redirect URIs and the email sending domain can now be registered. Dodo merchant account submitted for review 3 Nov (TODO §3) — outcome pending. Still open: Google, Resend, Paddle, D1, and a mailbox for hello@ (TODO §0)", lead: 5,  owner: "you", blocker: true },
         { id: "6.2", name: "GitHub repo, first commit, CI run", state: "done", when: "31 Oct", note: "basicappcompany/leaflock-pdf, private. Two commits (512 files), pushed 31 Oct, and run 41110988456 was green first time in 8m11s — 275 browser tests in 4.3m on a clean Linux runner, no retries used. The empty LeafLockPDF repo created 30 Oct was renamed rather than duplicated. gh needed the workflow scope before GitHub would accept a push containing ci.yml" },
         { id: "6.3", name: "Legal review of policy pages", state: "external", note: "brief ready to send (docs/legal-brief.md) — hosting and email provider resolved 3 Nov (Cloudflare, Resend — facts, not decisions; a questionnaire artifact exists for the rest). Four answers only you have left: entity name/address, governing law + courts, DPDP grievance officer, minimum age. Payment provider was already decided 28 Oct (Dodo + Paddle split) and is now named in privacy.md/terms.md too", lead: 21, owner: "lawyer", blocker: true },
         { id: "6.4", name: "Accessibility audit", state: "done", when: "30 Oct", note: "20 checks in accessibility.spec.ts, WCAG A/AA clean on 10 page kinds; fixed one real 1.4.10 Reflow failure (tables overflowed at 320px)" },
