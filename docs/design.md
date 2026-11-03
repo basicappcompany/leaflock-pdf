@@ -730,6 +730,15 @@ caught.
   for the *uncondensed* height, and condensing without re-measuring it would reopen the
   exact gap-above-the-sidebar bug the wrapper was built to close, just from a different
   trigger.
+- **Condense and expand use two different thresholds (64px / 16px), not one.**
+  `.site-chrome` is sticky, which still means it occupies normal document flow space —
+  condensing it shrinks that space and shifts everything below it upward, including
+  whatever the visitor (or Playwright's own scroll-into-view during a `.click()`) was
+  scrolling toward. A single shared threshold lets that shift itself re-cross the
+  threshold, flipping the state back, shifting again, forever — this is exactly what
+  broke `secure.spec.ts`'s download-link click in CI, intermittently, until bisected.
+  A wide dead zone between the two thresholds means one toggle's own shift can never
+  be large enough to cross back over the other side.
 
 ## 10b. Scroll reveal
 

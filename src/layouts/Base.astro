@@ -334,11 +334,20 @@ const chromeHeightScript = cspInlineScript(`
       // page. Site-wide, not gated behind `toolsSidebar`: the crowding applies to
       // every page, sidebar or not.
       //
-      // Threshold-gated, not a plain `scrollY > 0` check, so the tiniest scroll (or a
-      // sub-pixel rounding jitter some browsers report at rest) doesn't flip it.
+      // Two thresholds, not one, and far apart — this is sticky, so it still occupies
+      // document flow space, and condensing it shrinks that space, shifting everything
+      // below it upward. That shift moves whatever a visitor's cursor (or a test's
+      // scroll-into-view) was aiming at, which can nudge scrollY back across a single
+      // shared threshold and flip the state right back — condense, shift, re-cross,
+      // expand, shift again, forever. Found this the hard way: a real e2e regression
+      // where a result panel's Download link became permanently "not stable" to click,
+      // because Playwright's own auto-scroll kept landing exactly on that boundary. A
+      // wide dead zone between condense-at and expand-at means one shift from toggling
+      // can never itself cross back over the other threshold.
       const chrome = document.querySelector('.site-chrome');
       if (chrome) {
-        const THRESHOLD = 24;
+        const CONDENSE_AT = 64;
+        const EXPAND_AT = 16;
         let condensed = false;
         // Only pages with a sidebar read --tools-chrome-h, but setting it unconditionally
         // is simpler than branching on `toolsSidebar`, and costs nothing on pages without one.
@@ -349,7 +358,8 @@ const chromeHeightScript = cspInlineScript(`
           document.documentElement.style.setProperty('--tools-chrome-h', h + 'px');
         };
         const onScroll = () => {
-          const shouldCondense = window.scrollY > THRESHOLD;
+          const y = window.scrollY;
+          const shouldCondense = condensed ? y > EXPAND_AT : y > CONDENSE_AT;
           if (shouldCondense === condensed) return;
           condensed = shouldCondense;
           chrome.classList.toggle('site-chrome--condensed', condensed);

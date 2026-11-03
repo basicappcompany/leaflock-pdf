@@ -56,6 +56,18 @@ chrome that's no longer there — same bug class as the scroll-gap fix from 2 No
 different trigger. The same scroll listener that toggles the condensed class now
 re-measures and updates the variable in the same tick.
 
+**A second, worse finding, caught by CI rather than review:** a single shared scroll
+threshold made a real download-link click permanently fail with "element is not
+stable" — `secure.spec.ts`'s protect/unlock round trip, bisected down to this exact
+commit. `.site-chrome` is sticky but still occupies flow space, so condensing it
+shifts everything below upward; Playwright's own scroll-into-view during `.click()`
+landed exactly on the threshold, and each toggle's shift re-crossed it, flipping state
+forever. Fixed with two thresholds far apart (condense at 64px, expand at 16px) instead
+of one — a dead zone wide enough that one toggle's own layout shift can never cross
+back over the other side. `pnpm exec wrangler pages deployment list` showing Cloudflare
+built the broken version successfully was a reminder that a clean build proves nothing
+about runtime behaviour a build step can't exercise.
+
 ---
 
 ## 3 November 2026 — The same stale claim was duplicated across six pages, not one
