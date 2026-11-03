@@ -579,8 +579,17 @@ the policy pages promise.
 
 Every colour is defined once with `light-dark()` on `:root` in `src/styles/global.css`.
 `html[data-theme]` (set by `ThemeToggle.astro`, applied before paint by an inline script
-in `Base.astro`) forces one side; otherwise the system setting wins. Use the variables,
-never a hard-coded colour.
+in `Base.astro`) forces one side. Use the variables, never a hard-coded colour.
+
+**Default is Light, not the system setting — changed 3 November 2026, owner
+instruction.** A first-time visitor with nothing in `localStorage` gets
+`data-theme="light"` applied the same as if they'd chosen it from `ThemeToggle`.
+"System" is still offered and still works, but it's now a value stored explicitly
+(`theme: 'system'`) rather than represented by an absent key — an absent key used to
+mean "follow the OS" and now means Light, so System needed its own stored marker to
+stay distinguishable from "nothing chosen yet". `ThemeToggle.astro`'s script computes
+which radio to check the same way: `stored === 'dark' || stored === 'system' ? stored
+: 'light'`.
 
 **Default visual system is "Playful Rounded" — changed 2 November 2026** from the
 original ("Soft Product", now an alternate skin, see below). Big soft radii

@@ -17,6 +17,28 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 3 November 2026 — Default theme is Light, not the system setting
+
+Owner instruction: a first-time visitor should see Playful Rounded and Light,
+regardless of OS preference — the skin was already right (no `data-skin` is already
+Playful Rounded); the theme wasn't, since "nothing stored" fell through to
+`color-scheme: light dark` and followed the OS.
+
+**The finding worth keeping:** once "nothing stored" stops meaning "follow the OS",
+"follow the OS" needs a different signal to mean anything at all — `ThemeToggle`'s
+System option used an absent `localStorage` key specifically *because* that was already
+the fallback behaviour. Redefining the fallback to Light without also giving System its
+own stored value (`theme: 'system'`) would have silently broken the System option
+instead of just changing the default — the same key can't mean two different things.
+
+**Caught by a real syntax bug, not just logic:** the first attempt's inline comment
+used backticks around `` `color-scheme: light dark` `` inside the JS source string that
+the whole pre-paint script is itself built from (a template literal in `Base.astro`'s
+frontmatter) — closing that outer string early and turning one real error into 13
+unrelated-looking ones. `astro check` caught it before it shipped.
+
+---
+
 ## 3 November 2026 — A condensing header, reported from a real phone
 
 Owner reported the header eating too much of a phone's viewport, permanently, on every

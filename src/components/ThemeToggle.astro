@@ -28,19 +28,19 @@ const options = [
 
 <script>
   // The saved choice is applied before first paint by the inline script in Base.astro;
-  // this just keeps the radio buttons and storage in sync.
+  // this just keeps the radio buttons and storage in sync. Default is Light, not
+  // System — nothing stored reads the same as an explicit 'light' choice, matching
+  // what Base.astro's pre-paint script actually applies. 'system' is now stored
+  // explicitly rather than represented by an absent key, since an absent key means
+  // Light here, not "follow the OS".
   const stored = localStorage.getItem('theme');
-  const current = stored === 'light' || stored === 'dark' ? stored : 'system';
+  const current = stored === 'dark' || stored === 'system' ? stored : 'light';
   for (const input of document.querySelectorAll<HTMLInputElement>('.theme-toggle input[name="theme"]')) {
     input.checked = input.value === current;
     input.addEventListener('change', () => {
-      if (input.value === 'system') {
-        localStorage.removeItem('theme');
-        delete document.documentElement.dataset.theme;
-      } else {
-        localStorage.setItem('theme', input.value);
-        document.documentElement.dataset.theme = input.value;
-      }
+      localStorage.setItem('theme', input.value);
+      if (input.value === 'system') delete document.documentElement.dataset.theme;
+      else document.documentElement.dataset.theme = input.value;
     });
   }
 </script>

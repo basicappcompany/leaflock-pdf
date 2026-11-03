@@ -74,9 +74,18 @@ function cspInlineScript(source: string): string {
 
 const preTheme = cspInlineScript(`
       // Apply a saved light/dark choice before first paint, so the page doesn't flash.
+      // Default is Light, not the system setting — a first-time visitor with nothing
+      // saved gets data-theme="light" applied here, same as if they'd picked it
+      // themselves. Only an explicit 'system' choice (ThemeToggle.astro) leaves
+      // data-theme unset, which is what lets color-scheme: light dark actually follow
+      // the OS; 'dark' applies dark the same way light always has.
       try {
         const theme = localStorage.getItem('theme');
-        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+        if (theme === 'system') {
+          // leave data-theme unset — :root's own color-scheme: light dark then follows the OS
+        } else {
+          document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light';
+        }
         // Same reasoning, for the tools sidebar: apply a saved hidden choice and dock
         // edge before first paint so a returning visitor doesn't see it flash open, or
         // on the wrong edge, before settling. With nothing saved, a narrow viewport
