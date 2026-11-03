@@ -25,7 +25,7 @@ Everything we say about Stirling-PDF comes from its own GitHub repository and pr
 | Open source | No, closed source | Yes, open source |
 | Free tier | All tools free, no account needed | "$0, /month", "No card required", "60+ PDF tools" |
 | Self-hosting | The Business edition: static files, no server | Free and supported |
-| Team plan | Business edition, flat per organisation | "$99, /month" for "100 users included", adding SSO |
+| Team plan | Business edition, flat per organization | "$99, /month" for "100 users included", adding SSO |
 | Air-gapped | Business edition is static files | Listed under the Enterprise plan |
 
 ## Where your files are processed
@@ -40,7 +40,7 @@ The honest summary of the difference: **Stirling means your documents go to a ma
 
 ## What you have to run
 
-**Stirling-PDF.** A container or a desktop client, kept patched, with whoever administers it responsible for access, backups and updates. For many teams that is entirely normal and the open-source licence makes it free.
+**Stirling-PDF.** A container or a desktop client, kept patched, with whoever administers it responsible for access, backups and updates. For many teams that is entirely normal and the open-source license makes it free.
 
 **LeafLock.** Nothing, in the hosted case — it is a website. For the self-hosted [Business edition](/business), what you deploy is the **static build**: HTML, JavaScript and WebAssembly served by any web server you already run. There is no application server, no database and no outbound connection, so there is no service to patch and no stored data to breach. That is the difference the Business edition is actually sold on, and it is also its honest limit: you still have to serve files from somewhere.
 
@@ -56,13 +56,13 @@ If tool count is your deciding factor, Stirling wins it and we would not argue.
 
 **Stirling-PDF.** Its pricing page lists a Free plan at "$0, /month" with "No card required", "60+ PDF tools", "Web, desktop, and self-hosted" and "1,000 monthly credits to automate PDF work". The Team plan is "$99, /month" with "100 users included", adding "Single sign-on (SSO)", a team workspace and central control of the tool catalogue. Enterprise is "Custom", adding "Air-gapped deployment", "SCIM provisioning", "Data residency and audit logs" and "Uptime SLAs".
 
-**LeafLock.** Every core tool is free with no account. The professional set — redaction, Bates numbering, compare, batch, table extraction and PDF/A — sits in a paid tier and is free during early access. The self-hosted [Business edition](/business) is licensed per organisation with no limit on the number of people using it; the current price is on that page.
+**LeafLock.** Every core tool is free with no account. The professional set — redaction, Bates numbering, compare, batch, table extraction and PDF/A — sits in a paid tier and is free during early access. The self-hosted [Business edition](/business) is licensed per organization with no limit on the number of people using it; the current price is on that page.
 
-Worth stating plainly rather than spinning: **Stirling's free tier is free, self-hostable and open source, and nothing we sell undercuts free.** Where the comparison turns is on what an organisation has to operate, and on whether the air-gapped option sits behind a custom enterprise agreement or is simply what the product is.
+Worth stating plainly rather than spinning: **Stirling's free tier is free, self-hostable and open source, and nothing we sell undercuts free.** Where the comparison turns is on what an organization has to operate, and on whether the air-gapped option sits behind a custom enterprise agreement or is simply what the product is.
 
 ## Open source
 
-**Stirling-PDF.** Open source, with the code and its licence in the repository.
+**Stirling-PDF.** Open source, with the code and its license in the repository.
 
 **LeafLock.** Closed source. That is a real disadvantage here and we will not dress it up: you cannot audit our code the way you can Stirling's. What you can audit is the behaviour — the network panel, the Content Security Policy, and whether the tools keep working with the network switched off. [Our claims](/claims) lists every one of those checks, including what they do *not* prove.
 
@@ -70,4 +70,4 @@ Worth stating plainly rather than spinning: **Stirling's free tier is free, self
 
 Stirling-PDF may suit you better if you want open source, the largest tool count, a server you control, and a team already comfortable running and patching a container.
 
-LeafLock may suit you better if you would rather have **nothing to operate** — no container, no database, no service to patch — and want the privacy property to hold on any device with a browser, including for the people in your organisation who will never deploy anything.
+LeafLock may suit you better if you would rather have **nothing to operate** — no container, no database, no service to patch — and want the privacy property to hold on any device with a browser, including for the people in your organization who will never deploy anything.

@@ -26,7 +26,7 @@ export default {
     },
     {
       q: 'Can I tell which page the text came from?',
-      a: 'Yes. Mark where each page starts is on by default and adds a line such as “--- Page 2 ---” before each page. Turn it off for continuous text.',
+      a: 'Yes. The “Mark where each page starts” option is on by default and adds a line such as “--- Page 2 ---” before each page. Turn it off for continuous text.',
     },
     {
       q: 'What file do I get?',

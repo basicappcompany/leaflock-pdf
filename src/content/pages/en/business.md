@@ -35,7 +35,7 @@ The public site already keeps files on the user's device. The Business edition g
 
 ## Price
 
-**US$499 per company per year** during early access. The licence covers one
+**US$499 per company per year** during early access. The license covers one
 organization, with no limit on the number of people who use it. Applicable taxes may
 be added.
 

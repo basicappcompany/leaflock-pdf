@@ -1,7 +1,7 @@
 ---
 title: Cookie policy
-description: LeafLock PDF doesn't use cookies. Here's what the site stores in your browser instead, the theme choice and the OCR model, and how to remove it.
-updated: 2026-10-21
+description: The three strictly-necessary cookies LeafLock PDF sets, what else it stores in your browser (theme choice, the OCR model), and how to remove any of it.
+updated: 2026-11-03
 awaitingLegalReview: true
 ---
 
@@ -23,10 +23,10 @@ Cookies aren't the only way a website can store information in your browser. Lea
 
 ### localStorage: your theme choice
 
-If you choose a light or dark theme with the theme switch, the site saves your choice in your browser's localStorage under the name `theme`, so the next page you open uses the same theme.
+The site saves your theme choice in your browser's localStorage under the name `theme`, so the next page you open uses the same one. The default is light; picking "System" with the theme switch is itself a saved choice, the same as picking light or dark.
 
-- **What it contains:** the word `light` or `dark`.
-- **When it's set:** only when you choose a theme. If you switch back to following your system setting, it's removed.
+- **What it contains:** the word `light`, `dark` or `system`.
+- **When it's set:** the first time you open the site, and again whenever you change it with the theme switch.
 - **How long it lasts:** until you change the setting or clear the site's data.
 
 ### Browser storage: the OCR model
@@ -54,7 +54,7 @@ You can remove everything LeafLock PDF has stored by clearing the site data for 
 - **Safari on Mac:** go to **Settings > Privacy > Manage Website Data**, find leaflockpdf.com and remove it.
 - **Safari on iPhone and iPad:** go to **Settings > Apps > Safari > Advanced > Website Data**, find leaflockpdf.com and remove it.
 
-The site works the same afterward. Your theme goes back to following your system setting, and OCR PDF downloads its model again the next time you use it.
+The site works the same afterward. Your theme goes back to the default (light), and OCR PDF downloads its model again the next time you use it.
 
 ## If this changes
 

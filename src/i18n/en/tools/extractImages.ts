@@ -22,7 +22,7 @@ export default {
     },
     {
       q: 'Some images were not extracted. Why?',
-      a: 'A handful of storage methods are not decoded here: CMYK and indexed-colour images, 16-bit images, fax-compressed scans (CCITT) and JPEG2000. The result says how many were skipped rather than pretending everything came out.',
+      a: 'A handful of storage methods are not decoded here: CMYK and indexed-color images, 16-bit images, fax-compressed scans (CCITT) and JPEG2000. The result says how many were skipped rather than pretending everything came out.',
     },
   ],
   action: 'Extract images',

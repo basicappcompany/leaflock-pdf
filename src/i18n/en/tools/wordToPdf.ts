@@ -18,7 +18,7 @@ export default {
     },
     {
       q: 'What does not come across?',
-      a: 'Tables, images, your original fonts, colours, page size and margins. The PDF is built fresh on plain A4 pages in a single typeface, not a faithful copy of the document’s appearance — if the exact layout matters, this tool is not the right one yet.',
+      a: 'Tables, images, your original fonts, colors, page size and margins. The PDF is built fresh on plain A4 pages in a single typeface, not a faithful copy of the document’s appearance — if the exact layout matters, this tool is not the right one yet.',
     },
     {
       q: 'Why is a heading bold even though it wasn’t bold in my document?',

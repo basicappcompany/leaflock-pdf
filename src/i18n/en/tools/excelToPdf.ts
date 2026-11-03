@@ -18,7 +18,7 @@ export default {
     },
     {
       q: 'What does not come across?',
-      a: 'Cell colours, fonts, column widths, conditional formatting, charts and formulas — only the calculated value of a formula is shown, as plain text, the same way a printed spreadsheet shows a number rather than the formula behind it.',
+      a: 'Cell colors, fonts, column widths, conditional formatting, charts and formulas — only the calculated value of a formula is shown, as plain text, the same way a printed spreadsheet shows a number rather than the formula behind it.',
     },
     {
       q: 'What happens with a sheet that has a lot of columns?',

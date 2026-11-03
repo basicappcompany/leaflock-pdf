@@ -15,7 +15,7 @@ LeafLock PDF provides tools for working with PDF files and images. The tools run
 
 You don't need an account to use the Service. Some tools are marked Pro or Practice; see section 5.
 
-The Business edition, a self-hosted copy of the Service for organizations, is licensed under a separate agreement. [TO CONFIRM: Business edition licence terms]
+The Business edition, a self-hosted copy of the Service for organizations, is licensed under a separate agreement. [TO CONFIRM: Business edition license terms]
 
 ## 2. Your files and your responsibilities
 
@@ -47,7 +47,7 @@ The Service, including its code, design, text and the LeafLock PDF name and logo
 
 Results you create with the tools are yours, subject to the rights of anyone else in the files you processed.
 
-Some parts of the Service use open-source software under its own licence terms, listed with the required notices on the [Open-source licenses](/licenses) page.
+Some parts of the Service use open-source software under its own license terms, listed with the required notices on the [Open-source licenses](/licenses) page.
 
 ## 5. Paid plans
 

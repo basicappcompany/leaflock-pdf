@@ -1,7 +1,7 @@
 ---
 title: Privacy policy
 description: How LeafLock PDF handles personal data. Your files are processed on your device and never sent to us. What we do process, why, and your rights.
-updated: 2026-10-21
+updated: 2026-11-03
 awaitingLegalReview: true
 ---
 
@@ -67,12 +67,11 @@ When a tool fails because of a bug, your browser sends a short error report to o
 
 ## Data stored on your device
 
-The site doesn't set cookies. It stores the following in your browser, on your device only:
-
-- **Theme choice:** if you choose a light or dark theme, it's saved in your browser's localStorage so the site remembers it. Nothing is stored if you leave it on the system setting.
+- **Theme choice:** your light, dark or system choice is saved in your browser's localStorage so the site remembers it. The default is light; picking "System" is itself a saved choice.
 - **OCR language model:** after you first use OCR PDF, your browser stores the English text-recognition model so it doesn't need to download it again. This file is the same for everyone and contains no personal data.
+- **Cookies:** two if you sign in (`__Host-leaflock_session`, `leaflock_signed_in`), and a third (`leaflock_skin`) only if you pick a visual skin. None of them track you or carry a profile.
 
-We cannot read this data; it never leaves your device. See the [Cookie policy](/cookies) for details and how to remove it.
+We cannot read any of this data; it never leaves your device. See the [Cookie policy](/cookies) for what each item contains and how to remove it.
 
 ## What we don't do
 

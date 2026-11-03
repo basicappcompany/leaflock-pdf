@@ -4,7 +4,7 @@ export default {
   title: 'Convert PDF to PDF/A',
   metaTitle: 'Convert a PDF to PDF/A-2b privately | LeafLock PDF',
   metaDescription:
-    'Add the colour profile and PDF/A identification an archive or compliance system checks for, in your browser. Free, no sign-up, no upload.',
+    'Add the color profile and PDF/A identification an archive or compliance system checks for, in your browser. Free, no sign-up, no upload.',
   summary: 'Prepare a PDF for long-term archiving: PDF/A-2b profile and metadata, added on your device.',
   howTo: ['Choose a PDF.', 'Select Convert to PDF/A.', 'Download the result.'],
   faq: [
@@ -14,7 +14,7 @@ export default {
     },
     {
       q: 'What does this actually do?',
-      a: 'It embeds a colour profile (an ICC output intent) and writes the PDF/A-2b identification into the file’s metadata, and removes what PDF/A forbids outright: JavaScript, actions that run on open, and embedded files.',
+      a: 'It embeds a color profile (an ICC output intent) and writes the PDF/A-2b identification into the file’s metadata, and removes what PDF/A forbids outright: JavaScript, actions that run on open, and embedded files.',
     },
     {
       q: 'Does this guarantee the file passes PDF/A validation?',

@@ -17,6 +17,27 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 3 November 2026 — A full-site proofread, and three more stale cookie/theme claims
+
+Asked to check every page for grammar and vocabulary errors. Three parallel passes
+(tool copy, content/legal pages, guides/comparisons) found the prose itself genuinely
+clean — one real grammar error (a toggle's own label used as a sentence's subject with
+no article, in `pdfToText.ts`'s FAQ) and one real spelling inconsistency: British
+"colour"/"centred"/"organisation"/"licence" mixed with American spelling across eight
+files, including one sentence in `terms.md` that said "licence" and "licenses" within
+the same breath. Standardized on American, since it already had more UI strings.
+
+**The more important find wasn't grammar at all.** `security.md`, `privacy.md` and
+`cookies.md` each had a *second* place describing the site's cookies or theme default
+that the earlier stale-claims sweep (same day) hadn't touched — one bullet fixed,
+another one just like it two sections later, still claiming "exactly one cookie" or
+"follows your system setting" in its own words. A targeted grep for one exact phrase
+finds every copy of that phrase; it doesn't find a second place that says the same
+wrong thing differently. Worth re-reading a page end to end after a factual fix, not
+just re-grepping for the sentence already found.
+
+---
+
 ## 3 November 2026 — Default theme is Light, not the system setting
 
 Owner instruction: a first-time visitor should see Playful Rounded and Light,

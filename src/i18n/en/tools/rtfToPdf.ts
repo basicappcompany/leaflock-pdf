@@ -18,7 +18,7 @@ export default {
     },
     {
       q: 'What does not come across?',
-      a: 'Headings, lists, tables, images, fonts and colours. RTF has no reliable way to tell a heading from a styled paragraph without parsing the document’s full style sheet, so every paragraph is treated the same way here — a narrower scope than Word to PDF, stated plainly rather than guessed at.',
+      a: 'Headings, lists, tables, images, fonts and colors. RTF has no reliable way to tell a heading from a styled paragraph without parsing the document’s full style sheet, so every paragraph is treated the same way here — a narrower scope than Word to PDF, stated plainly rather than guessed at.',
     },
     {
       q: 'Can I convert a Word document instead?',

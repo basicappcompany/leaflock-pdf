@@ -18,7 +18,7 @@ export default {
     },
     {
       q: 'What does not come across?',
-      a: 'Tables, images, exact fonts, colours and precise page layout — a PDF records glyphs at coordinates, not structure, so this is the same inferred outline PDF to Word uses, written out differently rather than a second analysis.',
+      a: 'Tables, images, exact fonts, colors and precise page layout — a PDF records glyphs at coordinates, not structure, so this is the same inferred outline PDF to Word uses, written out differently rather than a second analysis.',
     },
     {
       q: 'How is this different from PDF to Text?',

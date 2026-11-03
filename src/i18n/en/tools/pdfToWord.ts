@@ -22,7 +22,7 @@ export default {
     },
     {
       q: 'What does not come across?',
-      a: 'Tables, images, exact fonts, colours and precise page layout. A PDF does not record any of those as structure — it records glyphs at coordinates — so a converter either infers them or invents them. We would rather tell you what you are getting. If the layout matters more than the text, keep the PDF.',
+      a: 'Tables, images, exact fonts, colors and precise page layout. A PDF does not record any of those as structure — it records glyphs at coordinates — so a converter either infers them or invents them. We would rather tell you what you are getting. If the layout matters more than the text, keep the PDF.',
     },
     {
       q: 'How does it know what is a heading?',

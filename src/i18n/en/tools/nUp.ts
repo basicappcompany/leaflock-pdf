@@ -22,7 +22,7 @@ export default {
     },
     {
       q: 'Will the pages be squashed?',
-      a: 'No. Each page is scaled to fit its cell while keeping its shape, and centred. Pages of different sizes in the same document are each scaled to fit on their own.',
+      a: 'No. Each page is scaled to fit its cell while keeping its shape, and centered. Pages of different sizes in the same document are each scaled to fit on their own.',
     },
     {
       q: 'What happens to sideways pages?',
