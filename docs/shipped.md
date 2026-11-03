@@ -17,6 +17,30 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 3 November 2026 — The same stale claim was duplicated across six pages, not one
+
+Asked to check for stale or placeholder values across the UI after the previous pass only
+fixed `cookies.md` and `privacy.md`/`terms.md`. It wasn't enough: "signed out, the site
+sets no cookies at all" and "taken by Dodo Payments" (singular) were copy-pasted into
+`claims.md`, `security.md`, `help.md`, and three comparison pages
+(`leaflock-vs-pdf24.md`, `leaflock-vs-pdffiller.md`, `leaflock-vs-sejda.md`) — none of
+which were touched by the earlier fix because a targeted search for `[TO CONFIRM: …]`
+brackets doesn't find a claim that's just plain wrong with no bracket marking it. All
+eight now describe the real three-cookie, two-provider state consistently.
+
+**The finding worth keeping:** a placeholder audit and a staleness audit are different
+searches. The first finds unfilled blanks; the second finds confidently-stated claims
+that used to be true. `claims.md` in particular exists specifically to be quoted
+verbatim into security questionnaires — exactly the page where a stale claim does the
+most damage, and exactly the one a bracket-search would never have caught.
+
+**Left alone, deliberately:** `pricing.ts`'s checkout note still says "Dodo Payments"
+only — unlike the policy pages, it describes what the code actually does right now
+(Paddle isn't wired in yet), so leaving it unchanged was the accurate choice, not a
+miss. It becomes stale, and needs fixing, only once Paddle integration lands.
+
+---
+
 ## 3 November 2026 — A real open-source notices page, and a wrong cookie policy fixed
 
 Asked to list every `[TO CONFIRM: …]` placeholder before launch, then to resolve what

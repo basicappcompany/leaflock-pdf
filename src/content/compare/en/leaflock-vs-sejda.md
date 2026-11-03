@@ -59,7 +59,7 @@ Paid plans come as a short-term web pass, a monthly web plan, and an annual plan
 
 **Sejda.** Its privacy policy lists contact information such as an email address, billing information including name and card details for customers, and "Internet Protocol address (IP), the address of the web pages you visited, browser type and settings". Its downloadable products also report error information and operating system details.
 
-**LeafLock.** No analytics, no advertising and no third-party scripts. Signed out, the site sets no cookies at all. If a tool crashes we receive a short technical report with file names and page text removed in your browser first, and your IP address is not stored — you can see the fields in the [privacy policy](/privacy), and the whole list of what we receive on [our claims](/claims).
+**LeafLock.** No analytics, no advertising and no third-party scripts. The only cookie set while signed out is a short-lived one if you pick a visual skin. If a tool crashes we receive a short technical report with file names and page text removed in your browser first, and your IP address is not stored — you can see the fields in the [privacy policy](/privacy), and the whole list of what we receive on [our claims](/claims).
 
 ## Apps and platforms
 

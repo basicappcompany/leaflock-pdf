@@ -60,7 +60,7 @@ So PDF24 is cheaper if you need everything it offers: it is free. LeafLock charg
 
 **PDF24.** Its privacy policy lists the data it collects, including IP address, date and time of access, browser type and version, operating system, referrer, and "Cookie data for tracking and analytics."
 
-**LeafLock.** No analytics, no advertising, no social or chat widgets, and no third-party scripts of any kind. Signed out, the site sets no cookies at all, which is why you see no cookie banner. See [Cookies](/cookies).
+**LeafLock.** No analytics, no advertising, no social or chat widgets, and no third-party scripts of any kind. The only cookie set while signed out is a short-lived one if you pick a visual skin — which is why you see no cookie banner. See [Cookies](/cookies).
 
 ## Tools
 

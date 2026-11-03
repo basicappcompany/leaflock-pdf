@@ -1,7 +1,7 @@
 ---
 title: How your files stay private
 description: LeafLock PDF processes files in your browser and never uploads them. Here's how that works, and how to check it yourself with your browser's developer tools.
-updated: 2026-10-21
+updated: 2026-11-03
 ---
 
 When you use a LeafLock PDF tool, your file is processed by code running in your own browser. It is not uploaded to us or to anyone else. This page explains how that works, what is and isn't stored on your device, and how you can verify all of it yourself without taking our word for it.
@@ -98,7 +98,7 @@ For the full list of claims, each with how to check it and what would change it,
 - **No file logs.** We have no record of which files you open, what they're called or what they contain, because that information never reaches us.
 - **No third-party scripts.** There are no analytics, advertising, social media or chat widgets on the site. All code comes from leaflockpdf.com.
 - **Error reports carry nothing of yours.** If a tool fails because of a bug, a short technical report goes to our own server. Your file names, page text and anything you typed are removed in your browser first, and we don't store your IP address. The [privacy policy](/privacy#error-reports) lists exactly what a report contains.
-- **No tracking cookies.** Signed out, the site sets no cookies at all. If you sign in, one session cookie identifies your session and nothing else. See the [Cookie policy](/cookies).
+- **No tracking cookies.** If you sign in, two cookies identify your session and nothing else. The only cookie set while signed out is a short-lived one if you pick a visual skin, and it's gone once you close the browser. See the [Cookie policy](/cookies).
 - **No account needed.** Every core tool works with no account and no sign-in. An account exists if you want a higher daily limit or a paid plan, and holds an email address, your plan and sign-in metadata — not a profile of what you do.
 
 ## All files come from our own site

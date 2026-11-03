@@ -1,7 +1,7 @@
 ---
 title: Help and FAQ
 description: "Answers to common questions about LeafLock PDF: privacy, supported browsers, file sizes, Pro pricing, and what to do when a PDF won't open or a tool fails."
-updated: 2026-10-21
+updated: 2026-11-03
 ---
 
 ## Privacy and security
@@ -20,7 +20,7 @@ No. You can use every tool without signing up or signing in.
 
 ### Do you use cookies or tracking?
 
-No. The site doesn't set cookies and doesn't load analytics, advertising or other third-party scripts. See the [Cookie policy](/cookies) and the [Privacy policy](/privacy).
+No tracking, ever — no analytics, no advertising, no third-party scripts. The site does set a small number of strictly-necessary cookies (keeping you signed in, remembering a visual skin you chose), never anything that tracks you across sites or builds a profile. See the [Cookie policy](/cookies) and the [Privacy policy](/privacy).
 
 ### Is it safe to use with confidential documents?
 

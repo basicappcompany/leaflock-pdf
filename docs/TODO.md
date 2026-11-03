@@ -172,6 +172,11 @@ now sits in `.dev.vars` beside the other three, and needs a real id like them.
 - [ ] **Paddle has no code yet.** The billing routes (`functions/api/billing/*`,
       `src/lib/server/billing.ts`) only know Dodo. Policy pages now promise Paddle
       handles non-India customers — that promise isn't true until Paddle is integrated.
+      Checked 3 November 2026: `src/i18n/en/pricing.ts`'s `checkout.note` ("Payments are
+      handled by Dodo Payments...") was deliberately **left unchanged**, since that's
+      still an accurate description of what the code actually does today — it becomes
+      stale, and needs rewording (likely to vary by the buyer's region), only once
+      Paddle is actually wired in.
 
 ## 4. Cloudflare D1 — not created
 

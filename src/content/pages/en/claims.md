@@ -1,7 +1,7 @@
 ---
 title: What we claim, and how to check it
 description: "Every privacy claim LeafLock PDF makes, written to be quoted: what stays on your device, the five things we receive, what the browser forbids, and what would change each one."
-updated: 2026-10-30
+updated: 2026-11-03
 ---
 
 This page exists to be quoted. Each claim below is written so it can be copied into a security questionnaire, a procurement review or an assistant's answer without losing its meaning, and each one says how to check it and what would change it.
@@ -41,7 +41,7 @@ This list is meant to be exhaustive. If you find something we receive that is no
 2. **An account, if you create one.** An email address, when you last signed in, which plan you are on, and — depending on how you sign in — a password hash or your Google account id. No name, no company, no address.
 3. **A crash report, if a tool fails.** It carries the tool's name, the page path, your browser family and version (for example "Chrome 141"), and the error message and stack trace with file names, page text and anything you typed removed in your browser first. Your IP address is not stored. The [privacy policy](/privacy) lists the fields.
 4. **Ordinary web server logs**, the kind every website receives: a request for a page or a script, with an IP address and a browser string. These never contain your documents.
-5. **A payment, if you buy a plan** — taken by Dodo Payments as the seller. We receive which plan you are on and when it renews. We never see your card details.
+5. **A payment, if you buy a plan** — taken by Dodo Payments (customers in India) or Paddle (everywhere else) as the seller. We receive which plan you are on and when it renews. We never see your card details.
 
 **What is not on that list, and never has been:** analytics, advertising, social or chat widgets, third-party scripts of any kind, and any record of which files you opened or what they contained.
 
@@ -54,7 +54,8 @@ This is the distinction this page exists to make legible, because the honest ans
 - **Recent work, if you turn it on.** A finished file can be kept in your browser's own storage for five minutes, one hour, twenty-four hours, or a length you choose on a paid plan. It is off until you enable it, it expires on its own, and you can clear it whenever you like. It never leaves your device, so the claims above are unaffected.
 - **The OCR language model**, after you first use [OCR PDF](/ocr-pdf) — about 10 MB, kept so it is not downloaded twice. It contains nothing of yours.
 - **Your light or dark theme choice**, if you pick one.
-- **A session cookie, if you sign in**, named `__Host-leaflock_session`. It identifies your session and nothing else. Signed out, the site sets no cookies at all, which is why you see no cookie banner. See [Cookies](/cookies).
+- **Two cookies, if you sign in**: `__Host-leaflock_session`, which identifies your session and nothing else, and `leaflock_signed_in`, a plain flag so the page knows you're signed in without asking our server. Neither carries a profile or a record of which tools you used.
+- **One more, only if you pick a visual skin**: `leaflock_skin`, which remembers your choice. Signed out, or on a free plan, it lasts only until you close the browser; signed in on Pro or Practice, it's kept for a year. See [Cookies](/cookies) for the full detail on all three and why none of them need a banner.
 
 You can remove all of it by clearing site data for leaflockpdf.com in your browser's settings.
 

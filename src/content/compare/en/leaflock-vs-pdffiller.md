@@ -52,7 +52,7 @@ This is the sharpest difference on the page, and it is worth stating plainly rat
 
 **pdfFiller.** Its privacy notice lists "Your full name, email address, mailing address, or phone number", payment details including the "first and last four digits of a credit card number", and "Hardware model, device browser, operating system, logs, session data, time stamps, your IP address, device IDs".
 
-**LeafLock.** You can use every core tool with no account at all. If you make one, we hold an email address, which plan you are on and when you last signed in — no name, no company, no address. There are no analytics, no advertising and no third-party scripts, and signed out the site sets no cookies. The complete list of what we receive is on [our claims](/claims).
+**LeafLock.** You can use every core tool with no account at all. If you make one, we hold an email address, which plan you are on and when you last signed in — no name, no company, no address. There are no analytics, no advertising and no third-party scripts, and the only cookie set while signed out is a short-lived one if you pick a visual skin. The complete list of what we receive is on [our claims](/claims).
 
 ## Security certifications
 
