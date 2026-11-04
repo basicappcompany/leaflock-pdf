@@ -142,11 +142,11 @@ Only `openid email` is requested, so the consent screen needs no sensitive-scope
 Each of these is read by a Pages Function but has no local value, so the feature behind it
 fails as soon as it is exercised locally.
 
-- [ ] `RESEND_API_KEY` — sending the magic-link and verification emails. Resend is now
-      named as the email provider in `privacy.md` (3 November 2026) — this was a FACT-tier
-      blank, not a decision, since the code already assumed it everywhere.
-- [ ] `EMAIL_FROM` — the From address (hello@leaflockpdf.com once the domain is verified
-      with Resend).
+- [x] `RESEND_API_KEY` — done 4 November 2026. `leaflockpdf.com` was already verified in
+      Resend; created a Sending-access key scoped to that domain (`leaflock-pdf` in the
+      Resend dashboard) and set it in `.dev.vars`.
+- [x] `EMAIL_FROM` — `hello@leaflockpdf.com`, set in `.dev.vars` alongside the key above,
+      matching the verified domain.
 - [ ] `DODO_API_KEY` — creating checkout sessions.
 
 ## 3. Dodo Payments — values present but unverified
