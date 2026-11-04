@@ -269,3 +269,20 @@ ambiguous address. The full set, in order:
 Steps 1–4 are the whole job for an ordinary add. A removal is the same list, plus one line
 in the roadmap saying **why it was dropped**: an item that silently disappears reads as an
 item that was forgotten.
+
+## 10. Branch + PR, not a direct push to `main` — owner instruction, 4 November 2026
+
+Every change up to this point went straight to `main`. From here on, a change gets its own
+branch and a pull request; `main` only moves by merge.
+
+- GitHub branch protection is still not purchasable here (`docs/TODO.md` §4a — Pro or
+  public, and the repo stays private, closed-source per `docs/design.md` §13), so this is
+  a convention, not an enforced rule. The gate is **CI green on the PR before merge**, not
+  a setting GitHub charges for.
+- One branch per change, named for what it does (`docs/…`, `fix/…`, `feat/…`), opened
+  against `main`, merged — squash or regular, whichever keeps the commit that lands
+  readable — once `pnpm test`, `pnpm tracker` and the GitHub Actions run are green.
+- Solo repo, so the PR is self-reviewed and self-merged; the point is the pause and the CI
+  run in between, not a second pair of eyes that doesn't exist yet. Revisit if a second
+  committer ever joins — that is also when GitHub Pro starts paying for itself
+  (`docs/TODO.md` §4a).
