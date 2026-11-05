@@ -217,6 +217,14 @@ export async function getUserBySubscription(db: D1Database, subscriptionId: stri
   return (await db.prepare('SELECT * FROM users WHERE subscription_id = ?').bind(subscriptionId).first<UserRow>()) ?? null;
 }
 
+/**
+ * Un-records a delivery whose handling failed, so Dodo's retry is processed rather than
+ * acknowledged as a duplicate of something that never took effect.
+ */
+export async function forgetWebhook(db: D1Database, id: string): Promise<void> {
+  await db.prepare('DELETE FROM webhook_events WHERE id = ?').bind(id).run();
+}
+
 /** Records a webhook delivery; returns false if that id has already been handled. */
 export async function recordWebhookOnce(db: D1Database, id: string, type: string, now: number): Promise<boolean> {
   const row = await db

@@ -8,7 +8,15 @@
  */
 
 import { effectivePlan, planForProduct, verifyWebhook } from '../../../src/lib/server/billing';
-import { getUserByEmail, getUserById, getUserBySubscription, recordWebhookOnce, setUserPlan, type UserRow } from '../../../src/lib/server/db';
+import {
+  forgetWebhook,
+  getUserByEmail,
+  getUserById,
+  getUserBySubscription,
+  recordWebhookOnce,
+  setUserPlan,
+  type UserRow,
+} from '../../../src/lib/server/db';
 
 const MAX_BODY = 64 * 1024;
 
@@ -75,11 +83,33 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
   // Retried deliveries are acknowledged, not applied twice.
   if (!(await recordWebhookOnce(env.DB, id, payload.type, now))) return new Response(null, { status: 204 });
 
+  try {
+    await applyDelivery(env, payload, data, now);
+  } catch (error) {
+    // The delivery is un-recorded and answered 5xx so Dodo retries it. Leaving it recorded
+    // would make the retry look like a duplicate and a paid upgrade would be lost for good.
+    console.error('dodo webhook failed', payload.type, error instanceof Error ? error.message : error);
+    try {
+      await forgetWebhook(env.DB, id);
+    } catch (forgetError) {
+      console.error('dodo webhook could not be released for retry', forgetError);
+    }
+    return new Response(null, { status: 500 });
+  }
+  return new Response(null, { status: 204 });
+}
+
+async function applyDelivery(
+  env: Env,
+  payload: WebhookPayload,
+  data: NonNullable<WebhookPayload['data']>,
+  now: number,
+): Promise<void> {
   const user = await findUser(env.DB, data);
   if (!user) {
     // Nothing to attach this to. 204 so Dodo stops retrying a delivery we can never use.
     console.error('dodo webhook for unknown account', payload.type);
-    return new Response(null, { status: 204 });
+    return;
   }
 
   const customerId = data.customer?.customer_id ?? null;
@@ -90,7 +120,11 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
     case 'subscription.renewed':
     case 'subscription.unpaused':
     case 'subscription.plan_changed': {
-      const plan = planForProduct(env, data.product_id ?? null) ?? 'pro';
+      const plan = planForProduct(env, data.product_id ?? null);
+      // A product we don't recognise is not a Pro purchase. Granting a tier by default would
+      // hand Pro to a Practice buyer whenever a product id is unset or mistyped, so refuse:
+      // the delivery fails, is retried, and succeeds once the configuration is fixed.
+      if (!plan) throw new Error(`unrecognised product ${data.product_id ?? '(none)'} on ${payload.type}`);
       await setUserPlan(env.DB, user.id, {
         plan,
         planStatus: 'active',
@@ -167,5 +201,4 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
       status: updated?.plan_status ?? null,
     }),
   );
-  return new Response(null, { status: 204 });
 }

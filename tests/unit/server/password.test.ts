@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { hashPassword, verifyPassword } from '../../../src/lib/server/password';
 
 describe('password hashing', () => {
@@ -29,6 +29,22 @@ describe('password hashing', () => {
 
   it('refuses an account with no password set', async () => {
     await expect(verifyPassword('anything', null)).resolves.toBe(false);
+  });
+
+  it('does the same amount of hashing work whether or not an account has a password', async () => {
+    const stored = await hashPassword('correct horse battery staple');
+    await verifyPassword('warm-up', null); // builds the decoy once, outside the measurement
+    const spy = vi.spyOn(crypto.subtle, 'deriveBits');
+
+    await verifyPassword('wrong', stored);
+    const withPassword = spy.mock.calls.length;
+    spy.mockClear();
+    await verifyPassword('wrong', null);
+    const withoutPassword = spy.mock.calls.length;
+    spy.mockRestore();
+
+    expect(withPassword).toBe(1);
+    expect(withoutPassword).toBe(withPassword);
   });
 
   it('refuses a malformed or truncated hash instead of throwing', async () => {

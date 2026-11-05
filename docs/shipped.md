@@ -17,6 +17,37 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 6 November 2026 — Security review fixes, and the phone sidebar button
+
+A read of the auth, session, Google, billing and account code (no credentials exposed; none
+in the repo or its history, `pnpm audit --prod` clean). Three things fixed:
+
+- **A paid upgrade could be lost for good.** `webhook.ts` recorded the delivery id *before*
+  applying it, so a transient D1 failure made Dodo's retry look like a duplicate and the
+  plan was never granted. Handling is now wrapped: on failure the id is un-recorded and the
+  route answers 500, so the retry runs.
+- **An unrecognised product granted Pro.** `planForProduct(...) ?? 'pro'` meant an unset or
+  mistyped product id gave a Practice buyer Pro (`DODO_PRODUCT_PRACTICE_YEARLY` has had no
+  real value, TODO §3). It now fails the delivery instead, and the retry succeeds once the
+  configuration is fixed.
+- **Password login leaked which emails have accounts by timing.** With no stored hash the
+  check returned instantly, against ~210k PBKDF2 rounds otherwise. It now derives against a
+  decoy, and a test asserts the amount of hashing is equal either way.
+
+**The phone sidebar button** failed intermittently because the "tap outside closes" handler
+exempted the reopen button with `event.target === button`; a tap on the arrow icon targets
+the `<svg>` inside it, so the tap that opened the drawer shut it again. Now `contains()` on
+`pointerdown`. Also: the open state is no longer saved on a phone (it reopened over every
+next page), and the buttons are 44px/40px instead of 36px/26px.
+
+**Stated limit:** known and *not* fixed — `set-password` needs no current password and keeps
+other sessions alive; per-email rate limits can be used to lock a victim out for 15
+minutes; magic links are consumed on GET so mail scanners can burn them; `rate_limits` is
+never pruned and `/api/errors` is unthrottled. HSTS and the `pages.dev` host are dashboard
+settings, in TODO §8.
+
+---
+
 ## 3 November 2026 — A full-site proofread, and three more stale cookie/theme claims
 
 Asked to check every page for grammar and vocabulary errors. Three parallel passes
