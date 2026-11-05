@@ -808,7 +808,8 @@ serving the same pages contradicts their own canonicals *and* breaks Google sign
 redirect URIs below are derived from the request origin, and only the apex is registered);
 and the Pages project must exist, building from the repo, before a custom domain can attach
 to it, which puts roadmap 6.2 ahead of any DNS work. The records themselves are tracked in
-`docs/TODO.md` §0.
+`docs/TODO.md` §0. *As built, checked 5 November 2026:* the apex serves the site, `www`
+returns a 301 to it, and the zone is on Cloudflare — so both consequences above held.
 
 Secrets are set with `wrangler pages secret put <NAME>` and, for local development, in
 `.dev.vars` (gitignored). Full list in `functions/env.d.ts`:

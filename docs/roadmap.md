@@ -198,7 +198,7 @@ waiting, which is the comparison this table exists for:
 | ~~30 Oct 2026~~ | ~~4.1 Re-tier the catalogue~~ — **done 30 Oct, no tier changes** | ~~0.5 working days~~ |
 | ~~30 Oct 2026~~ | ~~6.2 GitHub repo, first commit, CI green~~ — **done 31 Oct, green first run** | ~~owner, 1 day~~ |
 | ~~2 Nov 2026~~ | ~~6.4 Accessibility audit~~ — **done 30 Oct, three days early** | ~~1 working day~~ |
-| 3 Nov 2026 | 6.1 Credentials (Google, Resend, Dodo, D1) | owner, ~5 days |
+| 3 Nov 2026 | 6.1 Credentials (Google, Resend, Dodo, D1) — Resend and D1 done; Google, Dodo and Paddle open | owner, ~5 days |
 | **19 Nov 2026** | **6.3 Legal review of the policy pages** | **lawyer, ~21 days** |
 
 - **Launch-ready, blockers only: run `pnpm tracker`.** Both dates in this section used to be
@@ -1240,9 +1240,10 @@ many.
 Everything that only matters when strangers arrive, which is why it waits until they are
 about to. All of `docs/TODO.md` lands here.
 
-- Google OAuth credentials; real Dodo products, webhook and live mode; Resend key and
-  `EMAIL_FROM`; production secrets.
-- `wrangler d1 create`, paste the id, apply migrations remotely.
+- Google OAuth credentials; real Dodo products, webhook and live mode; ~~Resend key and
+  `EMAIL_FROM`~~ — done 4 Nov; production secrets.
+- ~~`wrangler d1 create`, paste the id, apply migrations remotely.~~ — done 3 Nov
+  (`docs/TODO.md` §4).
 - ~~Confirm `FREE_ACCOUNT_DAILY_JOBS` / `ANONYMOUS_DAILY_JOBS`~~ — done, Phase 4 above.
 - **SOC 2 Type II or ISO 27001 pursuit**, moved here from Phase 4 on 28 October 2026
   because it is the one Business-edition procurement item that is a genuine time/cost
