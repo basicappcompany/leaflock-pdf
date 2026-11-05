@@ -371,6 +371,17 @@ CONFIRM: …]`:**
   one of the sources flagged as needing confirmation rather than assumption. Flagged in
   `cookies.md` itself now, not left silent.
 
+## 8. Security review follow-ups — 6 November 2026
+
+Dashboard settings only; the code findings from the same review are in `docs/shipped.md`.
+
+- [ ] **Turn on HSTS** — Cloudflare → SSL/TLS → Edge Certificates. The live site sends no
+      `Strict-Transport-Security` header today.
+- [ ] **Stop `leaflock-pdf.pages.dev` serving the full site and API** (it returns 200 on
+      `/api/auth/me`), and protect preview deployments, which likely share the production D1
+      binding because `wrangler.toml` has a single `[[d1_databases]]` block. Not confirmed
+      in the dashboard — check the Pages project's Preview environment bindings first.
+
 ## Running the auth and billing routes at all
 
 `pnpm dev` serves only the Astro site; Pages Functions do not run, so every `/api/*` route

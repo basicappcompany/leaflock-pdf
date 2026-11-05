@@ -51,9 +51,20 @@ function timingSafeEqual(a: string, b: string): boolean {
   return mismatch === 0;
 }
 
-/** Checks a password against a stored hash, at whatever cost that hash was made with. */
+let decoyHash: Promise<string> | undefined;
+
+/** Checks a password against a stored hash, at whatever cost that hash was made with.
+ *
+ * With no stored hash it still does a full derivation against a decoy and returns false, so
+ * "no such account" takes as long as "wrong password" and response time can't be used to
+ * discover which addresses have an account. */
 export async function verifyPassword(password: string, stored: string | null): Promise<boolean> {
-  if (!stored) return false;
+  if (!stored) {
+    decoyHash ??= hashPassword('decoy-for-constant-work');
+    const [, iterations, salt] = (await decoyHash).split('$');
+    await derive(password, fromBase64(salt!), Number(iterations));
+    return false;
+  }
   const [scheme, iterations, salt, hash] = stored.split('$');
   if (scheme !== 'pbkdf2' || !iterations || !salt || !hash) return false;
   const rounds = Number(iterations);

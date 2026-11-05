@@ -15,6 +15,7 @@ export function createFakeD1() {
   const sessions: Row[] = [];
   const rateLimits: Row[] = [];
   const usageCounters: Row[] = [];
+  const webhookEvents: Row[] = [];
 
   function run(sql: string, params: unknown[]): { row: Row | null; rows: Row[] } {
     const text = normalize(sql);
@@ -120,6 +121,31 @@ export function createFakeD1() {
       return { row: null, rows: [] };
     }
 
+    if (text === 'INSERT INTO webhook_events (id, type, received_at) VALUES (?, ?, ?) ON CONFLICT(id) DO NOTHING RETURNING id') {
+      const [id, type, received_at] = params;
+      if (webhookEvents.some((row) => row['id'] === id)) return { row: null, rows: [] };
+      webhookEvents.push({ id, type, received_at });
+      return { row: { id }, rows: [] };
+    }
+    if (text === 'DELETE FROM webhook_events WHERE id = ?') {
+      const index = webhookEvents.findIndex((row) => row['id'] === params[0]);
+      if (index !== -1) webhookEvents.splice(index, 1);
+      return { row: null, rows: [] };
+    }
+    if (
+      text ===
+      'UPDATE users SET plan = ?, plan_status = ?, current_period_end = ?, dodo_customer_id = COALESCE(?, dodo_customer_id), subscription_id = COALESCE(?, subscription_id) WHERE id = ?'
+    ) {
+      const [plan, plan_status, current_period_end, customer, subscription, id] = params;
+      const row = users.find((row) => row['id'] === id);
+      if (row) {
+        Object.assign(row, { plan, plan_status, current_period_end });
+        if (customer !== null) row['dodo_customer_id'] = customer;
+        if (subscription !== null) row['subscription_id'] = subscription;
+      }
+      return { row: null, rows: [] };
+    }
+
     if (text.includes('INTO usage_counters')) {
       const [userId, period] = params as [string, string];
       let row = usageCounters.find((row) => row['user_id'] === userId && row['period'] === period && row['metric'] === 'jobs');
@@ -189,5 +215,5 @@ export function createFakeD1() {
     },
   };
 
-  return { db: db as unknown as D1Database, tables: { users, magicLinks, sessions, rateLimits, usageCounters } };
+  return { db: db as unknown as D1Database, tables: { users, magicLinks, sessions, rateLimits, usageCounters, webhookEvents } };
 }
