@@ -29,32 +29,35 @@ spread — so it gated everything below it rather than being a branding task.
 - [ ] `leaflockpdf.in` — open, and deliberately not bought: owner is holding at `.com` only
       for now (30 October 2026). Our jurisdiction is India and it is a few dollars, so this
       stays a revisit, not a decision waiting on anyone.
-- [ ] **Site DNS is not set up, and was documented nowhere** — found 30 October 2026 while
+- [x] **Site DNS** — done (verified live 5 November 2026: `https://leaflockpdf.com` returns 200, served via Cloudflare). Was found undocumented on 30 October 2026 while
       checking what the purchase actually left to do. `astro.config.mjs` sets
-      `site: 'https://leaflockpdf.com'`, the **apex**, and every canonical, hreflang, sitemap
-      entry and OG URL is derived from it, so the apex is the hostname that has to serve the
-      site. The order was forced, and the first step is done: the repo exists and `main` is
-      pushed (item 6.2, 31 October). **What is next is the Cloudflare Pages project** — Pages
-      builds from the repo, and the project (`leaflock-pdf`, i.e. `leaflock-pdf.pages.dev`)
-      has to exist and be connected to `basicappcompany/leaflock-pdf` before a custom domain
-      can attach to it. Adding `leaflockpdf.com` as a custom domain on that project is what
-      creates the apex record, once the zone is on Cloudflare.
-- [ ] **Decide `www` now, and the answer is a redirect rather than a second site.** Nothing in
+      `site: 'https://leaflockpdf.com'`, the **apex**, so the apex is the hostname that has to
+      serve the site. All three steps are done: repo and `main` pushed (item 6.2, 31
+      October), the Cloudflare Pages project connected to it, and the apex attached. Checked
+      5 November 2026: the zone is on Cloudflare (nameservers `bob`/`deb.ns.cloudflare.com`),
+      `/` returns 200, and `/api/auth/me` returns JSON, so the Functions bundle is
+      publishing as well as the static build.
+- [x] **`www` redirect** — done (verified 5 November 2026: `www.leaflockpdf.com` returns a 301 to the apex). Nothing in
       the codebase mentions `www.leaflockpdf.com` — zero occurrences — so if `www` ever
       serves the build, it serves every page under a hostname whose own canonical points at
       the apex. The sharper failure is sign-in: `redirectUri()` derives the Google callback
       from the **request origin**, and only the apex and `localhost:8788` are registered
       (`docs/design.md` §12), so Google rejects the callback for anyone who arrives on
-      `www`. A 301 from `www` to the apex at the edge is the whole fix.
+      `www`. A 301 from `www` to the apex at the edge is the whole fix. It is in place.
 - [ ] **A mailbox for `hello@leaflockpdf.com` is still missing, and Resend is not it.**
       Resend only *sends* (magic links, receipts); it provides nothing to receive at. A free
       forwarder to an existing mailbox is enough to start and is the simplest thing to
       disclose, which matters because `docs/legal-checklist.md` §2 requires the email
       provider to be **named in `privacy.md`** — so this choice goes into the 6.3 brief.
-      When DNS is set: SPF/DKIM TXT records are Resend's, MX is the mailbox's, and neither
-      collides with the apex record above — MX, TXT and A/CNAME are different record types
-      on the same name, so mail and the site coexist on the bare domain. DMARC gets set once,
-      after both exist, rather than twice.
+      DNS is now set, so this is unblocked. State on 5 November 2026: Resend's records exist
+      (`send.leaflockpdf.com` SPF and `resend._domainkey` DKIM) but there is **no MX record
+      at the apex** and no apex SPF, so nothing can be received yet. SPF/DKIM TXT records are
+      Resend's, MX is the mailbox's, and neither collides with the apex record — MX, TXT and
+      A/CNAME are different record types on the same name, so mail and the site coexist on
+      the bare domain. **A DMARC record already exists** (`p=quarantine`, reports going to an
+      `onsecureserver.net` address), which looks like a registrar default rather than a
+      choice — replace its `rua` with an address we read once the mailbox exists, rather
+      than adding a second record.
 - [ ] Note what is *not* needed: `leaflock.com` is a live gutter-guard product and is not
       obtainable. That is why the wordmark keeps "PDF" (`docs/design.md` §13).
 
@@ -193,10 +196,11 @@ now sits in `.dev.vars` beside the other three, and needs a real id like them.
 - [x] All four migrations applied remotely (`0001_auth` through `0004_practice_plan`).
 - [x] `SESSION_IP_SALT` set as a production Pages secret (a fresh random value, not the
       `dev-only…` placeholder `.dev.vars` still uses locally).
-- [ ] Trigger the next Cloudflare Pages build (push to `main` is enough) and confirm the
-      Functions bundle now actually publishes — the first deploy failed specifically on
-      the empty `database_id` (`Error 8000022: Invalid database UUID`), so this is the
-      thing to verify, not assume.
+- [x] Cloudflare Pages build and Functions bundle — verified 5 November 2026: the site is
+      live and `https://leaflockpdf.com/api/auth/me` and `/api/usage/today` return JSON
+      200, so the Functions bundle now publishes. The first deploy had failed on the empty
+      `database_id` (`Error 8000022: Invalid database UUID`). Not verified from outside:
+      that D1 reads and writes work, which needs a signed-in session (§1).
 
 ## 4a. CI runs on GitHub — done 31 October 2026 (item 6.2)
 
@@ -218,10 +222,10 @@ suite including the performance budget) now runs where it was always meant to.
       every push it buys little — the rule would only stop a mistake nobody else can make.
       Revisit when someone else commits here, which is also when Pro starts paying for
       itself. Recorded as decided rather than left as a box nobody can tick.
-- [ ] **Three actions target the deprecated Node 20** and are being force-run on Node 24:
+- [x] **Three actions target the deprecated Node 20** — already bumped (checked 5 November 2026: `ci.yml` uses checkout@v7, setup-node@v7, pnpm/action-setup@v6, upload-artifact@v7). Was: force-run on Node 24:
       `actions/checkout@v4`, `actions/setup-node@v4`, `pnpm/action-setup@v4`. A
       warning, not a failure. Bump each to v5 when the workflow is next touched.
-- [ ] **`ubuntu-latest` migrated to Ubuntu 26 on 19 October 2026**, so the runner can change
+- [x] **`ubuntu-latest` migrated to Ubuntu 26 on 19 October 2026** — already pinned (`runs-on: ubuntu-24.04` in `ci.yml`, checked 5 November 2026), so the runner can change
       under us. Pin `runs-on: ubuntu-24.04` to make that a decision instead of a surprise.
 
 Two things worth knowing before anyone repeats this on another machine:

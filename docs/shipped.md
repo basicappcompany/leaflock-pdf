@@ -311,8 +311,9 @@ in 8m11s: type check, `pnpm tracker`, 490 unit tests, then 275 browser tests in 
   appears at `workers: 4`.
 
 **Stated limit:** CI is the gate, not a deploy. Cloudflare Pages deploys from its own git
-integration and that project does not exist yet, so nothing shipped to a URL — the chain
-is still Pages project, then custom domain, then the apex record (`docs/TODO.md` §0).
+integration, and when this was written that project did not exist yet, so nothing shipped
+to a URL. *Update, 5 November 2026:* the chain since completed — Pages project, custom
+domain, apex record — and `https://leaflockpdf.com` serves the build (`docs/TODO.md` §0).
 
 ---
 

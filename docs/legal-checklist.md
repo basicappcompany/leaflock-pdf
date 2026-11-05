@@ -5,7 +5,7 @@ Everything a lawyer (and the owner) must settle before launch. The drafts live i
 Prepared 21 October 2026.
 
 **To send a lawyer, use `docs/legal-brief.md`** (added 30 October 2026) — it carries the
-product context this list assumes, the exact ask, and the six answers the owner must supply
+product context this list assumes, the exact ask, and the answers the owner must supply (four still open, `docs/legal-brief.md` §2)
 before anyone can start drafting. This file stays the authoritative list of open items; the
 brief does not duplicate it and is not updated as items close.
 
