@@ -93,10 +93,15 @@ const preTheme = cspInlineScript(`
         // full-screen overlay it never asked for — and so does a page that opted into
         // starting hidden regardless of width (the home page) — matching
         // ToolsSidebar.astro's own un-saved-choice defaults.
+        // On a narrow viewport the sidebar is a full-screen drawer, so it always starts
+        // closed whatever was saved: a saved "visible" would reopen it over the content on
+        // every page the visitor navigates to.
         const sidebarVisible = localStorage.getItem('toolsSidebarVisible');
-        if (sidebarVisible === 'hidden' || sidebarVisible === 'visible') {
+        if (window.matchMedia('(max-width: 48rem)').matches) {
+          document.documentElement.dataset.sidebarState = 'hidden';
+        } else if (sidebarVisible === 'hidden' || sidebarVisible === 'visible') {
           document.documentElement.dataset.sidebarState = sidebarVisible;
-        } else if (document.documentElement.dataset.sidebarDefaultHidden === 'true' || window.matchMedia('(max-width: 48rem)').matches) {
+        } else if (document.documentElement.dataset.sidebarDefaultHidden === 'true') {
           document.documentElement.dataset.sidebarState = 'hidden';
         }
         // No dock-specific CSS exists for the attribute being absent, so a first-ever

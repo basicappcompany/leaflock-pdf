@@ -862,11 +862,23 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
     box-shadow: 0 0 0 100vmax rgb(0 0 0 / 0.35);
   }
 
+  /* Touch-sized: 44px is the usual minimum, and these were 26px (header buttons) and
+     36px (reopen). Safe-area insets keep the reopen button clear of the iOS home bar and
+     rounded corners, and `touch-action` removes the double-tap-zoom delay on tap. */
   .tools-sidebar__reopen {
     top: auto;
-    bottom: 1rem;
-    left: 1rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    left: calc(1rem + env(safe-area-inset-left, 0px));
     z-index: 60;
+    width: 2.75rem;
+    height: 2.75rem;
+    touch-action: manipulation;
+  }
+
+  .tools-sidebar__btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    touch-action: manipulation;
   }
 }
 

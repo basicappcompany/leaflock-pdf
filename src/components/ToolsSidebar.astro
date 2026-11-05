@@ -183,6 +183,9 @@ const dockDirections = [
   // regardless of width (the home page: the sidebar should be reachable there, not
   // competing with the hero and category sections on a first visit).
   function initialVisibility(): Visibility {
+    // A narrow viewport shows the sidebar as a full-screen drawer, which always starts
+    // closed (Base.astro does the same before first paint).
+    if (window.matchMedia('(max-width: 48rem)').matches) return 'hidden';
     const pageDefaultHidden = document.getElementById('toolsSidebar')?.dataset.defaultHidden === 'true';
     return storedVisibility() ?? (pageDefaultHidden || window.matchMedia('(max-width: 48rem)').matches ? 'hidden' : 'visible');
   }
@@ -197,7 +200,9 @@ const dockDirections = [
 
   function setVisibility(state: Visibility) {
     visibility = state;
-    localStorage.setItem(VISIBLE_KEY, state);
+    // Opening the drawer on a phone is momentary, so it isn't remembered: saving it would
+    // reopen the drawer over the next page. Only the docked desktop choice is persisted.
+    if (!window.matchMedia('(max-width: 48rem)').matches) localStorage.setItem(VISIBLE_KEY, state);
     applyVisibility(state);
   }
   function setDock(dock: Dock) {
@@ -243,9 +248,21 @@ const dockDirections = [
   // panel, so this is skipped there rather than fighting it.
   const sidebar = document.getElementById('toolsSidebar');
   const isNarrow = () => window.matchMedia('(max-width: 48rem)').matches;
-  document.addEventListener('click', (event) => {
+  // pointerdown, not click, and `contains`, not `===`: tapping the reopen button's arrow
+  // icon targets the <svg> inside it rather than the button, so comparing against the
+  // button let the same tap that opened the drawer shut it again straight away. And on iOS
+  // Safari a click on a non-interactive area never reaches a document-level listener.
+  document.addEventListener('pointerdown', (event) => {
     if (!isNarrow() || visibility === 'hidden') return;
-    if (sidebar && !sidebar.contains(event.target as Node) && event.target !== reopenBtn) setVisibility('hidden');
+    const target = event.target as Node;
+    if (sidebar?.contains(target) || reopenBtn?.contains(target)) return;
+    setVisibility('hidden');
+  });
+  // Crossing the breakpoint (rotating a tablet, resizing a window) swaps between the
+  // drawer and the docked panel, so pick the right starting state for the new layout.
+  window.matchMedia('(max-width: 48rem)').addEventListener('change', () => {
+    visibility = initialVisibility();
+    applyVisibility(visibility);
   });
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && isNarrow() && visibility !== 'hidden') setVisibility('hidden');
