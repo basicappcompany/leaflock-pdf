@@ -42,7 +42,7 @@ Not in scope: SOC 2 / ISO certification (deferred, roadmap Phase 6), a master se
 agreement for negotiated enterprise deals (deferred to roadmap Phase 7, with insurance), and
 the future server-retention feature in §4 below.
 
-## 2. Six answers needed from the owner before a lawyer starts
+## 2. Four answers still needed from the owner before a lawyer starts (six were listed; #5 and #6 resolved 3 November 2026)
 
 These are inputs, not legal questions — nobody can draft around them. They are the real
 reason 6.3 has not begun.
@@ -53,13 +53,13 @@ reason 6.3 has not begun.
 | 2 | Governing law — India, which state — and courts (city, state) | terms.md |
 | 3 | Whether a DPDP Act 2023 grievance officer is required, and their name and contact | privacy.md |
 | 4 | Minimum user age, and the approach to DPDP verifiable parental consent | privacy.md |
-| 5 | Hosting provider confirmed (expected: Cloudflare Pages), and whether it sets cookies of its own | privacy.md, cookies.md |
-| 6 | Email provider for `hello@leaflockpdf.com` | privacy.md |
+| 5 | ~~Hosting provider confirmed~~ — **Cloudflare**, named 3 Nov. Still open: whether it sets cookies of its own (`docs/legal-checklist.md` §2) | privacy.md, cookies.md |
+| 6 | ~~Email provider~~ — **Resend**, named 3 Nov | privacy.md |
 
-**#6 has a dependency worth knowing:** `leaflockpdf.com` was registered on 30 October 2026,
-so a provider can now verify the sending domain. What is still open is the provider itself:
+**#6 was resolved on 3 November 2026:** Resend is the sending provider and is named in
+`privacy.md`; the domain is verified there. What remains is not a question for the lawyer:
 Resend only *sends*, so receiving at `hello@` needs a mailbox or a forwarder, and whichever
-is chosen is the name that goes into `privacy.md` (`docs/TODO.md` §0).
+is chosen will also have to be named in `privacy.md` (`docs/TODO.md` §0).
 
 ## 3. The fact the whole review turns on
 
