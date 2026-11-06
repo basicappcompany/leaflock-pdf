@@ -1,0 +1,41 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { localeInfo, locales } from '../i18n';
+import type { Messages } from '../i18n';
+
+interface Props {
+  /** Path of the current page without a locale prefix. */
+  path: string;
+  locale: string;
+  t: Messages['common']['language'];
+}
+
+const { path, locale, t } = Astro.props;
+// Only languages that exist are offered: a link to a planned locale would land on English.
+const options = Object.keys(locales).map((code) => ({
+  code,
+  native: localeInfo(code)?.native ?? code,
+  href: getRelativeLocaleUrl(code, path),
+}));
+---
+
+{
+  options.length > 1 && (
+    <details class="lang-switcher">
+      <summary>
+        <span aria-hidden="true">🌐</span>
+        <span class="visually-hidden">{t.label}: </span>
+        {localeInfo(locale)?.native ?? locale}
+      </summary>
+      <ul>
+        {options.map((option) => (
+          <li>
+            <a href={option.href} hreflang={option.code} lang={option.code} aria-current={option.code === locale ? 'true' : undefined}>
+              {option.native}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  )
+}

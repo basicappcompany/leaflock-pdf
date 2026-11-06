@@ -201,6 +201,102 @@ h2 {
   text-align: center;
 }
 
+/* Language switcher and first-visit suggestion. Logical properties throughout so the same
+   rules serve right-to-left locales (Arabic) without a second stylesheet. */
+.lang-switcher {
+  position: relative;
+  font-size: 0.9rem;
+}
+
+.lang-switcher summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.lang-switcher summary::-webkit-details-marker {
+  display: none;
+}
+
+.lang-switcher ul {
+  position: absolute;
+  inset-inline-end: 0;
+  z-index: 20;
+  min-inline-size: 12rem;
+  max-block-size: 70vh;
+  overflow-y: auto;
+  margin: 0.25rem 0 0;
+  padding: 0.25rem;
+  list-style: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+}
+
+.lang-switcher a {
+  display: block;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-small);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.lang-switcher a:hover,
+.lang-switcher a[aria-current='true'] {
+  background: var(--color-accent-soft);
+}
+
+.lang-suggest {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding: 0.5rem var(--space);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  font-size: 0.9rem;
+}
+
+.lang-suggest[hidden] {
+  display: none;
+}
+
+.lang-suggest__text {
+  margin: 0;
+}
+
+.lang-suggest__go {
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-small);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  text-decoration: none;
+}
+
+.lang-suggest__no {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.machine-note {
+  margin: 0;
+  padding: 0.3rem var(--space);
+  background: var(--color-surface-2);
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
 .skip-link {
   position: absolute;
   top: -10rem;

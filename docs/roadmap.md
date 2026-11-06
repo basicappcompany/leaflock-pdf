@@ -104,7 +104,7 @@ while the rest is built.
 | Landing variants | 5 | many | many | many | many | — | — |
 | Comparison pages | **7** | — | — | — | — | — | 3 |
 | Guides | 6 | large library | large library | large library | — | — | 40+ |
-| Locales live | 1 (`en`, i18n built for more) | 21+ | 24 | ~30 | — | — | 1 |
+| Locales live | 3 (`en`, plus `es` and `de` machine-translated); 17 more routed, not yet translated | 21+ | 24 | ~30 | — | — | 1 |
 | Processing | on device | server | server | server | server (desktop app offline) | customer's own server | **on device** |
 | Marginal cost per job | **~0** | server compute | server compute | server compute | server compute | customer's | ~0 |
 | Can run with no network | **yes** (service worker) | no | desktop app only | no | desktop app only | self-hosted | yes |
@@ -1203,6 +1203,33 @@ before Phase 3 settles means paying for the same sentence twice. The infrastruct
 already there — `astro.config.mjs` i18n, per-locale message folders, hreflang emitted.
 
 Competitors run 24–30 languages against our 1.
+
+**Revised 6 November 2026 (owner): 20 languages, machine-translated, auto-detected.** This
+reverses the "two locales, real translation" scoping below. The reasoning that survives:
+locale count is purely additive, and a locale that ranks costs nothing to serve. The
+reasoning that does not: a person can QA two languages and cannot QA twenty, so the safeguard
+moves from *who translates* to *what gets reviewed and how the page says so*.
+
+- **Languages:** en, hi, bn, pt-BR, id, ru, de (backed by Semrush country data for iLovePDF
+  and Smallpdf, September 2026) plus es, fr, tr, vi, it, ja, pl, ko, ar, th, nl, fil, zh-CN
+  (inferred from online population; **not measured**). Bengali's data point looks suspect:
+  24–35% of visits at 99.7% desktop. Replace the inferred half with our own Cloudflare
+  country analytics after launch (`src/i18n/locales.mjs` holds the list and each status).
+- **Per-locale pages, not runtime translation.** A translating widget or API would break
+  `connect-src 'self'` and the `/verify` claim, and a page translated after load is not what a
+  search engine indexed. Each locale is a static page at `/<code>/…`.
+- **Auto-detect without redirecting.** A first-visit banner offers the visitor's browser
+  language, in that language; it never forces a redirect (confusing for search engines and
+  for people who prefer English).
+- **A locale is indexed only once translated.** Until then its URLs serve English and are
+  `noindex`, absent from hreflang and the sitemap, so the empty locales cannot publish
+  thousands of thin duplicate pages (1,615 when all 19 were empty).
+- **Machine-translated pages say so** (`status: 'machine'` shows a note), until a person has
+  reviewed the trust claims, pricing and error strings (5.7).
+- **Unchanged:** legal pages stay English and govern; guides stay English-only; the service
+  worker precaches English only (20 copies would make a first visit download 1,700 pages).
+- **Not decided:** OCR language data per locale (multi-megabyte each; a size-budget call),
+  and the Chrome on-device Translator fallback for pages left in English.
 
 **Scoped 28 October 2026 (cost pass)**, ahead of Phase 3 rather than after it, because
 this phase is the multiplier that decides what the whole plan costs. Three decisions:

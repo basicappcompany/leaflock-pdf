@@ -382,6 +382,20 @@ Dashboard settings only; the code findings from the same review are in `docs/shi
       binding because `wrangler.toml` has a single `[[d1_databases]]` block. Not confirmed
       in the dashboard — check the Pages project's Preview environment bindings first.
 
+## 9. Locales — translation key and review, 6 November 2026
+
+`scripts/translate.mjs` is written and works; only the value and the human step are missing.
+
+- [ ] **`ANTHROPIC_API_KEY` for the translation script.** Read from the environment of
+      whoever runs `node scripts/translate.mjs --locale <code>`; it is never in the repo or
+      `.dev.vars`, and the site does not use it at run time. Decide whose account pays: a run
+      is about 58,000 tokens per locale (`--dry-run` prints the estimate).
+- [ ] **A person reads the trust claims, pricing and error strings per locale** before its
+      status in `src/i18n/locales.mjs` goes from `machine` to `reviewed` (roadmap 5.7). Until
+      then the page carries the "translated automatically" note.
+- [ ] **Replace the inferred half of the language list with our own country data** once the
+      site has traffic (Cloudflare analytics, which sets no cookies). Roadmap Phase 5.
+
 ## Running the auth and billing routes at all
 
 `pnpm dev` serves only the Astro site; Pages Functions do not run, so every `/api/*` route

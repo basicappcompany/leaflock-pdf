@@ -17,6 +17,52 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 6 November 2026 — Spanish and German published, machine-translated (items 5.1, 5.2)
+
+1,922 strings per locale, translated in-session by four parallel translators and loaded with
+`node scripts/translate.mjs --locale <code> --import <file>`, which applies the same checks as
+the API path: every `{placeholder}`, number, URL and tag must survive. Zero failures in either.
+
+- **A translator will translate things that are not prose.** File-name suffixes (`-smaller`,
+  `no-comments`) and example file names came back localized. That is fine here — they live in the
+  i18n strings on purpose and the Spanish ones are ASCII — but it is the first thing to read
+  in a new locale, and `{percent} %` vs `{percent}%` spacing was normalized by hand.
+- **Unreviewed by a person.** Both carry the "translated automatically" note. Glossary choices
+  to check: *redact* (redactar / schwärzen), *flatten* (aplanar / verflachen), "Letter" paper
+  size, and "Redaction" as a plan-feature noun (Redactar reads as a verb in es).
+- **The direct API path of the script has never succeeded.** The key in the environment was
+  rejected with 401 on every batch; nothing was written or billed. Only `--import` is proven.
+- **CI caught two things local unit tests could not.** (1) Building the locale table at import time
+  stopped the bundler dropping it from the ~70 client components that import `format`/`plural`
+  from `i18n`: JS + CSS hit 724 KB against a 380 KB budget with two locales. It is now built in a
+  `/*#__PURE__*/` function; client chunks are back at baseline with no catalogue text in them.
+  (2) `aria-label` on the switcher's `<summary>` failed axe (serious) on every page; it is now
+  visually hidden text. Both are guarded by the existing performance and accessibility specs.
+- **Stated limit:** pages 85 → 237 indexed (79 × 3). The other 17 locales still serve English
+  under `noindex`. Browser-checked: the suggestion banner shows for es/de visitors only, never
+  on a page already in their language, never for a language with no translation.
+
+---
+
+## 6 November 2026 — Locale infrastructure for 20 languages (item 5.3)
+
+Routing, registry, switcher, first-visit suggestion, noindex rules and right-to-left support.
+No translations yet; English is the only locale with content.
+
+- **Astro's `fallback` + `fallbackType: 'rewrite'` builds every page per locale with no
+  duplicated page files.** Each page gets its own `lang`, `dir` and `/<code>/` canonical, and
+  `getMessages()` deep-merges a locale over English, so a half-translated locale never breaks.
+  `fallback` keys must be URL **paths** (`pt-br`), not codes (`pt-BR`), or `astro check` fails.
+- **An empty locale must not be indexed.** The fallback serves English under `/th/…` with a
+  self-canonical; left alone that is 1,615 thin duplicates. `isTranslated()` drives `noindex`,
+  hreflang and the sitemap from one place.
+- **The service worker would have precached 1,699 URLs, up from 84.** It now skips locale
+  prefixes; navigations are cached on first visit, so a visitor's language still works offline.
+- **Stated limit:** pages 85 → 1,700 and files 451 → 2,066, against Cloudflare Pages' 20,000.
+  Build time 25s → 100s. The language list is half inferred, not measured (roadmap Phase 5).
+
+---
+
 ## 6 November 2026 — Security review fixes, and the phone sidebar button
 
 A read of the auth, session, Google, billing and account code (no credentials exposed; none

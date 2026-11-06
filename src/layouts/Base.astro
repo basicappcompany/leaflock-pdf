@@ -9,7 +9,9 @@ import SkinPicker from '../components/SkinPicker.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import ToolsMenu from '../components/ToolsMenu.astro';
 import ToolsSidebar from '../components/ToolsSidebar.astro';
-import { getMessages, locales } from '../i18n';
+import LanguageSuggestion from '../components/LanguageSuggestion.astro';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
+import { directionOf, getMessages, isTranslated, localeInfo, locales } from '../i18n';
 import { graph, organization, siteName, website } from '../lib/seo';
 
 interface Props {
@@ -53,6 +55,10 @@ const {
 } = Astro.props;
 const locale = Astro.currentLocale ?? 'en';
 const t = getMessages(locale).common;
+// A locale with no translation serves English under its own URL. Indexing that would publish
+// thin duplicates of every page, so it is noindex until the locale has a catalogue.
+const keepOut = noindex || !isTranslated(locale);
+const machineTranslated = localeInfo(locale)?.status === 'machine';
 const site = Astro.site!;
 const canonical = getAbsoluteLocaleUrl(locale, path);
 const image = new URL(`/og/${ogImage}.png`, site).href;
@@ -132,19 +138,19 @@ const chromeHeightScript = cspInlineScript(`
 ---
 
 <!doctype html>
-<html lang={locale} data-sidebar-default-hidden={toolsSidebarDefaultHidden}>
+<html lang={locale} dir={directionOf(locale)} data-sidebar-default-hidden={toolsSidebarDefaultHidden}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex" />}
-    {!noindex && <link rel="canonical" href={canonical} />}
+    {keepOut && <meta name="robots" content="noindex" />}
+    {!keepOut && <link rel="canonical" href={canonical} />}
     {
-      !noindex &&
+      !keepOut &&
         Object.keys(locales).map((code) => <link rel="alternate" hreflang={code} href={getAbsoluteLocaleUrl(code, path)} />)
     }
-    {!noindex && <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl('en', path)} />}
+    {!keepOut && <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl('en', path)} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" id="siteFavicon" />
     <link rel="sitemap" href="/sitemap.xml" />
     <link rel="manifest" href="/manifest.webmanifest" />
@@ -238,10 +244,13 @@ const chromeHeightScript = cspInlineScript(`
           accountHref={getRelativeLocaleUrl(locale, 'dashboard')}
         />
       </nav>
+      <LanguageSwitcher path={path} locale={locale} t={t.language} />
       <SkinPicker t={t.appearance} />
       <ThemeToggle t={t.theme} />
     </header>
     <p class="privacy-strip">{t.site.privacyNote}</p>
+    <LanguageSuggestion path={path} locale={locale} />
+    {machineTranslated && <p class="machine-note" role="note">{t.language.machineNote}</p>}
     </div>
     {
       toolsSidebar && (
