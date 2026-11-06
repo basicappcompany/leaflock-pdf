@@ -126,7 +126,12 @@ interface Budget {
 // deliberate cost of shipping both site-wide rather than a measurement regression.
 // Current weight sits around 93-98KB; the budget leaves headroom without being toothless.
 const CONTENT_BUDGET: Budget = { html: 105_000, jsCss: 320_000, lcpMs: 1500, cls: 0.1 };
-const TOOL_BUDGET: Budget = { html: 100_000, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
+// Tool pages' HTML 100_000 -> 102_000 on 7 Nov 2026: the language switcher (src/components/
+// LanguageSwitcher.astro) lists every translated language in every page so it works without
+// JS. Ten languages cost about 1.2 KB per page (~0.12 KB per language added); /ocr-pdf went
+// from just under the old limit to 100,066. The banner's sentences are NOT in the HTML: they are
+// fetched from /lang-offers.json only when shown. Revisit if the language count passes ~20.
+const TOOL_BUDGET: Budget = { html: 102_000, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
 
 /** One representative page per kind, not all 52: this is a real-browser measurement
  * with response-body capture, materially slower per page than site.spec.ts's "loads

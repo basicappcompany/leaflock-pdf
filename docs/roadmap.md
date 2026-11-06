@@ -104,7 +104,7 @@ while the rest is built.
 | Landing variants | 5 | many | many | many | many | — | — |
 | Comparison pages | **7** | — | — | — | — | — | 3 |
 | Guides | 6 | large library | large library | large library | — | — | 40+ |
-| Locales live | 3 (`en`, plus `es` and `de` machine-translated); 17 more routed, not yet translated | 21+ | 24 | ~30 | — | — | 1 |
+| Locales live | 10 (`en`, plus `hi`, `bn`, `pt-BR`, `id`, `ru`, `de`, `es`, `fr`, `tr` machine-translated); 10 more routed, deferred | 21+ | 24 | ~30 | — | — | 1 |
 | Processing | on device | server | server | server | server (desktop app offline) | customer's own server | **on device** |
 | Marginal cost per job | **~0** | server compute | server compute | server compute | server compute | customer's | ~0 |
 | Can run with no network | **yes** (service worker) | no | desktop app only | no | desktop app only | self-hosted | yes |

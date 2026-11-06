@@ -1,7 +1,5 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
 import { getMessages, localeInfo, locales } from '../i18n';
-import { format } from '../i18n/format';
 
 interface Props {
   path: string;
@@ -9,22 +7,19 @@ interface Props {
 }
 
 const { path, locale } = Astro.props;
-// One entry per available language, each with its own sentence in its own language, so the
-// visitor reads the offer in the language being offered. The script picks one; no network.
-const offers = Object.keys(locales)
+// The sentences live in /lang-offers.json, fetched only when an offer is going to be shown, so
+// no page carries them. What the page does carry is tiny: the available codes with their URL
+// prefixes, and this page's own path, enough for the script to build each link.
+const codes = Object.keys(locales)
   .filter((code) => code !== locale)
-  .map((code) => ({
-    code,
-    href: getRelativeLocaleUrl(code, path),
-    message: format(getMessages(code).common.language.suggest, { language: localeInfo(code)?.native ?? code }),
-    action: getMessages(code).common.language.switchTo,
-    dismiss: getMessages(code).common.language.dismiss,
-  }));
+  .map((code) => `${code}=${localeInfo(code)?.path === 'en' ? '' : (localeInfo(code)?.path ?? code)}`)
+  .join(',');
+const pagePath = path.startsWith('/') ? path : `/${path}`;
 ---
 
 {
-  offers.length > 0 && (
-    <div class="lang-suggest" role="region" aria-label={getMessages(locale).common.language.label} hidden data-offers={JSON.stringify(offers)} data-current={locale}>
+  codes && (
+    <div class="lang-suggest" role="region" aria-label={getMessages(locale).common.language.label} hidden data-codes={codes} data-path={pagePath} data-current={locale}>
       <p class="lang-suggest__text" />
       <a class="lang-suggest__go" href="/" />
       <button type="button" class="lang-suggest__no" />
@@ -33,12 +28,13 @@ const offers = Object.keys(locales)
 }
 
 <script>
-  // Offers the visitor's own language once. Reads navigator.languages only; nothing is sent.
+  // Offers the visitor's own language once. Reads navigator.languages; the only request is a
+  // same-origin fetch of /lang-offers.json, and only when there is an offer to show.
   // Dismissal is remembered per browser; every storage call is guarded because storage can be
   // blocked or throw in private windows.
   const box = document.querySelector<HTMLElement>('.lang-suggest');
   if (box) {
-    const offers: { code: string; href: string; message: string; action: string; dismiss: string }[] = JSON.parse(box.dataset.offers ?? '[]');
+    const prefixes = new Map((box.dataset.codes ?? '').split(',').filter(Boolean).map((pair) => pair.split('=') as [string, string]));
     const KEY = 'leaflock.lang-suggest';
     let dismissed = false;
     try {
@@ -48,34 +44,44 @@ const offers = Object.keys(locales)
     }
     // Match the full tag first (pt-BR), then the bare language (pt matches pt-BR, zh matches zh-CN).
     const wanted = (navigator.languages?.length ? navigator.languages : [navigator.language]).map((tag) => tag.toLowerCase());
-    let match: (typeof offers)[number] | undefined;
+    const codes = [...prefixes.keys()];
+    let code: string | undefined;
     for (const tag of wanted) {
       const base = tag.split('-')[0];
-      match =
-        offers.find((offer) => offer.code.toLowerCase() === tag) ??
-        offers.find((offer) => offer.code.toLowerCase().split('-')[0] === base);
-      if (match) break;
+      code = codes.find((c) => c.toLowerCase() === tag) ?? codes.find((c) => c.toLowerCase().split('-')[0] === base);
+      if (code) break;
     }
     // Their preferred language is already this page's: say nothing.
     const current = (box.dataset.current ?? 'en').toLowerCase().split('-')[0];
     const preferred = wanted[0]?.split('-')[0];
-    if (match && !dismissed && preferred !== current) {
-      box.querySelector('.lang-suggest__text')!.textContent = match.message;
-      const go = box.querySelector<HTMLAnchorElement>('.lang-suggest__go')!;
-      go.textContent = match.action;
-      go.href = match.href;
-      const no = box.querySelector<HTMLButtonElement>('.lang-suggest__no')!;
-      no.textContent = match.dismiss;
-      no.addEventListener('click', () => {
-        box.hidden = true;
-        try {
-          localStorage.setItem(KEY, 'dismissed');
-        } catch {
-          /* ignore */
-        }
-      });
-      box.lang = match.code;
-      box.hidden = false;
+    if (code && !dismissed && preferred !== current) {
+      const chosen = code;
+      fetch('/lang-offers.json')
+        .then((response): Promise<Record<string, { message: string; action: string; dismiss: string }>> => (response.ok ? response.json() : Promise.reject(new Error(String(response.status)))))
+        .then((offers) => {
+          const offer = offers[chosen];
+          if (!offer) return;
+          box.querySelector('.lang-suggest__text')!.textContent = offer.message;
+          const go = box.querySelector<HTMLAnchorElement>('.lang-suggest__go')!;
+          go.textContent = offer.action;
+          const prefix = prefixes.get(chosen) ?? '';
+          go.href = (prefix ? `/${prefix}` : '') + (box.dataset.path ?? '/');
+          const no = box.querySelector<HTMLButtonElement>('.lang-suggest__no')!;
+          no.textContent = offer.dismiss;
+          no.addEventListener('click', () => {
+            box.hidden = true;
+            try {
+              localStorage.setItem(KEY, 'dismissed');
+            } catch {
+              /* ignore */
+            }
+          });
+          box.lang = chosen;
+          box.hidden = false;
+        })
+        .catch(() => {
+          /* offline or blocked: no banner, nothing lost */
+        });
     }
   }
 </script>

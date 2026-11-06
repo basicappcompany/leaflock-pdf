@@ -32,7 +32,9 @@ const CLAIM_PATTERNS = [
  * here with its source, so that it becomes a visible decision rather than a number
  * nobody can check — the same rule the allowances test uses.
  */
-const ALLOWED = new Set<number>([...Object.values(prices), businessYearlyTarget]);
+// 0 is the Free plan's price. English writes it as a bare "$0", which no pattern above matches;
+// a locale that writes "US$0" (pt-BR does) would otherwise trip the check on a true statement.
+const ALLOWED = new Set<number>([0, ...Object.values(prices), businessYearlyTarget]);
 
 const ROOTS = ['src/content', 'src/i18n'];
 const EXTENSIONS = ['.md', '.ts'];

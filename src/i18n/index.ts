@@ -65,3 +65,4 @@ export function getMessages(locale: string | undefined): Messages {
 // transformed, and vitest caches that transform by the file's *content*. Adding a new
 // locale folder without editing this file can leave a local vitest run seeing the old file
 // list (tests then say the new locale "has no catalogue"). Any edit to this file refreshes it.
+// (Seen again on 7 Nov 2026 after adding seven locales at once: touching this comment fixed it.)
