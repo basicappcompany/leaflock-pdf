@@ -4,6 +4,7 @@ import react from '@astrojs/react';
 import { serviceWorker } from './integrations/service-worker.mjs';
 import { standardFonts } from './integrations/standard-fonts.mjs';
 import { vendorAssets } from './integrations/vendor-assets.mjs';
+import { astroFallback, astroLocales } from './src/i18n/locales.mjs';
 
 export default defineConfig({
   site: 'https://leaflockpdf.com',
@@ -33,8 +34,11 @@ export default defineConfig({
   },
   i18n: {
     defaultLocale: 'en',
-    // Add a locale here and a matching folder in src/i18n/ to publish a new language.
-    locales: ['en'],
-    routing: { prefixDefaultLocale: false },
+    // The list lives in src/i18n/locales.mjs. A locale is *published* (indexed, in hreflang
+    // and the sitemap) once it has a folder in src/i18n/ and a status other than 'planned';
+    // until then its URLs serve English and are noindex.
+    locales: astroLocales,
+    fallback: astroFallback,
+    routing: { prefixDefaultLocale: false, fallbackType: 'rewrite' },
   },
 });

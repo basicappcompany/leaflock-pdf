@@ -1,4 +1,5 @@
 import type { ToolId } from '../tools/registry';
+import { defaultLocale, localeRegistry } from './config';
 import { en } from './en';
 
 export { format, plural, type PluralForms } from './format';
@@ -8,12 +9,41 @@ export type { ToolMessagesBase } from './en';
 export type Messages = typeof en;
 export type ToolMessages<K extends ToolId> = Messages['tools'][K];
 
-export const locales = { en } satisfies Record<string, Messages>;
+export { defaultLocale, directionOf, isTranslated, localeInfo, localeRegistry } from './config';
 
-export type Locale = keyof typeof locales;
+type DeepPartial<T> = T extends readonly unknown[] ? T : T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;
 
-export const defaultLocale: Locale = 'en';
+/**
+ * A locale's catalogue may be partial: any string it lacks is taken from English. That is
+ * what lets a locale ship in stages, and what keeps a half-translated page from crashing.
+ * Files live at `src/i18n/<code>/index.ts` and export `default` as a DeepPartial<Messages>.
+ */
+const catalogues = import.meta.glob<{ default: DeepPartial<Messages> }>('./*/index.ts', { eager: true });
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/** Overlays `overrides` on `base`. Arrays are replaced whole: a half-translated list is worse than an English one. */
+export function mergeMessages<T>(base: T, overrides: unknown): T {
+  if (!isPlainObject(base) || !isPlainObject(overrides)) return (overrides ?? base) as T;
+  const out: Record<string, unknown> = { ...base };
+  for (const key of Object.keys(overrides)) out[key] = mergeMessages(out[key], overrides[key]);
+  return out as T;
+}
+
+const translated: Record<string, Messages> = { en };
+for (const [file, module] of Object.entries(catalogues)) {
+  const folder = file.split('/')[1]!;
+  const info = localeRegistry.find((locale) => locale.path === folder);
+  if (info && info.code !== 'en') translated[info.code] = mergeMessages(en, module.default);
+}
+
+/** Locales that have a catalogue. These are the ones emitted in hreflang and the sitemap. */
+export const locales: Record<string, Messages> = translated;
+
+export type Locale = string;
 
 export function getMessages(locale: string | undefined): Messages {
-  return locales[(locale ?? defaultLocale) as Locale] ?? locales[defaultLocale];
+  return translated[locale ?? defaultLocale] ?? en;
 }

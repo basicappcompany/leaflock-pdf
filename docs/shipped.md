@@ -17,6 +17,25 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 6 November 2026 — Locale infrastructure for 20 languages (item 5.3)
+
+Routing, registry, switcher, first-visit suggestion, noindex rules and right-to-left support.
+No translations yet; English is the only locale with content.
+
+- **Astro's `fallback` + `fallbackType: 'rewrite'` builds every page per locale with no
+  duplicated page files.** Each page gets its own `lang`, `dir` and `/<code>/` canonical, and
+  `getMessages()` deep-merges a locale over English, so a half-translated locale never breaks.
+  `fallback` keys must be URL **paths** (`pt-br`), not codes (`pt-BR`), or `astro check` fails.
+- **An empty locale must not be indexed.** The fallback serves English under `/th/…` with a
+  self-canonical; left alone that is 1,615 thin duplicates. `isTranslated()` drives `noindex`,
+  hreflang and the sitemap from one place.
+- **The service worker would have precached 1,699 URLs, up from 84.** It now skips locale
+  prefixes; navigations are cached on first visit, so a visitor's language still works offline.
+- **Stated limit:** pages 85 → 1,700 and files 451 → 2,066, against Cloudflare Pages' 20,000.
+  Build time 25s → 100s. The language list is half inferred, not measured (roadmap Phase 5).
+
+---
+
 ## 6 November 2026 — Security review fixes, and the phone sidebar button
 
 A read of the auth, session, Google, billing and account code (no credentials exposed; none

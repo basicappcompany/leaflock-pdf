@@ -1040,6 +1040,14 @@ them from the request origin: `http://localhost:8788/api/auth/google/callback` a
 - **Launch happens when the roadmap is done**, not in stages. The cost — domain and page
   age, the one ranking input that cannot be bought later — is recorded in
   `docs/roadmap.md` as a choice.
+- **Twenty locales, machine-translated** — *revised 6 November 2026, reversing the 28 October
+  "two locales, real translation" scoping.* What changes: the number of locales (20, from
+  `src/i18n/locales.mjs`) and who translates (a model, with a visible label). What does **not**
+  change: legal pages stay English and govern; guides stay English-only; no translation is
+  done at runtime or by a third party, because that would break `connect-src 'self'`; and a
+  locale with no translation is `noindex` and absent from hreflang and the sitemap. The
+  safeguard that replaced "a person translates" is "a person reviews the trust claims, pricing
+  and error strings before the label comes off" (roadmap item 5.7).
 
 ## 14. Known gaps in this design
 

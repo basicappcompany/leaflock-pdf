@@ -36,6 +36,7 @@ function escape(text: string): string {
 }
 
 export function sitemapXml(entries: readonly SitemapEntry[]): string {
+  // Only locales with a translation: a 'planned' locale serves English and must not be indexed.
   const codes = Object.keys(locales);
   const urls = codes.flatMap((locale) =>
     entries.map((entry) => {

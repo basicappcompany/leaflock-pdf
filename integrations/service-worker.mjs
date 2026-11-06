@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { localeRegistry } from '../src/i18n/locales.mjs';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
@@ -11,6 +12,14 @@ const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
  * permanently-loading screen in front of an offline visitor.
  */
 const SESSION_ONLY = ['/account', '/dashboard', '/login'];
+
+/**
+ * URL prefixes of the non-default locales. Their pages are not precached: 19 locales would
+ * make every first visit download 20 copies of the site (1,700 pages, against 85). The
+ * worker's navigation handler caches a page the first time it is visited, so a visitor's own
+ * language still works offline after one load.
+ */
+const LOCALE_PREFIXES = localeRegistry.filter((locale) => locale.code !== 'en').map((locale) => `/${locale.path}`);
 
 /** Extensions that belong in the precached shell: small, and needed to render anything. */
 const SHELL_EXTENSIONS = new Set(['.html', '.css', '.webmanifest', '.svg', '.ico']);
@@ -88,6 +97,7 @@ export function serviceWorker() {
           if (url.startsWith('/og/') || url.startsWith('/vendor/')) continue;
           if (!SHELL_EXTENSIONS.has(path.extname(file))) continue;
           if (SESSION_ONLY.some((prefix) => url === prefix || url.startsWith(`${prefix}/`))) continue;
+          if (LOCALE_PREFIXES.some((prefix) => url === prefix || url.startsWith(`${prefix}/`))) continue;
           shell.push(url);
         }
         shell.sort();
