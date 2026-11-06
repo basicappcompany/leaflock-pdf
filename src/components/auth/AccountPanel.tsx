@@ -15,13 +15,13 @@ export default function AccountPanel({ t }: { t: Messages['auth']['account'] }) 
   }
 
   if (session.state === 'out') {
-    if (typeof window !== 'undefined') window.location.href = '/login';
+    if (typeof window !== 'undefined') window.location.href = '/login/';
     return null;
   }
 
   async function logout() {
     await fetch('/api/auth/logout', { method: 'POST' });
-    window.location.href = '/login';
+    window.location.href = '/login/';
   }
 
   const onFreePlan = session.plan === 'free';
@@ -46,7 +46,7 @@ export default function AccountPanel({ t }: { t: Messages['auth']['account'] }) 
 
         <div className="account-actions">
           {onFreePlan && (
-            <a className="primary-button" href="/pricing">
+            <a className="primary-button" href="/pricing/">
               {t.upgrade}
             </a>
           )}

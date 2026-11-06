@@ -73,7 +73,7 @@ export function webApplication(options: {
           price: String(options.tierPrice),
           priceCurrency: 'USD',
           category: 'subscription',
-          url: new URL('/pricing', options.site).href,
+          url: new URL('/pricing/', options.site).href,
         }
       : { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     publisher: { '@id': new URL('/#organization', options.site).href },
