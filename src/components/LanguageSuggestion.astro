@@ -57,8 +57,8 @@ const pagePath = path.startsWith('/') ? path : `/${path}`;
     if (code && !dismissed && preferred !== current) {
       const chosen = code;
       fetch('/lang-offers.json')
-        .then((response) => (response.ok ? response.json() : Promise.reject(new Error(String(response.status)))))
-        .then((offers: Record<string, { message: string; action: string; dismiss: string }>) => {
+        .then((response): Promise<Record<string, { message: string; action: string; dismiss: string }>> => (response.ok ? response.json() : Promise.reject(new Error(String(response.status)))))
+        .then((offers) => {
           const offer = offers[chosen];
           if (!offer) return;
           box.querySelector('.lang-suggest__text')!.textContent = offer.message;
