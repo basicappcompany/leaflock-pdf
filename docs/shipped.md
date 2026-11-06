@@ -17,6 +17,18 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 7 November 2026 — Footer columns aligned with the page
+
+The tool columns (Organize, Convert, …) and the Product / Company / Legal row were two grids
+with different widths, and both were wider than `main`'s content, so the footer neither lined up
+with itself nor with the page above it. Both rows are now the same four equal columns (two on
+tablet, one on a phone), and the footer's inner width and side padding match `main`. Checked in
+a browser at 360, 390, 768, 1024 and 1440 px: no horizontal scroll, edges match the content.
+Known and left alone: on a tool page with the sidebar open, the footer stays centred under the
+whole window while the content sits right of the sidebar, so the two differ by the sidebar's width.
+
+---
+
 ## 7 November 2026 — Top-10 languages published, machine-translated (item 5.8)
 
 Hindi, Bengali, Brazilian Portuguese, Indonesian, Russian, French and Turkish, 1,922 strings

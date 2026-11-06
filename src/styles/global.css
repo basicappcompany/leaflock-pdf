@@ -970,7 +970,9 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
 }
 
 .site-footer {
-  padding: calc(var(--space) * 2) calc(var(--space) * 1.5) var(--space);
+  /* Same side padding as `main`, and the inner blocks below are `main`'s content width, so the
+     footer's edges line up with the page above it at every width. */
+  padding: calc(var(--space) * 2) var(--space) var(--space);
   border-top: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-muted);
@@ -978,15 +980,28 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
 }
 
 .site-footer__columns {
+  /* Four equal columns for both rows, so Product / Company / Legal sit exactly under the
+     first three tool categories instead of on a grid of their own. */
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: calc(var(--space) * 1.5);
-  max-width: 64rem;
+  max-width: calc(64rem - var(--space) * 2);
   margin: 0 auto;
 }
 
+@media (max-width: 48rem) {
+  .site-footer__columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 26rem) {
+  .site-footer__columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .site-footer__columns--meta {
-  grid-template-columns: repeat(auto-fill, minmax(9rem, 12rem));
   margin-top: calc(var(--space) * 1.5);
   padding-top: calc(var(--space) * 1.5);
   border-top: 1px solid var(--color-border);
@@ -1023,7 +1038,7 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.5rem;
-  max-width: 64rem;
+  max-width: calc(64rem - var(--space) * 2);
   margin: calc(var(--space) * 2) auto 0;
   padding-top: var(--space);
   border-top: 1px solid var(--color-border);
