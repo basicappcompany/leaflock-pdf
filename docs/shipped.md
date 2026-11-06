@@ -32,6 +32,12 @@ the API path: every `{placeholder}`, number, URL and tag must survive. Zero fail
   size, and "Redaction" as a plan-feature noun (Redactar reads as a verb in es).
 - **The direct API path of the script has never succeeded.** The key in the environment was
   rejected with 401 on every batch; nothing was written or billed. Only `--import` is proven.
+- **CI caught two things local unit tests could not.** (1) Building the locale table at import time
+  stopped the bundler dropping it from the ~70 client components that import `format`/`plural`
+  from `i18n`: JS + CSS hit 724 KB against a 380 KB budget with two locales. It is now built in a
+  `/*#__PURE__*/` function; client chunks are back at baseline with no catalogue text in them.
+  (2) `aria-label` on the switcher's `<summary>` failed axe (serious) on every page; it is now
+  visually hidden text. Both are guarded by the existing performance and accessibility specs.
 - **Stated limit:** pages 85 → 237 indexed (79 × 3). The other 17 locales still serve English
   under `noindex`. Browser-checked: the suggestion banner shows for es/de visitors only, never
   on a page already in their language, never for a language with no translation.

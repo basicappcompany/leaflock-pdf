@@ -22,8 +22,10 @@ const options = Object.keys(locales).map((code) => ({
 {
   options.length > 1 && (
     <details class="lang-switcher">
-      <summary aria-label={t.label}>
-        <span aria-hidden="true">🌐</span> {localeInfo(locale)?.native ?? locale}
+      <summary>
+        <span aria-hidden="true">🌐</span>
+        <span class="visually-hidden">{t.label}: </span>
+        {localeInfo(locale)?.native ?? locale}
       </summary>
       <ul>
         {options.map((option) => (

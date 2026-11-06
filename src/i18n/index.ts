@@ -32,12 +32,25 @@ export function mergeMessages<T>(base: T, overrides: unknown): T {
   return out as T;
 }
 
-const translated: Record<string, Messages> = { en };
-for (const [file, module] of Object.entries(catalogues)) {
-  const folder = file.split('/')[1]!;
-  const info = localeRegistry.find((locale) => locale.path === folder);
-  if (info && info.code !== 'en') translated[info.code] = mergeMessages(en, module.default);
+/**
+ * Built inside a function that is marked pure, on purpose. About seventy client components import
+ * `format` and `plural` from this file at run time; a loop at module level has side effects, so the
+ * bundler cannot drop it and every browser chunk would carry every locale's catalogue (it did: JS +
+ * CSS went from under 380 KB to 724 KB with two locales). Marked pure and unused in the browser, the
+ * whole table and the catalogue files are removed from client bundles. The performance spec in
+ * tests/e2e enforces the budget.
+ */
+function buildLocales(): Record<string, Messages> {
+  const out: Record<string, Messages> = { en };
+  for (const [file, module] of Object.entries(catalogues)) {
+    const folder = file.split('/')[1]!;
+    const info = localeRegistry.find((locale) => locale.path === folder);
+    if (info && info.code !== 'en') out[info.code] = mergeMessages(en, module.default);
+  }
+  return out;
 }
+
+const translated = /*#__PURE__*/ buildLocales();
 
 /** Locales that have a catalogue. These are the ones emitted in hreflang and the sitemap. */
 export const locales: Record<string, Messages> = translated;
