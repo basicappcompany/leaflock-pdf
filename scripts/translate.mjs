@@ -1,10 +1,14 @@
-// @ts-check
 /**
  * Machine-translates the English catalogue (src/i18n/en/**) into another locale.
  *
  *   node scripts/translate.mjs --locale es --dry-run     count strings, estimate cost, call nothing
  *   node scripts/translate.mjs --locale es               translate and write src/i18n/es/index.ts
  *   node scripts/translate.mjs --locale es --force       re-translate strings that already exist
+ *   node scripts/translate.mjs --export strings.json     write every English string as a JSON array
+ *   node scripts/translate.mjs --locale es --import es.json
+ *                                                        validate a translated array (same length
+ *                                                        and order as the export) and write the
+ *                                                        catalogue; no API key needed
  *
  * Needs ANTHROPIC_API_KEY in the environment. This is build-time tooling run by a person, never
  * shipped code, so the site's `connect-src 'self'` does not apply to it.
@@ -124,6 +128,14 @@ async function translateBatch(batch, locale, glossary) {
 }
 
 async function main() {
+  const exportTo = option('export');
+  if (exportTo) {
+    const strings = leaves(await loadEnglish()).map((item) => item.text);
+    await writeFile(exportTo, JSON.stringify(strings), 'utf8');
+    console.log(`Exported ${strings.length} strings to ${exportTo}`);
+    return;
+  }
+
   const code = option('locale');
   const locale = localeRegistry.find((item) => item.code === code);
   if (!locale || locale.code === 'en') {
@@ -132,6 +144,24 @@ async function main() {
   }
 
   const english = await loadEnglish();
+  const importFrom = option('import');
+  if (importFrom) {
+    const incoming = JSON.parse(await readFile(importFrom, 'utf8'));
+    const all = leaves(english);
+    if (!Array.isArray(incoming) || incoming.length !== all.length) {
+      console.error(`Expected an array of ${all.length} strings, got ${Array.isArray(incoming) ? incoming.length : typeof incoming}.`);
+      process.exit(2);
+    }
+    const result = structuredClone(english);
+    const failed = [];
+    all.forEach((item, index) => {
+      const issues = problems(item.text, incoming[index]);
+      if (issues.length === 0) setAt(result, item.trail, incoming[index]);
+      else failed.push({ trail: item.trail.join('.'), issues });
+    });
+    await writeCatalogue(result, failed, path.join(root, 'src/i18n', locale.path, 'index.ts'), 'in-session translation (scripts/translate.mjs --import)');
+    return;
+  }
   const outFile = path.join(root, 'src/i18n', locale.path, 'index.ts');
   const glossary = JSON.parse(await readFile(path.join(root, 'scripts/translate-glossary.json'), 'utf8'));
 
@@ -185,16 +215,24 @@ async function main() {
     console.log(`  ${Math.min(start + BATCH_SIZE, todo.length)}/${todo.length}`);
   }
 
+  await writeCatalogue(result, failed, outFile, `${MODEL}`);
+}
+
+async function writeCatalogue(result, failed, outFile, source) {
   await mkdir(path.dirname(outFile), { recursive: true });
   const header =
-    `// Machine-translated from src/i18n/en by scripts/translate.mjs (${MODEL}). Do not edit by hand:\n` +
-    `// a hand edit is overwritten by the next --force run. Fix the glossary or the English instead.\n` +
-    `// Strings that failed validation are left in English; see the run log.\n`;
-  await writeFile(outFile, `${header}export default ${JSON.stringify(result, null, 2)};\n`, 'utf8');
+    `// Machine-translated from src/i18n/en by ${source}. Do not edit by hand:
+` +
+    `// a hand edit is overwritten by the next --force run. Fix the glossary or the English instead.
+` +
+    `// Strings that failed validation are left in English; see the run log.
+`;
+  await writeFile(outFile, `${header}export default ${JSON.stringify(result, null, 2)};
+`, 'utf8');
   console.log(`Wrote ${path.relative(root, outFile)}`);
   if (failed.length > 0) {
     console.log(`${failed.length} string(s) left in English:`);
-    for (const item of failed.slice(0, 30)) console.log(`  ${item.trail}: ${item.issues.join(', ')}`);
+    for (const item of failed.slice(0, 40)) console.log(`  ${item.trail}: ${item.issues.join(', ')}`);
   }
 }
 

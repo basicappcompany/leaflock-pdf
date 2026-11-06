@@ -104,7 +104,7 @@ while the rest is built.
 | Landing variants | 5 | many | many | many | many | — | — |
 | Comparison pages | **7** | — | — | — | — | — | 3 |
 | Guides | 6 | large library | large library | large library | — | — | 40+ |
-| Locales live | 1 translated (`en`); 19 more routed, not yet translated (item 5.3) | 21+ | 24 | ~30 | — | — | 1 |
+| Locales live | 3 (`en`, plus `es` and `de` machine-translated); 17 more routed, not yet translated | 21+ | 24 | ~30 | — | — | 1 |
 | Processing | on device | server | server | server | server (desktop app offline) | customer's own server | **on device** |
 | Marginal cost per job | **~0** | server compute | server compute | server compute | server compute | customer's | ~0 |
 | Can run with no network | **yes** (service worker) | no | desktop app only | no | desktop app only | self-hosted | yes |
@@ -1222,8 +1222,8 @@ moves from *who translates* to *what gets reviewed and how the page says so*.
   language, in that language; it never forces a redirect (confusing for search engines and
   for people who prefer English).
 - **A locale is indexed only once translated.** Until then its URLs serve English and are
-  `noindex`, absent from hreflang and the sitemap, so 19 empty locales cannot publish 1,615
-  thin duplicate pages.
+  `noindex`, absent from hreflang and the sitemap, so the empty locales cannot publish
+  thousands of thin duplicate pages (1,615 when all 19 were empty).
 - **Machine-translated pages say so** (`status: 'machine'` shows a note), until a person has
   reviewed the trust claims, pricing and error strings (5.7).
 - **Unchanged:** legal pages stay English and govern; guides stay English-only; the service

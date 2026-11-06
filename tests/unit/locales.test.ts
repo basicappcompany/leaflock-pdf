@@ -5,7 +5,7 @@ import { mergeMessages } from '../../src/i18n';
 import { plural } from '../../src/i18n/format';
 
 describe('locale registry', () => {
-  it('lists 20 languages with English as the only reviewed one at the start', () => {
+  it('lists 20 languages with English as the only reviewed one', () => {
     expect(localeRegistry).toHaveLength(20);
     expect(localeRegistry.filter((locale) => locale.status === 'reviewed').map((locale) => locale.code)).toEqual(['en']);
   });

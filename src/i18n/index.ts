@@ -47,3 +47,8 @@ export type Locale = string;
 export function getMessages(locale: string | undefined): Messages {
   return translated[locale ?? defaultLocale] ?? en;
 }
+
+// Caveat for a developer, not for CI: `import.meta.glob` is expanded when this file is
+// transformed, and vitest caches that transform by the file's *content*. Adding a new
+// locale folder without editing this file can leave a local vitest run seeing the old file
+// list (tests then say the new locale "has no catalogue"). Any edit to this file refreshes it.
