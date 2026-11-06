@@ -24,13 +24,18 @@ const offers = Object.keys(locales)
 
 {
   offers.length > 0 && (
-    <div class="lang-suggest" role="region" aria-label={getMessages(locale).common.language.label} hidden data-offers={JSON.stringify(offers)} data-current={locale}>
+    <div class="lang-suggest" role="region" aria-label={getMessages(locale).common.language.label} hidden data-current={locale}>
       <p class="lang-suggest__text" />
       <a class="lang-suggest__go" href="/" />
       <button type="button" class="lang-suggest__no" />
     </div>
   )
 }
+{
+  /* A JSON block, not a data attribute: an attribute escapes every quote as &quot;, which cost
+     about 1 KB per page against the HTML budget. "<" is escaped so no string can close the tag. */
+}
+{offers.length > 0 && <script is:inline type="application/json" id="lang-offers" set:html={JSON.stringify(offers).replace(/</g, '\\u003c')} />}
 
 <script>
   // Offers the visitor's own language once. Reads navigator.languages only; nothing is sent.
@@ -38,7 +43,7 @@ const offers = Object.keys(locales)
   // blocked or throw in private windows.
   const box = document.querySelector<HTMLElement>('.lang-suggest');
   if (box) {
-    const offers: { code: string; href: string; message: string; action: string; dismiss: string }[] = JSON.parse(box.dataset.offers ?? '[]');
+    const offers: { code: string; href: string; message: string; action: string; dismiss: string }[] = JSON.parse(document.getElementById('lang-offers')?.textContent ?? '[]');
     const KEY = 'leaflock.lang-suggest';
     let dismissed = false;
     try {
