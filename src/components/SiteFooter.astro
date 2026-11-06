@@ -4,12 +4,18 @@ import { format, getMessages } from '../i18n';
 import { footerGroups } from '../lib/siteLinks';
 import { categories, tools } from '../tools/registry';
 
+interface Props {
+  /** The page has the fixed tools sidebar, so the footer reserves the same room beside it. */
+  withSidebar?: boolean;
+}
+
+const { withSidebar = false } = Astro.props;
 const locale = Astro.currentLocale ?? 'en';
 const messages = getMessages(locale);
 const common = messages.common;
 ---
 
-<footer class="site-footer">
+<footer class:list={['site-footer', { 'site-footer--with-sidebar': withSidebar }]}>
   {/* Two separate grids, not one flowing list: with all seven groups (four tool
       categories plus product/company/legal) in a single auto-fill grid, the categories
       filled exactly five columns at common widths and the three link groups wrapped

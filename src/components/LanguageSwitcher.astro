@@ -39,3 +39,21 @@ const options = Object.keys(locales).map((code) => ({
     </details>
   )
 }
+
+<script>
+  // Same as ToolsMenu: a native <details> that also closes on a click anywhere outside it or on
+  // Escape (focus returns to the button). Picking a language or clicking the button again
+  // already closed it natively.
+  const switcher = document.querySelector<HTMLDetailsElement>('.lang-switcher');
+  if (switcher) {
+    document.addEventListener('click', (event) => {
+      if (switcher.open && !switcher.contains(event.target as Node)) switcher.open = false;
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && switcher.open) {
+        switcher.open = false;
+        switcher.querySelector('summary')?.focus();
+      }
+    });
+  }
+</script>
