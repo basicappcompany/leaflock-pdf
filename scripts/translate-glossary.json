@@ -1,0 +1,16 @@
+{
+  "redact": "permanently remove (black out and delete) content from a PDF; use the legal-document term, not 'hide'",
+  "Bates numbering": "sequential page identifiers used in legal discovery; keep 'Bates' and use the local legal term for numbering",
+  "merge": "combine several PDFs into one file",
+  "split": "divide one PDF into several files",
+  "compress": "reduce a PDF's file size",
+  "flatten": "turn form fields and annotations into fixed page content",
+  "OCR": "make scanned text searchable; keep the abbreviation 'OCR' and explain once if the English does",
+  "metadata": "hidden document properties such as author and creation date",
+  "on your device": "processed locally in the visitor's own browser; never imply any upload or server",
+  "never uploaded": "files are not sent anywhere; keep this absolute and exact",
+  "watermark": "text or image stamped across pages",
+  "Practice": "the name of a paid plan; keep as 'Practice'",
+  "Pro": "the name of a paid plan; keep as 'Pro'",
+  "Business": "the name of a paid plan; keep as 'Business'"
+}
