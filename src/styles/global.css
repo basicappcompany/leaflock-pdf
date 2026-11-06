@@ -979,6 +979,34 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
   font-size: 0.9rem;
 }
 
+.site-footer--with-sidebar {
+  transition: padding 0.15s ease;
+}
+
+/* The same room `.tools-layout` reserves for the fixed sidebar (plus the footer's own side
+   padding), on whichever edge it is docked, so the footer's content is centred in the space
+   left beside the sidebar exactly as the page content above it is. */
+html[data-sidebar-dock='left'] .site-footer--with-sidebar {
+  padding-left: calc(16rem + var(--space));
+}
+
+html[data-sidebar-dock='right'] .site-footer--with-sidebar {
+  padding-right: calc(16rem + var(--space));
+}
+
+html[data-sidebar-state='hidden'] .site-footer--with-sidebar {
+  padding-left: var(--space) !important;
+  padding-right: var(--space) !important;
+}
+
+@media (max-width: 48rem) {
+  /* Below this width the sidebar overlays the page instead of reserving room (see .tools-layout). */
+  .site-footer--with-sidebar {
+    padding-left: var(--space) !important;
+    padding-right: var(--space) !important;
+  }
+}
+
 .site-footer__columns {
   /* Four equal columns for both rows, so Product / Company / Legal sit exactly under the
      first three tool categories instead of on a grid of their own. */

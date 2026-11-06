@@ -279,7 +279,7 @@ const chromeHeightScript = cspInlineScript(`
         </main>
       )
     }
-    <SiteFooter />
+    <SiteFooter withSidebar={Boolean(toolsSidebar)} />
     <script>
       // Offline and installable (public/sw.js, filled in by integrations/service-worker.mjs).
       // Deliberately not `is:inline`: Astro bundles this into a file of its own, which the

@@ -17,15 +17,17 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
-## 7 November 2026 — Footer columns aligned with the page
+## 7 November 2026 — Footer aligned with the page, language switcher closes on outside click
 
 The tool columns (Organize, Convert, …) and the Product / Company / Legal row were two grids
 with different widths, and both were wider than `main`'s content, so the footer neither lined up
 with itself nor with the page above it. Both rows are now the same four equal columns (two on
 tablet, one on a phone), and the footer's inner width and side padding match `main`. Checked in
 a browser at 360, 390, 768, 1024 and 1440 px: no horizontal scroll, edges match the content.
-Known and left alone: on a tool page with the sidebar open, the footer stays centred under the
-whole window while the content sits right of the sidebar, so the two differ by the sidebar's width.
+On pages with the tools sidebar the footer now reserves the same 16rem beside it (left or right
+dock, none when the sidebar is hidden or overlays on a phone), so its edges match the content
+there too (352–1344 px at 1440 wide, both). The language switcher also closes on a click
+anywhere outside it or on Escape, like the tools menu.
 
 ---
 
