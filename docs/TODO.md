@@ -408,6 +408,16 @@ Dashboard settings only; the code findings from the same review are in `docs/shi
 - [ ] **Replace the inferred half of the language list with our own country data** once the
       site has traffic (Cloudflare analytics, which sets no cookies). Roadmap Phase 5.
 
+## 10. Tool page load — fewer bytes, 7 November 2026
+
+Measured on 7 Nov (see `docs/shipped.md`): the skeleton fixed the blank gap, but the tool is still
+usable ~1.0–1.5 s after the page text on a slow connection, and it is bandwidth-bound (~300 KB of
+JS/CSS compressed over ~19–25 requests). Starting downloads earlier and hover prefetch did not help.
+- [ ] **Find what the ~300 KB is** (`pnpm build` output, a bundle visualiser) and cut it: the React
+      client (`client.*.js`, ~208 KB uncompressed), the shared chunks every tool pulls in, and
+      whether `common` strings in the island props are larger than the tool needs. Re-measure with
+      the same throttled test; a change is only worth keeping if it moves the time to usable.
+
 ## Running the auth and billing routes at all
 
 `pnpm dev` serves only the Astro site; Pages Functions do not run, so every `/api/*` route

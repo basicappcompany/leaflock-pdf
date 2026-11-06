@@ -7,6 +7,7 @@ import { requiresUpgrade, type ToolTier } from '../lib/proAccess';
 import { setActiveTool } from '../lib/recentActivity';
 import { ProGate } from './ui/ProGate';
 import { RecentWork } from './ui/RecentWork';
+import { ToolSkeleton } from './ui/ToolSkeleton';
 import { useSession } from './ui/useSession';
 import type { ToolProps } from './tools/types';
 
@@ -108,7 +109,7 @@ export default function ToolApp({ toolId, tier, locale, common, t, preset }: Pro
   // Wait for the plan before deciding: showing a paying customer an upgrade screen for
   // a moment would be worse than a brief wait. Signed-out visitors resolve immediately.
   if (tier !== 'free' && session.state === 'loading') {
-    return <p className="muted">{common.toolPage.loading}</p>;
+    return <ToolSkeleton label={common.toolPage.loading} />;
   }
 
   const plan = session.state === 'in' ? session.plan : 'anonymous';
@@ -118,7 +119,7 @@ export default function ToolApp({ toolId, tier, locale, common, t, preset }: Pro
 
   return (
     <>
-      <Suspense fallback={<p className="muted">{common.toolPage.loading}</p>}>
+      <Suspense fallback={<ToolSkeleton label={common.toolPage.loading} />}>
         <Tool locale={locale} common={common} t={t} preset={preset} />
       </Suspense>
       {/* Below the tool, not above it: someone arriving to do a job should see the file

@@ -929,6 +929,18 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
   display: flex;
 }
 
+/* The button that brings the sidebar back sits on the edge the sidebar is docked to, and its
+   arrow points the way the panel will slide in, so closing and reopening happen in the same
+   place. (It used to stay on the left whichever side the sidebar had been docked to.) */
+html[data-sidebar-dock='right'] .tools-sidebar__reopen {
+  right: 0.75rem;
+  left: auto;
+}
+
+html[data-sidebar-dock='right'] .tools-sidebar__reopen svg {
+  transform: scaleX(-1);
+}
+
 @media (max-width: 48rem) {
   /* Below the header's own collapse point, a reserved column stops making sense
      regardless of which edge it's docked to: visible becomes a full-screen overlay
@@ -960,6 +972,11 @@ html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
     width: 2.75rem;
     height: 2.75rem;
     touch-action: manipulation;
+  }
+
+  html[data-sidebar-dock='right'] .tools-sidebar__reopen {
+    right: calc(1rem + env(safe-area-inset-right, 0px));
+    left: auto;
   }
 
   .tools-sidebar__btn {
@@ -1741,6 +1758,51 @@ html[data-sidebar-state='hidden'] .site-footer--with-sidebar {
 
 .dropzone p {
   margin: 0;
+}
+
+/* Stand-in for the file picker while a tool's code downloads (ToolSkeleton.tsx, and the same
+   markup as the island's fallback in pages/[tool].astro). */
+.tool-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 8rem;
+}
+
+.tool-skeleton::before,
+.tool-skeleton::after {
+  content: '';
+  display: block;
+  height: 1rem;
+  border-radius: var(--radius-small);
+  background: var(--color-border);
+}
+
+.tool-skeleton::before {
+  width: min(24rem, 70%);
+}
+
+.tool-skeleton::after {
+  width: min(12rem, 40%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tool-skeleton::before,
+  .tool-skeleton::after {
+    animation: skeleton-pulse 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .selected-file {

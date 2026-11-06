@@ -85,7 +85,13 @@ const jsonLd = [
   }
 
   <div class="tool-mount">
-    <ToolApp client:only="react" toolId={toolId} tier={tool.tier} locale={locale} common={common} t={t} preset={preset} />
+    <ToolApp client:only="react" toolId={toolId} tier={tool.tier} locale={locale} common={common} t={t} preset={preset}>
+      {/* The island renders nothing on the server, so without this the box is blank until React
+          has started. Same markup as components/ui/ToolSkeleton.tsx, which takes over seamlessly. */}
+      <div slot="fallback" class="dropzone tool-skeleton" role="status" aria-busy="true">
+        <span class="visually-hidden">{common.toolPage.loading}</span>
+      </div>
+    </ToolApp>
   </div>
 
   <section class="tool-info">

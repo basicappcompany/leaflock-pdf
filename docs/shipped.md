@@ -17,6 +17,29 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 7 November 2026 — Tool pages show a skeleton while loading; sidebar reopen button follows the dock
+
+Tool pages used `client:only`, so the box was empty until React had started, then said "Loading
+tool…". It now shows a skeleton in the file picker's shape from the first byte: the island's
+`fallback` slot in `pages/[tool].astro` and `ui/ToolSkeleton.tsx` (the Suspense fallback) draw the
+same dashed box with two pulsing bars (CSS pseudo-elements, no motion under reduced-motion), so
+nothing jumps when the tool takes over. About 0.3 KB per tool page. The reopen button for a hidden
+sidebar now sits on the side the sidebar is docked to, with its arrow flipped on the right dock
+(it was always on the left), on desktop and on phones.
+
+Measured, not assumed (headless Edge, emulated slow 4G + 4x CPU, local build, single machine):
+page text appears at ~3.0–3.5 s and the tool is usable ~1.0–1.5 s after that. Tried and **dropped**:
+- *Starting the tool's chunk download early* (a page script calling the same dynamic import):
+  five alternating runs each way gave the same time to usable (merge 4.33 s vs 4.35 s, ocr 4.34 s
+  vs 4.25 s). On a slow link it is bytes, not request order, that costs.
+- *Hover prefetch* (Astro `prefetch`): it only fetches the HTML, so little to gain, and with it on
+  3 of 5 local accessibility runs had a `page.goto` aborted; with it off, 3 of 3 passed. Not worth it.
+The real lever left is shipping fewer bytes on a tool page (~300 KB of JS/CSS compressed, ~19–25
+requests); see `docs/TODO.md`. Local Playwright (4 workers, Edge) also flakes on its own now and
+then (a browser context timing out, an aborted goto) and passes alone; CI runs 2 workers with 2 retries.
+
+---
+
 ## 7 November 2026 — Footer aligned with the page, language switcher closes on outside click
 
 The tool columns (Organize, Convert, …) and the Product / Company / Legal row were two grids
