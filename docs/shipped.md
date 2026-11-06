@@ -17,6 +17,27 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 7 November 2026 — Top-10 languages published, machine-translated (item 5.8)
+
+Hindi, Bengali, Brazilian Portuguese, Indonesian, Russian, French and Turkish, 1,922 strings
+each, translated in-session by seven parallel translators and loaded with `--import`. Zero
+validation failures; the unit suite (558) passes and the build still makes 2,067 files.
+"Top 10" is the first ten in the registry, English included; the other ten stay routed as
+English under `noindex`, deferred by the owner "for now".
+
+- **Terms for a native reader to check first.** *redact*: hi रिडैक्ट, bn রিড্যাক্ট (transliterated),
+  pt-BR tarjar, fr caviarder, ru "Удаление данных (redaction)", tr karartma, id "Redaksi" (also
+  means editorial office). *flatten*: hi/bn transliterated, fr aplatir, ru сведение, id ratakan.
+  Also: the Russian count phrasings ("Файлов: {count}") avoid plural forms by design; Hindi uses
+  the dual "सकता/सकती"; Turkish file-name suffixes are ASCII; "White-out" is a coinage in bn.
+- **One test changed.** `statedPrices` now allows 0, because pt-BR writes the Free plan as
+  "US$0" (English writes a bare "$0", which no pattern matched).
+- **The vitest glob-cache caveat bit again** with seven new folders; touching `i18n/index.ts` fixed it.
+- **Stated limit:** indexed pages 237 → 790 (79 × 10). Files unchanged at 2,067 of 20,000 because
+  every locale already built as English copies.
+
+---
+
 ## 6 November 2026 — Spanish and German published, machine-translated (items 5.1, 5.2)
 
 1,922 strings per locale, translated in-session by four parallel translators and loaded with
