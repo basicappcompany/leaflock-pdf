@@ -11,7 +11,7 @@ import ToolsMenu from '../components/ToolsMenu.astro';
 import ToolsSidebar from '../components/ToolsSidebar.astro';
 import LanguageSuggestion from '../components/LanguageSuggestion.astro';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
-import { directionOf, getMessages, isTranslated, localeInfo, locales } from '../i18n';
+import { directionOf, getMessages, isTranslated, locales } from '../i18n';
 import { graph, organization, siteName, website } from '../lib/seo';
 
 interface Props {
@@ -58,7 +58,6 @@ const t = getMessages(locale).common;
 // A locale with no translation serves English under its own URL. Indexing that would publish
 // thin duplicates of every page, so it is noindex until the locale has a catalogue.
 const keepOut = noindex || !isTranslated(locale);
-const machineTranslated = localeInfo(locale)?.status === 'machine';
 const site = Astro.site!;
 const canonical = getAbsoluteLocaleUrl(locale, path);
 const image = new URL(`/og/${ogImage}.png`, site).href;
@@ -250,7 +249,6 @@ const chromeHeightScript = cspInlineScript(`
     </header>
     <p class="privacy-strip">{t.site.privacyNote}</p>
     <LanguageSuggestion path={path} locale={locale} />
-    {machineTranslated && <p class="machine-note" role="note">{t.language.machineNote}</p>}
     </div>
     {
       toolsSidebar && (

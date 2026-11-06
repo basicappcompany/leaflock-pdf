@@ -108,7 +108,6 @@ export default {
     },
     "language": {
       "label": "भाषा",
-      "machineNote": "अपने-आप अनुवादित। अंग्रेज़ी संस्करण ही संदर्भ है।",
       "suggest": "यह साइट {language} में भी उपलब्ध है।",
       "switchTo": "बदलें",
       "dismiss": "नहीं, धन्यवाद"

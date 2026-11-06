@@ -288,15 +288,6 @@ h2 {
   cursor: pointer;
 }
 
-.machine-note {
-  margin: 0;
-  padding: 0.3rem var(--space);
-  background: var(--color-surface-2);
-  color: var(--color-muted);
-  font-size: 0.85rem;
-  text-align: center;
-}
-
 .skip-link {
   position: absolute;
   top: -10rem;

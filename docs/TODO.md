@@ -392,7 +392,8 @@ Dashboard settings only; the code findings from the same review are in `docs/shi
       is about 58,000 tokens per locale (`--dry-run` prints the estimate).
 - [ ] **A person reads the trust claims, pricing and error strings per locale** before its
       status in `src/i18n/locales.mjs` goes from `machine` to `reviewed` (roadmap 5.7). Until
-      then the page carries the "translated automatically" note.
+      then the Claims page ("Honest limits") says translations are machine-made. There is no
+      per-page note any more; remove that Claims bullet only when every locale is reviewed.
       Review order, by traffic evidence: `hi`, `bn`, `pt-BR`, `id`, `ru`, then `de`, `es`, `fr`, `tr`.
       The glossary choices to check first are listed in `docs/shipped.md` (7 Nov 2026 entry).
 - [ ] **Bump `Expires` in `public/.well-known/security.txt` before 1 Nov 2027.** RFC 9116

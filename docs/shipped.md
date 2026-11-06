@@ -48,7 +48,7 @@ the API path: every `{placeholder}`, number, URL and tag must survive. Zero fail
   `no-comments`) and example file names came back localized. That is fine here — they live in the
   i18n strings on purpose and the Spanish ones are ASCII — but it is the first thing to read
   in a new locale, and `{percent} %` vs `{percent}%` spacing was normalized by hand.
-- **Unreviewed by a person.** Both carry the "translated automatically" note. Glossary choices
+- **Unreviewed by a person.** Neither says so on the page: the per-page note was removed on 7 Nov 2026 (owner decision), and the statement now lives once in the Claims page, "Honest limits". Glossary choices
   to check: *redact* (redactar / schwärzen), *flatten* (aplanar / verflachen), "Letter" paper
   size, and "Redaction" as a plan-feature noun (Redactar reads as a verb in es).
 - **The direct API path of the script has never succeeded.** The key in the environment was

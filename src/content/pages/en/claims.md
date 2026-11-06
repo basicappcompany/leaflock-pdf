@@ -1,7 +1,7 @@
 ---
 title: What we claim, and how to check it
 description: "Every privacy claim LeafLock PDF makes, written to be quoted: what stays on your device, the five things we receive, what the browser forbids, and what would change each one."
-updated: 2026-11-03
+updated: 2026-11-07
 ---
 
 This page exists to be quoted. Each claim below is written so it can be copied into a security questionnaire, a procurement review or an assistant's answer without losing its meaning, and each one says how to check it and what would change it.
@@ -76,6 +76,7 @@ A claim is worth less if it implies more than it covers:
 - **Browser extensions can read the page**, including a document open in a tool. The Content-Security-Policy governs the page, not extensions. For sensitive work, use a browser profile or private window with extensions turned off.
 - **A compromised device defeats any website.** If malware is running on your machine, nothing a web page does will protect your files.
 - **Downloaded results are ordinary files** on your device, protected only as well as everything else there.
+- **Translations are machine-made and not yet checked by a person.** The site is available in more than one language, but only the English text is the reference for what we claim and charge. If a translated page and the English page ever disagree, the English page is right. This applies to every translated page, including prices, limits and error messages.
 - **We hold no security certification** at this time. Our audit scope is unusually small, because we hold almost no data — but a small scope is not a certificate, and we will not imply otherwise.
 
 ## For a security review
