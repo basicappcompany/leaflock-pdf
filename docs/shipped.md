@@ -30,11 +30,32 @@ English under `noindex`, deferred by the owner "for now".
   means editorial office). *flatten*: hi/bn transliterated, fr aplatir, ru сведение, id ratakan.
   Also: the Russian count phrasings ("Файлов: {count}") avoid plural forms by design; Hindi uses
   the dual "सकता/सकती"; Turkish file-name suffixes are ASCII; "White-out" is a coinage in bn.
+- **The per-page note was then removed** (owner, same day): the "translated automatically"
+  strip, its string in all ten catalogues, its CSS and the layout code. The statement is one
+  bullet in `claims.md`, "Honest limits", with the page's date bumped. Trade-off recorded: a
+  reader of a translated price or privacy claim no longer sees the warning on the page.
+- **CI caught the banner's weight.** Embedding nine offers in every page pushed the home page
+  105,027 B past its 105,000 budget and tool pages past 100,000. The sentences now come from
+  `/lang-offers.json`, fetched same-origin only when a visitor's language matches an offer;
+  pages carry a ~70-byte code list. Tool-page HTML budget raised 100,000 → 102,000 because the
+  switcher's ten links cost ~1.2 KB (~0.12 KB per language); revisit past ~20. Browser-checked
+  for hi, pt-BR, en, ja, a dismissed state, and English on a Hindi page. Also: a type error in
+  that rewrite failed `pnpm check` in CI; run it before pushing.
 - **One test changed.** `statedPrices` now allows 0, because pt-BR writes the Free plan as
   "US$0" (English writes a bare "$0", which no pattern matched).
 - **The vitest glob-cache caveat bit again** with seven new folders; touching `i18n/index.ts` fixed it.
 - **Stated limit:** indexed pages 237 → 790 (79 × 10). Files unchanged at 2,067 of 20,000 because
   every locale already built as English copies.
+
+---
+
+## 7 November 2026 — security.txt
+
+`public/.well-known/security.txt` (RFC 9116): contact `basicappcompany@gmail.com`, expires
+1 Nov 2027, canonical URL on `leaflockpdf.com`. Prompted by Cloudflare Security Insights, which
+listed six findings; the other five are dashboard settings (HSTS, minimum TLS, Bot Fight
+Mode, AI Labyrinth) tracked in `docs/TODO.md` §8. The owner first gave `basicappco@gmail.com`;
+the Git account's address was used instead after the mismatch was raised.
 
 ---
 

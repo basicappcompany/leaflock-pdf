@@ -377,6 +377,13 @@ Dashboard settings only; the code findings from the same review are in `docs/shi
 
 - [ ] **Turn on HSTS** — Cloudflare → SSL/TLS → Edge Certificates. The live site sends no
       `Strict-Transport-Security` header today.
+- [ ] **Minimum TLS 1.2** — same tab. Cloudflare Security Insights (4 Nov scan) flagged
+      `www.leaflockpdf.com` as accepting older TLS.
+- [ ] **Decide on Bot Fight Mode** (Security → Bots) — flagged Moderate. Free, but it can block
+      legitimate scripted visitors; leaving it off is a defensible choice for a static site.
+- [x] **`security.txt`** — added 7 November 2026 at `public/.well-known/security.txt`
+      (contact `basicappcompany@gmail.com`); clears the Low finding on the next scan. Its
+      `Expires` date is tracked in §9. AI Labyrinth was skipped on purpose.
 - [ ] **Stop `leaflock-pdf.pages.dev` serving the full site and API** (it returns 200 on
       `/api/auth/me`), and protect preview deployments, which likely share the production D1
       binding because `wrangler.toml` has a single `[[d1_databases]]` block. Not confirmed

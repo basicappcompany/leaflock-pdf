@@ -47,6 +47,14 @@ Habits that keep the docs from becoming the expensive part:
   "nothing stored on your device or ours" after the retention shelf shipped. A number has
   something that recomputes it; a claim has nothing. So when a feature ships, grep the trust
   pages — `/claims`, `/security`, `/cookies`, `/privacy` — for what it just made untrue.
+- **Locale catalogues are generated.** `src/i18n/<code>/index.ts` is written by
+  `node scripts/translate.mjs --locale <code> --import <file>` (export the English strings with
+  `--export`); never edit one by hand. After adding a locale folder, flip its `status` in
+  `src/i18n/locales.mjs`, touch `src/i18n/index.ts` (vitest caches its `import.meta.glob`), and
+  run `pnpm check`, `pnpm test` and a build. Keep `buildLocales()` marked `/*#__PURE__*/`, or
+  every catalogue lands in every client chunk. Anything per-language must stay out of every
+  page's HTML: the HTML budgets in `tests/e2e/performance.spec.ts` are measured on English pages
+  only, but each page carries the switcher's links.
 - **A shipped tool gets ten lines in `docs/shipped.md`**, not a roadmap entry.
   `docs/roadmap.md` marks the item done in one line and stays a plan, not a history.
 - **Every shipped feature updates `docs/status.html` in the same pass**, before reporting
