@@ -40,7 +40,7 @@ test('without an account, using up the allowance offers a free account instead o
 
   const notice = page.getByRole('alert');
   await expect(notice).toContainText(/used today’s free tools/i);
-  await expect(notice.getByRole('link', { name: 'Create a free account' })).toHaveAttribute('href', '/login');
+  await expect(notice.getByRole('link', { name: 'Create a free account' })).toHaveAttribute('href', '/login/');
   await expect(downloadLink(page)).toHaveCount(0);
 });
 
@@ -51,7 +51,7 @@ test('on a free account, using up the allowance points at Pro', async ({ page })
 
   const notice = page.getByRole('alert');
   await expect(notice).toContainText(/Pro removes the daily limit/i);
-  await expect(notice.getByRole('link', { name: 'See Pro' })).toHaveAttribute('href', '/pricing');
+  await expect(notice.getByRole('link', { name: 'See Pro' })).toHaveAttribute('href', '/pricing/');
   await expect(downloadLink(page)).toHaveCount(0);
 });
 

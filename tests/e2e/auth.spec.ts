@@ -143,7 +143,7 @@ test('the account page shows the signed-in user and logs out', async ({ page, ba
   await expect(page.getByText('Free')).toBeVisible();
 
   await page.getByRole('button', { name: 'Log out' }).click();
-  await expect(page).toHaveURL(/\/login$/);
+  await expect(page).toHaveURL(/\/login\/$/);
   expect(loggedOut).toBe(true);
   watcher.assertClean();
 });
