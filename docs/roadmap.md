@@ -1210,6 +1210,13 @@ locale count is purely additive, and a locale that ranks costs nothing to serve.
 reasoning that does not: a person can QA two languages and cannot QA twenty, so the safeguard
 moves from *who translates* to *what gets reviewed and how the page says so*.
 
+**Narrowed 7 November 2026 (owner): top ten only, "for now".** The first ten in
+`src/i18n/locales.mjs` are published (en, hi, bn, pt-BR, id, ru, de, es, fr, tr); vi, it, ja,
+pl, ko, ar, th, nl, fil and zh-CN stay routed as English under `noindex` (item 5.6). The
+per-page "translated automatically" note was dropped; the statement now lives once in the
+Claims page, "Honest limits". The banner's sentences are fetched from `/lang-offers.json`
+rather than embedded in every page, which would otherwise grow the HTML with each language.
+
 - **Languages:** en, hi, bn, pt-BR, id, ru, de (backed by Semrush country data for iLovePDF
   and Smallpdf, September 2026) plus es, fr, tr, vi, it, ja, pl, ko, ar, th, nl, fil, zh-CN
   (inferred from online population; **not measured**). Bengali's data point looks suspect:

@@ -132,8 +132,6 @@ export const common = {
   /** Language switcher and the first-visit suggestion (src/components/LanguageSwitcher.astro). */
   language: {
     label: 'Language',
-    /** Shown on a machine-translated page; removed per locale once a person has reviewed it. */
-    machineNote: 'Translated automatically. The English version is the reference.',
     /** The first-visit suggestion, rendered in the *suggested* language. {language} is its native name. */
     suggest: 'This site is also available in {language}.',
     switchTo: 'Switch',

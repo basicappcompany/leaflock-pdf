@@ -108,7 +108,6 @@ export default {
     },
     "language": {
       "label": "Dil",
-      "machineNote": "Otomatik olarak çevrilmiştir. Başvuru kaynağı İngilizce sürümdür.",
       "suggest": "Bu site {language} dilinde de mevcuttur.",
       "switchTo": "Geç",
       "dismiss": "Hayır, teşekkürler"

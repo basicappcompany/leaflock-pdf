@@ -108,7 +108,6 @@ export default {
     },
     "language": {
       "label": "Idioma",
-      "machineNote": "Traducido automáticamente. La versión en inglés es la de referencia.",
       "suggest": "Este sitio también está disponible en {language}.",
       "switchTo": "Cambiar",
       "dismiss": "No, gracias"

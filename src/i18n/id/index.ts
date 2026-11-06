@@ -108,7 +108,6 @@ export default {
     },
     "language": {
       "label": "Bahasa",
-      "machineNote": "Diterjemahkan secara otomatis. Versi bahasa Inggris adalah acuannya.",
       "suggest": "Situs ini juga tersedia dalam {language}.",
       "switchTo": "Ganti",
       "dismiss": "Tidak, terima kasih"
