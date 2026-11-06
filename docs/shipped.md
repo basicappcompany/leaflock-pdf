@@ -21,7 +21,8 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 Hindi, Bengali, Brazilian Portuguese, Indonesian, Russian, French and Turkish, 1,922 strings
 each, translated in-session by seven parallel translators and loaded with `--import`. Zero
-validation failures; the unit suite (558) passes and the build still makes 2,067 files.
+validation failures; the unit suite passes (`pnpm counts` for the figure) and the build still
+makes 2,067 files.
 "Top 10" is the first ten in the registry, English included; the other ten stay routed as
 English under `noindex`, deferred by the owner "for now".
 
@@ -41,6 +42,10 @@ English under `noindex`, deferred by the owner "for now".
   switcher's ten links cost ~1.2 KB (~0.12 KB per language); revisit past ~20. Browser-checked
   for hi, pt-BR, en, ja, a dismissed state, and English on a Hindi page. Also: a type error in
   that rewrite failed `pnpm check` in CI; run it before pushing.
+- **Production verified** after the merge (Cloudflare Pages dashboard plus the live URLs): the
+  Claims bullet is live, the Hindi page has no note, `security.txt` and `/lang-offers.json`
+  serve, an untranslated locale is `noindex`. The deploy lands about a minute after CI passes,
+  so a check made in the first seconds shows the previous build.
 - **One test changed.** `statedPrices` now allows 0, because pt-BR writes the Free plan as
   "US$0" (English writes a bare "$0", which no pattern matched).
 - **The vitest glob-cache caveat bit again** with seven new folders; touching `i18n/index.ts` fixed it.
