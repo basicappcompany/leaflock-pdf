@@ -26,7 +26,7 @@ export default function CheckoutButton({
   // Buying needs an account, so the payment has something to attach to.
   if (session.state === 'out') {
     return (
-      <a className="primary-button" href="/login">
+      <a className="primary-button" href="/login/">
         {t.logInToBuy}
       </a>
     );

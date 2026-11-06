@@ -57,13 +57,13 @@ function limitedStatus(reason: UsageLimitReason, errors: CommonMessages['errors'
         state: 'limited',
         message: errors.dailyLimitAnonymous,
         actionLabel: errors.dailyLimitAnonymousAction,
-        actionHref: '/login',
+        actionHref: '/login/',
       }
     : {
         state: 'limited',
         message: errors.dailyLimitFree,
         actionLabel: errors.dailyLimitFreeAction,
-        actionHref: '/pricing',
+        actionHref: '/pricing/',
       };
 }
 

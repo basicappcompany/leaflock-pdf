@@ -36,7 +36,7 @@ describe('webApplication', () => {
     expect(data.offers).toMatchObject({
       price: '8',
       priceCurrency: 'USD',
-      url: 'https://leaflockpdf.com/pricing',
+      url: 'https://leaflockpdf.com/pricing/',
     });
   });
 
@@ -88,7 +88,7 @@ describe('product', () => {
     const data = product({
       name: 'LeafLock PDF Pro',
       description: 'Pro plans.',
-      url: 'https://leaflockpdf.com/pricing',
+      url: 'https://leaflockpdf.com/pricing/',
       site,
       offers: [
         { name: 'Pro', price: 8, recurring: 'month' },
