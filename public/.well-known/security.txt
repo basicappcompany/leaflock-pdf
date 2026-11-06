@@ -1,0 +1,5 @@
+# Security contact for LeafLock PDF (RFC 9116).
+Contact: mailto:basicappco@gmail.com
+Expires: 2027-11-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://leaflockpdf.com/.well-known/security.txt
