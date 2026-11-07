@@ -660,6 +660,26 @@ caught.
 
 ## 10a. Navigation chrome
 
+- **Starred tools** (8 Nov 2026). A star on every tool's page and on every sidebar row, and a
+  "Starred tools" group below "Recent tools", both with a heading icon, a count and a collapse
+  chevron like the categories (`groupIcons` in `src/lib/icons.ts`). Two places, one list:
+  localStorage (`leaflock-starred`, remembered on this browser, works signed out) and, signed in,
+  the account (`starred_tools`, migration 0006; `GET` and `PUT /api/starred`), so the list
+  follows the person. Only tool ids and their order; never a file or file name. The reconcile
+  rules are the part to read before touching it (`mergeStarred` in `src/lib/starred.ts`, tested
+  as plain data): a star or unstar is written locally at once and, signed in, recorded as
+  *pending* until the server confirms; a sync applies the pending changes on top of the
+  server's list and sends the result, so another device's change survives and an unstar is never
+  undone by a stale copy. The first sync on a browser treats everything starred before signing
+  in as an addition. A browser last synced as a *different* account takes that account's list
+  and drops the old pending changes, so stars never cross between people on a shared computer.
+  Everything fails open to the local list: a signed-out session, an unreachable server, or a
+  database that has not had migration 0006 applied (the endpoint answers 503) never costs
+  anyone their stars. The sidebar's per-row stars and both groups are built in the script, not
+  the page, because forty-three buttons in every page's HTML would break the HTML budget. A
+  star's name never changes ("Star Merge PDF"); whether it is on is `aria-pressed`, so the
+  visible word always matches the accessible name.
+
 - **The sidebar's three handles** (8 Nov 2026, replacing the header buttons, the reopen
   button and the title). One column on the sidebar's inner edge (the edge facing the page),
   centred vertically: *move to the other side* (top), *hide/show* (middle), *reset* (bottom).

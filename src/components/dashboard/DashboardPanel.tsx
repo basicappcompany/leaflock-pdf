@@ -5,6 +5,7 @@ import { toolIcons } from '../../lib/icons';
 import type { Plan } from '../../lib/planCache';
 import { requiresUpgrade } from '../../lib/proAccess';
 import { clearRecent, readRecent, type RecentRun } from '../../lib/recentActivity';
+import { onStarredChange, readStarred, syncStarred } from '../../lib/starred';
 import type { ToolId } from '../../tools/registry';
 
 interface ToolLink {
@@ -76,12 +77,21 @@ function useRelativeTime(locale: string): (at: number) => string {
  */
 export default function DashboardPanel({ t, locale, toolLinks, links, quickTools, plan }: DashboardPanelProps) {
   const [recent, setRecent] = useState<RecentRun[]>([]);
+  const [starred, setStarred] = useState<ToolId[]>([]);
   const [usage, setUsage] = useState<Usage | null>(null);
   const relative = useRelativeTime(locale);
 
   // Read after mount, never during render: localStorage does not exist while Astro
   // prerenders, and a value read during render would not match the first paint.
   useEffect(() => setRecent(readRecent()), []);
+
+  // The starred list is this browser's, reconciled with the account's when signed in; the page
+  // only renders for a signed-in visitor, so the sync always has an account to talk to.
+  useEffect(() => {
+    setStarred(readStarred());
+    void syncStarred();
+    return onStarredChange(() => setStarred(readStarred()));
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -154,6 +164,28 @@ export default function DashboardPanel({ t, locale, toolLinks, links, quickTools
 
             <p className="hint">{t.recentNote}</p>
           </div>
+          )}
+
+          {/* Absent altogether until something is starred, like the recent card above it. */}
+          {starred.length > 0 && (
+            <div className="dashboard__card">
+              <div className="list-header">
+                <h2>{t.starredHeading}</h2>
+              </div>
+              <ul className="tool-grid tool-grid--small">
+                {starred.map((tool) => (
+                  <li key={tool}>
+                    <a href={toolLinks[tool].href}>
+                      <span className="tool-grid__icon">
+                        <ToolGlyph tool={tool} />
+                      </span>
+                      <strong>{toolLinks[tool].title}</strong>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <p className="hint">{t.starredNote}</p>
+            </div>
           )}
 
           <div className="dashboard__card dashboard__quick">

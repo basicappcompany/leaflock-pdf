@@ -44,7 +44,7 @@ const footerLinks: { key: keyof typeof common.pageLinks; slug: string }[] = [
 
 ---
 
-<aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label} data-default-hidden={defaultHidden} data-recent-title={common.sidebar.recent} data-hide={common.sidebar.hide} data-show={common.sidebar.show} data-move-left={common.sidebar.moveLeft} data-move-right={common.sidebar.moveRight}>
+<aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label} data-default-hidden={defaultHidden} data-recent-title={common.sidebar.recent} data-starred-title={common.sidebar.starred} data-star-named={common.sidebar.starNamed} data-hide={common.sidebar.hide} data-show={common.sidebar.show} data-move-left={common.sidebar.moveLeft} data-move-right={common.sidebar.moveRight}>
   {/* Three handles hanging off the sidebar's inner edge (the edge facing the page), attached to
       it so they travel with it. Top: move to the other side. Middle: hide or show. Bottom: reset.
       Labels, icons and the disabled state are kept current by the script below; the move icon
@@ -133,8 +133,10 @@ const footerLinks: { key: keyof typeof common.pageLinks; slug: string }[] = [
 </aside>
 
 <script>
+  import { groupIcons } from '../lib/icons';
   import { readRecent } from '../lib/recentActivity';
-  import { tools } from '../tools/registry';
+  import { onStarredChange, readStarred, syncStarred, toggleStarred } from '../lib/starred';
+  import { tools, type ToolId } from '../tools/registry';
 
   // Mirrors ThemeToggle's pattern: plain script, localStorage, data attributes on
   // <html>. Both attributes are also set before first paint by the inline script in
@@ -274,63 +276,109 @@ const footerLinks: { key: keyof typeof common.pageLinks; slug: string }[] = [
     if (event.key === 'Escape' && isNarrow() && visibility !== 'hidden') setVisibility('hidden');
   });
 
-  // ---------------- recent tools ----------------
-  // The same list the dashboard reads (readRecent): tool ids and times only, never file
-  // names. Built here, not in the page, so every page's HTML stays as small as it was and
-  // so an empty list costs nothing. Each row is a copy of that tool's own link further
-  // down, so title, icon and address are always the ones the sidebar already renders.
-  // The group is only in the page while it has rows, and steps aside while searching.
-  const RECENT_CLOSED_KEY = 'toolsSidebarRecentClosed';
-  let recentBox: HTMLDetailsElement | null = null;
+  // ---------------- recent and starred tools ----------------
+  // Two personal groups at the top of the list, built here because their data lives on this
+  // device (and, for stars, in the account) and the build cannot read either. Recent is the
+  // tool ids and times from recentActivity.ts; starred is the list from starred.ts, which also
+  // follows a signed-in visitor between browsers. Neither holds a file name. Each row is a copy
+  // of that tool's own link further down, so title, icon, address and star always match it.
+  // The groups are only in the page while they have rows, and step aside while searching.
+  type PersonalKind = 'recent' | 'starred';
+  const CLOSED_KEY: Record<PersonalKind, string> = { recent: 'toolsSidebarRecentClosed', starred: 'toolsSidebarStarredClosed' };
+  const personal: Record<PersonalKind, HTMLDetailsElement | null> = { recent: null, starred: null };
   let searching = false;
-  function renderRecent() {
-    recentBox?.remove();
-    recentBox = null;
-    const nav = document.getElementById('toolsSidebarNav');
-    if (!nav) return;
+  const nav = document.getElementById('toolsSidebarNav');
+
+  // Each tool's row in the category lists, found once by its address.
+  const rowFor = new Map<ToolId, HTMLLIElement>();
+  if (nav) {
     const anchors = [...nav.querySelectorAll<HTMLAnchorElement>('.tools-sidebar__group li > a')];
-    const items: HTMLElement[] = [];
-    for (const run of readRecent()) {
-      const slug = tools.find((tool) => tool.id === run.tool)?.slug;
-      const link = anchors.find((a) => {
-        const path = new URL(a.href, location.href).pathname.replace(/\/$/, '');
-        return slug !== undefined && path.endsWith('/' + slug);
-      });
-      if (link?.parentElement) items.push(link.parentElement.cloneNode(true) as HTMLElement);
-      if (items.length === 5) break;
+    for (const tool of tools) {
+      const link = anchors.find((a) => new URL(a.href, location.href).pathname.replace(/\/$/, '').endsWith('/' + tool.slug));
+      if (link?.parentElement) rowFor.set(tool.id, link.parentElement as HTMLLIElement);
     }
-    if (items.length === 0) return;
+  }
+
+  // A star button on every row, added here and not in the page so the HTML does not carry
+  // forty-three of them on every page.
+  const STAR =
+    '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><polygon points="12 3 14.7 8.6 20.8 9.5 16.4 13.8 17.4 19.9 12 17 6.6 19.9 7.6 13.8 3.2 9.5 9.3 8.6" /></svg>';
+  for (const [id, row] of rowFor) {
+    row.classList.add('tools-sidebar__row');
+    const star = document.createElement('button');
+    star.type = 'button';
+    star.className = 'tools-sidebar__star';
+    star.dataset.tool = id;
+    star.innerHTML = STAR;
+    row.appendChild(star);
+  }
+
+  // Names and pressed state, kept in step with the list. The name stays the same whether or not
+  // the tool is starred; the pressed state says which.
+  function paintStars() {
+    if (!nav) return;
+    const starred = new Set<string>(readStarred());
+    for (const star of nav.querySelectorAll<HTMLButtonElement>('.tools-sidebar__star')) {
+      const id = star.dataset.tool ?? '';
+      const title = rowFor.get(id as ToolId)?.querySelector('.tools-sidebar__item-label')?.textContent ?? id;
+      star.setAttribute('aria-pressed', String(starred.has(id)));
+      star.setAttribute('aria-label', (labels.starNamed ?? '{name}').replace('{name}', title));
+    }
+  }
+
+  // One listener for every star, including those in the copied rows of the two groups.
+  nav?.addEventListener('click', (event) => {
+    const star = (event.target as Element).closest<HTMLButtonElement>('.tools-sidebar__star');
+    if (!star?.dataset.tool) return;
+    event.preventDefault();
+    toggleStarred(star.dataset.tool as ToolId);
+  });
+
+  function buildGroup(kind: PersonalKind, ids: ToolId[], title: string): HTMLDetailsElement | null {
+    if (!nav) return null;
+    const items: HTMLElement[] = [];
+    for (const id of ids) {
+      const row = rowFor.get(id);
+      if (row) items.push(row.cloneNode(true) as HTMLElement);
+    }
+    if (items.length === 0) return null;
+
+    // The same structure as a category heading: icon, name, count, chevron.
     const summary = document.createElement('summary');
     summary.className = 'tools-sidebar__heading';
-    const label = document.createElement('span');
-    label.className = 'tools-sidebar__heading-label';
-    label.textContent = sidebar?.dataset.recentTitle ?? '';
-    summary.appendChild(label);
-    // The same chevron the category headings use, so it rotates and re-skins with them.
+    summary.innerHTML =
+      '<svg class="tools-sidebar__heading-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      groupIcons[kind] +
+      '</svg><span class="tools-sidebar__heading-label"></span><span class="tools-sidebar__heading-count"></span>';
+    const label = summary.querySelector('.tools-sidebar__heading-label');
+    const count = summary.querySelector('.tools-sidebar__heading-count');
+    if (label) label.textContent = title;
+    if (count) count.textContent = String(items.length);
     const chevron = nav.querySelector('.tools-sidebar__chevron');
     if (chevron) summary.appendChild(chevron.cloneNode(true));
+
     const list = document.createElement('ul');
     for (const item of items) {
       item.removeAttribute('data-tool-name');
       list.appendChild(item);
     }
-    // A <details>, like every category below it, so it collapses the same way, by keyboard
-    // too. Open unless the visitor closed it; that choice is remembered on this device.
+
+    // A <details>, like every category, so it collapses the same way, by keyboard too. Open
+    // unless the visitor closed it; that choice is remembered on this device.
     const box = document.createElement('details');
-    recentBox = box;
-    box.id = 'sidebarRecent';
-    box.className = 'tools-sidebar__recent';
+    box.id = kind === 'recent' ? 'sidebarRecent' : 'sidebarStarred';
+    box.className = 'tools-sidebar__personal';
     let closed = false;
     try {
-      closed = localStorage.getItem(RECENT_CLOSED_KEY) === '1';
+      closed = localStorage.getItem(CLOSED_KEY[kind]) === '1';
     } catch {
       /* Blocked storage: stay open. */
     }
     box.open = !closed;
     box.addEventListener('toggle', () => {
       try {
-        if (box.open) localStorage.removeItem(RECENT_CLOSED_KEY);
-        else localStorage.setItem(RECENT_CLOSED_KEY, '1');
+        if (box.open) localStorage.removeItem(CLOSED_KEY[kind]);
+        else localStorage.setItem(CLOSED_KEY[kind], '1');
       } catch {
         /* The choice then lasts for this page only. */
       }
@@ -338,14 +386,30 @@ const footerLinks: { key: keyof typeof common.pageLinks; slug: string }[] = [
     box.hidden = searching;
     box.appendChild(summary);
     box.appendChild(list);
-    nav.insertBefore(recentBox, nav.firstChild);
+    return box;
   }
-  renderRecent();
-  // Back/forward restores a page from memory with the old list; another tab can change it.
-  window.addEventListener('pageshow', renderRecent);
+
+  function renderGroups() {
+    if (!nav) return;
+    personal.recent?.remove();
+    personal.starred?.remove();
+    personal.recent = buildGroup('recent', readRecent().map((run) => run.tool).slice(0, 5), labels.recentTitle ?? '');
+    personal.starred = buildGroup('starred', readStarred(), labels.starredTitle ?? '');
+    // Recent first, starred directly below it, both above the categories.
+    if (personal.recent) nav.insertBefore(personal.recent, nav.firstChild);
+    if (personal.starred) nav.insertBefore(personal.starred, personal.recent ? personal.recent.nextSibling : nav.firstChild);
+    paintStars();
+  }
+  renderGroups();
+  // Back/forward restores a page from memory with old lists; another tab can change them; and a
+  // star pressed anywhere on the page (here, or the button on the tool's own page) changes both.
+  window.addEventListener('pageshow', renderGroups);
   window.addEventListener('storage', (event) => {
-    if (event.key === 'leaflock-recent') renderRecent();
+    if (event.key === 'leaflock-recent') renderGroups();
   });
+  onStarredChange(renderGroups);
+  // Signed in: bring this browser and the account into agreement (does nothing otherwise).
+  void syncStarred();
 
   // ---------------- search ----------------
   // Filters the flat list of tools by a substring match on their title, opening every
@@ -360,7 +424,7 @@ const footerLinks: { key: keyof typeof common.pageLinks; slug: string }[] = [
     const query = searchInput.value.trim().toLowerCase();
     // Searching looks through every tool, so the shortcut group steps aside meanwhile.
     searching = query !== '';
-    if (recentBox) recentBox.hidden = searching;
+    for (const box of Object.values(personal)) if (box) box.hidden = searching;
     if (!query) {
       for (const group of groups) {
         group.hidden = false;

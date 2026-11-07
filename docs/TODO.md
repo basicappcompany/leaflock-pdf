@@ -194,6 +194,15 @@ now sits in `.dev.vars` beside the other three, and needs a real id like them.
 - [x] `wrangler d1 create leaflock-pdf` — database id `75b792bb-eef2-4a99-8090-56b77cb55e4d`
       (APAC region), now in `wrangler.toml`.
 - [x] All four migrations applied remotely (`0001_auth` through `0004_practice_plan`).
+- [ ] **Apply migration `0006_starred_tools`** (8 November 2026), the table behind starred tools
+      for signed-in people. Not applied from the coding session: the auto-mode classifier
+      refuses a production database change, which is the right default. Run, from the repo,
+      `pnpm exec wrangler d1 migrations apply leaflock-pdf --remote` (production) and
+      `pnpm exec wrangler d1 migrations apply leaflock-pdf-preview --remote` (previews); `list`
+      first shows exactly one pending file, `0006_starred_tools.sql`, a plain `CREATE TABLE`.
+      Until then nothing breaks: `/api/starred` answers 503, the browser keeps every star in
+      localStorage, and account deletion and export both skip the missing table. Starred tools
+      then work in the account the moment the table exists, with no redeploy.
 - [x] `SESSION_IP_SALT` set as a production Pages secret (a fresh random value, not the
       `dev-only…` placeholder `.dev.vars` still uses locally).
 - [x] Cloudflare Pages build and Functions bundle — verified 5 November 2026: the site is

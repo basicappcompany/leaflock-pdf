@@ -77,9 +77,10 @@ Our server also sends a few protective headers that a meta tag can't express. Yo
 
 ## What is stored on your device
 
-LeafLock PDF stores very little, and all of it stays on your device:
+LeafLock PDF stores very little, and almost all of it stays on your device. The one exception, your starred tools if you sign in, is described in the second item:
 
 - **Your light or dark theme choice**, saved in your browser's localStorage under the key `theme` once you press the theme button. The default is light, and nothing is saved until you press it.
+- **Your starred and recent tools.** The names of tools you starred or used recently, with the times for the recent ones, in your browser's localStorage so the sidebar can show them. Tool names only, never a file or a file name. If you are signed in, your starred tools are also saved to your account so they follow you to other browsers; that is a list of tool names and nothing else.
 - **Recent work, if you turn it on.** A finished file, kept in your browser's own storage (IndexedDB) for five minutes, one hour, twenty-four hours, or a length you choose on a paid plan. Off until you enable it, deleted when it expires, and clearable at any time. It never leaves your device.
 - **Two cookies, if you sign in**: `__Host-leaflock_session`, which identifies your session and carries nothing else, and `leaflock_signed_in`, a plain flag so the page knows you're signed in without asking our server. A third, `leaflock_skin`, is set only if you pick a visual skin — see the [Cookie policy](/cookies) for how long each one lasts.
 - **The OCR language model**, after you use [OCR PDF](/ocr-pdf) for the first time. It's a file of about 10 MB that teaches the OCR engine to recognize English text. Your browser saves it in its own storage (IndexedDB) so it doesn't have to download it again. It contains nothing about your documents.
@@ -88,7 +89,7 @@ Like any website, your browser may also keep copies of our pages and scripts in 
 
 You can remove all of this at any time by clearing site data for leaflockpdf.com in your browser's settings.
 
-We never store your files, file names, page text or results **on our servers**. On your own device, nothing is kept either unless you turn on recent work (above), which keeps a finished file in your browser's storage for a length you choose and then deletes it. Otherwise, when you close the tab they're gone from the page's memory.
+We never store your files, file names, page text or results **on our servers**. On your own device, no file, file name or result is kept either unless you turn on recent work (above), which keeps a finished file in your browser's storage for a length you choose and then deletes it. Otherwise, when you close the tab they're gone from the page's memory.
 
 For the full list of claims, each with how to check it and what would change it, see [Our claims](/claims).
 

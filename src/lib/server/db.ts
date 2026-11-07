@@ -83,6 +83,8 @@ export interface ExportedAccount {
   sessions: { created_at: number; expires_at: number; last_seen_at: number; browser: string | null }[];
   login_events: { at: number; method: LoginMethod; browser: string | null }[];
   usage: { period: string; metric: string; count: number }[];
+  /** Registry ids of the tools the account has starred, newest first. */
+  starred_tools: string[];
 }
 
 /**
@@ -111,11 +113,21 @@ export async function exportAccount(db: D1Database, userId: string): Promise<Exp
     .bind(userId)
     .all<ExportedAccount['usage'][number]>();
 
+  // Tolerant of a database that has not had migration 0006 applied yet: an export must never fail
+  // because a convenience list is missing.
+  let starred: string[] = [];
+  try {
+    starred = await listStarredTools(db, userId);
+  } catch {
+    starred = [];
+  }
+
   return {
     account: { ...rest, password_set: password_hash !== null },
     sessions: sessions.results ?? [],
     login_events: loginEvents.results ?? [],
     usage: usage.results ?? [],
+    starred_tools: starred,
   };
 }
 
@@ -133,6 +145,34 @@ export async function deleteAccount(db: D1Database, userId: string, email: strin
     db.prepare('DELETE FROM usage_counters WHERE user_id = ?').bind(userId),
     db.prepare('DELETE FROM magic_links WHERE email = ?').bind(email),
     db.prepare('DELETE FROM users WHERE id = ?').bind(userId),
+  ]);
+  // Its own statement, after the transaction: if migration 0006 has not been applied the table
+  // does not exist, and that must not stop an account from being erased.
+  try {
+    await db.prepare('DELETE FROM starred_tools WHERE user_id = ?').bind(userId).run();
+  } catch {
+    /* No table, so nothing was stored. */
+  }
+}
+
+/** The account's starred tool ids, newest first. */
+export async function listStarredTools(db: D1Database, userId: string): Promise<string[]> {
+  const rows = await db
+    .prepare('SELECT tool_id FROM starred_tools WHERE user_id = ? ORDER BY position')
+    .bind(userId)
+    .all<{ tool_id: string }>();
+  return (rows.results ?? []).map((row) => row.tool_id);
+}
+
+/** Replaces the account's starred list with `tools` (already validated, newest first), in one transaction. */
+export async function replaceStarredTools(db: D1Database, userId: string, tools: string[], now: number): Promise<void> {
+  await db.batch([
+    db.prepare('DELETE FROM starred_tools WHERE user_id = ?').bind(userId),
+    ...tools.map((tool, position) =>
+      db
+        .prepare('INSERT INTO starred_tools (user_id, tool_id, position, created_at) VALUES (?, ?, ?, ?)')
+        .bind(userId, tool, position, now),
+    ),
   ]);
 }
 

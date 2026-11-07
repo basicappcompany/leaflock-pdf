@@ -46,6 +46,8 @@ export default {
       "recentHeading": "Outils récents",
       "recentNote": "Conservé uniquement sur cet appareil. Nous ne voyons jamais quels fichiers vous ouvrez, donc cette liste ne vous suit pas sur un autre navigateur.",
       "recentEmpty": "Rien pour l’instant. Les outils que vous utiliserez apparaîtront ici.",
+      "starredHeading": "Outils favoris",
+      "starredNote": "Conservés dans ce navigateur et dans votre compte, ils vous suivent dans les autres navigateurs.",
       "quickHeading": "Outils rapides",
       "allTools": "Tous les outils",
       "open": "Ouvrir",
@@ -158,10 +160,16 @@ export default {
       "edit": "Modifier et signer",
       "secure": "Protéger et optimiser"
     },
+    "star": {
+      "label": "Mettre une étoile à cet outil",
+      "short": "Étoile"
+    },
     "sidebar": {
       "label": "Tous les outils",
       "allTools": "Tous les outils",
       "recent": "Outils récents",
+      "starred": "Outils favoris",
+      "starNamed": "Mettre une étoile à {name}",
       "hide": "Masquer la barre latérale",
       "show": "Afficher les outils",
       "position": "Position de la barre latérale",

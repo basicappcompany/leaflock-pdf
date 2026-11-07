@@ -958,18 +958,24 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
   margin-bottom: 0.2rem;
 }
 
-.tools-sidebar__recent {
-  margin-bottom: 0.6rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--color-border);
+/* The recent and starred groups look like the categories below them: same heading, same spacing. */
+.tools-sidebar__personal {
+  margin-bottom: 0.2rem;
 }
 
-.tools-sidebar__recent[hidden] {
+.tools-sidebar__personal[hidden] {
   display: none;
 }
 
-.tools-sidebar__recent[open] .tools-sidebar__chevron {
+.tools-sidebar__personal[open] .tools-sidebar__chevron {
   transform: rotate(90deg);
+}
+
+/* A thin rule between the personal groups and the categories, whichever of them are showing. */
+.tools-sidebar__personal + .tools-sidebar__group {
+  margin-top: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
 }
 
 .tools-sidebar__heading {
@@ -1061,6 +1067,139 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
   width: 17px;
   height: 17px;
   flex: none;
+}
+
+/* A star on every tool row, at the end of it. Outline until starred, filled once it is. It is a
+   separate button beside the link, so starring never navigates. */
+.tools-sidebar__row {
+  position: relative;
+}
+
+.tools-sidebar__row > a {
+  padding-right: 2.2rem;
+}
+
+.tools-sidebar__star {
+  position: absolute;
+  top: 50%;
+  right: 0.25rem;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-small);
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  opacity: 0.55;
+  transform: translateY(-50%);
+}
+
+.tools-sidebar__row:hover .tools-sidebar__star,
+.tools-sidebar__star:focus-visible,
+.tools-sidebar__star[aria-pressed='true'] {
+  opacity: 1;
+}
+
+.tools-sidebar__star:hover {
+  background: var(--color-surface-2);
+  color: var(--color-accent);
+}
+
+.tools-sidebar__star:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+.tools-sidebar__star svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+}
+
+.tools-sidebar__star[aria-pressed='true'] {
+  color: var(--color-accent);
+}
+
+.tools-sidebar__star[aria-pressed='true'] svg {
+  fill: currentColor;
+}
+
+/* On a touch screen there is no hover to reveal them, and the target must be comfortable. */
+@media (hover: none) {
+  .tools-sidebar__star {
+    width: 2.5rem;
+    height: 2.5rem;
+    opacity: 0.8;
+  }
+
+  .tools-sidebar__row > a {
+    padding-right: 2.9rem;
+  }
+}
+
+/* The star on a tool's own page, beside its title. */
+.tool-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  margin: 0 0 0.5rem;
+}
+
+.tool-heading h1 {
+  margin: 0;
+}
+
+.star-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2.25rem;
+  padding: 0 0.85rem 0 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface-2);
+  color: var(--color-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.star-toggle:hover {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow);
+}
+
+.star-toggle:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.star-toggle svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+}
+
+.star-toggle[aria-pressed='true'] {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.star-toggle[aria-pressed='true'] svg {
+  fill: currentColor;
 }
 
 .tools-sidebar__footer {
