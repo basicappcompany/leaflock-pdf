@@ -660,6 +660,23 @@ caught.
 
 ## 10a. Navigation chrome
 
+- **The sidebar's three handles** (8 Nov 2026, replacing the header buttons, the reopen
+  button and the title). One column on the sidebar's inner edge (the edge facing the page),
+  centred vertically: *move to the other side* (top), *hide/show* (middle), *reset* (bottom).
+  They are children of the sidebar, outside its box, so they ride its edge: flush against it
+  while open, at the window edge on the same side while hidden. Hidden is `width: 0`, not
+  `display: none`, which is what keeps them reachable; the sidebar's own contents sit in
+  `.tools-sidebar__clip` (overflow hidden, `visibility: hidden` when hidden). **Pressing Move
+  or Reset while hidden opens the sidebar and does the action, in one press.** The move
+  label always names the *opposite* side; Reset is disabled at the default (left, open). The
+  move icon and the chevron are chosen in CSS from `html[data-sidebar-dock]` and
+  `[data-sidebar-state]`; labels and the disabled state in `syncHandles()`. The room the
+  layout reserves includes the handles' width (`--sb-handle-w`), open or hidden. On a phone the
+  handles are 44px and, while the drawer is hidden, only the middle one stays on the screen
+  edge. Browser-tested by measured position, not attribute (`sidebarHandles.spec.ts`): a
+  mock-up once drew "docked left" on the right of the window and every attribute still read
+  correctly.
+
 - **The tools sidebar** — `src/components/ToolsSidebar.astro`, opt-in via `Base.astro`'s
   `toolsSidebar` prop (tool pages and the category hubs only; marketing pages stay
   uncluttered). Categorised, collapsible tool list (one `<details>` per category, the

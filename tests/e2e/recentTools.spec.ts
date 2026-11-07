@@ -118,21 +118,9 @@ test('sidebar: the Recent group collapses, and stays collapsed on the next page'
   await expect(page.locator('#sidebarRecent')).toHaveJSProperty('open', true);
 });
 
-test('sidebar: no "All tools" title, and the control buttons form one even row at the end', async ({ page }) => {
+test('sidebar: no "All tools" title in it', async ({ page }) => {
   await page.goto('/split-pdf');
-  await expect(page.locator('.tools-sidebar__head')).not.toContainText(en.common.sidebar.allTools);
-  const boxes: { x: number; y: number; width: number; height: number }[] = [];
-  for (const b of await page.locator('.tools-sidebar__head .tools-sidebar__btn').all()) boxes.push((await b.boundingBox())!);
-  expect(boxes).toHaveLength(4);
-  const sidebar = (await page.locator('#toolsSidebar').boundingBox())!;
-  for (const box of boxes) {
-    expect(box.y).toBeCloseTo(boxes[0]!.y, 0);
-    expect(box.height).toBeCloseTo(boxes[0]!.height, 0);
-  }
-  const last = boxes[3]!;
-  const gaps = boxes.slice(1).map((box, i) => box.x - (boxes[i]!.x + boxes[i]!.width));
-  for (const gap of gaps) expect(gap).toBeCloseTo(gaps[0]!, 0);
-  expect(sidebar.x + sidebar.width - (last.x + last.width)).toBeLessThan(20);
+  await expect(page.locator('#toolsSidebar')).not.toContainText(en.common.sidebar.allTools);
 });
 
 test('sidebar sits flush under the header after scrolling, with no gap', async ({ page }) => {

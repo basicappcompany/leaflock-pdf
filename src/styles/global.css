@@ -705,16 +705,29 @@ html[data-theme='dark'] .theme-toggle__moon {
   min-width: 0;
 }
 
+/* The three handles (move, hide/show, reset) hang off the sidebar's inner edge, outside its box,
+   so the room kept for the sidebar includes their width; hidden, only the handles are left. */
+:root {
+  --sb-handle-w: 1.75rem;
+  --sb-handle-h: 2.5rem;
+}
+
 html[data-sidebar-dock='left'] .tools-layout {
-  padding-left: 16rem;
+  padding-left: calc(16rem + var(--sb-handle-w));
 }
 
 html[data-sidebar-dock='right'] .tools-layout {
-  padding-right: 16rem;
+  padding-right: calc(16rem + var(--sb-handle-w));
 }
 
-html[data-sidebar-state='hidden'] .tools-layout {
-  padding: 0 !important;
+html[data-sidebar-state='hidden'][data-sidebar-dock='left'] .tools-layout {
+  padding-left: var(--sb-handle-w) !important;
+  padding-right: 0 !important;
+}
+
+html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .tools-layout {
+  padding-right: var(--sb-handle-w) !important;
+  padding-left: 0 !important;
 }
 
 .tools-sidebar {
@@ -722,9 +735,19 @@ html[data-sidebar-state='hidden'] .tools-layout {
   z-index: 30;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   background: var(--color-surface);
   transition: width 0.15s ease;
+}
+
+/* The sidebar itself no longer clips, so the handles can hang off its edge; this does the
+   clipping for everything inside it. */
+.tools-sidebar__clip {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 html[data-sidebar-dock='left'] .tools-sidebar {
@@ -743,59 +766,147 @@ html[data-sidebar-dock='right'] .tools-sidebar {
   border-left: 1px solid var(--color-border);
 }
 
+/* Hidden = zero width, not gone: the handles are children of the sidebar, so they ride its inner
+   edge to the window edge and stay there. Height is kept (top and bottom still apply) so they
+   stay vertically centred. */
 html[data-sidebar-state='hidden'] .tools-sidebar {
   width: 0 !important;
-  height: 0 !important;
   border: 0 !important;
 }
 
-.tools-sidebar__head {
-  display: flex;
-  flex: none;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--color-border);
+html[data-sidebar-state='hidden'] .tools-sidebar__clip {
+  visibility: hidden;
 }
 
-/* No title any more, so the controls are the whole row: one even run of identical square
-   buttons, pushed to the end of the row (the right edge, or the left in a right-to-left
-   language). The dock pair used to sit in its own bordered box a few pixels taller than
-   the others; it is now just two more buttons, the docked side shown by the accent. */
-.tools-sidebar__controls {
+/* Three handles in one column, centred on the sidebar's inner edge (the edge facing the page) and
+   attached to it, so they travel with it. Top: move to the other side. Middle: hide or show.
+   Bottom: reset. Pressing any of them while the sidebar is hidden opens it and does what the
+   handle says (ToolsSidebar.astro). */
+.tools-sidebar__handles {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
   display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.35rem;
+  flex-direction: column;
+  width: var(--sb-handle-w);
+  transform: translateY(-50%);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
 }
 
-.tools-sidebar__dock {
-  display: flex;
-  gap: 0.35rem;
+html[data-sidebar-dock='left'] .tools-sidebar__handles {
+  left: 100%;
+  border-left: 0;
+  border-radius: 0 var(--radius-small) var(--radius-small) 0;
 }
 
-.tools-sidebar__btn {
+html[data-sidebar-dock='right'] .tools-sidebar__handles {
+  right: 100%;
+  border-right: 0;
+  border-radius: var(--radius-small) 0 0 var(--radius-small);
+}
+
+.tools-sidebar__handle {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 1.65rem;
-  height: 1.65rem;
+  width: 100%;
+  height: var(--sb-handle-h);
+  margin: 0;
   padding: 0;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-small);
-  background: var(--color-surface-2);
+  border: 0;
+  background: transparent;
   color: var(--color-muted);
   cursor: pointer;
 }
 
-.tools-sidebar__btn:hover {
-  color: var(--color-text);
+.tools-sidebar__handle + .tools-sidebar__handle {
+  border-top: 1px solid var(--color-border);
 }
 
-.tools-sidebar__btn[aria-current='true'] {
+.tools-sidebar__handle:hover {
   background: var(--color-accent-soft);
   color: var(--color-accent);
+}
+
+.tools-sidebar__handle:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+.tools-sidebar__handle:disabled {
+  opacity: 0.35;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: default;
+}
+
+.tools-sidebar__handle--main {
+  color: var(--color-accent);
+}
+
+/* A label beside the handle on hover or keyboard focus, pointing into the page. */
+.tools-sidebar__handle::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  transform: translateY(-50%);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-small);
+  background: var(--color-text);
+  color: var(--color-surface);
+  font-size: 0.78rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+
+html[data-sidebar-dock='left'] .tools-sidebar__handle::after {
+  left: calc(100% + 0.5rem);
+}
+
+html[data-sidebar-dock='right'] .tools-sidebar__handle::after {
+  right: calc(100% + 0.5rem);
+}
+
+.tools-sidebar__handle:hover::after,
+.tools-sidebar__handle:focus-visible::after {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .tools-sidebar__handle::after {
+    display: none;
+  }
+}
+
+/* The move icon is a panel with the side it will go to filled: docked left shows the right-hand
+   one, docked right the left-hand one. */
+.tools-sidebar__to-left {
+  display: none;
+}
+
+html[data-sidebar-dock='right'] .tools-sidebar__to-right {
+  display: none;
+}
+
+html[data-sidebar-dock='right'] .tools-sidebar__to-left {
+  display: block;
+}
+
+/* The chevron points toward the window edge to fold the sidebar away, and away from it to open it. */
+@media (prefers-reduced-motion: no-preference) {
+  .tools-sidebar__chevron-handle {
+    transition: transform 0.15s ease;
+  }
+}
+
+html[data-sidebar-dock='left'][data-sidebar-state='hidden'] .tools-sidebar__chevron-handle,
+html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sidebar__chevron-handle {
+  transform: rotate(180deg);
 }
 
 .tools-sidebar__search {
@@ -978,40 +1089,6 @@ html[data-sidebar-state='hidden'] .tools-sidebar {
   color: var(--color-accent);
 }
 
-.tools-sidebar__reopen {
-  display: none;
-  position: fixed;
-  top: calc(var(--tools-chrome-h, 0px) + 0.75rem);
-  left: 0.75rem;
-  z-index: 30;
-  width: 2.25rem;
-  height: 2.25rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-small);
-  background: var(--color-surface);
-  box-shadow: var(--shadow);
-  color: var(--color-muted);
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-}
-
-html[data-sidebar-state='hidden'] .tools-sidebar__reopen {
-  display: flex;
-}
-
-/* The button that brings the sidebar back sits on the edge the sidebar is docked to, and its
-   arrow points the way the panel will slide in, so closing and reopening happen in the same
-   place. (It used to stay on the left whichever side the sidebar had been docked to.) */
-html[data-sidebar-dock='right'] .tools-sidebar__reopen {
-  right: 0.75rem;
-  left: auto;
-}
-
-html[data-sidebar-dock='right'] .tools-sidebar__reopen svg {
-  transform: scaleX(-1);
-}
-
 @media (max-width: 48rem) {
   /* Below the header's own collapse point, a reserved column stops making sense
      regardless of which edge it's docked to: visible becomes a full-screen overlay
@@ -1032,28 +1109,24 @@ html[data-sidebar-dock='right'] .tools-sidebar__reopen svg {
     box-shadow: 0 0 0 100vmax rgb(0 0 0 / 0.35);
   }
 
-  /* Touch-sized: 44px is the usual minimum, and these were 26px (header buttons) and
-     36px (reopen). Safe-area insets keep the reopen button clear of the iOS home bar and
-     rounded corners, and `touch-action` removes the double-tap-zoom delay on tap. */
-  .tools-sidebar__reopen {
-    top: auto;
-    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-    left: calc(1rem + env(safe-area-inset-left, 0px));
-    z-index: 60;
-    width: 2.75rem;
-    height: 2.75rem;
+  /* Touch-sized: the handles are 44px wide and tall. While the drawer is hidden only the
+     middle one stays on the screen edge, so the stack does not cover the page. */
+  :root {
+    --sb-handle-w: 2.75rem;
+    --sb-handle-h: 2.75rem;
+  }
+
+  .tools-sidebar__handle {
     touch-action: manipulation;
   }
 
-  html[data-sidebar-dock='right'] .tools-sidebar__reopen {
-    right: calc(1rem + env(safe-area-inset-right, 0px));
-    left: auto;
+  html[data-sidebar-state='hidden'] .tools-sidebar__handle:not(.tools-sidebar__handle--main) {
+    display: none;
   }
 
-  .tools-sidebar__btn {
-    width: 2.5rem;
-    height: 2.5rem;
-    touch-action: manipulation;
+  /* Same specificity as the desktop hidden-state rules (state and dock), and later, so it wins. */
+  html[data-sidebar-state='hidden'][data-sidebar-dock] .tools-layout {
+    padding: 0 !important;
   }
 }
 
@@ -1075,21 +1148,27 @@ html[data-sidebar-dock='right'] .tools-sidebar__reopen svg {
    padding), on whichever edge it is docked, so the footer's content is centred in the space
    left beside the sidebar exactly as the page content above it is. */
 html[data-sidebar-dock='left'] .site-footer--with-sidebar {
-  padding-left: calc(16rem + var(--space));
+  padding-left: calc(16rem + var(--sb-handle-w) + var(--space));
 }
 
 html[data-sidebar-dock='right'] .site-footer--with-sidebar {
-  padding-right: calc(16rem + var(--space));
+  padding-right: calc(16rem + var(--sb-handle-w) + var(--space));
 }
 
-html[data-sidebar-state='hidden'] .site-footer--with-sidebar {
-  padding-left: var(--space) !important;
+html[data-sidebar-state='hidden'][data-sidebar-dock='left'] .site-footer--with-sidebar {
+  padding-left: calc(var(--sb-handle-w) + var(--space)) !important;
   padding-right: var(--space) !important;
+}
+
+html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-sidebar {
+  padding-left: var(--space) !important;
+  padding-right: calc(var(--sb-handle-w) + var(--space)) !important;
 }
 
 @media (max-width: 48rem) {
   /* Below this width the sidebar overlays the page instead of reserving room (see .tools-layout). */
-  .site-footer--with-sidebar {
+  .site-footer--with-sidebar,
+  html[data-sidebar-state='hidden'][data-sidebar-dock] .site-footer--with-sidebar {
     padding-left: var(--space) !important;
     padding-right: var(--space) !important;
   }
