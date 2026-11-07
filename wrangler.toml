@@ -8,5 +8,13 @@ database_name = "leaflock-pdf"
 database_id = "75b792bb-eef2-4a99-8090-56b77cb55e4d"
 migrations_dir = "migrations"
 
+# Preview deployments get their own database, so a branch build can never read or write
+# production data. env blocks do not inherit bindings, hence the repeated binding name.
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "leaflock-pdf-preview"
+database_id = "f0fc3642-62c3-4cbb-a07a-9197eb939911"
+migrations_dir = "migrations"
+
 # Secrets (RESEND_API_KEY, EMAIL_FROM, SESSION_IP_SALT) are set with
 # `wrangler pages secret put <NAME>` and, for local dev, in `.dev.vars` (gitignored).

@@ -6,6 +6,7 @@
   Referrer-Policy: no-referrer
   Permissions-Policy: camera=(self), microphone=(), geolocation=(), interest-cohort=()
   Cross-Origin-Opener-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000
 
 # The worker is how every other asset gets updated, so it must never come from a cache
 # itself — a stale sw.js would pin a visitor to an old build indefinitely.
