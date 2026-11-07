@@ -161,6 +161,7 @@ export default {
     "sidebar": {
       "label": "Alle Werkzeuge",
       "allTools": "Alle Werkzeuge",
+      "recent": "Zuletzt verwendete Werkzeuge",
       "hide": "Seitenleiste ausblenden",
       "show": "Werkzeuge anzeigen",
       "search": "Werkzeuge suchen",

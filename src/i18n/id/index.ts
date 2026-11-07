@@ -161,6 +161,7 @@ export default {
     "sidebar": {
       "label": "Semua alat",
       "allTools": "Semua alat",
+      "recent": "Alat terbaru",
       "hide": "Sembunyikan bilah samping",
       "show": "Tampilkan alat",
       "search": "Cari alat",
