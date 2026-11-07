@@ -45,12 +45,13 @@ test('theme: Light by default, and one button switches and persists', async ({ p
   // Nothing saved: Light, and the button offers the other mode.
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('.theme-toggle')).toHaveCount(1);
-  await expect(button).toHaveAttribute('aria-label', `${en.common.theme.label}: ${en.common.theme.dark}`);
+  const { label, light: lightWord, dark: darkWord } = en.common.theme;
+  await expect(button).toHaveAttribute('aria-label', `${lightWord}. ${label}: ${darkWord}`);
 
   await button.click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   expect(await background()).not.toBe(light);
-  await expect(button).toHaveAttribute('aria-label', `${en.common.theme.label}: ${en.common.theme.light}`);
+  await expect(button).toHaveAttribute('aria-label', `${darkWord}. ${label}: ${lightWord}`);
 
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
@@ -66,6 +67,6 @@ test('theme: a dark device still gets Light until the button is pressed', async 
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('.theme-toggle')).toHaveAttribute(
     'aria-label',
-    `${en.common.theme.label}: ${en.common.theme.dark}`,
+    `${en.common.theme.light}. ${en.common.theme.label}: ${en.common.theme.dark}`,
   );
 });
