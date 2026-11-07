@@ -375,8 +375,9 @@ CONFIRM: …]`:**
 
 Dashboard settings only; the code findings from the same review are in `docs/shipped.md`.
 
-- [ ] **Turn on HSTS** — Cloudflare → SSL/TLS → Edge Certificates. The live site sends no
-      `Strict-Transport-Security` header today.
+- [x] **HSTS** — added 7 November 2026 in `public/_headers` (`max-age=31536000`, no
+      `includeSubDomains`/`preload`); live after the next deploy. Cloudflare's dashboard toggle
+      is now optional, and would only add `includeSubDomains`/`preload` if ever wanted.
 - [ ] **Minimum TLS 1.2** — same tab. Cloudflare Security Insights (4 Nov scan) flagged
       `www.leaflockpdf.com` as accepting older TLS.
 - [ ] **Decide on Bot Fight Mode** (Security → Bots) — flagged Moderate. Free, but it can block
@@ -384,10 +385,17 @@ Dashboard settings only; the code findings from the same review are in `docs/shi
 - [x] **`security.txt`** — added 7 November 2026 at `public/.well-known/security.txt`
       (contact `basicappcompany@gmail.com`); clears the Low finding on the next scan. Its
       `Expires` date is tracked in §9. AI Labyrinth was skipped on purpose.
-- [ ] **Stop `leaflock-pdf.pages.dev` serving the full site and API** (it returns 200 on
-      `/api/auth/me`), and protect preview deployments, which likely share the production D1
-      binding because `wrangler.toml` has a single `[[d1_databases]]` block. Not confirmed
-      in the dashboard — check the Pages project's Preview environment bindings first.
+- [x] **`pages.dev` API and preview database** — done 7 November 2026, live after the next
+      deploy. Confirmed from `wrangler.toml`: one top-level D1 block meant previews shared the
+      production database. Now `[[env.preview.d1_databases]]` binds `leaflock-pdf-preview`
+      (id in `wrangler.toml`, migrations applied), and `functions/api/_middleware.ts`
+      308-redirects `/api/*` off any non-apex host. The static site still serves on `pages.dev`
+      by design (a root middleware would meter every asset request).
+- [ ] **Verify after the deploy:** `curl -sI https://leaflock-pdf.pages.dev/api/auth/me` should
+      return 308 to the apex, and `https://leaflockpdf.com/` should carry
+      `strict-transport-security`. Preview deployments have **no secrets** yet; set
+      `SESSION_IP_SALT` etc. with `wrangler pages secret put <NAME> --env preview` only if
+      you want previews to run the API.
 
 ## 9. Locales — translation key and review, 6 November 2026
 

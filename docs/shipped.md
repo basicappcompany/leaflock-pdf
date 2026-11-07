@@ -17,6 +17,25 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 7 November 2026 — Preview builds get their own database; the API answers only on the apex; HSTS
+
+Found from the code side: `wrangler.toml` had one top-level `[[d1_databases]]` block, which Pages
+applies to Production **and** Preview, so every preview deployment read and wrote the real D1.
+`[[env.preview.d1_databases]]` now binds `leaflock-pdf-preview` (migrations 0001–0004 applied).
+env blocks do not inherit bindings, so the binding name `DB` is repeated. Preview has no
+secrets either (`SESSION_IP_SALT` and the rest): a preview's API will fail until they are set
+with `wrangler pages secret put <NAME> --env preview`, which is the safe default.
+
+`functions/api/_middleware.ts` 308-redirects `/api/*` on any host but the apex (and localhost)
+to the apex, via `src/lib/server/canonicalHost.ts`. **Scoped to `/api/`, not the root, on
+purpose:** a root middleware makes every static asset request a metered Functions invocation.
+The static site on `pages.dev` still serves; it holds nothing private. 308 keeps a POST's method.
+`Strict-Transport-Security: max-age=31536000` is in `public/_headers`, without
+`includeSubDomains` or `preload` (a subdomain such as `send.` is mail-only and nothing has
+checked the rest).
+
+---
+
 ## 7 November 2026 — Tool pages show a skeleton while loading; sidebar reopen button follows the dock
 
 Tool pages used `client:only`, so the box was empty until React had started, then said "Loading
