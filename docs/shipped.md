@@ -17,6 +17,24 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 7 November 2026 — Sign-in history
+
+Before this, only `users.last_login_at` existed: each sign-in overwrote the one before, and a
+session row vanished on expiry or logout, so who signed in when, and how, could not be
+recovered. Migration `0005_login_events.sql` adds `login_events` (user, time, method
+`link`/`password`/`google`, browser family) and `recordLogin()` in `src/lib/server/db.ts`
+writes it from all three sign-in endpoints. **No IP address, raw or hashed, and nothing about
+files.** Included in the account export and deleted with the account.
+
+The history row is best effort: a failed insert is logged and swallowed so it can never stop a
+sign-in, while the `last_login_at` update still throws as before. **Migration order matters:**
+the migration must be applied to production and preview D1 *before* the code deploys, or the
+insert fails (harmlessly, by the rule above, but silently losing history). `privacy.md` had no
+section on account data at all; it now has one, with a retention blank in
+`docs/legal-checklist.md` §3. Stated limit: history starts the day this ships.
+
+---
+
 ## 7 November 2026 — Preview builds get their own database; the API answers only on the apex; HSTS
 
 Found from the code side: `wrangler.toml` had one top-level `[[d1_databases]]` block, which Pages

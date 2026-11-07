@@ -1,7 +1,7 @@
 ---
 title: Privacy policy
 description: How LeafLock PDF handles personal data. Your files are processed on your device and never sent to us. What we do process, why, and your rights.
-updated: 2026-11-03
+updated: 2026-11-07
 awaitingLegalReview: true
 ---
 
@@ -32,6 +32,16 @@ These logs never contain your documents, because documents are not sent in any r
 - **Purpose:** delivering the website, keeping it secure and protecting it from abuse, and diagnosing technical problems.
 - **Legal basis (GDPR):** our legitimate interest in running a secure and reliable website (Article 6(1)(f)).
 - **Retention:** [TO CONFIRM: log retention period set by the hosting provider].
+
+### Your account and sign-in history (if you sign in)
+
+Signing in is optional. If you create an account, we keep your email address, when the account was created, your plan, and, if you set them up, a password (stored only as a salted hash) or a link to your Google account. We also keep a record of each time you sign in: the date and time, whether you used an email link, a password or Google, and your browser family and major version (for example "Chrome 141"). We do not store your IP address in this record, and it never contains anything about your files.
+
+You can download all of it from your account page, and deleting your account deletes it.
+
+- **Purpose:** running your account, keeping it secure, and showing you when it was used.
+- **Legal basis (GDPR):** performing the service you asked for (Article 6(1)(b)), and our legitimate interest in keeping accounts secure (Article 6(1)(f)).
+- **Retention:** until you delete your account. [TO CONFIRM: whether sign-in history should instead expire after a fixed period]
 
 ### Emails you send us
 

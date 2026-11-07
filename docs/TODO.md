@@ -385,15 +385,18 @@ Dashboard settings only; the code findings from the same review are in `docs/shi
 - [x] **`security.txt`** — added 7 November 2026 at `public/.well-known/security.txt`
       (contact `basicappcompany@gmail.com`); clears the Low finding on the next scan. Its
       `Expires` date is tracked in §9. AI Labyrinth was skipped on purpose.
-- [x] **`pages.dev` API and preview database** — done 7 November 2026, live after the next
-      deploy. Confirmed from `wrangler.toml`: one top-level D1 block meant previews shared the
+- [x] **`pages.dev` API and preview database** — done and live 7 November 2026 (PR #15).
+      Confirmed from `wrangler.toml`: one top-level D1 block meant previews shared the
       production database. Now `[[env.preview.d1_databases]]` binds `leaflock-pdf-preview`
       (id in `wrangler.toml`, migrations applied), and `functions/api/_middleware.ts`
       308-redirects `/api/*` off any non-apex host. The static site still serves on `pages.dev`
       by design (a root middleware would meter every asset request).
-- [ ] **Verify after the deploy:** `curl -sI https://leaflock-pdf.pages.dev/api/auth/me` should
-      return 308 to the apex, and `https://leaflockpdf.com/` should carry
-      `strict-transport-security`. Preview deployments have **no secrets** yet; set
+- [x] **Verified live 7 November 2026** after PR #15 deployed:
+      `https://leaflock-pdf.pages.dev/api/auth/me` returns 308 to the apex,
+      `https://leaflockpdf.com/` sends `strict-transport-security: max-age=31536000`, and a
+      GET to the apex `/api/auth/me` still returns 200 JSON. (Probe with GET, not `curl -I`:
+      the routes define only GET handlers, so HEAD returns 404.)
+- [ ] Preview deployments have **no secrets** yet; set
       `SESSION_IP_SALT` etc. with `wrangler pages secret put <NAME> --env preview` only if
       you want previews to run the API.
 

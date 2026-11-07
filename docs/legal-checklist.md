@@ -64,6 +64,9 @@ brief does not duplicate it and is not updated as items close.
       requires roughly 6–7 years from the relevant assessment year, the Companies Act 8
       years, GST law 6 years — common practice is to retain 8 years to satisfy all
       three at once. Per §0a, still "a CA question, not a lawyer one."
+- [ ] Sign-in history (privacy.md, "Your account and sign-in history") — added 7 November
+      2026. Currently kept until the account is deleted; decide whether it should instead
+      expire after a fixed period. Holds time, method and browser family only: no IP address.
 - [ ] Crash reports, e.g. 90 days (privacy.md, "Error reports"). Reports contain no IP address and no file data; see `src/lib/errorReporting.ts`.
 
 **Zero-knowledge share links — added 29 October 2026, and this is a second pass, not part

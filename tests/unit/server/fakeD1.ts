@@ -13,6 +13,7 @@ export function createFakeD1() {
   const users: Row[] = [];
   const magicLinks: Row[] = [];
   const sessions: Row[] = [];
+  const loginEvents: Row[] = [];
   const rateLimits: Row[] = [];
   const usageCounters: Row[] = [];
   const webhookEvents: Row[] = [];
@@ -102,6 +103,22 @@ export function createFakeD1() {
         .filter((row) => row['user_id'] === params[0])
         .map(({ period, metric, count }) => ({ period, metric, count }));
       return { row: null, rows };
+    }
+    if (text === 'INSERT INTO login_events (id, user_id, at, method, browser) VALUES (?, ?, ?, ?, ?)') {
+      const [id, user_id, at, method, browser] = params;
+      loginEvents.push({ id, user_id, at, method, browser });
+      return { row: null, rows: [] };
+    }
+    if (text === 'SELECT at, method, browser FROM login_events WHERE user_id = ? ORDER BY at') {
+      const rows = loginEvents
+        .filter((row) => row['user_id'] === params[0])
+        .sort((a, b) => (a['at'] as number) - (b['at'] as number))
+        .map(({ at, method, browser }) => ({ at, method, browser }));
+      return { row: null, rows };
+    }
+    if (text === 'DELETE FROM login_events WHERE user_id = ?') {
+      for (let i = loginEvents.length - 1; i >= 0; i--) if (loginEvents[i]!['user_id'] === params[0]) loginEvents.splice(i, 1);
+      return { row: null, rows: [] };
     }
     if (text === 'DELETE FROM sessions WHERE user_id = ?') {
       for (let i = sessions.length - 1; i >= 0; i--) if (sessions[i]!['user_id'] === params[0]) sessions.splice(i, 1);
@@ -215,5 +232,5 @@ export function createFakeD1() {
     },
   };
 
-  return { db: db as unknown as D1Database, tables: { users, magicLinks, sessions, rateLimits, usageCounters, webhookEvents } };
+  return { db: db as unknown as D1Database, tables: { users, magicLinks, sessions, loginEvents, rateLimits, usageCounters, webhookEvents } };
 }
