@@ -21,7 +21,7 @@ test('sidebar: no Recent group while nothing has been used', async ({ page, base
   await page.goto('/split-pdf');
   await expect(page.locator('#toolsSidebar')).toBeVisible();
   await expect(page.locator('#sidebarRecent')).toBeHidden();
-  await expect(page.getByRole('heading', { name: en.common.sidebar.recent })).toHaveCount(0);
+  await expect(page.locator('#sidebarRecent')).toHaveCount(0);
   watch.assertClean();
 });
 
@@ -37,7 +37,7 @@ test('sidebar: recently used tools sit at the top, newest first, and link to the
 
   const group = page.locator('#sidebarRecent');
   await expect(group).toBeVisible();
-  await expect(group.getByRole('heading', { name: en.common.sidebar.recent })).toBeVisible();
+  await expect(group.locator('summary')).toHaveText(en.common.sidebar.recent);
   const rows = group.locator('li');
   // The unknown id is skipped; the other two are ordered newest first.
   await expect(rows).toHaveCount(2);
@@ -76,7 +76,7 @@ test('theme button: an icon only, still named for assistive technology', async (
   expect(box.width).toBeGreaterThanOrEqual(36);
 });
 
-test('scrolled header: language and theme buttons stay, at the left beside the brand', async ({ page, baseURL }) => {
+test('scrolled header: language and theme buttons stay, in the right-most corner', async ({ page, baseURL }) => {
   const watch = watchPage(page, baseURL!);
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
@@ -94,13 +94,43 @@ test('scrolled header: language and theme buttons stay, at the left beside the b
   await expect(lang).toBeVisible();
   await expect(theme).toBeVisible();
 
-  const brand = (await page.locator('.site-header .brand').boundingBox())!;
   const langBox = (await lang.boundingBox())!;
   const themeBox = (await theme.boundingBox())!;
-  // Left-aligned with the brand: both buttons start within the left third of the window,
-  // in order, not stranded at the far right edge.
-  expect(langBox.x).toBeGreaterThan(brand.x + brand.width - 1);
+  // In order, with the theme button at the far right edge of the window.
   expect(themeBox.x).toBeGreaterThan(langBox.x);
-  expect(themeBox.x + themeBox.width).toBeLessThan(1280 / 3);
+  expect(1280 - (themeBox.x + themeBox.width)).toBeLessThan(40);
   watch.assertClean();
+});
+
+test('sidebar: the Recent group collapses, and stays collapsed on the next page', async ({ page }) => {
+  await seed(page, [{ tool: 'merge', at: Date.now() }]);
+  await page.goto('/split-pdf');
+  const group = page.locator('#sidebarRecent');
+  await expect(group).toHaveJSProperty('open', true);
+
+  await group.locator('summary').click();
+  await expect(group).toHaveJSProperty('open', false);
+  await expect(group.locator('li')).toBeHidden();
+
+  await page.goto('/rotate-pdf');
+  await expect(page.locator('#sidebarRecent')).toHaveJSProperty('open', false);
+  await page.locator('#sidebarRecent summary').click();
+  await expect(page.locator('#sidebarRecent')).toHaveJSProperty('open', true);
+});
+
+test('sidebar: no "All tools" title, and the control buttons form one even row at the end', async ({ page }) => {
+  await page.goto('/split-pdf');
+  await expect(page.locator('.tools-sidebar__head')).not.toContainText(en.common.sidebar.allTools);
+  const boxes: { x: number; y: number; width: number; height: number }[] = [];
+  for (const b of await page.locator('.tools-sidebar__head .tools-sidebar__btn').all()) boxes.push((await b.boundingBox())!);
+  expect(boxes).toHaveLength(4);
+  const sidebar = (await page.locator('#toolsSidebar').boundingBox())!;
+  for (const box of boxes) {
+    expect(box.y).toBeCloseTo(boxes[0]!.y, 0);
+    expect(box.height).toBeCloseTo(boxes[0]!.height, 0);
+  }
+  const last = boxes[3]!;
+  const gaps = boxes.slice(1).map((box, i) => box.x - (boxes[i]!.x + boxes[i]!.width));
+  for (const gap of gaps) expect(gap).toBeCloseTo(gaps[0]!, 0);
+  expect(sidebar.x + sidebar.width - (last.x + last.width)).toBeLessThan(20);
 });

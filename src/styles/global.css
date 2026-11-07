@@ -177,11 +177,11 @@ h2 {
   display: none;
 }
 
-/* The language button and theme button stay while scrolled, at the left beside the
-   brand, so they are reachable from anywhere on a long page. The nav between them and
-   the brand is what is hidden, so nothing pushes them across to the right. */
-.site-chrome--condensed .site-header {
-  justify-content: flex-start;
+/* The language button and theme button stay while scrolled, in the right-most corner, so
+   they are reachable from anywhere on a long page. With the nav hidden nothing else
+   fills the row, so the language button's auto margin carries both to the end. */
+.site-chrome--condensed .lang-switcher {
+  margin-inline-start: auto;
 }
 
 .site-chrome--condensed .site-header {
@@ -759,31 +759,21 @@ html[data-sidebar-state='hidden'] .tools-sidebar {
   border-bottom: 1px solid var(--color-border);
 }
 
-.tools-sidebar__title {
-  flex: 1;
-  font-weight: 700;
-  font-size: 0.9rem;
-  white-space: nowrap;
-}
-
+/* No title any more, so the controls are the whole row: one even run of identical square
+   buttons, pushed to the end of the row (the right edge, or the left in a right-to-left
+   language). The dock pair used to sit in its own bordered box a few pixels taller than
+   the others; it is now just two more buttons, the docked side shown by the accent. */
 .tools-sidebar__controls {
   display: flex;
+  flex: 1;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.35rem;
 }
 
 .tools-sidebar__dock {
   display: flex;
-  gap: 1px;
-  padding: 1px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-small);
-  background: var(--color-border);
-}
-
-.tools-sidebar__dock .tools-sidebar__btn {
-  border: 0;
-  border-radius: 0;
+  gap: 0.35rem;
 }
 
 .tools-sidebar__btn {
@@ -867,14 +857,8 @@ html[data-sidebar-state='hidden'] .tools-sidebar {
   display: none;
 }
 
-.tools-sidebar__recent-title {
-  margin: 0 0 0.1rem;
-  padding: 0.45rem 0.4rem;
-  color: var(--color-muted);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.tools-sidebar__recent[open] .tools-sidebar__chevron {
+  transform: rotate(90deg);
 }
 
 .tools-sidebar__heading {
