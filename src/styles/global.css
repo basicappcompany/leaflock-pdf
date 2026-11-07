@@ -451,48 +451,72 @@ h2 {
   color: var(--color-accent);
 }
 
+/* One button showing the mode you are in: a sun and "Light", or a moon and "Dark". The
+   word is hidden on a phone, where the icon alone carries it. Which pair shows follows
+   html[data-theme], which the pre-paint script always sets, so it is right from first
+   paint. */
 .theme-toggle {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 2.25rem;
+  height: 2.25rem;
   margin: 0;
-  padding: 2px;
+  padding: 0 0.7rem;
   border: 1px solid var(--color-border);
   border-radius: 999px;
   background: var(--color-surface-2);
-}
-
-.theme-toggle__option {
-  display: grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 999px;
-  cursor: pointer;
-  color: var(--color-muted);
-}
-
-@media (max-width: 48rem) {
-  /* 32px suits a cursor; a thumb wants closer to 36-40px. Three of these sit edge to
-     edge in one track, so the increase has to come from the option itself, not spacing. */
-  .theme-toggle__option {
-    width: 2.25rem;
-    height: 2.25rem;
-  }
-}
-
-.theme-toggle__option input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.theme-toggle__option:has(input:checked) {
-  background: var(--color-surface);
   color: var(--color-text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.theme-toggle:hover {
+  background: var(--color-surface);
   box-shadow: var(--shadow);
 }
 
-.theme-toggle__option:has(input:focus-visible) {
+.theme-toggle:focus-visible {
   outline: 2px solid var(--color-focus);
+}
+
+.theme-toggle__icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-toggle__moon {
+  display: none;
+}
+
+html[data-theme='dark'] .theme-toggle__sun {
+  display: none;
+}
+
+html[data-theme='dark'] .theme-toggle__moon {
+  display: inline;
+}
+
+@media (max-width: 48rem) {
+  /* A thumb wants about 36px, and the icon alone says enough on a phone. */
+  .theme-toggle {
+    width: 2.25rem;
+    padding: 0;
+  }
+
+  .theme-toggle__word {
+    display: none !important;
+  }
 }
 
 /* ---------- skin picker, lives next to .theme-toggle in the header ---------- */

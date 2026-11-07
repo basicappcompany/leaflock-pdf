@@ -23,9 +23,9 @@ Cookies aren't the only way a website can store information in your browser. Lea
 
 ### localStorage: your theme choice
 
-The site saves your theme choice in your browser's localStorage under the name `theme`, so the next page you open uses the same one. The default is light; picking "System" with the theme switch is itself a saved choice, the same as picking light or dark.
+The site saves your theme choice in your browser's localStorage under the name `theme`, so the next page you open uses the same one. The default is light, and nothing is saved until you press the theme button, which saves your choice of light or dark.
 
-- **What it contains:** the word `light`, `dark` or `system`.
+- **What it contains:** the word `light` or `dark`.
 - **When it's set:** the first time you open the site, and again whenever you change it with the theme switch.
 - **How long it lasts:** until you change the setting or clear the site's data.
 

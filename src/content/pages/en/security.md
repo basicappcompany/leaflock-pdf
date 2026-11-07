@@ -79,7 +79,7 @@ Our server also sends a few protective headers that a meta tag can't express. Yo
 
 LeafLock PDF stores very little, and all of it stays on your device:
 
-- **Your light, dark or system theme choice**, saved in your browser's localStorage under the key `theme`. The default is light; picking "System" is itself a saved choice, not the absence of one.
+- **Your light or dark theme choice**, saved in your browser's localStorage under the key `theme` once you press the theme button. The default is light, and nothing is saved until you press it.
 - **Recent work, if you turn it on.** A finished file, kept in your browser's own storage (IndexedDB) for five minutes, one hour, twenty-four hours, or a length you choose on a paid plan. Off until you enable it, deleted when it expires, and clearable at any time. It never leaves your device.
 - **Two cookies, if you sign in**: `__Host-leaflock_session`, which identifies your session and carries nothing else, and `leaflock_signed_in`, a plain flag so the page knows you're signed in without asking our server. A third, `leaflock_skin`, is set only if you pick a visual skin — see the [Cookie policy](/cookies) for how long each one lasts.
 - **The OCR language model**, after you use [OCR PDF](/ocr-pdf) for the first time. It's a file of about 10 MB that teaches the OCR engine to recognize English text. Your browser saves it in its own storage (IndexedDB) so it doesn't have to download it again. It contains nothing about your documents.

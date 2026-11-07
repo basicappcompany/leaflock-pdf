@@ -77,7 +77,7 @@ When a tool fails because of a bug, your browser sends a short error report to o
 
 ## Data stored on your device
 
-- **Theme choice:** your light, dark or system choice is saved in your browser's localStorage so the site remembers it. The default is light; picking "System" is itself a saved choice.
+- **Theme choice:** if you press the theme button, your light or dark choice is saved in your browser's localStorage so the site remembers it. The default is light, and nothing is saved until you press it.
 - **OCR language model:** after you first use OCR PDF, your browser stores the English text-recognition model so it doesn't need to download it again. This file is the same for everyone and contains no personal data.
 - **Cookies:** two if you sign in (`__Host-leaflock_session`, `leaflock_signed_in`), and a third (`leaflock_skin`) only if you pick a visual skin. None of them track you or carry a profile.
 

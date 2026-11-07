@@ -24,7 +24,7 @@ import { pdfUpload, watchPage } from './helpers';
  * against: a header that wrapped nav links across up to four rows with no padding
  * (~24px tall, no visible button shape), and 32px icon buttons for page-grid and
  * file-list controls that are fine with a cursor but tight for a thumb. See the
- * `.nav-link`, `.theme-toggle__option`, `.icon-button` and `.tool__actions` rules in
+ * `.nav-link`, `.theme-toggle`, `.icon-button` and `.tool__actions` rules in
  * src/styles/global.css.
  */
 
@@ -77,7 +77,7 @@ test('every header control is a comfortable size to tap', async ({ page, baseURL
     expect(box?.height, `nav link "${label}"`).toBeGreaterThanOrEqual(COMFORTABLE);
   }
 
-  for (const option of await page.locator('.theme-toggle__option').all()) {
+  for (const option of await page.locator('.theme-toggle').all()) {
     const box = await option.boundingBox();
     expect(box?.width).toBeGreaterThanOrEqual(COMFORTABLE);
     expect(box?.height).toBeGreaterThanOrEqual(COMFORTABLE);

@@ -581,15 +581,17 @@ Every colour is defined once with `light-dark()` on `:root` in `src/styles/globa
 `html[data-theme]` (set by `ThemeToggle.astro`, applied before paint by an inline script
 in `Base.astro`) forces one side. Use the variables, never a hard-coded colour.
 
-**Default is Light, not the system setting — changed 3 November 2026, owner
-instruction.** A first-time visitor with nothing in `localStorage` gets
-`data-theme="light"` applied the same as if they'd chosen it from `ThemeToggle`.
-"System" is still offered and still works, but it's now a value stored explicitly
-(`theme: 'system'`) rather than represented by an absent key — an absent key used to
-mean "follow the OS" and now means Light, so System needed its own stored marker to
-stay distinguishable from "nothing chosen yet". `ThemeToggle.astro`'s script computes
-which radio to check the same way: `stored === 'dark' || stored === 'system' ? stored
-: 'light'`.
+**Default is always Light, and the picker is one button — changed 7 November 2026, owner
+instruction.** It replaces the three-way System/Light/Dark control. (The owner briefly asked
+for System as the default the same day, then withdrew it: the default stays Light.) A visitor
+with nothing in `localStorage` gets `data-theme="light"` from the pre-paint script; only a
+stored `dark` gives dark, and an old stored `'system'` reads as Light. `ThemeToggle.astro` is
+a single button showing the mode you are in (sun and "Light", or moon and "Dark"; the word
+is hidden on a phone). Which icon and word show is decided in CSS from `html[data-theme]`,
+which is always set, so it is right at first paint; the script only writes the choice on
+click and keeps the tooltip pointing at the mode a click leads to. **Stated limit:** System
+is no longer offered. The `system` string in `common.ts` is unused now but stays, because the
+other locales' catalogues are generated and would need regenerating to drop it.
 
 **Default visual system is "Playful Rounded" — changed 2 November 2026** from the
 original ("Soft Product", now an alternate skin, see below). Big soft radii
