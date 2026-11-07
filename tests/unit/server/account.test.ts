@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { createUser, deleteAccount, exportAccount, getUserByEmail, setPasswordHash } from '../../../src/lib/server/db';
+import {
+  createUser,
+  deleteAccount,
+  exportAccount,
+  getUserByEmail,
+  recordLogin,
+  setPasswordHash,
+} from '../../../src/lib/server/db';
 import { createMagicLink } from '../../../src/lib/server/magicLink';
 import { createSession } from '../../../src/lib/server/session';
 import { claimDailyJob } from '../../../src/lib/server/usage';
@@ -13,6 +20,7 @@ async function seed() {
   const user = await createUser(fake.db, 'person@example.com', NOW);
   await setPasswordHash(fake.db, user.id, 'pbkdf2$210000$c2FsdA==$aGFzaA==');
   await createSession(fake.db, user.id, 'Chrome 141', NOW);
+  await recordLogin(fake.db, { userId: user.id, method: 'link', browser: 'Chrome 141', now: NOW });
   await createMagicLink(fake.db, 'person@example.com', null, NOW);
   await claimDailyJob(fake.db, user.id, 30, NOW);
   return { ...fake, user };
@@ -27,6 +35,14 @@ describe('exporting an account', () => {
     expect(data?.sessions).toHaveLength(1);
     expect(data?.sessions[0]).toMatchObject({ browser: 'Chrome 141' });
     expect(data?.usage).toEqual([{ period: '2026-10-23', metric: 'jobs', count: 1 }]);
+  });
+
+  it('includes the login history, and no IP address anywhere', async () => {
+    const { db, user } = await seed();
+    const data = await exportAccount(db, user.id);
+
+    expect(data?.login_events).toEqual([{ at: NOW, method: 'link', browser: 'Chrome 141' }]);
+    expect(JSON.stringify(data?.login_events)).not.toMatch(/ip/i);
   });
 
   it('never hands out credentials, only whether a password exists', async () => {
@@ -62,6 +78,7 @@ describe('deleting an account', () => {
 
     expect(tables.users).toHaveLength(0);
     expect(tables.sessions).toHaveLength(0);
+    expect(tables.loginEvents).toHaveLength(0);
     expect(tables.usageCounters).toHaveLength(0);
     expect(tables.magicLinks).toHaveLength(0);
     await expect(getUserByEmail(db, 'person@example.com')).resolves.toBeNull();
@@ -71,10 +88,12 @@ describe('deleting an account', () => {
     const { db, tables, user } = await seed();
     const other = await createUser(db, 'other@example.com', NOW);
     await createSession(db, other.id, 'Firefox 140', NOW);
+    await recordLogin(db, { userId: other.id, method: 'google', browser: 'Firefox 140', now: NOW });
     await claimDailyJob(db, other.id, 30, NOW);
 
     await deleteAccount(db, user.id, user.email);
 
+    expect(tables.loginEvents).toHaveLength(1);
     expect(tables.users.map((row) => row['email'])).toEqual(['other@example.com']);
     expect(tables.sessions).toHaveLength(1);
     expect(tables.usageCounters).toHaveLength(1);

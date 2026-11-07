@@ -81,6 +81,7 @@ export async function createUser(db: D1Database, email: string, now: number): Pr
 export interface ExportedAccount {
   account: Omit<UserRow, 'password_hash'> & { password_set: boolean };
   sessions: { created_at: number; expires_at: number; last_seen_at: number; browser: string | null }[];
+  login_events: { at: number; method: LoginMethod; browser: string | null }[];
   usage: { period: string; metric: string; count: number }[];
 }
 
@@ -101,6 +102,10 @@ export async function exportAccount(db: D1Database, userId: string): Promise<Exp
     .prepare('SELECT created_at, expires_at, last_seen_at, browser FROM sessions WHERE user_id = ? ORDER BY created_at')
     .bind(userId)
     .all<ExportedAccount['sessions'][number]>();
+  const loginEvents = await db
+    .prepare('SELECT at, method, browser FROM login_events WHERE user_id = ? ORDER BY at')
+    .bind(userId)
+    .all<ExportedAccount['login_events'][number]>();
   const usage = await db
     .prepare('SELECT period, metric, count FROM usage_counters WHERE user_id = ? ORDER BY period')
     .bind(userId)
@@ -109,6 +114,7 @@ export async function exportAccount(db: D1Database, userId: string): Promise<Exp
   return {
     account: { ...rest, password_set: password_hash !== null },
     sessions: sessions.results ?? [],
+    login_events: loginEvents.results ?? [],
     usage: usage.results ?? [],
   };
 }
@@ -123,6 +129,7 @@ export async function exportAccount(db: D1Database, userId: string): Promise<Exp
 export async function deleteAccount(db: D1Database, userId: string, email: string): Promise<void> {
   await db.batch([
     db.prepare('DELETE FROM sessions WHERE user_id = ?').bind(userId),
+    db.prepare('DELETE FROM login_events WHERE user_id = ?').bind(userId),
     db.prepare('DELETE FROM usage_counters WHERE user_id = ?').bind(userId),
     db.prepare('DELETE FROM magic_links WHERE email = ?').bind(email),
     db.prepare('DELETE FROM users WHERE id = ?').bind(userId),
@@ -143,6 +150,37 @@ export async function linkGoogleAccount(db: D1Database, userId: string, sub: str
 
 export async function touchLastLogin(db: D1Database, userId: string, now: number): Promise<void> {
   await db.prepare('UPDATE users SET last_login_at = ? WHERE id = ?').bind(now, userId).run();
+}
+
+export type LoginMethod = 'link' | 'password' | 'google';
+
+export async function insertLoginEvent(
+  db: D1Database,
+  args: { userId: string; method: LoginMethod; browser: string | null; now: number },
+): Promise<void> {
+  await db
+    .prepare('INSERT INTO login_events (id, user_id, at, method, browser) VALUES (?, ?, ?, ?, ?)')
+    .bind(newId(), args.userId, args.now, args.method, args.browser)
+    .run();
+}
+
+/**
+ * Records a successful sign-in: the latest time on the account, plus a history row.
+ *
+ * The history row is best effort. A failure writing it must never stop someone signing in,
+ * so it is logged (no personal data in the message) and swallowed; the last-login update,
+ * which sign-in already depended on, still throws.
+ */
+export async function recordLogin(
+  db: D1Database,
+  args: { userId: string; method: LoginMethod; browser: string | null; now: number },
+): Promise<void> {
+  await touchLastLogin(db, args.userId, args.now);
+  try {
+    await insertLoginEvent(db, args);
+  } catch {
+    console.error('login_events insert failed');
+  }
 }
 
 export async function insertMagicLink(

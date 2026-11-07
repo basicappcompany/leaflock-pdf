@@ -7,7 +7,7 @@
  */
 
 import { browserFamily } from '../../../src/lib/errorReporting';
-import { getUserByEmail, touchLastLogin } from '../../../src/lib/server/db';
+import { getUserByEmail, recordLogin } from '../../../src/lib/server/db';
 import { hashIp } from '../../../src/lib/server/ipHash';
 import { verifyPassword } from '../../../src/lib/server/password';
 import { checkAndIncrement } from '../../../src/lib/server/rateLimit';
@@ -45,8 +45,9 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
   if (!ok || !user || user.status !== 'active') return new Response(null, { status: 401 });
 
   const now = Date.now();
-  await touchLastLogin(env.DB, user.id, now);
-  const cookieValue = await createSession(env.DB, user.id, browserFamily(request.headers.get('user-agent') ?? ''), now);
+  const browser = browserFamily(request.headers.get('user-agent') ?? '');
+  await recordLogin(env.DB, { userId: user.id, method: 'password', browser, now });
+  const cookieValue = await createSession(env.DB, user.id, browser, now);
 
   const response = new Response(null, { status: 204 });
   response.headers.append('Set-Cookie', sessionSetCookieHeader(cookieValue));

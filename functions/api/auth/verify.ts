@@ -4,7 +4,7 @@
  */
 
 import { browserFamily } from '../../../src/lib/errorReporting';
-import { createUser, getUserByEmail, touchLastLogin } from '../../../src/lib/server/db';
+import { createUser, getUserByEmail, recordLogin } from '../../../src/lib/server/db';
 import { verifyMagicLink } from '../../../src/lib/server/magicLink';
 import { createSession, sessionSetCookieHeader, signedInHintCookieHeader } from '../../../src/lib/server/session';
 
@@ -22,9 +22,9 @@ export async function onRequestGet({ request, env }: { request: Request; env: En
 
   const now = Date.now();
   const user = (await getUserByEmail(env.DB, email)) ?? (await createUser(env.DB, email, now));
-  await touchLastLogin(env.DB, user.id, now);
-
   const browser = browserFamily(request.headers.get('user-agent') ?? '');
+  await recordLogin(env.DB, { userId: user.id, method: 'link', browser, now });
+
   const cookieValue = await createSession(env.DB, user.id, browser, now);
 
   const response = new Response(null, { status: 302, headers: { Location: `${url.origin}/account` } });

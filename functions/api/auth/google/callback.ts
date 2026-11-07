@@ -12,7 +12,7 @@ import {
   getUserByEmail,
   getUserByGoogleSub,
   linkGoogleAccount,
-  touchLastLogin,
+  recordLogin,
 } from '../../../../src/lib/server/db';
 import { GOOGLE_STATE_COOKIE, exchangeCode, googleConfigured } from '../../../../src/lib/server/google';
 import { createSession, sessionSetCookieHeader, signedInHintCookieHeader } from '../../../../src/lib/server/session';
@@ -56,8 +56,9 @@ export async function onRequestGet({ request, env }: { request: Request; env: En
   }
   if (user.status !== 'active') return failed(origin, 'google_failed');
 
-  await touchLastLogin(env.DB, user.id, now);
-  const cookieValue = await createSession(env.DB, user.id, browserFamily(request.headers.get('user-agent') ?? ''), now);
+  const browser = browserFamily(request.headers.get('user-agent') ?? '');
+  await recordLogin(env.DB, { userId: user.id, method: 'google', browser, now });
+  const cookieValue = await createSession(env.DB, user.id, browser, now);
 
   const response = new Response(null, { status: 302, headers: { Location: `${origin}/account` } });
   response.headers.append('Set-Cookie', sessionSetCookieHeader(cookieValue));
