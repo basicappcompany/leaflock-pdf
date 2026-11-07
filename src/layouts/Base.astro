@@ -358,12 +358,16 @@ const chromeHeightScript = cspInlineScript(`
         let condensed = false;
         // Only pages with a sidebar read --tools-chrome-h, but setting it unconditionally
         // is simpler than branching on `toolsSidebar`, and costs nothing on pages without one.
+        // Measured from the whole chrome box, not header plus strip, and measured again when
+        // the header's padding transition ends and whenever the box resizes: reading it only
+        // at the moment the class flips caught the header mid-transition, 8px too tall, and
+        // left that much gap between the header and the sidebar for the rest of the scroll.
         const updateChromeHeight = () => {
-          const header = chrome.querySelector<HTMLElement>('.site-header');
-          const strip = chrome.querySelector<HTMLElement>('.privacy-strip');
-          const h = (header ? header.offsetHeight : 0) + (strip ? strip.offsetHeight : 0);
+          const h = Math.round(chrome.getBoundingClientRect().height);
           document.documentElement.style.setProperty('--tools-chrome-h', h + 'px');
         };
+        chrome.addEventListener('transitionend', updateChromeHeight);
+        if (typeof ResizeObserver !== 'undefined') new ResizeObserver(updateChromeHeight).observe(chrome);
         const onScroll = () => {
           const y = window.scrollY;
           const shouldCondense = condensed ? y > EXPAND_AT : y > CONDENSE_AT;
