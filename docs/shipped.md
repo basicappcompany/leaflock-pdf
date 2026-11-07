@@ -31,11 +31,19 @@ Measured, not assumed (headless Edge, emulated slow 4G + 4x CPU, local build, si
 page text appears at ~3.0–3.5 s and the tool is usable ~1.0–1.5 s after that. Tried and **dropped**:
 - *Starting the tool's chunk download early* (a page script calling the same dynamic import):
   five alternating runs each way gave the same time to usable (merge 4.33 s vs 4.35 s, ocr 4.34 s
-  vs 4.25 s). On a slow link it is bytes, not request order, that costs.
+  vs 4.25 s). Request order is not what costs. (Later measurement: nor are the bytes; see below.)
 - *Hover prefetch* (Astro `prefetch`): it only fetches the HTML, so little to gain, and with it on
   3 of 5 local accessibility runs had a `page.goto` aborted; with it off, 3 of 3 passed. Not worth it.
-The real lever left is shipping fewer bytes on a tool page (~300 KB of JS/CSS compressed, ~19–25
-requests); see `docs/TODO.md`. Local Playwright (4 workers, Edge) also flakes on its own now and
+Bytes are not the lever either. A tool page transfers ~250 KB brotli over 19–25 requests, 170 KB of
+it `pdf.worker` (the PDF engine, 543 KB raw), which `ToolApp` warms when the browser is idle. Blocking
+that one file changed nothing: median time to usable 4,453 vs 4,408 ms on merge, 3,596 vs 3,770 ms on
+compress (3 alternating runs each), because it arrives after the tool is already usable. What is
+left on the critical path is the HTML, 8 KB of CSS, the React client (55 KB brotli, 208 KB raw) and a
+2–3 KB tool chunk: ~70 KB, a third of a second of transfer even at 1.6 Mbps. On this machine
+without throttling the tool is usable ~0.4–0.5 s after the page text; the 1.0–1.5 s figure needs
+the 4x CPU slowdown, so it is mostly a slow phone running JavaScript. Nothing cheap is left; the
+skeleton is the fix. Re-open only with a real-device measurement.
+Local Playwright (4 workers, Edge) also flakes on its own now and
 then (a browser context timing out, an aborted goto) and passes alone; CI runs 2 workers with 2 retries.
 
 ---
