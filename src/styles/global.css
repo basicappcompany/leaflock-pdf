@@ -173,9 +173,15 @@ h2 {
    without that second part, the sidebar would hold open a gap sized for the header's
    full, uncondensed height. */
 .site-chrome--condensed .site-nav,
-.site-chrome--condensed .skin-picker,
-.site-chrome--condensed .theme-toggle {
+.site-chrome--condensed .skin-picker {
   display: none;
+}
+
+/* The language button and theme button stay while scrolled, at the left beside the
+   brand, so they are reachable from anywhere on a long page. The nav between them and
+   the brand is what is hidden, so nothing pushes them across to the right. */
+.site-chrome--condensed .site-header {
+  justify-content: flex-start;
 }
 
 .site-chrome--condensed .site-header {
@@ -502,19 +508,17 @@ h2 {
   color: var(--color-accent);
 }
 
-/* One button showing the mode you are in: a sun and "Light", or a moon and "Dark". The
-   word is hidden on a phone, where the icon alone carries it. Which pair shows follows
-   html[data-theme], which the pre-paint script always sets, so it is right from first
-   paint. */
+/* One icon-only button showing the mode you are in: a sun, or a moon. Which one shows
+   follows html[data-theme], which the pre-paint script always sets, so it is right from
+   first paint. The accessible name carries the words. */
 .theme-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  min-width: 2.25rem;
+  width: 2.25rem;
   height: 2.25rem;
   margin: 0;
-  padding: 0 0.7rem;
+  padding: 0;
   border: 1px solid var(--color-border);
   border-radius: 999px;
   background: var(--color-surface-2);
@@ -556,18 +560,6 @@ html[data-theme='dark'] .theme-toggle__sun {
 
 html[data-theme='dark'] .theme-toggle__moon {
   display: inline;
-}
-
-@media (max-width: 48rem) {
-  /* A thumb wants about 36px, and the icon alone says enough on a phone. */
-  .theme-toggle {
-    width: 2.25rem;
-    padding: 0;
-  }
-
-  .theme-toggle__word {
-    display: none !important;
-  }
 }
 
 /* ---------- skin picker, lives next to .theme-toggle in the header ---------- */
@@ -863,6 +855,26 @@ html[data-sidebar-state='hidden'] .tools-sidebar {
 
 .tools-sidebar__group {
   margin-bottom: 0.2rem;
+}
+
+.tools-sidebar__recent {
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tools-sidebar__recent[hidden] {
+  display: none;
+}
+
+.tools-sidebar__recent-title {
+  margin: 0 0 0.1rem;
+  padding: 0.45rem 0.4rem;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .tools-sidebar__heading {

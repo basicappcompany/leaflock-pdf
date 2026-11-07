@@ -115,26 +115,24 @@ export default function DashboardPanel({ t, locale, toolLinks, links, quickTools
 
       <div className="dashboard__panels">
         <div className="dashboard__main">
+          {/* First card, and absent altogether until a tool has been used: an empty
+              "nothing yet" panel at the top is space spent on a message about nothing. */}
+          {recent.length > 0 && (
           <div className="dashboard__card">
             <div className="list-header">
               <h2>{t.recentHeading}</h2>
-              {recent.length > 0 && (
-                <button
-                  type="button"
-                  className="link-button"
-                  onClick={() => {
-                    clearRecent();
-                    setRecent([]);
-                  }}
-                >
-                  {t.clear}
-                </button>
-              )}
+              <button
+                type="button"
+                className="link-button"
+                onClick={() => {
+                  clearRecent();
+                  setRecent([]);
+                }}
+              >
+                {t.clear}
+              </button>
             </div>
 
-            {recent.length === 0 ? (
-              <p className="muted">{t.recentEmpty}</p>
-            ) : (
               <ul className="dashboard__recent">
                 {recent.map(({ tool, at }) => (
                   <li key={tool}>
@@ -153,10 +151,10 @@ export default function DashboardPanel({ t, locale, toolLinks, links, quickTools
                   </li>
                 ))}
               </ul>
-            )}
 
             <p className="hint">{t.recentNote}</p>
           </div>
+          )}
 
           <div className="dashboard__card dashboard__quick">
             <div className="list-header">

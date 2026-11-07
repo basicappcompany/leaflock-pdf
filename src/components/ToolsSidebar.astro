@@ -86,6 +86,13 @@ const dockDirections = [
   </div>
 
   <nav class="tools-sidebar__nav" id="toolsSidebarNav">
+    {/* Filled in by the script below from the device-local list of recently used tools
+        (src/lib/recentActivity.ts) and left hidden while that list is empty. Built in the
+        browser because the list lives in localStorage, which the build cannot read. */}
+    <section class="tools-sidebar__recent" id="sidebarRecent" aria-labelledby="sidebarRecentTitle" hidden>
+      <h2 class="tools-sidebar__recent-title" id="sidebarRecentTitle">{common.sidebar.recent}</h2>
+      <ul id="sidebarRecentList"></ul>
+    </section>
     {
       categories.map((category) => {
         const inCategory = tools.filter((tool) => tool.category === category);
@@ -116,7 +123,7 @@ const dockDirections = [
                 const active = path === href || path === `${href}/`;
                 const title = messages.tools[tool.id].title;
                 return (
-                  <li data-tool-name={title.toLowerCase()}>
+                  <li data-tool-name={title.toLowerCase()} data-tool-id={tool.id}>
                     <a href={href} aria-current={active ? 'page' : undefined}>
                       <ToolIcon tool={tool.id} class="tools-sidebar__item-icon" />
                       <span class="tools-sidebar__item-label">{title}</span>
@@ -268,6 +275,45 @@ const dockDirections = [
     if (event.key === 'Escape' && isNarrow() && visibility !== 'hidden') setVisibility('hidden');
   });
 
+  // ---------------- recent tools ----------------
+  // The same list the dashboard reads: tool ids and timestamps only, never file names.
+  // Each row is a copy of that tool's existing link below, so title, icon and address are
+  // the ones the sidebar already renders. Anything unreadable, or naming a tool this page
+  // does not know, is skipped; if nothing is left the group stays hidden.
+  const recentBox = document.getElementById('sidebarRecent');
+  const recentList = document.getElementById('sidebarRecentList');
+  function renderRecent() {
+    if (!recentBox || !recentList) return;
+    let ids: string[] = [];
+    try {
+      const parsed: unknown = JSON.parse(localStorage.getItem('leaflock-recent') ?? '[]');
+      if (Array.isArray(parsed)) {
+        ids = parsed
+          .filter((entry): entry is { tool: string; at: number } => !!entry && typeof entry.tool === 'string' && typeof entry.at === 'number')
+          .sort((a, b) => b.at - a.at)
+          .map((entry) => entry.tool);
+      }
+    } catch {
+      /* Blocked storage or a damaged value: show nothing. */
+    }
+    recentList.replaceChildren();
+    for (const id of ids.slice(0, 5)) {
+      const source = document.querySelector<HTMLLIElement>('.tools-sidebar__group li[data-tool-id="' + id + '"]');
+      if (!source) continue;
+      const item = source.cloneNode(true) as HTMLLIElement;
+      item.removeAttribute('data-tool-id');
+      item.removeAttribute('data-tool-name');
+      recentList.appendChild(item);
+    }
+    recentBox.hidden = recentList.childElementCount === 0;
+  }
+  renderRecent();
+  // Back/forward restores a page from memory with the old list; another tab can change it.
+  window.addEventListener('pageshow', renderRecent);
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'leaflock-recent') renderRecent();
+  });
+
   // ---------------- search ----------------
   // Filters the flat list of tools by a substring match on their title, opening every
   // category that has a match (and closing the rest, so results stay scannable) while
@@ -279,6 +325,8 @@ const dockDirections = [
 
   searchInput?.addEventListener('input', () => {
     const query = searchInput.value.trim().toLowerCase();
+    // Searching looks through every tool, so the shortcut group steps aside meanwhile.
+    if (recentBox) recentBox.hidden = query !== '' || recentList?.childElementCount === 0;
     if (!query) {
       for (const group of groups) {
         group.hidden = false;

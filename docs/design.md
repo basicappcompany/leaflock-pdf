@@ -586,8 +586,8 @@ instruction.** It replaces the three-way System/Light/Dark control. (The owner b
 for System as the default the same day, then withdrew it: the default stays Light.) A visitor
 with nothing in `localStorage` gets `data-theme="light"` from the pre-paint script; only a
 stored `dark` gives dark, and an old stored `'system'` reads as Light. `ThemeToggle.astro` is
-a single button showing the mode you are in (sun and "Light", or moon and "Dark"; the word
-is hidden on a phone). Which icon and word show is decided in CSS from `html[data-theme]`,
+a single icon-only button showing the mode you are in (a sun or a moon; the accessible name
+carries the words). Which icon shows is decided in CSS from `html[data-theme]`,
 which is always set, so it is right at first paint; the script only writes the choice on
 click and keeps the tooltip pointing at the mode a click leads to. **Stated limit:** System
 is no longer offered. The `system` string in `common.ts` is unused now but stays, because the

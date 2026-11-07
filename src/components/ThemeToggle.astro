@@ -9,13 +9,12 @@ const { t } = Astro.props;
 ---
 
 {/* One button. The default is always Light; a click switches to the other mode and saves
-     it. The icon and the word show the mode you are in now (sun and "Light", or moon and
-     "Dark"); the tooltip and accessible name start with that word (WCAG 2.5.3, label in
-     name) and then say what a click leads to. Which pair is
+     it. The icon alone shows the mode you are in now (sun for Light, moon for Dark); the
+     tooltip and accessible name still name that mode and then say what a click leads to,
+     so nothing is lost to a screen reader. Which icon is
      visible is decided in CSS from html[data-theme], which the pre-paint script in
      Base.astro always sets, so the right one is there from first paint and the script
-     below only writes the choice and keeps the labels current. The words come from the
-     i18n strings; on a phone only the icon shows. A JSX comment, not an HTML one, so it
+     below only writes the choice and keeps the labels current. A JSX comment, not an HTML one, so it
      is not shipped in every page. */}
 <button
   type="button"
@@ -34,8 +33,6 @@ const { t } = Astro.props;
   <svg class="theme-toggle__icon theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
     <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"></path>
   </svg>
-  <span class="theme-toggle__word theme-toggle__sun" aria-hidden="true">{t.light}</span>
-  <span class="theme-toggle__word theme-toggle__moon" aria-hidden="true">{t.dark}</span>
 </button>
 
 <script>
@@ -47,8 +44,7 @@ const { t } = Astro.props;
   if (button) {
     const showingDark = () => document.documentElement.dataset.theme === 'dark';
     const sync = () => {
-      // Starts with the visible word (the mode you are in), which WCAG 2.5.3 requires,
-      // then says what a click leads to.
+      // Names the mode you are in, then says what a click leads to.
       const dark = showingDark();
       const now = dark ? button.dataset.toDark : button.dataset.toLight;
       const next = dark ? button.dataset.toLight : button.dataset.toDark;

@@ -17,6 +17,21 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 7 November 2026 — Recent tools in the sidebar; icon-only theme button; scrolled header
+
+The recently-used-tools list (`recentActivity.ts`: tool id and time, never a file name) now
+heads the tools sidebar as a "Recent tools" group, for everyone and not only signed-in
+visitors. The dashboard's recent card is hidden outright while the list is empty. Both are
+absent until a tool has been used. The sidebar group is built in the browser by cloning the
+tool's own link, so title, icon and address cannot drift. It steps aside while searching.
+The theme button lost its "Light"/"Dark" word (the accessible name keeps them). Once the page
+scrolls, the language and theme buttons stay and sit left beside the brand. Stated limit: the
+new `sidebar.recent` string falls back to English in other locales until catalogues are
+regenerated; `dashboard.recentEmpty` is unused but stays, since catalogues must match key for key.
+Spec: `tests/e2e/recentTools.spec.ts`.
+
+---
+
 ## 7 November 2026 — Flag-only language button, and the phone header stops wrapping
 
 The language button shows only a flag (the globe for a regional language), and the opened list
