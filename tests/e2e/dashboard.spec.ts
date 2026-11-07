@@ -82,8 +82,19 @@ test('clears the recent list on request', async ({ page, baseURL }) => {
   await page.goto('/dashboard');
 
   await page.getByRole('button', { name: t.clear }).click();
-  await expect(page.getByText(t.recentEmpty)).toBeVisible();
+  // Cleared means the whole card goes, not an empty one in its place.
+  await expect(page.getByRole('heading', { name: t.recentHeading })).toHaveCount(0);
   expect(await page.evaluate(() => window.localStorage.getItem('leaflock-recent'))).toBeNull();
+});
+
+test('shows no recent-tools card at all while nothing has been used', async ({ page, baseURL }) => {
+  await signIn(page, baseURL!, 'free');
+  await page.goto('/dashboard');
+
+  await expect(page.getByRole('heading', { level: 1, name: t.welcome })).toBeVisible();
+  await expect(page.getByRole('heading', { name: t.recentHeading })).toHaveCount(0);
+  await expect(page.getByText(t.recentEmpty)).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: t.quickHeading })).toBeVisible();
 });
 
 test('shows the daily meter and an upgrade prompt on a free account', async ({ page, baseURL }) => {

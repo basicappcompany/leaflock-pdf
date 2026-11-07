@@ -56,6 +56,7 @@ export const common = {
     recentHeading: 'Recent tools',
     /** Shown under the list, because a device-local list surprises people otherwise. */
     recentNote: 'Kept on this device only. We never see which files you open, so this list does not follow you to another browser.',
+    /** No longer shown (the card is left out while nothing has been used); kept because generated locale catalogues must match English key for key. */
     recentEmpty: 'Nothing yet. The tools you use will show up here.',
     quickHeading: 'Quick tools',
     allTools: 'All tools',
@@ -193,6 +194,8 @@ export const common = {
   sidebar: {
     label: 'All tools',
     allTools: 'All tools',
+    /** Heading of the "recently used" group at the top of the list; shown only once a tool has been used. */
+    recent: 'Recent tools',
     hide: 'Hide sidebar',
     show: 'Show tools',
     search: 'Search tools',

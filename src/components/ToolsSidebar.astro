@@ -48,7 +48,7 @@ const dockDirections = [
 ] as const;
 ---
 
-<aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label} data-default-hidden={defaultHidden}>
+<aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label} data-default-hidden={defaultHidden} data-recent-title={common.sidebar.recent}>
   <div class="tools-sidebar__head">
     <span class="tools-sidebar__title">{common.sidebar.allTools}</span>
     <div class="tools-sidebar__controls">
@@ -152,6 +152,9 @@ const dockDirections = [
 </button>
 
 <script>
+  import { readRecent } from '../lib/recentActivity';
+  import { tools } from '../tools/registry';
+
   // Mirrors ThemeToggle's pattern: plain script, localStorage, data attributes on
   // <html>. Both attributes are also set before first paint by the inline script in
   // Base.astro, so there is no layout flash between the defaults and a saved choice.
@@ -268,6 +271,56 @@ const dockDirections = [
     if (event.key === 'Escape' && isNarrow() && visibility !== 'hidden') setVisibility('hidden');
   });
 
+  // ---------------- recent tools ----------------
+  // The same list the dashboard reads (readRecent): tool ids and times only, never file
+  // names. Built here, not in the page, so every page's HTML stays as small as it was and
+  // so an empty list costs nothing. Each row is a copy of that tool's own link further
+  // down, so title, icon and address are always the ones the sidebar already renders.
+  // The group is only in the page while it has rows, and steps aside while searching.
+  let recentBox: HTMLElement | null = null;
+  let searching = false;
+  function renderRecent() {
+    recentBox?.remove();
+    recentBox = null;
+    const nav = document.getElementById('toolsSidebarNav');
+    if (!nav) return;
+    const anchors = [...nav.querySelectorAll<HTMLAnchorElement>('.tools-sidebar__group li > a')];
+    const items: HTMLElement[] = [];
+    for (const run of readRecent()) {
+      const slug = tools.find((tool) => tool.id === run.tool)?.slug;
+      const link = anchors.find((a) => {
+        const path = new URL(a.href, location.href).pathname.replace(/\/$/, '');
+        return slug !== undefined && path.endsWith('/' + slug);
+      });
+      if (link?.parentElement) items.push(link.parentElement.cloneNode(true) as HTMLElement);
+      if (items.length === 5) break;
+    }
+    if (items.length === 0) return;
+    const title = document.createElement('h2');
+    title.className = 'tools-sidebar__recent-title';
+    title.id = 'sidebarRecentTitle';
+    title.textContent = sidebar?.dataset.recentTitle ?? '';
+    const list = document.createElement('ul');
+    for (const item of items) {
+      item.removeAttribute('data-tool-name');
+      list.appendChild(item);
+    }
+    recentBox = document.createElement('section');
+    recentBox.id = 'sidebarRecent';
+    recentBox.className = 'tools-sidebar__recent';
+    recentBox.setAttribute('aria-labelledby', 'sidebarRecentTitle');
+    recentBox.hidden = searching;
+    recentBox.appendChild(title);
+    recentBox.appendChild(list);
+    nav.insertBefore(recentBox, nav.firstChild);
+  }
+  renderRecent();
+  // Back/forward restores a page from memory with the old list; another tab can change it.
+  window.addEventListener('pageshow', renderRecent);
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'leaflock-recent') renderRecent();
+  });
+
   // ---------------- search ----------------
   // Filters the flat list of tools by a substring match on their title, opening every
   // category that has a match (and closing the rest, so results stay scannable) while
@@ -279,6 +332,9 @@ const dockDirections = [
 
   searchInput?.addEventListener('input', () => {
     const query = searchInput.value.trim().toLowerCase();
+    // Searching looks through every tool, so the shortcut group steps aside meanwhile.
+    searching = query !== '';
+    if (recentBox) recentBox.hidden = searching;
     if (!query) {
       for (const group of groups) {
         group.hidden = false;
