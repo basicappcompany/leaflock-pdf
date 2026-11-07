@@ -52,6 +52,45 @@ export const localeRegistry = [
   { code: 'zh-CN', path: 'zh-cn', name: 'Chinese (Simplified)', native: '简体中文', dir: 'ltr', evidence: 'inferred', status: 'planned' },
 ];
 
+/**
+ * The flag shown on the language button, as an ISO 3166 country code (the file name in
+ * the `flag-icons` package), or `null` for the globe.
+ *
+ * Owner rule, 7 November 2026: a language that is a country's own gets that country's flag;
+ * a regional language, or one spoken across several countries with no clear single home,
+ * gets the globe. Bengali is the worked example: spoken in Bangladesh and in India's West
+ * Bengal, so a flag would pick a side. English uses the US flag because the site is
+ * written in American spelling. Arabic is the globe for the same reason as Bengali.
+ *
+ * Only the flags named here are copied into `public/vendor/flags/`
+ * (integrations/vendor-assets.mjs). Every registry code needs an entry — checked in
+ * tests/unit/locales.test.ts — so adding a language means deciding its flag.
+ *
+ * @type {Readonly<Record<string, string | null>>}
+ */
+export const localeFlags = {
+  en: 'us',
+  hi: 'in',
+  bn: null,
+  'pt-BR': 'br',
+  id: 'id',
+  ru: 'ru',
+  de: 'de',
+  es: 'es',
+  fr: 'fr',
+  tr: 'tr',
+  vi: 'vn',
+  it: 'it',
+  ja: 'jp',
+  pl: 'pl',
+  ko: 'kr',
+  ar: null,
+  th: 'th',
+  nl: 'nl',
+  fil: 'ph',
+  'zh-CN': 'cn',
+};
+
 /** The shape Astro's `i18n.locales` expects: a plain string, or { path, codes } when the URL differs from the code. */
 // Typed `any`: Astro derives `defaultLocale`'s type from literal locale strings, which a list
 // built at runtime cannot provide. tests/unit/locales.test.ts checks the real shape instead.

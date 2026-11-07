@@ -18,6 +18,7 @@ The following are used under the MIT License. Each copyright notice belongs to t
 - **@tesseract.js-data/eng** 1.0.0 (the English text-recognition model used by OCR PDF) — [npmjs.com/package/@tesseract.js-data/eng](https://www.npmjs.com/package/@tesseract.js-data/eng)
 - **docx** 9.15.0 — Copyright (c) 2016 Dolan — [npmjs.com/package/docx](https://www.npmjs.com/package/docx)
 - **fflate** 0.8.3 — Copyright (c) 2026 Arjun Barrett — [npmjs.com/package/fflate](https://www.npmjs.com/package/fflate)
+- **flag-icons** 7.6.0 (the country flags on the language button, served as separate files from `/vendor/flags/`) — Copyright (c) 2013 Panayiotis Lipiridis — [npmjs.com/package/flag-icons](https://www.npmjs.com/package/flag-icons)
 - **React** 19.3.1 — Copyright (c) Meta Platforms, Inc. and affiliates. — [react.dev](https://react.dev)
 - **React DOM** 19.3.1 — Copyright (c) Meta Platforms, Inc. and affiliates.
 - **read-excel-file** 9.3.13 — Copyright (c) 2018 gitlab.com/catamphetamine — [npmjs.com/package/read-excel-file](https://www.npmjs.com/package/read-excel-file)

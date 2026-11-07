@@ -17,6 +17,30 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 7 November 2026 — Flag-only language button, and the phone header stops wrapping
+
+The language button shows only a flag (the globe for a regional language), and the opened list
+shows the same mark beside each language's full name. **Rule, owner 7 November 2026:** a
+language that is a country's own gets that flag; a regional or multi-country one gets the globe.
+`localeFlags` in `src/i18n/locales.mjs` decides, and `tests/unit/locales.test.ts` fails if a
+registry language has no decision, names a flag the package lacks, or the globe set drifts from
+Bengali and Arabic. English is the US flag because the site is in American spelling.
+
+**Why SVG, not emoji:** Windows Chrome and Edge do not draw flag emoji, only two letters ("IN",
+"DE"), and Windows is most of this audience. `flag-icons` (MIT, devDependency) is copied by
+`integrations/vendor-assets.mjs` into `public/vendor/flags/`, only the codes in `localeFlags`
+(18 files, 124 KB on disk, about 1 KB each on the wire, list images `loading="lazy"` so a closed
+list fetches none), with its LICENSE beside them and an entry on `/licenses`. The flag list is
+in the vendor stamp so adding a language re-copies. Same-origin, so the CSP is untouched.
+
+The phone header had wrapped the theme button onto its own row: wordmark, language button and two
+round buttons needed about 355px of a 342px row at 390px wide. Smaller gaps and side padding on
+phones fix it, and `tests/e2e/mobile.spec.ts` now fails at 360, 390 and 412px if any of the four
+leaves the first row. Stated limit: the button's accessible name still says the language ("Language:
+Deutsch") because a flag alone is a weak label.
+
+---
+
 ## 7 November 2026 — Sign-in history
 
 Before this, only `users.last_login_at` existed: each sign-in overwrote the one before, and a

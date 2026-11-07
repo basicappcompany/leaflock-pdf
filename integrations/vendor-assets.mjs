@@ -3,6 +3,7 @@ import { cp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { localeFlags } from '../src/i18n/locales.mjs';
 
 const require = createRequire(import.meta.url);
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -20,9 +21,12 @@ function packageDir(name) {
 async function copyVendorAssets() {
   // Skip when this exact set is already in place; parallel builds would otherwise
   // overwrite files another build is reading (EBUSY on Windows).
-  const versions = ['pdfjs-dist', 'tesseract.js', '@tesseract.js-data/eng', 'libheif-js']
-    .map((name) => `${name}@${require(`${name}/package.json`).version}`)
-    .join('\n');
+  const flagCodes = [...new Set(Object.values(localeFlags).filter((code) => code !== null))].sort();
+  // The flag list is part of the stamp: adding a language with a new flag must re-copy.
+  const versions =
+    ['pdfjs-dist', 'tesseract.js', '@tesseract.js-data/eng', 'libheif-js', 'flag-icons']
+      .map((name) => `${name}@${require(`${name}/package.json`).version}`)
+      .join('\n') + `\nflags:${flagCodes.join(',')}`;
   const stamp = path.join(outDir, '.versions');
   if ((await readFile(stamp, 'utf8').catch(() => '')) === versions) return false;
 
@@ -56,6 +60,15 @@ async function copyVendorAssets() {
     await cp(path.join(libheif, file), path.join(outDir, 'libheif', file));
   }
 
+  // The language button's flags (flag-icons, MIT): only the ones a locale actually uses, as
+  // the 4:3 SVGs, with the licence beside them. Served from our origin like everything else.
+  const flags = packageDir('flag-icons');
+  await mkdir(path.join(outDir, 'flags'), { recursive: true });
+  for (const code of flagCodes) {
+    await cp(path.join(flags, 'flags', '4x3', `${code}.svg`), path.join(outDir, 'flags', `${code}.svg`));
+  }
+  await cp(path.join(flags, 'LICENSE'), path.join(outDir, 'flags', 'LICENSE'));
+
   await writeFile(stamp, versions);
   return true;
 }
@@ -66,7 +79,7 @@ export function vendorAssets() {
     name: 'leaflock:vendor-assets',
     hooks: {
       'astro:config:setup': async ({ logger }) => {
-        if (await copyVendorAssets()) logger.info("Copied pdf.js, tesseract.js and libheif runtime files to public/vendor");
+        if (await copyVendorAssets()) logger.info("Copied pdf.js, tesseract.js, libheif and flag files to public/vendor");
       },
     },
   };
