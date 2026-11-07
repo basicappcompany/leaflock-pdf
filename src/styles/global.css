@@ -767,8 +767,7 @@ html[data-sidebar-dock='right'] .tools-sidebar {
 }
 
 /* Hidden = zero width, not gone: the handles are children of the sidebar, so they ride its inner
-   edge to the window edge and stay there. Height is kept (top and bottom still apply) so they
-   stay vertically centred. */
+   edge to the window edge and stay there, at the same height. */
 html[data-sidebar-state='hidden'] .tools-sidebar {
   width: 0 !important;
   border: 0 !important;
@@ -778,18 +777,18 @@ html[data-sidebar-state='hidden'] .tools-sidebar__clip {
   visibility: hidden;
 }
 
-/* Three handles in one column, centred on the sidebar's inner edge (the edge facing the page) and
-   attached to it, so they travel with it. Top: move to the other side. Middle: hide or show.
+/* Three handles in one column on the sidebar's inner edge (the edge facing the page), near the
+   top just under the search box where a hand already is, not mid-screen; attached to the sidebar,
+   so they travel with it. Top: move to the other side. Middle: hide or show.
    Bottom: reset. Pressing any of them while the sidebar is hidden opens it and does what the
    handle says (ToolsSidebar.astro). */
 .tools-sidebar__handles {
   position: absolute;
-  top: 50%;
+  top: 3.5rem;
   z-index: 2;
   display: flex;
   flex-direction: column;
   width: var(--sb-handle-w);
-  transform: translateY(-50%);
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   box-shadow: var(--shadow);

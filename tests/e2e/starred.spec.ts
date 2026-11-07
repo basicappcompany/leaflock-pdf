@@ -150,9 +150,12 @@ test.describe('on a desktop', () => {
 
   test('another tab starring a tool updates this one', async ({ page, context }) => {
     await page.goto('/split-pdf');
+    await expect(page.locator('.star-toggle')).toBeVisible();
+    // A light page in a second tab writes the list, which is what starring there does; the
+    // browser then tells this tab through a storage event.
     const other = await context.newPage();
-    await other.goto('/merge-pdf');
-    await other.locator('.star-toggle').click();
+    await other.goto('/about');
+    await other.evaluate((key) => window.localStorage.setItem(key, JSON.stringify({ tools: ['merge'] })), KEY);
     await expect(page.locator('#sidebarStarred li')).toContainText(en.tools.merge.title);
   });
 

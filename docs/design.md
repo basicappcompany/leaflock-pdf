@@ -682,7 +682,7 @@ caught.
 
 - **The sidebar's three handles** (8 Nov 2026, replacing the header buttons, the reopen
   button and the title). One column on the sidebar's inner edge (the edge facing the page),
-  centred vertically: *move to the other side* (top), *hide/show* (middle), *reset* (bottom).
+  near the top, just under the search box (not mid-screen, where a hand never is): *move to the other side* (top), *hide/show* (middle), *reset* (bottom).
   They are children of the sidebar, outside its box, so they ride its edge: flush against it
   while open, at the window edge on the same side while hidden. Hidden is `width: 0`, not
   `display: none`, which is what keeps them reachable; the sidebar's own contents sit in
