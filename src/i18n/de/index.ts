@@ -46,6 +46,8 @@ export default {
       "recentHeading": "Zuletzt verwendete Werkzeuge",
       "recentNote": "Wird nur auf diesem Gerät gespeichert. Wir sehen nie, welche Dateien Sie öffnen, daher folgt Ihnen diese Liste nicht in einen anderen Browser.",
       "recentEmpty": "Noch nichts vorhanden. Die Werkzeuge, die Sie verwenden, erscheinen hier.",
+      "starredHeading": "Markierte Werkzeuge",
+      "starredNote": "Gespeichert in diesem Browser und in Ihrem Konto, damit sie Ihnen in andere Browser folgen.",
       "quickHeading": "Schnellzugriff",
       "allTools": "Alle Werkzeuge",
       "open": "Öffnen",
@@ -158,10 +160,15 @@ export default {
       "edit": "Bearbeiten und signieren",
       "secure": "Schützen und optimieren"
     },
+    "star": {
+      "label": "Dieses Werkzeug mit Stern markieren",
+      "short": "Stern"
+    },
     "sidebar": {
       "label": "Alle Werkzeuge",
       "allTools": "Alle Werkzeuge",
       "recent": "Zuletzt verwendete Werkzeuge",
+      "starred": "Markierte Werkzeuge",
       "hide": "Seitenleiste ausblenden",
       "show": "Werkzeuge anzeigen",
       "position": "Position der Seitenleiste",

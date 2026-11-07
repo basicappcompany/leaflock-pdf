@@ -46,6 +46,8 @@ export default {
       "recentHeading": "Alat terbaru",
       "recentNote": "Hanya disimpan di perangkat ini. Kami tidak pernah melihat file mana yang Anda buka, sehingga daftar ini tidak ikut ke browser lain.",
       "recentEmpty": "Belum ada. Alat yang Anda gunakan akan muncul di sini.",
+      "starredHeading": "Alat berbintang",
+      "starredNote": "Disimpan di browser ini dan di akun Anda, jadi ikut Anda ke browser lain.",
       "quickHeading": "Alat cepat",
       "allTools": "Semua alat",
       "open": "Buka",
@@ -158,10 +160,15 @@ export default {
       "edit": "Edit dan tanda tangan",
       "secure": "Lindungi dan optimalkan"
     },
+    "star": {
+      "label": "Beri bintang alat ini",
+      "short": "Bintang"
+    },
     "sidebar": {
       "label": "Semua alat",
       "allTools": "Semua alat",
       "recent": "Alat terbaru",
+      "starred": "Alat berbintang",
       "hide": "Sembunyikan bilah samping",
       "show": "Tampilkan alat",
       "position": "Posisi bilah samping",

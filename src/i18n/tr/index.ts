@@ -46,6 +46,8 @@ export default {
       "recentHeading": "Son kullanılan araçlar",
       "recentNote": "Yalnızca bu cihazda tutulur. Hangi dosyaları açtığınızı asla görmeyiz, bu yüzden bu liste başka bir tarayıcıya taşınmaz.",
       "recentEmpty": "Henüz bir şey yok. Kullandığınız araçlar burada görünecek.",
+      "starredHeading": "Yıldızlı araçlar",
+      "starredNote": "Bu tarayıcıda ve hesabınızda saklanır, böylece diğer tarayıcılarda da görünür.",
       "quickHeading": "Hızlı araçlar",
       "allTools": "Tüm araçlar",
       "open": "Aç",
@@ -158,10 +160,15 @@ export default {
       "edit": "Düzenle ve imzala",
       "secure": "Koru ve optimize et"
     },
+    "star": {
+      "label": "Bu aracı yıldızla",
+      "short": "Yıldız"
+    },
     "sidebar": {
       "label": "Tüm araçlar",
       "allTools": "Tüm araçlar",
       "recent": "Son kullanılan araçlar",
+      "starred": "Yıldızlı araçlar",
       "hide": "Kenar çubuğunu gizle",
       "show": "Araçları göster",
       "position": "Kenar çubuğu konumu",

@@ -37,6 +37,8 @@ These logs never contain your documents, because documents are not sent in any r
 
 Signing in is optional. If you create an account, we keep your email address, when the account was created, your plan, and, if you set them up, a password (stored only as a salted hash) or a link to your Google account. We also keep a record of each time you sign in: the date and time, whether you used an email link, a password or Google, and your browser family and major version (for example "Chrome 141"). We do not store your IP address in this record, and it never contains anything about your files.
 
+If you star tools, we also keep which tools you starred, in the order you starred them, so the same list appears in every browser you sign in on. It is a list of tool names only, such as "Merge PDF", and never contains a file, a file name or anything you typed into a tool.
+
 You can download all of it from your account page, and deleting your account deletes it.
 
 - **Purpose:** running your account, keeping it secure, and showing you when it was used.
@@ -78,10 +80,11 @@ When a tool fails because of a bug, your browser sends a short error report to o
 ## Data stored on your device
 
 - **Theme choice:** if you press the theme button, your light or dark choice is saved in your browser's localStorage so the site remembers it. The default is light, and nothing is saved until you press it.
+- **Starred and recent tools:** the tools you star, and the tools you used recently with the time you used them, are saved in your browser's localStorage so the sidebar and your dashboard can show them. Tool names and times only, never a file or a file name. If you are signed in, your starred tools are also saved to your account (see above); the recent list stays on your device. Clear your site data to remove them.
 - **OCR language model:** after you first use OCR PDF, your browser stores the English text-recognition model so it doesn't need to download it again. This file is the same for everyone and contains no personal data.
 - **Cookies:** two if you sign in (`__Host-leaflock_session`, `leaflock_signed_in`), and a third (`leaflock_skin`) only if you pick a visual skin. None of them track you or carry a profile.
 
-We cannot read any of this data; it never leaves your device. See the [Cookie policy](/cookies) for what each item contains and how to remove it.
+We cannot read any of this data; it stays on your device, except for your starred tools if you are signed in, which are saved to your account as described above. See the [Cookie policy](/cookies) for what each item contains and how to remove it.
 
 ## What we don't do
 

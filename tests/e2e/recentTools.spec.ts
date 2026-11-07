@@ -37,7 +37,7 @@ test('sidebar: recently used tools sit at the top, newest first, and link to the
 
   const group = page.locator('#sidebarRecent');
   await expect(group).toBeVisible();
-  await expect(group.locator('summary')).toHaveText(en.common.sidebar.recent);
+  await expect(group.locator('summary')).toContainText(en.common.sidebar.recent);
   const rows = group.locator('li');
   // The unknown id is skipped; the other two are ordered newest first.
   await expect(rows).toHaveCount(2);

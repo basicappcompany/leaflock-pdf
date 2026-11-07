@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
+import StarToolButton from '../components/StarToolButton.astro';
 import ToolApp from '../components/ToolApp';
 import Base from '../layouts/Base.astro';
 import { getMessages, type ToolMessagesBase } from '../i18n';
@@ -65,10 +66,13 @@ const jsonLd = [
     <span aria-hidden="true">/</span>
     <a href={getRelativeLocaleUrl(locale, `tools/${tool.category}`)}>{common.categories[tool.category]}</a>
   </nav>
-  <h1>
-    {page.title}
-    {tool.tier !== 'free' && <span class="badge-pro">{common.toolPage.tiers[tool.tier].label}</span>}
-  </h1>
+  <div class="tool-heading">
+    <h1>
+      {page.title}
+      {tool.tier !== 'free' && <span class="badge-pro">{common.toolPage.tiers[tool.tier].label}</span>}
+    </h1>
+    <StarToolButton toolId={toolId} t={common.star} />
+  </div>
   <p class="lead">{page.summary}</p>
   <ul class="trust">
     <li>{common.trust.noUpload}</li>

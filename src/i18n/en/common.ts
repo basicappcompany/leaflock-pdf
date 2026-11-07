@@ -58,6 +58,9 @@ export const common = {
     recentNote: 'Kept on this device only. We never see which files you open, so this list does not follow you to another browser.',
     /** No longer shown (the card is left out while nothing has been used); kept because generated locale catalogues must match English key for key. */
     recentEmpty: 'Nothing yet. The tools you use will show up here.',
+    starredHeading: 'Starred tools',
+    /** Under the list, because where stars are kept is the question people ask. */
+    starredNote: 'Kept in this browser, and in your account, so they follow you to other browsers.',
     quickHeading: 'Quick tools',
     allTools: 'All tools',
     open: 'Open',
@@ -190,12 +193,19 @@ export const common = {
     edit: 'Edit and sign',
     secure: 'Protect and optimize',
   },
+  /** The star button on a tool's page. Its name stays the same; whether it is on is its pressed state. */
+  star: {
+    label: 'Star this tool',
+    short: 'Star',
+  },
   /** The persistent tools sidebar on tool and category pages (src/components/ToolsSidebar.astro). */
   sidebar: {
     label: 'All tools',
     allTools: 'All tools',
     /** Heading of the "recently used" group at the top of the list; shown only once a tool has been used. */
     recent: 'Recent tools',
+    /** Heading of the group of tools the visitor has starred, below the recent ones. */
+    starred: 'Starred tools',
     hide: 'Hide sidebar',
     show: 'Show tools',
     /** Labels of the three handles on the sidebar's inner edge. */

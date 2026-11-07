@@ -51,6 +51,7 @@ This list is meant to be exhaustive. If you find something we receive that is no
 
 This is the distinction this page exists to make legible, because the honest answer is not "nothing is stored".
 
+- **Your starred and recent tools.** The names of the tools you starred or used recently, and when, are kept in your browser's localStorage. They name tools, never files, and carry nothing you typed into one. If you sign in, your starred tools are also saved to your account so they follow you to other browsers; the recent list stays on your device. Neither contains document content, so the claims above are unaffected.
 - **Recent work, if you turn it on.** A finished file can be kept in your browser's own storage for five minutes, one hour, twenty-four hours, or a length you choose on a paid plan. It is off until you enable it, it expires on its own, and you can clear it whenever you like. It never leaves your device, so the claims above are unaffected.
 - **The OCR language model**, after you first use [OCR PDF](/ocr-pdf) — about 10 MB, kept so it is not downloaded twice. It contains nothing of yours.
 - **Your light or dark theme choice**, if you pick one.
@@ -89,7 +90,7 @@ If you are filling in a questionnaire, these are the answers most of them ask fo
 | Is document content transmitted to the vendor? | No |
 | Is document content stored by the vendor? | No |
 | Is document content stored on the device? | Only if the user turns on recent work, with an expiry they choose |
-| What personal data is held? | Email address, plan, sign-in metadata; a salted IP hash for rate limiting |
+| What personal data is held? | Email address, plan, sign-in metadata, the names of any tools the user starred; a salted IP hash for rate limiting |
 | Sub-processors | Hosting, email and payment providers, named in the [privacy policy](/privacy) |
 | Third-party scripts or trackers | None |
 | Technical control preventing exfiltration | `connect-src 'self'`, enforced by the browser |

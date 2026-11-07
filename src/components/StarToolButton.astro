@@ -1,0 +1,41 @@
+---
+import type { CommonMessages } from '../i18n';
+import type { ToolId } from '../tools/registry';
+
+interface Props {
+  toolId: ToolId;
+  t: CommonMessages['star'];
+}
+
+const { toolId, t } = Astro.props;
+---
+
+{/* Its name never changes; whether the tool is starred is its pressed state, so a screen reader
+     says "Star this tool, toggle button, pressed" and the visible word always matches the name
+     (WCAG 2.5.3). The filled star is the same state, for everyone else. */}
+<button type="button" class="star-toggle" data-tool={toolId} aria-pressed="false" aria-label={t.label}>
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <polygon points="12 3 14.7 8.6 20.8 9.5 16.4 13.8 17.4 19.9 12 17 6.6 19.9 7.6 13.8 3.2 9.5 9.3 8.6"></polygon>
+  </svg>
+  <span>{t.short}</span>
+</button>
+
+<script>
+  import { isStarred, onStarredChange, syncStarred, toggleStarred } from '../lib/starred';
+  import type { ToolId } from '../tools/registry';
+
+  const button = document.querySelector<HTMLButtonElement>('.star-toggle');
+  if (button) {
+    const id = button.dataset.tool as ToolId;
+    const paint = () => button.setAttribute('aria-pressed', String(isStarred(id)));
+    paint();
+    button.addEventListener('click', () => {
+      toggleStarred(id);
+      paint();
+    });
+    // The list can change under this button: from the sidebar's star, another tab, or a sync.
+    onStarredChange(paint);
+    window.addEventListener('pageshow', paint);
+    void syncStarred();
+  }
+</script>

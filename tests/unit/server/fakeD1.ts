@@ -17,6 +17,7 @@ export function createFakeD1() {
   const rateLimits: Row[] = [];
   const usageCounters: Row[] = [];
   const webhookEvents: Row[] = [];
+  const starredTools: Row[] = [];
 
   function run(sql: string, params: unknown[]): { row: Row | null; rows: Row[] } {
     const text = normalize(sql);
@@ -118,6 +119,22 @@ export function createFakeD1() {
     }
     if (text === 'DELETE FROM login_events WHERE user_id = ?') {
       for (let i = loginEvents.length - 1; i >= 0; i--) if (loginEvents[i]!['user_id'] === params[0]) loginEvents.splice(i, 1);
+      return { row: null, rows: [] };
+    }
+    if (text === 'SELECT tool_id FROM starred_tools WHERE user_id = ? ORDER BY position') {
+      const rows = starredTools
+        .filter((row) => row['user_id'] === params[0])
+        .sort((a, b) => (a['position'] as number) - (b['position'] as number))
+        .map(({ tool_id }) => ({ tool_id }));
+      return { row: null, rows };
+    }
+    if (text === 'INSERT INTO starred_tools (user_id, tool_id, position, created_at) VALUES (?, ?, ?, ?)') {
+      const [user_id, tool_id, position, created_at] = params;
+      starredTools.push({ user_id, tool_id, position, created_at });
+      return { row: null, rows: [] };
+    }
+    if (text === 'DELETE FROM starred_tools WHERE user_id = ?') {
+      for (let i = starredTools.length - 1; i >= 0; i--) if (starredTools[i]!['user_id'] === params[0]) starredTools.splice(i, 1);
       return { row: null, rows: [] };
     }
     if (text === 'DELETE FROM sessions WHERE user_id = ?') {
@@ -232,5 +249,5 @@ export function createFakeD1() {
     },
   };
 
-  return { db: db as unknown as D1Database, tables: { users, magicLinks, sessions, loginEvents, rateLimits, usageCounters, webhookEvents } };
+  return { db: db as unknown as D1Database, tables: { users, magicLinks, sessions, loginEvents, rateLimits, usageCounters, webhookEvents, starredTools } };
 }

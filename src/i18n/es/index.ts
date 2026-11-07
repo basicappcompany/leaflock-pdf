@@ -46,6 +46,8 @@ export default {
       "recentHeading": "Herramientas recientes",
       "recentNote": "Se guarda solo en este dispositivo. Nunca vemos qué archivos abre, por lo que esta lista no le sigue a otro navegador.",
       "recentEmpty": "Aún nada. Las herramientas que use aparecerán aquí.",
+      "starredHeading": "Herramientas destacadas",
+      "starredNote": "Se guardan en este navegador y en tu cuenta, así que te acompañan en otros navegadores.",
       "quickHeading": "Herramientas rápidas",
       "allTools": "Todas las herramientas",
       "open": "Abrir",
@@ -158,10 +160,15 @@ export default {
       "edit": "Editar y firmar",
       "secure": "Proteger y optimizar"
     },
+    "star": {
+      "label": "Marcar esta herramienta con una estrella",
+      "short": "Estrella"
+    },
     "sidebar": {
       "label": "Todas las herramientas",
       "allTools": "Todas las herramientas",
       "recent": "Herramientas recientes",
+      "starred": "Herramientas destacadas",
       "hide": "Ocultar barra lateral",
       "show": "Mostrar herramientas",
       "position": "Posición de la barra lateral",

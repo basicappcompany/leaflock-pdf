@@ -19,7 +19,7 @@ leaflockpdf.com sets **no advertising cookies and no analytics or tracking cooki
 
 ## What we store in your browser instead
 
-Cookies aren't the only way a website can store information in your browser. LeafLock PDF uses two other browser features, for limited purposes. Both stay on your device: the data isn't sent to us, and we can't read it.
+Cookies aren't the only way a website can store information in your browser. LeafLock PDF uses two other browser features, for limited purposes. Almost all of it stays on your device: the data isn't sent to us, and we can't read it. The one exception is your list of starred tools when you are signed in, described below.
 
 ### localStorage: your theme choice
 
@@ -28,6 +28,15 @@ The site saves your theme choice in your browser's localStorage under the name `
 - **What it contains:** the word `light` or `dark`.
 - **When it's set:** the first time you open the site, and again whenever you change it with the theme switch.
 - **How long it lasts:** until you change the setting or clear the site's data.
+
+### localStorage: your starred and recent tools
+
+If you star a tool, the site saves the list in your browser's localStorage under the name `leaflock-starred`. It also keeps the tools you used recently, with the time you used them, under `leaflock-recent`, so the sidebar and your dashboard can show them. A few smaller entries remember whether you collapsed the sidebar's groups and which side it is docked to.
+
+- **What it contains:** tool names, such as `merge`, and times. Never a file, a file name or anything you typed into a tool.
+- **When it's set:** when you star or unstar a tool, or finish using one.
+- **Does it leave your device:** the recent list never does. If you are signed in, your starred tools are also saved to your account so they follow you to other browsers, and you can download them with the rest of your account data. Signed out, they stay here.
+- **How long it lasts:** until you unstar the tool, clear the list, or clear the site's data.
 
 ### Browser storage: the OCR model
 

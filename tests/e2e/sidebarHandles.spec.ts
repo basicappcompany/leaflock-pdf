@@ -70,6 +70,18 @@ for (const dock of ['left', 'right'] as const) {
   });
 }
 
+test('the handles sit near the top, under the search box, not in the middle of the screen', async ({ page }) => {
+  for (const visible of ['visible', 'hidden'] as const) {
+    await openWith(page, 'left', visible);
+    const { sidebar, handles } = await geometry(page);
+    const search = (await page.locator('#sidebarSearch').boundingBox());
+    // In the top fifth of the sidebar, and clear of the search box when it is showing.
+    expect(handles.y - sidebar.y, `${visible}: distance from the sidebar's top`).toBeLessThan(sidebar.height / 5);
+    expect(handles.y).toBeGreaterThan(sidebar.y);
+    if (visible === 'visible' && search) expect(handles.y).toBeGreaterThanOrEqual(search.y + search.height);
+  }
+});
+
 test('pressing Move while hidden opens the sidebar on the other side in one press', async ({ page }) => {
   await openWith(page, 'left', 'hidden');
   await page.locator('#sidebarMove').click();

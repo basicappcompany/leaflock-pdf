@@ -17,6 +17,22 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 8 November 2026 — Starred tools, in the browser and in the account
+
+A star on every tool page and every sidebar row; a "Starred tools" group below "Recent tools", both
+with a heading icon and count like the categories. The list is in localStorage (so it is remembered on
+this browser, signed out too) and, signed in, in the account via `/api/starred` and migration 0006,
+so it follows the person. Tool ids only. **The sync is op-based, not "last write wins":** a change is
+pending until the server confirms it and is applied on top of the server's list, so an unstar is not
+undone by a stale copy and another device's star is kept; a different account on the same browser
+replaces the list instead of merging into it. Stated limits: a signed-out person's stars live only in
+that browser; stars made while signed out on a browser last synced as another account are replaced on
+sign-in; the cap is 100. Found on the way: the endpoint must answer 503 (not crash) when the table is
+missing, and account deletion must still work then. Spec: `tests/e2e/starred.spec.ts`,
+`tests/unit/starred.test.ts`, `tests/unit/server/starred.test.ts`.
+
+---
+
 ## 8 November 2026 — Sidebar handles: move, hide/show and reset hang off its inner edge
 
 The header buttons, the separate reopen button and the title are gone. Three handles hang off
