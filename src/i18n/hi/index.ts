@@ -169,7 +169,6 @@ export default {
       "allTools": "सभी टूल",
       "recent": "हाल के टूल",
       "starred": "स्टार किए गए टूल",
-      "starNamed": "{name} को स्टार करें",
       "hide": "साइडबार छिपाएँ",
       "show": "टूल दिखाएँ",
       "position": "साइडबार की स्थिति",

@@ -169,7 +169,6 @@ export default {
       "allTools": "Todas las herramientas",
       "recent": "Herramientas recientes",
       "starred": "Herramientas destacadas",
-      "starNamed": "Marcar {name} con una estrella",
       "hide": "Ocultar barra lateral",
       "show": "Mostrar herramientas",
       "position": "Posición de la barra lateral",

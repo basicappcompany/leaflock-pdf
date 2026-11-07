@@ -677,8 +677,11 @@ caught.
   database that has not had migration 0006 applied (the endpoint answers 503) never costs
   anyone their stars. The sidebar's per-row stars and both groups are built in the script, not
   the page, because forty-three buttons in every page's HTML would break the HTML budget. A
-  star's name never changes ("Star Merge PDF"); whether it is on is `aria-pressed`, so the
-  visible word always matches the accessible name.
+  star's name never changes; whether it is on is `aria-pressed`. The tool page's star is named
+  "Star this tool" under the visible word "Star"; a sidebar row's star is named just "Star" and
+  *described* by its row's label (`aria-describedby`), because a name like "Star Split PDF"
+  contains the tool's title and so collides with the tool's own "Split PDF" button — for voice
+  control, and in nineteen existing browser tests that find that button by name.
 
 - **The sidebar's three handles** (8 Nov 2026, replacing the header buttons, the reopen
   button and the title). One column on the sidebar's inner edge (the edge facing the page),

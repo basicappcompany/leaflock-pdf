@@ -169,7 +169,6 @@ export default {
       "allTools": "Alle Werkzeuge",
       "recent": "Zuletzt verwendete Werkzeuge",
       "starred": "Markierte Werkzeuge",
-      "starNamed": "{name} mit Stern markieren",
       "hide": "Seitenleiste ausblenden",
       "show": "Werkzeuge anzeigen",
       "position": "Position der Seitenleiste",

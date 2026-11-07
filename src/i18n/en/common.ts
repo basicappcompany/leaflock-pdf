@@ -206,8 +206,6 @@ export const common = {
     recent: 'Recent tools',
     /** Heading of the group of tools the visitor has starred, below the recent ones. */
     starred: 'Starred tools',
-    /** Name of the star button beside each tool in the list; {name} is the tool's title. */
-    starNamed: 'Star {name}',
     hide: 'Hide sidebar',
     show: 'Show tools',
     /** Labels of the three handles on the sidebar's inner edge. */

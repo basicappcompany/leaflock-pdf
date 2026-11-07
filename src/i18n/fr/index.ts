@@ -169,7 +169,6 @@ export default {
       "allTools": "Tous les outils",
       "recent": "Outils récents",
       "starred": "Outils favoris",
-      "starNamed": "Mettre une étoile à {name}",
       "hide": "Masquer la barre latérale",
       "show": "Afficher les outils",
       "position": "Position de la barre latérale",

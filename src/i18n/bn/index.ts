@@ -169,7 +169,6 @@ export default {
       "allTools": "সব টুল",
       "recent": "সাম্প্রতিক টুল",
       "starred": "স্টার দেওয়া টুল",
-      "starNamed": "{name}-এ স্টার দিন",
       "hide": "সাইডবার লুকান",
       "show": "টুল দেখান",
       "position": "সাইডবারের অবস্থান",

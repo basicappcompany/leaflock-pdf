@@ -169,7 +169,6 @@ export default {
       "allTools": "Semua alat",
       "recent": "Alat terbaru",
       "starred": "Alat berbintang",
-      "starNamed": "Beri bintang {name}",
       "hide": "Sembunyikan bilah samping",
       "show": "Tampilkan alat",
       "position": "Posisi bilah samping",

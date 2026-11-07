@@ -169,7 +169,6 @@ export default {
       "allTools": "Tüm araçlar",
       "recent": "Son kullanılan araçlar",
       "starred": "Yıldızlı araçlar",
-      "starNamed": "{name} aracını yıldızla",
       "hide": "Kenar çubuğunu gizle",
       "show": "Araçları göster",
       "position": "Kenar çubuğu konumu",

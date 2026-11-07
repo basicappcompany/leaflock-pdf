@@ -115,7 +115,9 @@ test.describe('on a desktop', () => {
     await page.goto('/split-pdf');
     const row = page.locator('.tools-sidebar__group .tools-sidebar__star[data-tool="merge"]');
     await expect(row).toHaveAttribute('aria-pressed', 'false');
-    await expect(row).toHaveAttribute('aria-label', sb.starNamed.replace('{name}', en.tools.merge.title));
+    // Named "Star", described by its row, so its name never overlaps the tool's own button.
+    await expect(row).toHaveAttribute('aria-label', en.common.star.short);
+    expect(await row.evaluate((el) => document.getElementById(el.getAttribute('aria-describedby') ?? '')?.textContent)).toBe(en.tools.merge.title);
 
     await row.click();
     await expect(page).toHaveURL(/split-pdf/);
