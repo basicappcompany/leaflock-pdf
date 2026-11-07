@@ -194,15 +194,29 @@ now sits in `.dev.vars` beside the other three, and needs a real id like them.
 - [x] `wrangler d1 create leaflock-pdf` — database id `75b792bb-eef2-4a99-8090-56b77cb55e4d`
       (APAC region), now in `wrangler.toml`.
 - [x] All four migrations applied remotely (`0001_auth` through `0004_practice_plan`).
-- [ ] **Apply migration `0006_starred_tools`** (8 November 2026), the table behind starred tools
-      for signed-in people. Not applied from the coding session: the auto-mode classifier
-      refuses a production database change, which is the right default. Run, from the repo,
-      `pnpm exec wrangler d1 migrations apply leaflock-pdf --remote` (production) and
-      `pnpm exec wrangler d1 migrations apply leaflock-pdf-preview --remote` (previews); `list`
-      first shows exactly one pending file, `0006_starred_tools.sql`, a plain `CREATE TABLE`.
-      Until then nothing breaks: `/api/starred` answers 503, the browser keeps every star in
-      localStorage, and account deletion and export both skip the missing table. Starred tools
-      then work in the account the moment the table exists, with no redeploy.
+- [ ] **Apply migration `0007_feedback`** (8 November 2026), the table behind the feature-request and
+      feedback forms. From the repo: `pnpm exec wrangler d1 migrations apply leaflock-pdf --remote`, and
+      `pnpm exec wrangler d1 migrations apply leaflock-pdf-preview --remote --env preview` for previews.
+      Until then the form answers "could not send" and shows the contact address; nothing breaks.
+- [ ] **Decide where feedback alerts go.** Messages are stored and read with `pnpm feedback`. For an
+      email per message, set a production Pages secret: `pnpm exec wrangler pages secret put
+      FEEDBACK_NOTIFY_EMAIL --project-name leaflock-pdf` (any address you read; sending uses Resend).
+      Not verified: that `RESEND_API_KEY` and `EMAIL_FROM` are set as *production* secrets (§2 only
+      records them in `.dev.vars`).
+- [ ] **`hello@leaflockpdf.com` still has no mailbox (§0), and the feedback form's error message tells
+      people to write to it.** Until a mailbox exists, a visitor who hits that message has nowhere to
+      send it. Either add the mailbox or change `contactEmail` in `ToolsSidebar.astro`.
+- [x] **Migration `0006_starred_tools` applied to production**, 8 November 2026, by the owner
+      (the coding session's auto-mode classifier refuses production database changes, which is
+      the right default): `cd /c/Claude/leaflock-pdf && pnpm exec wrangler d1 migrations apply
+      leaflock-pdf --remote`. `migrations list --remote` then reports nothing left to apply.
+      Starred tools now sync to the account. Before it existed nothing broke: `/api/starred`
+      answered 503 and the browser kept every star locally.
+- [x] **`0006` applied to the preview database too**, 8 November 2026, by the owner:
+      `pnpm exec wrangler d1 migrations apply leaflock-pdf-preview --remote --env preview`.
+      The `--env preview` matters: that database is declared only inside
+      `[[env.preview.d1_databases]]` in `wrangler.toml`, so without it Wrangler says it cannot
+      find it. `list` then reports nothing left to apply.
 - [x] `SESSION_IP_SALT` set as a production Pages secret (a fresh random value, not the
       `dev-only…` placeholder `.dev.vars` still uses locally).
 - [x] Cloudflare Pages build and Functions bundle — verified 5 November 2026: the site is

@@ -160,6 +160,23 @@ export default {
       "edit": "Editar y firmar",
       "secure": "Proteger y optimizar"
     },
+    "feedback": {
+      "requestButton": "Pedir una función",
+      "feedbackButton": "Enviar comentarios",
+      "requestTitle": "Pedir una función",
+      "feedbackTitle": "¿Qué podemos mejorar?",
+      "requestPrompt": "¿Qué te gustaría que hiciera LeafLock PDF?",
+      "feedbackPrompt": "¿Qué podríamos hacer mejor?",
+      "emailLabel": "Tu correo, solo si quieres una respuesta (opcional)",
+      "privacy": "Por favor, no incluyas tus documentos ni nada personal. Leemos todos los mensajes. Si das una dirección de correo, la guardamos con tu mensaje, solo para responderte.",
+      "send": "Enviar",
+      "cancel": "Cancelar",
+      "sending": "Enviando…",
+      "thanks": "Gracias. Hemos recibido tu mensaje.",
+      "tooShort": "Escribe un poco más, al menos {min} caracteres.",
+      "error": "Lo sentimos, no se pudo enviar. Puedes escribirnos a {email}.",
+      "close": "Cerrar"
+    },
     "star": {
       "label": "Marcar esta herramienta con una estrella",
       "short": "Estrella"

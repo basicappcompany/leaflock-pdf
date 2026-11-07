@@ -17,6 +17,20 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 8 November 2026 — Feature requests and feedback
+
+Two buttons at the bottom of the sidebar, "Request a feature" and "Send feedback", replace the About,
+Business, Help and Contact links (all in the footer already). One dialog, a message and an optional
+email, sent to `/api/feedback` and stored in a new `feedback` table (migration 0007); read with
+`pnpm feedback`. Stored: the message, the kind, the email if given, the page path. Not stored: any IP
+(hashed only to rate-limit), any account id, anything about a file. Found on the way: a button's
+own `display` beat the `hidden` attribute, so Cancel stayed visible after sending. Stated limits:
+until migration 0007 is applied the form says it could not send and shows the contact address, and
+that address has no mailbox yet (`docs/TODO.md` §0). Spec: `tests/e2e/feedback.spec.ts`,
+`tests/unit/server/feedback.test.ts`.
+
+---
+
 ## 8 November 2026 — Starred tools, in the browser and in the account
 
 A star on every tool page and every sidebar row; a "Starred tools" group below "Recent tools", both

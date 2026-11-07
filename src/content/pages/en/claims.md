@@ -1,6 +1,6 @@
 ---
 title: What we claim, and how to check it
-description: "Every privacy claim LeafLock PDF makes, written to be quoted: what stays on your device, the five things we receive, what the browser forbids, and what would change each one."
+description: "Every privacy claim LeafLock PDF makes, written to be quoted: what stays on your device, the six things we receive, what the browser forbids, and what would change each one."
 updated: 2026-11-07
 ---
 
@@ -38,10 +38,11 @@ Every page ships a Content-Security-Policy containing `connect-src 'self'`. In p
 This list is meant to be exhaustive. If you find something we receive that is not on it, that is a bug in this page.
 
 1. **A request that counts one tool run**, if you are not on a paid plan. The browser posts to `/api/usage/claim` **with no request body at all** — no tool name, no file, nothing about what you did. The server adds one to a counter and replies with how many runs are left. Without an account the counter is keyed to a salted hash of your IP address, never the address itself.
-2. **An account, if you create one.** An email address, when you last signed in, which plan you are on, and — depending on how you sign in — a password hash or your Google account id. No name, no company, no address.
+2. **An account, if you create one.** An email address, when you last signed in, which plan you are on, the names of any tools you have starred, and — depending on how you sign in — a password hash or your Google account id. No name, no company, no address.
 3. **A crash report, if a tool fails.** It carries the tool's name, the page path, your browser family and version (for example "Chrome 141"), and the error message and stack trace with file names, page text and anything you typed removed in your browser first. Your IP address is not stored. The [privacy policy](/privacy) lists the fields.
 4. **Ordinary web server logs**, the kind every website receives: a request for a page or a script, with an IP address and a browser string. These never contain your documents.
-5. **A payment, if you buy a plan** — taken by Dodo Payments (customers in India) or Paddle (everywhere else) as the seller. We receive which plan you are on and when it renews. We never see your card details.
+5. **A message, if you send one.** The "Request a feature" and "Send feedback" buttons in the sidebar send what you type, which of the two it was, and the path of the page you were on, such as `/split-pdf`. An email address only if you type one into the optional field, to reply to you. No file, no account id, and no IP address is stored with it; a hash of the address is used only to limit how many messages one visitor can send. The form tells you not to include documents or anything personal.
+6. **A payment, if you buy a plan** — taken by Dodo Payments (customers in India) or Paddle (everywhere else) as the seller. We receive which plan you are on and when it renews. We never see your card details.
 
 **What is not on that list, and never has been:** analytics, advertising, social or chat widgets, third-party scripts of any kind, and any record of which files you opened or what they contained.
 

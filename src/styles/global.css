@@ -1202,29 +1202,133 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
 }
 
 .tools-sidebar__footer {
+  display: flex;
   flex: none;
-  padding: 0.6rem 0.75rem;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.5rem 0.6rem;
   border-top: 1px solid var(--color-border);
 }
 
-.tools-sidebar__footer ul {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.4rem 0.8rem;
+/* Two buttons that look like the list above them: icon, then the words, quiet until hovered. */
+.tools-sidebar__action {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
   margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tools-sidebar__footer a {
-  display: block;
+  padding: 0.5rem 0.4rem;
+  border: 0;
+  border-radius: var(--radius-small);
+  background: transparent;
   color: var(--color-muted);
-  text-decoration: none;
-  font-size: 0.82rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
 }
 
-.tools-sidebar__footer a:hover {
+.tools-sidebar__action:hover {
+  background: var(--color-surface-2);
   color: var(--color-accent);
+}
+
+.tools-sidebar__action:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+.tools-sidebar__action svg {
+  flex: none;
+}
+
+/* The feature-request and feedback dialog. A native <dialog>, so focus stays inside it, Escape
+   closes it and the page behind it cannot be reached while it is open. */
+.feedback {
+  width: min(32rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow);
+  overflow: auto;
+}
+
+.feedback::backdrop {
+  background: rgb(0 0 0 / 0.45);
+}
+
+.feedback__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.25rem;
+}
+
+.feedback__title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.feedback textarea {
+  min-height: 7rem;
+}
+
+.feedback__note {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.feedback__status {
+  min-height: 1.3rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.feedback__status[data-state='error'] {
+  color: var(--color-error);
+}
+
+.feedback__status[data-state='ok'] {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* A button's own display rule would otherwise win over the hidden attribute: after a message is
+   sent, Cancel is hidden and Send turns into Close. */
+.feedback [hidden] {
+  display: none;
+}
+
+.feedback__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Off screen rather than display:none, because some bots skip fields that are display:none. */
+.feedback__hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (max-width: 48rem) {
+  .tools-sidebar__action {
+    padding-block: 0.7rem;
+  }
+
+  .feedback__actions .primary-button,
+  .feedback__actions .secondary-button {
+    flex: 1;
+  }
 }
 
 @media (max-width: 48rem) {

@@ -160,6 +160,23 @@ export default {
       "edit": "Edit dan tanda tangan",
       "secure": "Lindungi dan optimalkan"
     },
+    "feedback": {
+      "requestButton": "Minta fitur",
+      "feedbackButton": "Kirim masukan",
+      "requestTitle": "Minta fitur",
+      "feedbackTitle": "Apa yang bisa kami perbaiki?",
+      "requestPrompt": "Apa yang Anda ingin LeafLock PDF lakukan?",
+      "feedbackPrompt": "Apa yang bisa kami lakukan lebih baik?",
+      "emailLabel": "Email Anda, hanya jika ingin dibalas (opsional)",
+      "privacy": "Mohon jangan sertakan dokumen atau hal pribadi Anda. Kami membaca setiap pesan. Jika Anda memberikan alamat email, kami menyimpannya bersama pesan Anda, hanya untuk membalas.",
+      "send": "Kirim",
+      "cancel": "Batal",
+      "sending": "Mengirim…",
+      "thanks": "Terima kasih. Pesan Anda sudah kami terima.",
+      "tooShort": "Tulis sedikit lebih banyak, minimal {min} karakter.",
+      "error": "Maaf, pesan tidak terkirim. Anda bisa mengirim email ke {email}.",
+      "close": "Tutup"
+    },
     "star": {
       "label": "Beri bintang alat ini",
       "short": "Bintang"

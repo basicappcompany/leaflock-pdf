@@ -193,6 +193,28 @@ export const common = {
     edit: 'Edit and sign',
     secure: 'Protect and optimize',
   },
+  /** The feature-request and feedback forms, opened from two buttons at the bottom of the sidebar
+   * (ToolsSidebar.astro, src/lib/feedbackDialog.ts). Both send to /api/feedback. */
+  feedback: {
+    requestButton: 'Request a feature',
+    feedbackButton: 'Send feedback',
+    requestTitle: 'Request a feature',
+    feedbackTitle: 'What can we improve?',
+    requestPrompt: 'What would you like LeafLock PDF to do?',
+    feedbackPrompt: 'What could we do better?',
+    emailLabel: 'Your email, only if you would like a reply (optional)',
+    /** Said above the Send button, because what is sent is the one thing here that is not on the device. */
+    privacy:
+      'Please do not include your documents or anything personal. We read every message. If you give an email address we keep it with your message, only to reply.',
+    send: 'Send',
+    cancel: 'Cancel',
+    sending: 'Sending…',
+    thanks: 'Thank you. We have your message.',
+    tooShort: 'Please write a little more, at least {min} characters.',
+    /** {email} is the contact address, shown as the fallback when sending fails. */
+    error: 'Sorry, that did not send. You can email us at {email} instead.',
+    close: 'Close',
+  },
   /** The star button on a tool's page. Its name stays the same; whether it is on is its pressed state. */
   star: {
     label: 'Star this tool',

@@ -71,8 +71,11 @@ const jsonLd = [
   {
     categories.map((category, index) => {
       const inCategory = tools.filter((tool) => tool.category === category);
+      // Every category starts open: the front page is where someone looks over everything on offer,
+      // and a closed section hides tools they came to find. Each is still a native <details>, so a
+      // visitor can fold one away.
       return (
-        <details class={`category category--${category}${index === 0 ? ' category--first' : ''}`} open={index === 0}>
+        <details class={`category category--${category}${index === 0 ? ' category--first' : ''}`} open>
           <summary>
             <ToolIcon category={category} />
             <span class="category__name">{common.categories[category]}</span>

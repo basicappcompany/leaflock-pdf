@@ -95,6 +95,28 @@ test('the result panel and retention picker are accessible', async ({ page }) =>
   expect(describe(violations), 'result panel with the retention picker').toEqual([]);
 });
 
+test('the feature-request dialog is accessible, open, with its error and thank-you states', async ({ page }) => {
+  // A modal dialog with two labelled fields, a live status line and a hidden bot trap: the kind
+  // of UI where a missing label or a focus trap that does not hold would be easy to ship.
+  let status = 503;
+  await page.route('**/api/feedback', (route) => route.fulfill({ status }));
+  await page.goto('/split-pdf');
+  await page.locator('#sidebarRequest').click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  expect(describe((await scan(page)).violations), 'dialog, empty').toEqual([]);
+
+  await dialog.getByLabel(/LeafLock PDF to do/).fill('Please add a way to reorder pages with the keyboard.');
+  await dialog.getByRole('button', { name: 'Send' }).click();
+  await expect(dialog.getByRole('status')).toContainText('did not send');
+  expect(describe((await scan(page)).violations), 'dialog, error shown').toEqual([]);
+
+  status = 204;
+  await dialog.getByRole('button', { name: 'Send' }).click();
+  await expect(dialog.getByRole('status')).toContainText('Thank you');
+  expect(describe((await scan(page)).violations), 'dialog, thank-you shown').toEqual([]);
+});
+
 test('the kept-files shelf is accessible', async ({ page }) => {
   const bytes = await makePdf([[200, 300]]);
   await page.goto('/merge-pdf');

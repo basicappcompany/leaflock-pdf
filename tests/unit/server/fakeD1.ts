@@ -18,6 +18,7 @@ export function createFakeD1() {
   const usageCounters: Row[] = [];
   const webhookEvents: Row[] = [];
   const starredTools: Row[] = [];
+  const feedback: Row[] = [];
 
   function run(sql: string, params: unknown[]): { row: Row | null; rows: Row[] } {
     const text = normalize(sql);
@@ -137,6 +138,11 @@ export function createFakeD1() {
       for (let i = starredTools.length - 1; i >= 0; i--) if (starredTools[i]!['user_id'] === params[0]) starredTools.splice(i, 1);
       return { row: null, rows: [] };
     }
+    if (text === 'INSERT INTO feedback (id, created_at, kind, message, email, page) VALUES (?, ?, ?, ?, ?, ?)') {
+      const [id, created_at, kind, message, email, page] = params;
+      feedback.push({ id, created_at, kind, message, email, page });
+      return { row: null, rows: [] };
+    }
     if (text === 'DELETE FROM sessions WHERE user_id = ?') {
       for (let i = sessions.length - 1; i >= 0; i--) if (sessions[i]!['user_id'] === params[0]) sessions.splice(i, 1);
       return { row: null, rows: [] };
@@ -249,5 +255,5 @@ export function createFakeD1() {
     },
   };
 
-  return { db: db as unknown as D1Database, tables: { users, magicLinks, sessions, loginEvents, rateLimits, usageCounters, webhookEvents, starredTools } };
+  return { db: db as unknown as D1Database, tables: { users, magicLinks, sessions, loginEvents, rateLimits, usageCounters, webhookEvents, starredTools, feedback } };
 }

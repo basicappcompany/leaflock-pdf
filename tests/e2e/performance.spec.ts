@@ -131,7 +131,11 @@ const CONTENT_BUDGET: Budget = { html: 105_000, jsCss: 320_000, lcpMs: 1500, cls
 // JS. Ten languages cost about 1.2 KB per page (~0.12 KB per language added); /ocr-pdf went
 // from just under the old limit to 100,066. The banner's sentences are NOT in the HTML: they are
 // fetched from /lang-offers.json only when shown. Revisit if the language count passes ~20.
-const TOOL_BUDGET: Budget = { html: 102_000, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
+// Tool pages' HTML 102_000 -> 105_000 on 8 Nov 2026: the feature-request and feedback dialog
+// (ToolsSidebar.astro) ships its wording in a <template> on every page with the sidebar, so it is in
+// the visitor's language and needs no request to open. About 1.9 KB; /ocr-pdf went from just under
+// the old limit to 103.5 KB. Build the dialog from a fetched fragment instead if this is raised again.
+const TOOL_BUDGET: Budget = { html: 105_000, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
 
 /** One representative page per kind, not all 52: this is a real-browser measurement
  * with response-body capture, materially slower per page than site.spec.ts's "loads

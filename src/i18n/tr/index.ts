@@ -160,6 +160,23 @@ export default {
       "edit": "Düzenle ve imzala",
       "secure": "Koru ve optimize et"
     },
+    "feedback": {
+      "requestButton": "Özellik iste",
+      "feedbackButton": "Geri bildirim gönder",
+      "requestTitle": "Özellik iste",
+      "feedbackTitle": "Neyi geliştirebiliriz?",
+      "requestPrompt": "LeafLock PDF’in ne yapmasını isterdiniz?",
+      "feedbackPrompt": "Neyi daha iyi yapabiliriz?",
+      "emailLabel": "E-postanız, yalnızca yanıt istiyorsanız (isteğe bağlı)",
+      "privacy": "Lütfen belgelerinizi veya kişisel bir şey eklemeyin. Her mesajı okuruz. Bir e-posta adresi verirseniz, yalnızca yanıt vermek için mesajınızla birlikte saklarız.",
+      "send": "Gönder",
+      "cancel": "İptal",
+      "sending": "Gönderiliyor…",
+      "thanks": "Teşekkürler. Mesajınızı aldık.",
+      "tooShort": "Lütfen biraz daha yazın, en az {min} karakter.",
+      "error": "Üzgünüz, gönderilemedi. Bunun yerine bize {email} adresinden yazabilirsiniz.",
+      "close": "Kapat"
+    },
     "star": {
       "label": "Bu aracı yıldızla",
       "short": "Yıldız"
