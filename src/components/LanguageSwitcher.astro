@@ -2,6 +2,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { localeInfo, locales } from '../i18n';
 import type { Messages } from '../i18n';
+import { localeFlags } from '../i18n/locales.mjs';
 
 interface Props {
   /** Path of the current page without a locale prefix. */
@@ -15,22 +16,39 @@ const { path, locale, t } = Astro.props;
 const options = Object.keys(locales).map((code) => ({
   code,
   native: localeInfo(code)?.native ?? code,
+  flag: localeFlags[code] ?? null,
   href: getRelativeLocaleUrl(code, path),
 }));
+// The button shows only a flag, or the globe for a regional language (localeFlags says
+// which). The opened list shows the same mark beside each language's name in full, and the
+// button's own accessible name carries the current one, since a flag alone is a weak label.
+const flag = localeFlags[locale] ?? null;
 ---
 
 {
   options.length > 1 && (
     <details class="lang-switcher">
       <summary>
-        <span aria-hidden="true">🌐</span>
-        <span class="visually-hidden">{t.label}: </span>
-        {localeInfo(locale)?.native ?? locale}
+        {
+          flag ? (
+            <img class="lang-switcher__flag" src={`/vendor/flags/${flag}.svg`} width="20" height="15" alt="" />
+          ) : (
+            <span aria-hidden="true">🌐</span>
+          )
+        }
+        <span class="visually-hidden">{t.label}: {localeInfo(locale)?.native ?? locale}</span>
       </summary>
       <ul>
         {options.map((option) => (
           <li>
             <a href={option.href} hreflang={option.code} lang={option.code} aria-current={option.code === locale ? 'true' : undefined}>
+              {
+                option.flag ? (
+                  <img class="lang-switcher__flag" src={`/vendor/flags/${option.flag}.svg`} width="20" height="15" alt="" loading="lazy" />
+                ) : (
+                  <span class="lang-switcher__globe" aria-hidden="true">🌐</span>
+                )
+              }
               {option.native}
             </a>
           </li>

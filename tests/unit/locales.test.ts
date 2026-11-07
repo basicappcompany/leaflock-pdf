@@ -1,8 +1,27 @@
 import { describe, expect, it } from 'vitest';
 import { directionOf, isTranslated, localeInfo, localeRegistry } from '../../src/i18n/config';
-import { astroFallback, astroLocales } from '../../src/i18n/locales.mjs';
+import { existsSync } from 'node:fs';
+import { astroFallback, astroLocales, localeFlags } from '../../src/i18n/locales.mjs';
 import { mergeMessages } from '../../src/i18n';
 import { plural } from '../../src/i18n/format';
+
+describe('language button flags', () => {
+  it('decides a flag or the globe for every language, and for nothing else', () => {
+    expect(Object.keys(localeFlags).sort()).toEqual(localeRegistry.map((locale) => locale.code).sort());
+  });
+
+  it('uses the globe only for regional or multi-country languages (Bengali, Arabic)', () => {
+    const globe = Object.entries(localeFlags).filter(([, flag]) => flag === null).map(([code]) => code);
+    expect(globe.sort()).toEqual(['ar', 'bn']);
+  });
+
+  it('only names flags that exist in the flag-icons package', () => {
+    for (const flag of Object.values(localeFlags)) {
+      if (flag === null) continue;
+      expect(existsSync(`node_modules/flag-icons/flags/4x3/${flag}.svg`), `flag ${flag}`).toBe(true);
+    }
+  });
+});
 
 describe('locale registry', () => {
   it('lists 20 languages with English as the only reviewed one', () => {

@@ -59,6 +59,26 @@ for (const path of allPagePaths) {
   });
 }
 
+test('the header keeps the brand, language, appearance and theme buttons on one row', async ({ page }) => {
+  // 360 is the tightest real phone; 390 is a current iPhone, where the theme button was
+  // seen wrapping onto a row of its own.
+  for (const width of [360, 390, 412]) {
+    await page.setViewportSize({ width, height: 740 });
+    await page.goto('/');
+    const rowTop = async (selector: string) => {
+      const box = await page.locator(selector).first().boundingBox();
+      expect(box, `${selector} at ${width}px`).not.toBeNull();
+      return box!.y + box!.height / 2;
+    };
+    const brand = await rowTop('.site-header .brand');
+    for (const selector of ['.lang-switcher summary', '.skin-picker summary', '.theme-toggle']) {
+      expect(Math.abs((await rowTop(selector)) - brand), `${selector} shares the brand's row at ${width}px`).toBeLessThan(20);
+    }
+    const nav = await page.locator('.site-nav').boundingBox();
+    expect(nav!.y, `nav sits below that row at ${width}px`).toBeGreaterThan(brand);
+  }
+});
+
 test('every header control is a comfortable size to tap', async ({ page, baseURL }) => {
   const watch = watchPage(page, baseURL!);
   await page.goto('/');

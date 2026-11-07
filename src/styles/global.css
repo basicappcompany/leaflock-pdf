@@ -208,14 +208,51 @@ h2 {
   font-size: 0.9rem;
 }
 
+/* Icon only: a flag, or the globe for a regional language. Same size and shape as the
+   theme button beside it; the language's name lives in the visually hidden text and the
+   opened list. */
 .lang-switcher summary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  box-sizing: border-box;
+  padding: 0 0.5rem;
   cursor: pointer;
   list-style: none;
-  padding: 0.35rem 0.6rem;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-small);
-  background: var(--color-surface);
+  border-radius: 999px;
+  background: var(--color-surface-2);
   color: var(--color-text);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.lang-switcher summary:hover {
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
+}
+
+.lang-switcher summary:focus-visible {
+  outline: 2px solid var(--color-focus);
+}
+
+.lang-switcher__flag {
+  display: block;
+  flex: none;
+  width: 1.25rem;
+  height: auto;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--color-border);
+}
+
+.lang-switcher__globe {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.25rem;
+  line-height: 1;
 }
 
 .lang-switcher summary::-webkit-details-marker {
@@ -237,8 +274,12 @@ h2 {
   background: var(--color-surface);
 }
 
+/* Each row: the same flag (or globe) the button uses, then the language's name. The globe
+   gets the flag's width so the names line up. */
 .lang-switcher a {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   padding: 0.4rem 0.6rem;
   border-radius: var(--radius-small);
   color: var(--color-text);
@@ -346,6 +387,16 @@ h2 {
 
   .skin-picker {
     margin-left: auto;
+  }
+
+  /* The first row has to hold the wordmark, the language button and two round buttons.
+     At the full 1rem gap and 1.5rem side padding that is about 355px of content in 342px
+     of room on a 390px phone (and worse at 360), so the last button wrapped onto a row of
+     its own. Tighter gaps and side padding fit it, and tests/e2e/mobile.spec.ts fails if
+     it ever wraps again. */
+  .site-header {
+    gap: 0.5rem;
+    padding-inline: 1rem;
   }
 }
 
