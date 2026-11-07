@@ -134,3 +134,26 @@ test('sidebar: no "All tools" title, and the control buttons form one even row a
   for (const gap of gaps) expect(gap).toBeCloseTo(gaps[0]!, 0);
   expect(sidebar.x + sidebar.width - (last.x + last.width)).toBeLessThan(20);
 });
+
+test('sidebar sits flush under the header after scrolling, with no gap', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/split-pdf');
+  await page.evaluate(() => {
+    const spacer = document.createElement('div');
+    spacer.style.height = '4000px';
+    document.body.appendChild(spacer);
+  });
+  for (const y of [100, 600, 1500]) {
+    await page.evaluate((to) => window.scrollTo(0, to), y);
+    // The header shrinks over 0.2s; the sidebar must follow it to the pixel once it settles.
+    await expect
+      .poll(async () =>
+        page.evaluate(() => {
+          const chrome = document.querySelector('.site-chrome')!.getBoundingClientRect();
+          const sidebar = document.querySelector('#toolsSidebar')!.getBoundingClientRect();
+          return Math.round(sidebar.top - chrome.bottom);
+        }),
+      )
+      .toBe(0);
+  }
+});
