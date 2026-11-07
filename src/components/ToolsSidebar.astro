@@ -48,7 +48,7 @@ const dockDirections = [
 ] as const;
 ---
 
-<aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label} data-default-hidden={defaultHidden}>
+<aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label} data-default-hidden={defaultHidden} data-recent-title={common.sidebar.recent}>
   <div class="tools-sidebar__head">
     <span class="tools-sidebar__title">{common.sidebar.allTools}</span>
     <div class="tools-sidebar__controls">
@@ -86,13 +86,6 @@ const dockDirections = [
   </div>
 
   <nav class="tools-sidebar__nav" id="toolsSidebarNav">
-    {/* Filled in by the script below from the device-local list of recently used tools
-        (src/lib/recentActivity.ts) and left hidden while that list is empty. Built in the
-        browser because the list lives in localStorage, which the build cannot read. */}
-    <section class="tools-sidebar__recent" id="sidebarRecent" aria-labelledby="sidebarRecentTitle" hidden>
-      <h2 class="tools-sidebar__recent-title" id="sidebarRecentTitle">{common.sidebar.recent}</h2>
-      <ul id="sidebarRecentList"></ul>
-    </section>
     {
       categories.map((category) => {
         const inCategory = tools.filter((tool) => tool.category === category);
@@ -123,7 +116,7 @@ const dockDirections = [
                 const active = path === href || path === `${href}/`;
                 const title = messages.tools[tool.id].title;
                 return (
-                  <li data-tool-name={title.toLowerCase()} data-tool-id={tool.id}>
+                  <li data-tool-name={title.toLowerCase()}>
                     <a href={href} aria-current={active ? 'page' : undefined}>
                       <ToolIcon tool={tool.id} class="tools-sidebar__item-icon" />
                       <span class="tools-sidebar__item-label">{title}</span>
@@ -159,6 +152,9 @@ const dockDirections = [
 </button>
 
 <script>
+  import { readRecent } from '../lib/recentActivity';
+  import { tools } from '../tools/registry';
+
   // Mirrors ThemeToggle's pattern: plain script, localStorage, data attributes on
   // <html>. Both attributes are also set before first paint by the inline script in
   // Base.astro, so there is no layout flash between the defaults and a saved choice.
@@ -276,36 +272,47 @@ const dockDirections = [
   });
 
   // ---------------- recent tools ----------------
-  // The same list the dashboard reads: tool ids and timestamps only, never file names.
-  // Each row is a copy of that tool's existing link below, so title, icon and address are
-  // the ones the sidebar already renders. Anything unreadable, or naming a tool this page
-  // does not know, is skipped; if nothing is left the group stays hidden.
-  const recentBox = document.getElementById('sidebarRecent');
-  const recentList = document.getElementById('sidebarRecentList');
+  // The same list the dashboard reads (readRecent): tool ids and times only, never file
+  // names. Built here, not in the page, so every page's HTML stays as small as it was and
+  // so an empty list costs nothing. Each row is a copy of that tool's own link further
+  // down, so title, icon and address are always the ones the sidebar already renders.
+  // The group is only in the page while it has rows, and steps aside while searching.
+  let recentBox: HTMLElement | null = null;
+  let searching = false;
   function renderRecent() {
-    if (!recentBox || !recentList) return;
-    let ids: string[] = [];
-    try {
-      const parsed: unknown = JSON.parse(localStorage.getItem('leaflock-recent') ?? '[]');
-      if (Array.isArray(parsed)) {
-        ids = parsed
-          .filter((entry): entry is { tool: string; at: number } => !!entry && typeof entry.tool === 'string' && typeof entry.at === 'number')
-          .sort((a, b) => b.at - a.at)
-          .map((entry) => entry.tool);
-      }
-    } catch {
-      /* Blocked storage or a damaged value: show nothing. */
+    recentBox?.remove();
+    recentBox = null;
+    const nav = document.getElementById('toolsSidebarNav');
+    if (!nav) return;
+    const anchors = [...nav.querySelectorAll<HTMLAnchorElement>('.tools-sidebar__group li > a')];
+    const items: HTMLElement[] = [];
+    for (const run of readRecent()) {
+      const slug = tools.find((tool) => tool.id === run.tool)?.slug;
+      const link = anchors.find((a) => {
+        const path = new URL(a.href, location.href).pathname.replace(/\/$/, '');
+        return slug !== undefined && path.endsWith('/' + slug);
+      });
+      if (link?.parentElement) items.push(link.parentElement.cloneNode(true) as HTMLElement);
+      if (items.length === 5) break;
     }
-    recentList.replaceChildren();
-    for (const id of ids.slice(0, 5)) {
-      const source = document.querySelector<HTMLLIElement>('.tools-sidebar__group li[data-tool-id="' + id + '"]');
-      if (!source) continue;
-      const item = source.cloneNode(true) as HTMLLIElement;
-      item.removeAttribute('data-tool-id');
+    if (items.length === 0) return;
+    const title = document.createElement('h2');
+    title.className = 'tools-sidebar__recent-title';
+    title.id = 'sidebarRecentTitle';
+    title.textContent = sidebar?.dataset.recentTitle ?? '';
+    const list = document.createElement('ul');
+    for (const item of items) {
       item.removeAttribute('data-tool-name');
-      recentList.appendChild(item);
+      list.appendChild(item);
     }
-    recentBox.hidden = recentList.childElementCount === 0;
+    recentBox = document.createElement('section');
+    recentBox.id = 'sidebarRecent';
+    recentBox.className = 'tools-sidebar__recent';
+    recentBox.setAttribute('aria-labelledby', 'sidebarRecentTitle');
+    recentBox.hidden = searching;
+    recentBox.appendChild(title);
+    recentBox.appendChild(list);
+    nav.insertBefore(recentBox, nav.firstChild);
   }
   renderRecent();
   // Back/forward restores a page from memory with the old list; another tab can change it.
@@ -326,7 +333,8 @@ const dockDirections = [
   searchInput?.addEventListener('input', () => {
     const query = searchInput.value.trim().toLowerCase();
     // Searching looks through every tool, so the shortcut group steps aside meanwhile.
-    if (recentBox) recentBox.hidden = query !== '' || recentList?.childElementCount === 0;
+    searching = query !== '';
+    if (recentBox) recentBox.hidden = searching;
     if (!query) {
       for (const group of groups) {
         group.hidden = false;
