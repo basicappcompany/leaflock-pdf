@@ -54,6 +54,22 @@ checked the rest).
 
 ---
 
+## 7 November 2026 — One theme button; the default stays Light
+
+The three-way System/Light/Dark control is now a single button showing the mode you are in (a
+sun and "Light", or a moon and "Dark"; icon only on a phone), with the tooltip and accessible
+name naming what a click leads to. **Default is always Light**: the owner first asked for System
+as the default, then withdrew it the same day, so the pre-paint script in `Base.astro` sets
+`data-theme` to light unless `dark` is saved, and an old stored `'system'` reads as Light. Which
+icon shows is decided in CSS from `html[data-theme]`, so it is right at first paint. Found on the
+way: an HTML comment in an `.astro` template is emitted into every page, so the explanatory
+comment is a JSX one. Stated limit: System is no longer offered, and the `system` string stays
+in `common.ts` (unused) because the generated locale catalogues would need regenerating to drop
+it. `cookies.md`, `privacy.md`, `security.md`, `CLAUDE.md` and `design.md` §10 were updated to say
+the same, and the e2e theme test now covers a dark device still getting Light.
+
+---
+
 ## 7 November 2026 — Tool pages show a skeleton while loading; sidebar reopen button follows the dock
 
 Tool pages used `client:only`, so the box was empty until React had started, then said "Loading

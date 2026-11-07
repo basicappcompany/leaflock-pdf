@@ -6,41 +6,66 @@ interface Props {
 }
 
 const { t } = Astro.props;
-const options = [
-  { value: 'system', label: t.system, icon: '◐' },
-  { value: 'light', label: t.light, icon: '☀' },
-  { value: 'dark', label: t.dark, icon: '☾' },
-];
 ---
 
-<fieldset class="theme-toggle">
-  <legend class="visually-hidden">{t.label}</legend>
-  {
-    options.map((option) => (
-      <label class="theme-toggle__option" title={option.label}>
-        <input type="radio" name="theme" value={option.value} />
-        <span aria-hidden="true">{option.icon}</span>
-        <span class="visually-hidden">{option.label}</span>
-      </label>
-    ))
-  }
-</fieldset>
+{/* One button. The default is always Light; a click switches to the other mode and saves
+     it. The icon and the word show the mode you are in now (sun and "Light", or moon and
+     "Dark"); the tooltip and accessible name start with that word (WCAG 2.5.3, label in
+     name) and then say what a click leads to. Which pair is
+     visible is decided in CSS from html[data-theme], which the pre-paint script in
+     Base.astro always sets, so the right one is there from first paint and the script
+     below only writes the choice and keeps the labels current. The words come from the
+     i18n strings; on a phone only the icon shows. A JSX comment, not an HTML one, so it
+     is not shipped in every page. */}
+<button
+  type="button"
+  class="theme-toggle"
+  data-label={t.label}
+  data-to-light={t.light}
+  data-to-dark={t.dark}
+  aria-label={`${t.light}. ${t.label}: ${t.dark}`}
+  title={`${t.light}. ${t.label}: ${t.dark}`}
+>
+  <svg class="theme-toggle__icon theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+    ></path>
+  </svg>
+  <svg class="theme-toggle__icon theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"></path>
+  </svg>
+  <span class="theme-toggle__word theme-toggle__sun" aria-hidden="true">{t.light}</span>
+  <span class="theme-toggle__word theme-toggle__moon" aria-hidden="true">{t.dark}</span>
+</button>
 
 <script>
-  // The saved choice is applied before first paint by the inline script in Base.astro;
-  // this just keeps the radio buttons and storage in sync. Default is Light, not
-  // System — nothing stored reads the same as an explicit 'light' choice, matching
-  // what Base.astro's pre-paint script actually applies. 'system' is now stored
-  // explicitly rather than represented by an absent key, since an absent key means
-  // Light here, not "follow the OS".
-  const stored = localStorage.getItem('theme');
-  const current = stored === 'dark' || stored === 'system' ? stored : 'light';
-  for (const input of document.querySelectorAll<HTMLInputElement>('.theme-toggle input[name="theme"]')) {
-    input.checked = input.value === current;
-    input.addEventListener('change', () => {
-      localStorage.setItem('theme', input.value);
-      if (input.value === 'system') delete document.documentElement.dataset.theme;
-      else document.documentElement.dataset.theme = input.value;
+  // The saved choice is applied before first paint by the inline script in Base.astro,
+  // which always sets data-theme: 'dark' if that is what was saved, light otherwise. This
+  // script writes the choice when the button is clicked and keeps the tooltip and
+  // accessible name pointing at the mode a click leads to.
+  const button = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  if (button) {
+    const showingDark = () => document.documentElement.dataset.theme === 'dark';
+    const sync = () => {
+      // Starts with the visible word (the mode you are in), which WCAG 2.5.3 requires,
+      // then says what a click leads to.
+      const dark = showingDark();
+      const now = dark ? button.dataset.toDark : button.dataset.toLight;
+      const next = dark ? button.dataset.toLight : button.dataset.toDark;
+      const label = `${now}. ${button.dataset.label}: ${next}`;
+      button.setAttribute('aria-label', label);
+      button.title = label;
+    };
+    button.addEventListener('click', () => {
+      const next = showingDark() ? 'light' : 'dark';
+      try {
+        localStorage.setItem('theme', next);
+      } catch {
+        // Storage can be blocked; the choice still applies for this page.
+      }
+      document.documentElement.dataset.theme = next;
+      sync();
     });
+    sync();
   }
 </script>
