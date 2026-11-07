@@ -6,6 +6,9 @@ interface Env {
   /** Resend API key. Omitted in dev/CI, where src/lib/email/consoleSender.ts is used instead. */
   RESEND_API_KEY?: string;
   EMAIL_FROM?: string;
+  /** Where to send a short notice for each feature request or piece of feedback. Optional: without it
+   * messages are still stored in the `feedback` table and read from there. [TO CONFIRM: owner] */
+  FEEDBACK_NOTIFY_EMAIL?: string;
   /** Server-only salt for hashing requester IPs before they're ever stored (never the raw address).
    * [TO CONFIRM: owner] Set via `wrangler pages secret put SESSION_IP_SALT`. */
   SESSION_IP_SALT: string;

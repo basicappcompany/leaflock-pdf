@@ -18,7 +18,8 @@
     "counts": "node scripts/counts.mjs",
     "og": "playwright test -c playwright.og.config.ts scripts/og-images.ts",
     "icons": "playwright test -c playwright.og.config.ts scripts/pwa-icons.ts",
-    "tracker": "node scripts/tracker-check.mjs"
+    "tracker": "node scripts/tracker-check.mjs",
+    "feedback": "node scripts/feedback.mjs"
   },
   "dependencies": {
     "@astrojs/react": "7.1.0",

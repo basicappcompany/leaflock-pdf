@@ -32,16 +32,8 @@ const activeCategory =
     return path === href || path === `${href}/`;
   })?.category ?? 'organize';
 
-/** A handful of site links, not tools — where to find the rest of the site without
- * leaving the sidebar. Kept short and useful rather than exhaustive: SiteFooter.astro
- * already lists everything else. */
-const footerLinks: { key: keyof typeof common.pageLinks; slug: string }[] = [
-  { key: 'about', slug: 'about' },
-  { key: 'business', slug: 'business' },
-  { key: 'help', slug: 'help' },
-  { key: 'contact', slug: 'contact' },
-];
-
+/** Where messages are sent if the form cannot send them, shown in its error message. */
+const contactEmail = 'hello@leaflockpdf.com';
 ---
 
 <aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label} data-default-hidden={defaultHidden} data-recent-title={common.sidebar.recent} data-starred-title={common.sidebar.starred} data-star-label={common.star.short} data-hide={common.sidebar.hide} data-show={common.sidebar.show} data-move-left={common.sidebar.moveLeft} data-move-right={common.sidebar.moveRight}>
@@ -118,19 +110,60 @@ const footerLinks: { key: keyof typeof common.pageLinks; slug: string }[] = [
     <p class="tools-sidebar__no-results" id="sidebarNoResults" data-template={common.sidebar.searchNoResults} hidden />
   </nav>
 
+  {/* Two ways to talk to us, in place of the page links that used to be here (About, Business,
+      Help, Contact are all in the site footer already). They open one dialog, built from the
+      template below the sidebar the first time it is needed. */}
   <div class="tools-sidebar__footer">
-    <ul>
-      {
-        footerLinks.map((link) => (
-          <li>
-            <a href={getRelativeLocaleUrl(locale, link.slug)}>{common.pageLinks[link.key]}</a>
-          </li>
-        ))
-      }
-    </ul>
+    <button type="button" class="tools-sidebar__action" id="sidebarRequest">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16"><path d="M9 18h6" /><path d="M10 21h4" /><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.1h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z" /></svg>
+      {common.feedback.requestButton}
+    </button>
+    <button type="button" class="tools-sidebar__action" id="sidebarFeedback">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z" /></svg>
+      {common.feedback.feedbackButton}
+    </button>
   </div>
   </div>
 </aside>
+
+{/* Not shown: cloned into a <dialog> by src/lib/feedbackDialog.ts on first use. In a template so the
+    page carries the wording in the visitor's language without rendering any of it. The hidden
+    "website" field is a trap for bots; no person can see or reach it. */}
+<template
+  id="feedbackTemplate"
+  data-request-title={common.feedback.requestTitle}
+  data-feedback-title={common.feedback.feedbackTitle}
+  data-request-prompt={common.feedback.requestPrompt}
+  data-feedback-prompt={common.feedback.feedbackPrompt}
+  data-send={common.feedback.send}
+  data-sending={common.feedback.sending}
+  data-thanks={common.feedback.thanks}
+  data-too-short={common.feedback.tooShort}
+  data-error={common.feedback.error}
+  data-close={common.feedback.close}
+  data-email={contactEmail}
+>
+  <dialog class="feedback" aria-labelledby="feedbackTitle">
+    <form class="feedback__form" novalidate>
+      <h2 class="feedback__title" id="feedbackTitle"></h2>
+      <div class="field">
+        <label for="feedbackMessage" class="feedback__prompt"></label>
+        <textarea id="feedbackMessage" name="message" rows="5" maxlength="2000" required></textarea>
+      </div>
+      <div class="field">
+        <label for="feedbackEmail">{common.feedback.emailLabel}</label>
+        <input type="email" id="feedbackEmail" name="email" autocomplete="email" maxlength="254" />
+      </div>
+      <input class="feedback__hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <p class="feedback__note">{common.feedback.privacy}</p>
+      <p class="feedback__status" role="status" data-state="idle"></p>
+      <div class="feedback__actions">
+        <button type="button" class="secondary-button" data-cancel>{common.feedback.cancel}</button>
+        <button type="submit" class="primary-button" data-send>{common.feedback.send}</button>
+      </div>
+    </form>
+  </dialog>
+</template>
 
 <script>
   import { groupIcons } from '../lib/icons';
@@ -275,6 +308,15 @@ const footerLinks: { key: keyof typeof common.pageLinks; slug: string }[] = [
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && isNarrow() && visibility !== 'hidden') setVisibility('hidden');
   });
+
+  // ---------------- feature requests and feedback ----------------
+  // The dialog's code is loaded the first time a button is pressed, not with every page.
+  for (const [id, kind] of [['sidebarRequest', 'feature'], ['sidebarFeedback', 'feedback']] as const) {
+    document.getElementById(id)?.addEventListener('click', (event) => {
+      const button = event.currentTarget as HTMLElement;
+      void import('../lib/feedbackDialog').then(({ openFeedback }) => openFeedback(kind, button));
+    });
+  }
 
   // ---------------- recent and starred tools ----------------
   // Two personal groups at the top of the list, built here because their data lives on this

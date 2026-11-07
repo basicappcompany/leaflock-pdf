@@ -660,6 +660,20 @@ caught.
 
 ## 10a. Navigation chrome
 
+- **Feature requests and feedback** (8 Nov 2026). Two buttons at the bottom of the sidebar replace the
+  page links that were there (About, Business, Help and Contact are all in the site footer). They
+  open one native `<dialog>`, built on first use from a `<template>` the page carries in the
+  visitor's language (`src/lib/feedbackDialog.ts`, so its code costs nothing until used) and send to
+  `POST /api/feedback`, which stores the message in the `feedback` table (migration 0007). **What is
+  stored is what the person typed, the kind, an email only if they typed one, and the page path** —
+  no IP (a salted hash is used only to rate-limit, in `rate_limits`, never beside the message), no
+  account id. Limits: 5 an hour and 15 a day per visitor, 300 a day across everyone, 2000 characters,
+  10 minimum. A hidden `website` field is a bot trap (a filled one gets a 204 and stores nothing). An
+  email notice to the owner is sent only if `FEEDBACK_NOTIFY_EMAIL` is set, after the message is
+  stored, and its failure is ignored. Read the messages with `pnpm feedback`. The endpoint answers
+  503 when the table is missing, and the form then shows the contact address, so no message is ever
+  silently lost.
+
 - **Starred tools** (8 Nov 2026). A star on every tool's page and on every sidebar row, and a
   "Starred tools" group below "Recent tools", both with a heading icon, a count and a collapse
   chevron like the categories (`groupIcons` in `src/lib/icons.ts`). Two places, one list:

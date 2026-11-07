@@ -45,6 +45,18 @@ You can download all of it from your account page, and deleting your account del
 - **Legal basis (GDPR):** performing the service you asked for (Article 6(1)(b)), and our legitimate interest in keeping accounts secure (Article 6(1)(f)).
 - **Retention:** until you delete your account. [TO CONFIRM: whether sign-in history should instead expire after a fixed period]
 
+### Feature requests and feedback (if you send one)
+
+The sidebar has two buttons, "Request a feature" and "Send feedback". If you use one, we receive what you type in the box, which of the two it was, and the path of the page you were on (for example "/split-pdf", never a file or anything after the address). If you type an email address into the optional field, we receive that too, and we use it only to reply to you.
+
+We don't store your IP address with your message. It is hashed with a secret key and used only to count how many messages come from one visitor, so a form open to everyone can't be flooded. Your message isn't linked to your account, even if you are signed in, unless you put your email address in it.
+
+Please don't include your documents or anything personal in a message. We never need them.
+
+- **Purpose:** reading what to build or fix next, and replying if you asked us to.
+- **Legal basis (GDPR):** your consent, which you give by sending the message (Article 6(1)(a)), and our legitimate interest in improving the product (Article 6(1)(f)).
+- **Retention:** until we have dealt with it, and no longer than [TO CONFIRM: retention period, for example 12 months]. To have a message and its email address deleted sooner, email us and say roughly when you sent it and what it said.
+
 ### Emails you send us
 
 If you email us, we receive your email address, your name if you include it, the content of your message and anything you attach. We use this only to reply to you and to keep a record of the conversation.
