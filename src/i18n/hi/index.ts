@@ -161,6 +161,7 @@ export default {
     "sidebar": {
       "label": "सभी टूल",
       "allTools": "सभी टूल",
+      "recent": "हाल के टूल",
       "hide": "साइडबार छिपाएँ",
       "show": "टूल दिखाएँ",
       "search": "टूल खोजें",

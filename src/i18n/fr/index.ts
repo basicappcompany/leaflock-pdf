@@ -161,6 +161,7 @@ export default {
     "sidebar": {
       "label": "Tous les outils",
       "allTools": "Tous les outils",
+      "recent": "Outils récents",
       "hide": "Masquer la barre latérale",
       "show": "Afficher les outils",
       "search": "Rechercher des outils",

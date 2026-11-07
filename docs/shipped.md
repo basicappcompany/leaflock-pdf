@@ -27,8 +27,8 @@ the page: a static version added 1.3 KB to every page and broke the HTML budget 
 The sidebar title "All tools" is gone and its four control buttons are one even row at the end.
 The theme button lost its "Light"/"Dark" word. Once the page scrolls, the language and theme
 buttons stay in the right-most corner (owner changed this from "left" the same day). Stated limit:
-the new `sidebar.recent` string is English in other locales until catalogues are regenerated;
-`dashboard.recentEmpty` is unused but stays, since catalogues must match key for key.
+the `sidebar.recent` heading is translated in all nine catalogues, reusing each language's existing
+"Recent tools" wording from the dashboard (machine status, like the rest); `dashboard.recentEmpty` is unused but stays, since catalogues must match key for key.
 Spec: `tests/e2e/recentTools.spec.ts`.
 
 ---

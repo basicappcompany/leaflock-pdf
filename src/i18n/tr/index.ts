@@ -161,6 +161,7 @@ export default {
     "sidebar": {
       "label": "Tüm araçlar",
       "allTools": "Tüm araçlar",
+      "recent": "Son kullanılan araçlar",
       "hide": "Kenar çubuğunu gizle",
       "show": "Araçları göster",
       "search": "Araç ara",
