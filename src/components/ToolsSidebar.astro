@@ -42,40 +42,27 @@ const footerLinks: { key: keyof typeof common.pageLinks; slug: string }[] = [
   { key: 'contact', slug: 'contact' },
 ];
 
-const dockDirections = [
-  { dock: 'left', label: common.sidebar.dock.left, path: 'M14 6 8 12l6 6' },
-  { dock: 'right', label: common.sidebar.dock.right, path: 'M10 6l6 6-6 6' },
-] as const;
 ---
 
-<aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label} data-default-hidden={defaultHidden} data-recent-title={common.sidebar.recent}>
-  <div class="tools-sidebar__head">
-    <div class="tools-sidebar__controls">
-      <div class="tools-sidebar__dock" role="group" aria-label={common.sidebar.label}>
-        {
-          dockDirections.map((d) => (
-            <button type="button" class="tools-sidebar__btn" data-dock-btn={d.dock} aria-label={d.label} title={d.label}>
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d={d.path} />
-              </svg>
-            </button>
-          ))
-        }
-      </div>
-      <button type="button" class="tools-sidebar__btn" id="sidebarReset" aria-label={common.sidebar.reset} title={common.sidebar.reset}>
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M20 11a8 8 0 1 0-2.3 5.7" />
-          <path d="M20 5v6h-6" />
-        </svg>
-      </button>
-      <button type="button" class="tools-sidebar__btn" id="sidebarHide" aria-label={common.sidebar.hide}>
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M5 5l14 14M19 5 5 19" />
-        </svg>
-      </button>
-    </div>
+<aside class="tools-sidebar" id="toolsSidebar" aria-label={common.sidebar.label} data-default-hidden={defaultHidden} data-recent-title={common.sidebar.recent} data-hide={common.sidebar.hide} data-show={common.sidebar.show} data-move-left={common.sidebar.moveLeft} data-move-right={common.sidebar.moveRight}>
+  {/* Three handles hanging off the sidebar's inner edge (the edge facing the page), attached to
+      it so they travel with it. Top: move to the other side. Middle: hide or show. Bottom: reset.
+      Labels, icons and the disabled state are kept current by the script below; the move icon
+      and the chevron are chosen in CSS from html[data-sidebar-dock] and [data-sidebar-state]. */}
+  <div class="tools-sidebar__handles" role="toolbar" aria-label={common.sidebar.position}>
+    <button type="button" class="tools-sidebar__handle" id="sidebarMove" aria-label={common.sidebar.moveRight} data-tip={common.sidebar.moveRight}>
+      <svg class="tools-sidebar__to-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16"><rect x="3.5" y="5" width="17" height="14" rx="2" /><rect x="14.5" y="5" width="6" height="14" rx="2" fill="currentColor" stroke="none" opacity=".35" /><path d="M14.5 5v14" /></svg>
+      <svg class="tools-sidebar__to-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16"><rect x="3.5" y="5" width="17" height="14" rx="2" /><rect x="3.5" y="5" width="6" height="14" rx="2" fill="currentColor" stroke="none" opacity=".35" /><path d="M9.5 5v14" /></svg>
+    </button>
+    <button type="button" class="tools-sidebar__handle tools-sidebar__handle--main" id="sidebarToggle" aria-label={common.sidebar.hide} aria-expanded="true" data-tip={common.sidebar.hide}>
+      <svg class="tools-sidebar__chevron-handle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="14" height="14"><path d="M15 6l-6 6 6 6" /></svg>
+    </button>
+    <button type="button" class="tools-sidebar__handle" id="sidebarReset" aria-label={common.sidebar.reset} data-tip={common.sidebar.reset}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16"><path d="M20 11a8 8 0 1 0-2.3 5.7" /><path d="M20 5v6h-6" /></svg>
+    </button>
   </div>
 
+  <div class="tools-sidebar__clip">
   <div class="tools-sidebar__search">
     <svg class="tools-sidebar__search-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <circle cx="11" cy="11" r="7" />
@@ -142,13 +129,8 @@ const dockDirections = [
       }
     </ul>
   </div>
+  </div>
 </aside>
-
-<button type="button" class="tools-sidebar__reopen" id="sidebarReopen" aria-label={common.sidebar.show}>
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M9 5l6 7-6 7" />
-  </svg>
-</button>
 
 <script>
   import { readRecent } from '../lib/recentActivity';
@@ -165,10 +147,28 @@ const dockDirections = [
   type Dock = (typeof DOCKS)[number];
   const DEFAULT_DOCK: Dock = 'left';
 
-  const hideBtn = document.getElementById('sidebarHide');
-  const reopenBtn = document.getElementById('sidebarReopen');
-  const resetBtn = document.getElementById('sidebarReset');
-  const dockBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-dock-btn]')];
+  const toggleBtn = document.getElementById('sidebarToggle') as HTMLButtonElement | null;
+  const moveBtn = document.getElementById('sidebarMove') as HTMLButtonElement | null;
+  const resetBtn = document.getElementById('sidebarReset') as HTMLButtonElement | null;
+  const labels = document.getElementById('toolsSidebar')?.dataset ?? {};
+
+  // Keeps the three handles' names and the reset button's disabled state in step with the
+  // sidebar. Everything visual (which icon, which way the chevron points) is CSS.
+  function syncHandles() {
+    const html = document.documentElement.dataset;
+    const hidden = html.sidebarState === 'hidden';
+    const right = html.sidebarDock === 'right';
+    const name = (button: HTMLElement | null, text: string | undefined) => {
+      if (!button || !text) return;
+      button.setAttribute('aria-label', text);
+      button.setAttribute('data-tip', text);
+    };
+    name(toggleBtn, hidden ? labels.show : labels.hide);
+    toggleBtn?.setAttribute('aria-expanded', String(!hidden));
+    name(moveBtn, right ? labels.moveLeft : labels.moveRight);
+    // Already docked left and open is the default position: nothing for reset to do.
+    if (resetBtn) resetBtn.disabled = !right && !hidden;
+  }
 
   function storedVisibility(): Visibility | null {
     const value = localStorage.getItem(VISIBLE_KEY);
@@ -194,10 +194,11 @@ const dockDirections = [
 
   function applyVisibility(state: Visibility) {
     document.documentElement.dataset.sidebarState = state;
+    syncHandles();
   }
   function applyDock(dock: Dock) {
     document.documentElement.dataset.sidebarDock = dock;
-    for (const btn of dockBtns) btn.setAttribute('aria-current', String(btn.dataset.dockBtn === dock));
+    syncHandles();
   }
 
   function setVisibility(state: Visibility) {
@@ -235,11 +236,13 @@ const dockDirections = [
   if (header) chromeObserver.observe(header);
   if (strip) chromeObserver.observe(strip);
 
-  hideBtn?.addEventListener('click', () => setVisibility('hidden'));
-  reopenBtn?.addEventListener('click', () => setVisibility('visible'));
-  for (const btn of dockBtns) {
-    btn.addEventListener('click', () => setDock(btn.dataset.dockBtn as Dock));
-  }
+  toggleBtn?.addEventListener('click', () => setVisibility(visibility === 'hidden' ? 'visible' : 'hidden'));
+  // While the sidebar is hidden, pressing Move or Reset also opens it: one press, the whole
+  // action, rather than a press to open and a second to do what was asked.
+  moveBtn?.addEventListener('click', () => {
+    setDock(document.documentElement.dataset.sidebarDock === 'right' ? 'left' : 'right');
+    if (visibility === 'hidden') setVisibility('visible');
+  });
   resetBtn?.addEventListener('click', () => {
     setDock(DEFAULT_DOCK);
     setVisibility('visible');
@@ -250,14 +253,15 @@ const dockDirections = [
   // panel, so this is skipped there rather than fighting it.
   const sidebar = document.getElementById('toolsSidebar');
   const isNarrow = () => window.matchMedia('(max-width: 48rem)').matches;
-  // pointerdown, not click, and `contains`, not `===`: tapping the reopen button's arrow
-  // icon targets the <svg> inside it rather than the button, so comparing against the
-  // button let the same tap that opened the drawer shut it again straight away. And on iOS
-  // Safari a click on a non-interactive area never reaches a document-level listener.
+  // pointerdown, not click, and `contains`, not `===`: tapping a handle's icon targets the
+  // <svg> inside the button rather than the button, so comparing against the button let the
+  // same tap that opened the drawer shut it again straight away. The handles are children of
+  // the sidebar, so `contains` covers them. And on iOS Safari a click on a non-interactive
+  // area never reaches a document-level listener.
   document.addEventListener('pointerdown', (event) => {
     if (!isNarrow() || visibility === 'hidden') return;
     const target = event.target as Node;
-    if (sidebar?.contains(target) || reopenBtn?.contains(target)) return;
+    if (sidebar?.contains(target)) return;
     setVisibility('hidden');
   });
   // Crossing the breakpoint (rotating a tablet, resizing a window) swaps between the

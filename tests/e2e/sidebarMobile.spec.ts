@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
 /**
- * The tools sidebar as a phone drawer. Reported 6 November 2026: the reopen button
+ * The tools sidebar as a phone drawer. Reported 6 November 2026: the hide/show handle
  * "doesn't work really good and sometimes does not even work".
  *
  * The cause was a document-level "tap outside closes it" handler that skipped the reopen
@@ -21,15 +21,15 @@ async function tapCentre(page: Page, selector: string) {
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/merge-pdf');
-  await expect(page.locator('#sidebarReopen')).toBeVisible();
+  await expect(page.locator('#sidebarToggle')).toBeVisible();
 });
 
 test('the drawer starts closed on a phone', async ({ page }) => {
   expect(await state(page)).toBe('hidden');
 });
 
-test('tapping the middle of the reopen button, where the icon is, opens the drawer and it stays open', async ({ page }) => {
-  await tapCentre(page, '#sidebarReopen');
+test('tapping the middle of the hide/show handle, where the icon is, opens the drawer and it stays open', async ({ page }) => {
+  await tapCentre(page, '#sidebarToggle');
   // Give a same-gesture re-close, the old failure, time to happen before asserting.
   await page.waitForTimeout(300);
   expect(await state(page)).toBe('visible');
@@ -37,29 +37,34 @@ test('tapping the middle of the reopen button, where the icon is, opens the draw
 });
 
 test('tapping outside the drawer closes it, and so does Escape', async ({ page }) => {
-  await tapCentre(page, '#sidebarReopen');
+  await tapCentre(page, '#sidebarToggle');
   await expect.poll(() => state(page)).toBe('visible');
   await page.touchscreen.tap(340, 400); // right of the 17rem drawer
   await expect.poll(() => state(page)).toBe('hidden');
 
-  await tapCentre(page, '#sidebarReopen');
+  await tapCentre(page, '#sidebarToggle');
   await expect.poll(() => state(page)).toBe('visible');
   await page.keyboard.press('Escape');
   await expect.poll(() => state(page)).toBe('hidden');
 });
 
 test('opening the drawer is not remembered, so it does not cover the next page', async ({ page }) => {
-  await tapCentre(page, '#sidebarReopen');
+  await tapCentre(page, '#sidebarToggle');
   await expect.poll(() => state(page)).toBe('visible');
   await page.goto('/split-pdf');
   expect(await state(page)).toBe('hidden');
 });
 
-test('the reopen and hide buttons are big enough for a thumb', async ({ page }) => {
-  const reopen = (await page.locator('#sidebarReopen').boundingBox())!;
-  expect(Math.min(reopen.width, reopen.height)).toBeGreaterThanOrEqual(44);
-  await tapCentre(page, '#sidebarReopen');
+test('the handles are big enough for a thumb, and only the main one shows while hidden', async ({ page }) => {
+  const toggle = (await page.locator('#sidebarToggle').boundingBox())!;
+  expect(Math.min(toggle.width, toggle.height)).toBeGreaterThanOrEqual(40);
+  // Hidden: the stack would cover the page edge, so only the hide/show handle stays.
+  await expect(page.locator('#sidebarMove')).toBeHidden();
+  await expect(page.locator('#sidebarReset')).toBeHidden();
+  await tapCentre(page, '#sidebarToggle');
   await expect.poll(() => state(page)).toBe('visible');
-  const hide = (await page.locator('#sidebarHide').boundingBox())!;
-  expect(Math.min(hide.width, hide.height)).toBeGreaterThanOrEqual(40);
+  for (const id of ['#sidebarMove', '#sidebarReset']) {
+    const box = (await page.locator(id).boundingBox())!;
+    expect(Math.min(box.width, box.height), id).toBeGreaterThanOrEqual(40);
+  }
 });

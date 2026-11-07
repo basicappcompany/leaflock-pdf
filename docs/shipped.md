@@ -17,6 +17,22 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 8 November 2026 — Sidebar handles: move, hide/show and reset hang off its inner edge
+
+The header buttons, the separate reopen button and the title are gone. Three handles hang off
+the sidebar's inner edge and travel with it (open: flush against it; hidden: width 0, so they sit
+on the window edge on the same side). **Move or Reset pressed while hidden opens the sidebar and
+acts, in one press.** The move label names the opposite side; Reset is disabled at the default.
+Found on the way: an earlier mock-up drew "docked left" on the right because the page came first
+in the markup, and every attribute still read right, so the test measures positions. Also: a
+phone-width override lost to a two-attribute desktop selector and cost 28px at 320px, so it
+needed the same specificity; and the chevron's transition had to sit in the no-preference
+motion query. Stated limit: on a phone only the hide/show handle stays on the screen edge while
+the drawer is hidden. Spec: `tests/e2e/sidebarHandles.spec.ts`; strings `sidebar.position`,
+`moveLeft`, `moveRight` are in all nine catalogues.
+
+---
+
 ## 7 November 2026 — Recent tools in the sidebar; icon-only theme button; scrolled header
 
 The recently-used-tools list (`recentActivity.ts`: tool id and time, never a file name) now

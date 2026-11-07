@@ -198,6 +198,10 @@ export const common = {
     recent: 'Recent tools',
     hide: 'Hide sidebar',
     show: 'Show tools',
+    /** Labels of the three handles on the sidebar's inner edge. */
+    position: 'Sidebar position',
+    moveLeft: 'Move sidebar to the left',
+    moveRight: 'Move sidebar to the right',
     search: 'Search tools',
     searchClear: 'Clear search',
     searchNoResults: 'No tools match "{query}".',
