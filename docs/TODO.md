@@ -408,15 +408,15 @@ Dashboard settings only; the code findings from the same review are in `docs/shi
 - [ ] **Replace the inferred half of the language list with our own country data** once the
       site has traffic (Cloudflare analytics, which sets no cookies). Roadmap Phase 5.
 
-## 10. Tool page load — fewer bytes, 7 November 2026
+## 10. Tool page load — investigated, nothing to do, 7 November 2026
 
-Measured on 7 Nov (see `docs/shipped.md`): the skeleton fixed the blank gap, but the tool is still
-usable ~1.0–1.5 s after the page text on a slow connection, and it is bandwidth-bound (~300 KB of
-JS/CSS compressed over ~19–25 requests). Starting downloads earlier and hover prefetch did not help.
-- [ ] **Find what the ~300 KB is** (`pnpm build` output, a bundle visualiser) and cut it: the React
-      client (`client.*.js`, ~208 KB uncompressed), the shared chunks every tool pulls in, and
-      whether `common` strings in the island props are larger than the tool needs. Re-measure with
-      the same throttled test; a change is only worth keeping if it moves the time to usable.
+The skeleton (docs/shipped.md, 7 Nov) removed the blank gap. The follow-up audit found no cheap
+win: the biggest download (`pdf.worker`, 170 KB brotli of ~250 KB) arrives after the tool is usable,
+and blocking it changed nothing; the critical path is ~70 KB. The 1.0–1.5 s wait only appears with a
+4x CPU slowdown. A reason to look again would be a real-device or field measurement (Cloudflare
+analytics has no timing data; there is no RUM, by design, because a beacon would break `connect-src
+'self'`).
+- [ ] **Optional: measure on a real mid-range phone** before spending any more effort here.
 
 ## Running the auth and billing routes at all
 
