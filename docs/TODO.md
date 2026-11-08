@@ -6,7 +6,7 @@ A dated snapshot; the sections below are the detail and the source of truth.
 
 **Pending on you** (accounts, dashboards, people):
 - Valid `ANTHROPIC_API_KEY` (§9); a person to review translated trust claims (§9).
-- Apply migration `0007` to the preview database; decide `FEEDBACK_NOTIFY_EMAIL` and confirm the Resend
+- Decide `FEEDBACK_NOTIFY_EMAIL` and confirm the Resend
   secrets exist in production (§4); try the feedback form end to end with `pnpm feedback`.
 - Send a test email to `hello@leaflockpdf.com` from another account; decide on replying from it (§0).
 - Auto-renew and registrar 2FA (§0); TLS 1.2 and Bot Fight Mode decisions (§8).
@@ -211,9 +211,10 @@ now sits in `.dev.vars` beside the other three, and needs a real id like them.
       timed out reaching Cloudflare's API before anything ran; the second succeeded):
       `cd /c/Claude/leaflock-pdf && pnpm exec wrangler d1 migrations apply leaflock-pdf --remote`.
       The feature-request and feedback forms now store messages; read them with `pnpm feedback`.
-- [ ] **Apply `0007` to the preview database too**: `pnpm exec wrangler d1 migrations apply
-      leaflock-pdf-preview --remote --env preview`. Only branch previews need it; there the form says
-      it could not send until it is done.
+- [x] **`0007` applied to the preview database**, 9 November 2026, by the owner (the coding
+      session's Cloudflare login is refused by that database, code 7403, so it is run from the
+      owner's shell): `pnpm exec wrangler d1 migrations apply leaflock-pdf-preview --remote --env
+      preview`. Branch previews now store feedback too.
 - [ ] **Decide where feedback alerts go.** Messages are stored and read with `pnpm feedback`. For an
       email per message, set a production Pages secret: `pnpm exec wrangler pages secret put
       FEEDBACK_NOTIFY_EMAIL --project-name leaflock-pdf` (any address you read; sending uses Resend).
