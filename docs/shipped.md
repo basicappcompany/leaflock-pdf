@@ -17,6 +17,19 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 8 November 2026 — Search Console, and IndexNow for the other search engines
+
+The sitemap (790 URLs) was submitted in Search Console and read successfully; seven key pages were
+requested for indexing (home, merge, compress, PDF to Word, PDF to Excel, JPG to PDF, security).
+Found: the sitemap first showed "Couldn't fetch" and cleared on its own within the hour, which is the
+normal first-submission state, so it is worth waiting before treating it as a fault. `pnpm indexnow`
+tells Bing, Yandex, Seznam and Naver (and through Bing, DuckDuckGo and Ecosia) about every sitemap
+URL; the proof that the site is ours is a key file at `/<key>.txt` (`public/`), and the script
+refuses to send until that file is live. Google does not use IndexNow. Stated limit: Search Console's
+"request indexing" allows only about ten pages a day, so the sitemap does the bulk of the work.
+
+---
+
 ## 8 November 2026 — Feature requests and feedback
 
 Two buttons at the bottom of the sidebar, "Request a feature" and "Send feedback", replace the About,

@@ -19,7 +19,8 @@
     "og": "playwright test -c playwright.og.config.ts scripts/og-images.ts",
     "icons": "playwright test -c playwright.og.config.ts scripts/pwa-icons.ts",
     "tracker": "node scripts/tracker-check.mjs",
-    "feedback": "node scripts/feedback.mjs"
+    "feedback": "node scripts/feedback.mjs",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@astrojs/react": "7.1.0",
