@@ -12,6 +12,7 @@ import { readBytes } from '../ui/usePdfDocument';
 import { useTask } from '../ui/useTask';
 import { outputName } from './secure/outputName';
 import type { ToolProps } from './types';
+import '../../styles/compress.css';
 import '../../styles/secure.css';
 
 const levels: readonly CompressLevel[] = ['light', 'recommended', 'strong'];

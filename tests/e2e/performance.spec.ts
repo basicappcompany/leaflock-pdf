@@ -125,7 +125,10 @@ interface Budget {
 // (src/components/SkinPicker.astro) renders all 15 options the same way — a real,
 // deliberate cost of shipping both site-wide rather than a measurement regression.
 // Current weight sits around 93-98KB; the budget leaves headroom without being toothless.
-const CONTENT_BUDGET: Budget = { html: 105_000, jsCss: 320_000, lcpMs: 1500, cls: 0.1 };
+// HTML 105_000 -> 106_000 on 9 Nov 2026: the sidebar's phone rules (the lone hide/show handle as a
+// bottom-corner button) are inlined into every page's head, and the front page was already within
+// a few hundred bytes of the old limit. About 0.5 KB; the front page went from 104.9 to 105.4 KB.
+const CONTENT_BUDGET: Budget = { html: 106_000, jsCss: 320_000, lcpMs: 1500, cls: 0.1 };
 // Tool pages' HTML 100_000 -> 102_000 on 7 Nov 2026: the language switcher (src/components/
 // LanguageSwitcher.astro) lists every translated language in every page so it works without
 // JS. Ten languages cost about 1.2 KB per page (~0.12 KB per language added); /ocr-pdf went
