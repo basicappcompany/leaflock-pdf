@@ -90,7 +90,11 @@ export default {
       "copyright": "© {year} LeafLock PDF"
     },
     "home": {
-      "viewAll": "Ver todas las herramientas de {category}"
+      "viewAll": "Ver todas las herramientas de {category}",
+      "whatIsHeading": "¿Qué es LeafLock PDF?",
+      "whatIsBody": "LeafLock PDF es un conjunto gratuito de {count} herramientas PDF, entre ellas unir, dividir, comprimir, OCR, firmar, tachar y convertir desde y hacia Word, Excel e imágenes. Cada herramienta se ejecuta dentro de tu navegador web, así que tus archivos nunca se suben.",
+      "whatIsProof": "No tienes que creernos sin más. Cada página le indica a tu navegador que solo puede conectarse de vuelta a leaflockpdf.com, y el navegador lo hace cumplir. Una vez cargada la página, puedes apagar la red y las herramientas siguen funcionando.",
+      "whatIsFor": "Es para quien maneja contratos, documentos de identidad, facturas o informes médicos y prefiere no entregárselos al servidor de otra persona."
     },
     "pageLinks": {
       "about": "Acerca de",
@@ -3050,6 +3054,171 @@ export default {
         {
           "q": "¿Mi PDF se sube?",
           "a": "No. La página se agrega en su navegador, en su dispositivo, y el archivo nunca se envía a ninguna parte."
+        }
+      ]
+    },
+    "combinePdf": {
+      "title": "Combinar archivos PDF",
+      "metaTitle": "Combina archivos PDF en uno, de forma privada | LeafLock PDF",
+      "metaDescription": "Combina varios PDF en un solo archivo en el orden que elijas. Funciona en tu navegador, así que no se sube nada. Sin marca de agua ni registro.",
+      "summary": "Combina varios PDF en un solo archivo, en el orden que elijas.",
+      "howTo": [
+        "Elige los archivos PDF que quieres combinar, dos o más.",
+        "Ordénelos con los botones de flecha.",
+        "Selecciona Unir PDF y descarga el archivo combinado."
+      ],
+      "faq": [
+        {
+          "q": "¿Combinar PDF es lo mismo que unirlos?",
+          "a": "Sí. Combinar y unir son dos nombres para lo mismo: las páginas de cada archivo se juntan, en tu orden, en un PDF nuevo."
+        },
+        {
+          "q": "¿Puedo combinar un PDF con una foto o un documento de Word?",
+          "a": "No en este paso, que solo acepta PDF. Convierte la foto en PDF con JPG a PDF, o el archivo de Word con Word a PDF, y luego combina los resultados."
+        },
+        {
+          "q": "¿Puedo combinar solo algunas páginas de cada archivo?",
+          "a": "Sí, con Organizar PDF: añade todos los archivos, quita las páginas que no quieras, arrastra el resto en orden y guarda un solo archivo."
+        },
+        {
+          "q": "¿Se conservan la calidad y los marcadores?",
+          "a": "Las páginas se copian sin recomprimir, así que el texto y las imágenes se ven exactamente igual que antes. Los marcadores pasan anidados y en orden. Unos pocos tipos poco habituales, como los que saltan a otro documento, se descartan."
+        },
+        {
+          "q": "¿Se suben mis archivos para combinarlos?",
+          "a": "No. Tu navegador los une en tu dispositivo, así que contratos o escaneos de identificación nunca salen de él."
+        }
+      ]
+    },
+    "deletePdfPages": {
+      "title": "Eliminar páginas de un PDF",
+      "metaTitle": "Elimine páginas de un PDF, de forma privada | LeafLock PDF",
+      "metaDescription": "Elimina las páginas que no necesitas de un PDF haciendo clic en ellas o escribiendo números de página. Funciona en tu navegador, no se sube nada y no hay marca de agua.",
+      "summary": "Elimina las páginas que no necesitas de un PDF.",
+      "howTo": [
+        "Elija un PDF.",
+        "Haz clic en las páginas que quieres eliminar, o escribe sus números y rangos, como 1-3, 5, 8-.",
+        "Seleccione Quitar páginas y descargue el PDF nuevo."
+      ],
+      "faq": [
+        {
+          "q": "¿Es más rápido eliminar páginas o extraer las que quiero?",
+          "a": "Si vas a quitar pocas páginas, elimínalas aquí. Si solo quieres conservar unas pocas, Extraer páginas es más rápido."
+        },
+        {
+          "q": "¿Cómo elimino las últimas páginas sin contarlas?",
+          "a": "Escribe un rango abierto como 8-, que significa de la página 8 hasta el final."
+        },
+        {
+          "q": "¿Cambiará mi archivo original?",
+          "a": "No. Descargas una copia nueva sin esas páginas, así que conserva el original por si vuelves a necesitarlas."
+        },
+        {
+          "q": "¿Puedo eliminar todas las páginas?",
+          "a": "No. Al menos una página tiene que quedar."
+        },
+        {
+          "q": "¿Es esta la forma de ocultar texto sensible?",
+          "a": "Eliminar quita una página entera. Para tachar solo una parte de una página, usa Redactar PDF."
+        }
+      ]
+    },
+    "pdfPasswordRemover": {
+      "title": "Quitar contraseña de PDF",
+      "metaTitle": "Quita la contraseña de un PDF tuyo, de forma privada | LeafLock PDF",
+      "metaDescription": "Quita la contraseña de un PDF que tienes permiso para abrir. La contraseña y el archivo se quedan en tu navegador; no se sube nada.",
+      "summary": "Quita la contraseña de un PDF que tienes permiso para abrir.",
+      "howTo": [
+        "Elija el PDF protegido con contraseña.",
+        "Escriba su contraseña.",
+        "Seleccione Desbloquear PDF y descargue una copia sin la contraseña."
+      ],
+      "faq": [
+        {
+          "q": "¿Puede quitar una contraseña que he olvidado?",
+          "a": "No. Si el PDF necesita una contraseña para abrirse, necesitas esa contraseña. Esta herramienta no puede adivinarla ni descifrarla. Sirve para quitar la contraseña de un archivo que ya puedes abrir."
+        },
+        {
+          "q": "¿Y si el PDF solo bloquea la impresión o la copia?",
+          "a": "Un PDF que se abre libremente pero limita imprimir, copiar o editar se puede desbloquear sin escribir nada."
+        },
+        {
+          "q": "¿Es seguro escribir una contraseña en un sitio web?",
+          "a": "Aquí, sí. La contraseña solo la usa tu navegador para descifrar el archivo en tu dispositivo, y ni la contraseña ni el PDF se suben."
+        },
+        {
+          "q": "¿Cambia el contenido?",
+          "a": "No. Obtienes una copia con las mismas páginas, texto e imágenes, sin la contraseña."
+        },
+        {
+          "q": "¿Es legal desbloquear un PDF?",
+          "a": "Desbloquee únicamente archivos que sean suyos o que tenga permiso de modificar."
+        }
+      ]
+    },
+    "rearrangePdfPages": {
+      "title": "Reordenar páginas de PDF",
+      "metaTitle": "Reordena, ordena y gira páginas de PDF de forma privada | LeafLock PDF",
+      "metaDescription": "Arrastra las páginas de un PDF a un nuevo orden, gira o quita páginas, incluso mezcla páginas de varios archivos. Funciona en tu navegador, así que no se sube nada.",
+      "summary": "Arrastra las páginas de un PDF a un nuevo orden y gira o quita las que necesites.",
+      "howTo": [
+        "Elija uno o más PDF.",
+        "Arrastre las páginas para ordenarlas, y gire o quite las que necesite.",
+        "Seleccione Guardar PDF y descargue el resultado."
+      ],
+      "faq": [
+        {
+          "q": "¿Puedo reordenar páginas en un teléfono o una tableta?",
+          "a": "Sí. Si arrastrar no funciona en tu pantalla táctil, usa los botones de flecha bajo cada página para moverla antes o después."
+        },
+        {
+          "q": "¿Puedo mezclar páginas de distintos PDF?",
+          "a": "Sí. Añada más de un PDF y todas sus páginas aparecerán juntas, para que pueda mezclarlas, reordenarlas y guardar un solo archivo."
+        },
+        {
+          "q": "¿Puedo deshacer un error?",
+          "a": "Sí. Una página quitada se puede restaurar con el botón que hay debajo de ella, y Deshacer todos los cambios devuelve cada página a como estaba cuando añadió los archivos."
+        },
+        {
+          "q": "¿Reordenar cambia la calidad?",
+          "a": "No. Las páginas se copian tal cual, y girar solo cambia su orientación, por lo que no se recomprime nada."
+        },
+        {
+          "q": "¿Se suben mis páginas mientras las reorganizo?",
+          "a": "No. Las vistas previas de las páginas y el PDF final se crean en su navegador, por lo que sus archivos permanecen en su dispositivo todo el tiempo."
+        }
+      ]
+    },
+    "reducePdfSize": {
+      "title": "Reducir el tamaño de un PDF",
+      "metaTitle": "Reduce el tamaño de un PDF sin subirlo | LeafLock PDF",
+      "metaDescription": "Haz más pequeño un PDF reduciendo las imágenes que contiene. Ves el tamaño antes y después, y no se sube nada. Gratis, sin marca de agua.",
+      "summary": "Haga más pequeño un PDF, sobre todo reduciendo las imágenes que contiene.",
+      "howTo": [
+        "Elija un PDF.",
+        "Elige cuánto comprimir: Ligera, Recomendada o Fuerte.",
+        "Seleccione Comprimir PDF, revise el nuevo tamaño y descárguelo."
+      ],
+      "faq": [
+        {
+          "q": "¿Puedo elegir el tamaño exacto que quiero?",
+          "a": "No. Eliges un nivel, no un tamaño objetivo, porque lo pequeño que queda un archivo depende de lo que contiene. Ves el tamaño antes y después, y puedes probar un nivel más fuerte si sigue siendo demasiado grande."
+        },
+        {
+          "q": "¿Qué se reduce más?",
+          "a": "Los PDF llenos de fotos o páginas escaneadas. Un archivo que es sobre todo texto suele ser pequeño ya."
+        },
+        {
+          "q": "¿El texto se vuelve borroso?",
+          "a": "No. El texto y los dibujos se mantienen nítidos en todos los niveles. Las fotos y los escaneos se reducen y se guardan como JPG, así que pueden verse más suaves, sobre todo con Fuerte."
+        },
+        {
+          "q": "¿Por qué mi PDF no se hizo más pequeño?",
+          "a": "Probablemente ya está bien comprimido o es sobre todo texto. La herramienta nunca te da un archivo más grande; prueba Fuerte para reducir más las imágenes."
+        },
+        {
+          "q": "¿Mi PDF se sube para comprimirlo?",
+          "a": "No. La compresión se ejecuta en su navegador, por lo que su PDF permanece en su dispositivo de principio a fin."
         }
       ]
     }

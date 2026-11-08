@@ -1540,6 +1540,21 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
 
 /* A column of text as wide as the hero grid allows is hard to read and breaks the
    headline at awkward points. Both are held to a comfortable measure instead. */
+/* The front page's plain definition: a short, readable column under the hero. */
+.answer {
+  max-width: 44rem;
+  margin: 0 0 calc(var(--space) * 2);
+}
+
+.answer h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.answer p {
+  margin: 0 0 0.6rem;
+}
+
 .hero__text h1 {
   max-width: 24ch;
   /* Bigger than the shared h1 rule above, deliberately: that rule also sizes every
