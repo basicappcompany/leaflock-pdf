@@ -1371,31 +1371,60 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
     padding: 0 !important;
   }
 
-  /* While the drawer is hidden, its one remaining handle floats in the bottom corner on the docked
-     side, round, as the old reopen button did. At the top of the screen edge it sat over the first
-     letters of every heading, because a phone's page gutter (1rem) is narrower than the handle;
-     padding the page to clear it breaks the 320px reflow, and a corner button covers nothing. */
+  /* While the drawer is hidden, its one remaining handle is a slim tab on the docked screen edge,
+     low on the screen, exactly as wide as the page's side gutter (1rem). It therefore sits in the
+     empty margin and covers no text at all: a 44px handle at the top covered the first letters of
+     every heading, and a round corner button covered whatever text was scrolled under it. Padding
+     the page to make room breaks the 320px reflow. One tap on it opens the drawer. */
   html[data-sidebar-state='hidden'] .tools-sidebar__handles {
     position: fixed;
     top: auto;
-    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    bottom: calc(22vh + env(safe-area-inset-bottom, 0px));
+    width: 1rem;
+    height: 3.5rem;
     border: 1px solid var(--color-border);
-    border-radius: 999px;
-    overflow: hidden;
   }
 
   html[data-sidebar-state='hidden'][data-sidebar-dock='left'] .tools-sidebar__handles {
-    left: calc(1rem + env(safe-area-inset-left, 0px));
+    left: env(safe-area-inset-left, 0px);
     right: auto;
+    border-left: 0;
+    border-radius: 0 0.6rem 0.6rem 0;
   }
 
   html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .tools-sidebar__handles {
-    right: calc(1rem + env(safe-area-inset-right, 0px));
+    right: env(safe-area-inset-right, 0px);
     left: auto;
+    border-right: 0;
+    border-radius: 0.6rem 0 0 0.6rem;
   }
 
   html[data-sidebar-state='hidden'] .tools-sidebar__handle--main {
-    border-radius: 999px;
+    height: 100%;
+    border-radius: inherit;
+  }
+
+  /* The tab is slim so it stays off the text, but a thumb needs more than 16px: an invisible extension
+     reaches into the page, 44px wide in all. Only this short band is affected. */
+  html[data-sidebar-state='hidden'] .tools-sidebar__handle--main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2rem;
+  }
+
+  html[data-sidebar-state='hidden'][data-sidebar-dock='left'] .tools-sidebar__handle--main::before {
+    left: 100%;
+  }
+
+  html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .tools-sidebar__handle--main::before {
+    right: 100%;
+  }
+
+  html[data-sidebar-state='hidden'] .tools-sidebar__handle--main svg {
+    width: 0.75rem;
+    height: 0.75rem;
   }
 }
 

@@ -57,7 +57,22 @@ test('opening the drawer is not remembered, so it does not cover the next page',
 
 test('the handles are big enough for a thumb, and only the main one shows while hidden', async ({ page }) => {
   const toggle = (await page.locator('#sidebarToggle').boundingBox())!;
-  expect(Math.min(toggle.width, toggle.height)).toBeGreaterThanOrEqual(40);
+  // Hidden, the visible tab is slim so it stays in the page margin; an invisible extension makes the
+  // tappable width up to 44px, so what is checked is where a thumb can land, not the painted edge.
+  expect(toggle.height).toBeGreaterThanOrEqual(48);
+  const reach = await page.evaluate(() => {
+    const el = document.querySelector('#sidebarToggle')!;
+    const box = el.getBoundingClientRect();
+    const y = box.top + box.height / 2;
+    const left = box.left < 8;
+    let width = 0;
+    for (let step = 1; step <= 60; step++) {
+      const x = left ? box.left + step : box.right - step;
+      if (document.elementFromPoint(x, y) === el) width = step; else if (step > 16) break;
+    }
+    return width;
+  });
+  expect(reach, 'tappable width in px').toBeGreaterThanOrEqual(40);
   // Hidden: the stack would cover the page edge, so only the hide/show handle stays.
   await expect(page.locator('#sidebarMove')).toBeHidden();
   await expect(page.locator('#sidebarReset')).toBeHidden();

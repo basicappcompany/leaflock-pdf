@@ -1115,11 +1115,12 @@ them from the request origin: `http://localhost:8788/api/auth/google/callback` a
   never a worse-looking file chased in silence. Only the 200 KB and 1 MB landings were built;
   further sizes wait for search traffic. This reverses the 8 November note that a target-size
   landing "would promise what it cannot do" — it was true while the tool had only levels.
-- **Sidebar controls hang off the sidebar's inner edge; hidden, one round corner button remains —
-  decided 7–8 November 2026.** Stars are stored in the browser and merged into the account on
+- **Sidebar controls hang off the sidebar's inner edge; hidden on a phone, one slim edge tab remains —
+  decided 7–8 November 2026, revised 9 November.** Stars are stored in the browser and merged into the account on
   sign-in (op-based, so a removal on one device is not undone by another). A page-edge handle
-  covered headings on a phone and padding the page for it broke the 320 px reflow; a corner
-  button covers nothing.
+  covered headings on a phone, and padding the page for it broke the 320 px reflow. A round
+  corner button (first fix) covered text scrolled under it. The tab is exactly as wide as the page's
+  side gutter (1 rem), low on the screen, with an invisible 44 px tappable reach, so it covers no text.
 - **Mail: `hello@` is Cloudflare Email Routing into the owner's Gmail — 9 November 2026.**
   Resend only sends the service's own emails. Named in `privacy.md`. Replying *from* `hello@`
   is deliberately not set up yet.
