@@ -68,6 +68,14 @@ const jsonLd = [
     <li>{common.trust.noFileSizeLimit}</li>
   </ul>
 
+  {/* A plain definition, near the top, for people and for the assistants and search engines that
+      quote the first clear statement of what a site is. The count is computed, never typed. */}
+  <section class="answer">
+    <h2>{common.home.whatIsHeading}</h2>
+    <p>{format(common.home.whatIsBody, { count: tools.length })}</p>
+    <p>{common.home.whatIsProof}</p>
+    <p>{common.home.whatIsFor}</p>
+  </section>
   {
     categories.map((category, index) => {
       const inCategory = tools.filter((tool) => tool.category === category);

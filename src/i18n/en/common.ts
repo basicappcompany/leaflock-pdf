@@ -114,6 +114,14 @@ export const common = {
   home: {
     /** `{category}` is one of the common.categories labels, e.g. "Organize". */
     viewAll: 'See all {category} tools',
+    /** A plain definition near the top of the front page. `{count}` is the number of tools, computed. */
+    whatIsHeading: 'What is LeafLock PDF?',
+    whatIsBody:
+      'LeafLock PDF is a free set of {count} PDF tools, including merge, split, compress, OCR, sign, redact and conversion to and from Word, Excel and images. Every tool runs inside your web browser, so your files are never uploaded.',
+    whatIsProof:
+      'You do not have to take that on trust. Each page tells your browser it may only connect back to leaflockpdf.com, and the browser enforces it. Once a page has loaded, you can switch your network off and the tools still work.',
+    whatIsFor:
+      'It is for anyone who handles contracts, IDs, invoices or medical papers and would rather not hand them to someone else’s server.',
   },
   /** Titles of site pages, used in navigation and footers. Keys match src/content/pages/<locale>/<key>.md. */
   pageLinks: {

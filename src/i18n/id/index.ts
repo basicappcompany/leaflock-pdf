@@ -90,7 +90,11 @@ export default {
       "copyright": "© {year} LeafLock PDF"
     },
     "home": {
-      "viewAll": "Lihat semua alat {category}"
+      "viewAll": "Lihat semua alat {category}",
+      "whatIsHeading": "Apa itu LeafLock PDF?",
+      "whatIsBody": "LeafLock PDF adalah kumpulan gratis {count} alat PDF, termasuk menggabungkan, membagi, mengompres, OCR, menandatangani, menyensor, dan mengonversi dari dan ke Word, Excel, serta gambar. Setiap alat berjalan di dalam browser web Anda, jadi berkas Anda tidak pernah diunggah.",
+      "whatIsProof": "Anda tidak perlu langsung percaya begitu saja. Setiap halaman memberi tahu browser Anda bahwa ia hanya boleh terhubung kembali ke leaflockpdf.com, dan browser yang menegakkannya. Setelah halaman dimuat, Anda bisa mematikan jaringan dan alat tetap berfungsi.",
+      "whatIsFor": "Ini untuk siapa saja yang menangani kontrak, kartu identitas, faktur, atau berkas medis dan tidak ingin menyerahkannya ke server orang lain."
     },
     "pageLinks": {
       "about": "Tentang",
@@ -3050,6 +3054,171 @@ export default {
         {
           "q": "Apakah PDF saya diunggah?",
           "a": "Tidak. Halaman ditambahkan di browser Anda di perangkat Anda, dan file tidak pernah dikirim ke mana pun."
+        }
+      ]
+    },
+    "combinePdf": {
+      "title": "Gabungkan berkas PDF",
+      "metaTitle": "Gabungkan berkas PDF jadi satu, secara privat | LeafLock PDF",
+      "metaDescription": "Gabungkan beberapa PDF menjadi satu berkas dengan urutan pilihan Anda. Berjalan di browser Anda, jadi tidak ada yang diunggah. Tanpa watermark dan tanpa pendaftaran.",
+      "summary": "Gabungkan beberapa PDF menjadi satu berkas, dengan urutan yang Anda pilih.",
+      "howTo": [
+        "Pilih berkas PDF yang ingin digabungkan, dua atau lebih.",
+        "Atur urutannya dengan tombol panah.",
+        "Pilih Gabungkan PDF lalu unduh berkas gabungan."
+      ],
+      "faq": [
+        {
+          "q": "Apakah menggabungkan PDF sama dengan menyatukannya?",
+          "a": "Ya. Menggabungkan dan menyatukan adalah dua nama untuk hal yang sama: halaman setiap berkas disambung, sesuai urutan Anda, menjadi satu PDF baru."
+        },
+        {
+          "q": "Bisakah saya menggabungkan PDF dengan foto atau dokumen Word?",
+          "a": "Tidak di langkah ini, yang hanya menerima PDF. Ubah foto menjadi PDF dengan JPG ke PDF, atau berkas Word dengan Word ke PDF, lalu gabungkan hasilnya."
+        },
+        {
+          "q": "Bisakah saya menggabungkan hanya beberapa halaman dari tiap berkas?",
+          "a": "Bisa, dengan Atur PDF: tambahkan semua berkas, hapus halaman yang tidak diinginkan, seret sisanya ke urutan yang benar, lalu simpan satu berkas."
+        },
+        {
+          "q": "Apakah kualitas dan penanda tetap terjaga?",
+          "a": "Halaman disalin tanpa dikompres ulang, jadi teks dan gambar terlihat persis seperti sebelumnya. Penanda ikut terbawa, bersarang dan berurutan. Beberapa jenis yang tidak umum, seperti yang melompat ke dokumen lain, dibuang."
+        },
+        {
+          "q": "Apakah berkas saya diunggah untuk digabungkan?",
+          "a": "Tidak. Browser Anda menyatukannya di perangkat Anda, jadi kontrak atau pindaian kartu identitas tidak pernah keluar darinya."
+        }
+      ]
+    },
+    "deletePdfPages": {
+      "title": "Hapus halaman dari PDF",
+      "metaTitle": "Hapus halaman dari PDF secara privat | LeafLock PDF",
+      "metaDescription": "Hapus halaman yang tidak Anda perlukan dari PDF dengan mengkliknya atau mengetik nomor halaman. Berjalan di browser Anda, tidak ada yang diunggah, dan tidak ada watermark.",
+      "summary": "Hapus halaman yang tidak Anda perlukan dari PDF.",
+      "howTo": [
+        "Pilih PDF.",
+        "Klik halaman yang akan dihapus, atau ketik nomor dan rentangnya, seperti 1-3, 5, 8-.",
+        "Pilih Hapus halaman lalu unduh PDF barunya."
+      ],
+      "faq": [
+        {
+          "q": "Lebih cepat menghapus halaman atau mengekstrak yang saya inginkan?",
+          "a": "Jika hanya membuang beberapa halaman, hapus di sini. Jika hanya ingin menyimpan beberapa halaman, Ekstrak halaman lebih cepat."
+        },
+        {
+          "q": "Bagaimana menghapus halaman terakhir tanpa menghitungnya?",
+          "a": "Ketik rentang terbuka seperti 8-, yang berarti halaman 8 sampai akhir."
+        },
+        {
+          "q": "Apakah berkas asli saya berubah?",
+          "a": "Tidak. Anda mengunduh salinan baru tanpa halaman itu, jadi simpan berkas asli jika mungkin membutuhkannya lagi."
+        },
+        {
+          "q": "Bisakah saya menghapus semua halaman?",
+          "a": "Tidak. Setidaknya satu halaman harus tersisa."
+        },
+        {
+          "q": "Apakah ini cara menyembunyikan teks sensitif?",
+          "a": "Menghapus membuang seluruh halaman. Untuk menyensor hanya sebagian halaman, gunakan Redaksi PDF."
+        }
+      ]
+    },
+    "pdfPasswordRemover": {
+      "title": "Penghapus kata sandi PDF",
+      "metaTitle": "Hapus kata sandi dari PDF milik Anda, secara privat | LeafLock PDF",
+      "metaDescription": "Hapus kata sandi dari PDF yang boleh Anda buka. Kata sandi dan berkas tetap di browser Anda; tidak ada yang diunggah.",
+      "summary": "Hapus kata sandi dari PDF yang boleh Anda buka.",
+      "howTo": [
+        "Pilih PDF yang dilindungi kata sandi.",
+        "Ketik kata sandinya.",
+        "Pilih Buka Kunci PDF lalu unduh salinan tanpa kata sandi."
+      ],
+      "faq": [
+        {
+          "q": "Bisakah menghapus kata sandi yang saya lupa?",
+          "a": "Tidak. Jika PDF memerlukan kata sandi untuk dibuka, Anda membutuhkan kata sandi itu. Alat ini tidak bisa menebak atau membobolnya. Alat ini untuk melepas kata sandi dari berkas yang sudah bisa Anda buka."
+        },
+        {
+          "q": "Bagaimana jika PDF hanya memblokir pencetakan atau penyalinan?",
+          "a": "PDF yang terbuka bebas tetapi membatasi pencetakan, penyalinan, atau pengeditan bisa dibuka kuncinya tanpa mengetik apa pun."
+        },
+        {
+          "q": "Amankah mengetik kata sandi di situs web?",
+          "a": "Di sini, ya. Kata sandi hanya dipakai browser Anda untuk mendekripsi berkas di perangkat Anda, dan baik kata sandi maupun PDF tidak diunggah."
+        },
+        {
+          "q": "Apakah isinya berubah?",
+          "a": "Tidak. Anda mendapat salinan dengan halaman, teks, dan gambar yang sama, tanpa kata sandi."
+        },
+        {
+          "q": "Apakah legal membuka kunci PDF?",
+          "a": "Hanya buka kunci file milik Anda sendiri atau yang Anda berwenang mengubahnya."
+        }
+      ]
+    },
+    "rearrangePdfPages": {
+      "title": "Susun ulang halaman PDF",
+      "metaTitle": "Susun ulang, urutkan, dan putar halaman PDF secara privat | LeafLock PDF",
+      "metaDescription": "Seret halaman PDF ke urutan baru, putar atau hapus halaman, bahkan campur halaman dari beberapa berkas. Berjalan di browser Anda, jadi tidak ada yang diunggah.",
+      "summary": "Seret halaman PDF ke urutan baru, lalu putar atau hapus yang perlu.",
+      "howTo": [
+        "Pilih satu PDF atau lebih.",
+        "Seret halaman ke urutan yang diinginkan, lalu putar atau hapus yang perlu.",
+        "Pilih Simpan PDF lalu unduh hasilnya."
+      ],
+      "faq": [
+        {
+          "q": "Bisakah saya menyusun ulang halaman di ponsel atau tablet?",
+          "a": "Bisa. Jika menyeret tidak berfungsi di layar sentuh Anda, gunakan tombol panah di bawah tiap halaman untuk memindahkannya lebih awal atau lebih akhir."
+        },
+        {
+          "q": "Bisakah saya mencampur halaman dari PDF yang berbeda?",
+          "a": "Ya. Tambahkan lebih dari satu PDF dan semua halamannya muncul bersama, sehingga Anda bisa mencampur dan mengurutkannya ulang lalu menyimpannya sebagai satu file."
+        },
+        {
+          "q": "Bisakah saya membatalkan kesalahan?",
+          "a": "Ya. Halaman yang dihapus dapat dipulihkan dengan tombol di bawahnya, dan Batalkan semua perubahan mengembalikan setiap halaman seperti saat Anda menambahkan file."
+        },
+        {
+          "q": "Apakah menyusun ulang mengubah kualitas?",
+          "a": "Tidak. Halaman disalin apa adanya, dan pemutaran hanya mengubah orientasinya, sehingga tidak ada yang dikompres ulang."
+        },
+        {
+          "q": "Apakah halaman saya diunggah saat saya menyusunnya ulang?",
+          "a": "Tidak. Pratinjau halaman dan PDF akhir sama-sama dibuat di browser Anda, jadi file Anda tetap di perangkat Anda sepanjang waktu."
+        }
+      ]
+    },
+    "reducePdfSize": {
+      "title": "Perkecil ukuran PDF",
+      "metaTitle": "Perkecil ukuran berkas PDF tanpa mengunggahnya | LeafLock PDF",
+      "metaDescription": "Buat PDF lebih kecil dengan memperkecil gambar di dalamnya. Anda melihat ukuran sebelum dan sesudah, dan tidak ada yang diunggah. Gratis, tanpa watermark.",
+      "summary": "Perkecil PDF, terutama dengan menyusutkan gambar di dalamnya.",
+      "howTo": [
+        "Pilih PDF.",
+        "Pilih seberapa kuat kompresinya: Ringan, Disarankan, atau Kuat.",
+        "Pilih Kompres PDF, periksa ukuran barunya, lalu unduh."
+      ],
+      "faq": [
+        {
+          "q": "Bisakah saya memilih ukuran persis yang saya mau?",
+          "a": "Tidak. Anda memilih tingkat, bukan ukuran target, karena seberapa kecil berkas jadinya bergantung pada isinya. Anda melihat ukuran sebelum dan sesudah, dan bisa mencoba tingkat yang lebih kuat jika masih terlalu besar."
+        },
+        {
+          "q": "Apa yang paling mengecil?",
+          "a": "PDF yang penuh foto atau halaman pindaian. Berkas yang sebagian besar teks biasanya sudah kecil."
+        },
+        {
+          "q": "Apakah teksnya jadi buram?",
+          "a": "Tidak. Teks dan gambar garis tetap tajam di semua tingkat. Foto dan pindaian diperkecil dan disimpan sebagai JPG, jadi bisa tampak lebih lembut, terutama dengan Kuat."
+        },
+        {
+          "q": "Mengapa PDF saya tidak jadi lebih kecil?",
+          "a": "Kemungkinan sudah terkompresi dengan baik atau sebagian besar teks. Alat ini tidak pernah memberi Anda berkas yang lebih besar; coba Kuat untuk memperkecil gambar lebih jauh."
+        },
+        {
+          "q": "Apakah PDF saya diunggah untuk dikompres?",
+          "a": "Tidak. Kompresi berjalan di browser Anda, sehingga PDF Anda tetap di perangkat Anda dari awal sampai akhir."
         }
       ]
     }

@@ -17,6 +17,26 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 8 November 2026 — Search answers: a definition on the front page, five more search names
+
+The front page now opens with a plain "What is LeafLock PDF?" block (the tool count is computed, never
+typed) so a person, a search engine or an assistant that quotes the first clear statement gets a true
+one, and every one of its own category sections starts open. Five search names for tools that already
+exist became pages of their own: **Combine PDF** (Merge), **Delete pages from a PDF** (Remove pages),
+**PDF password remover** (Unlock), **Rearrange PDF pages** (Organize) and **Reduce PDF size**
+(Compress). Each answer restates a fact the tool's own page already states. **Deliberately not
+built:** "compress to 200 KB" and its siblings. The compress tool has three levels and no target
+size, so such a page would promise what it cannot do; the **Reduce PDF size** page says so
+plainly. That is a feature to build first (try levels until a size is reached, say honestly when it
+cannot be), not a page to write. Translated into all nine languages by hand, in-session, because the
+`ANTHROPIC_API_KEY` in this environment is rejected (HTTP 401): the tool and button names in each
+answer are pulled from that language's own catalogue so they match the app, and 22 strings reused
+existing translations. Also changed outside the repo: Cloudflare's *AI Crawler and Agent access
+policies* (done by the owner) so `robots.txt` no longer blocks ChatGPT-User, Claude-User,
+Perplexity-User or the training crawlers.
+
+---
+
 ## 8 November 2026 — Search Console, and IndexNow for the other search engines
 
 The sitemap (790 URLs) was submitted in Search Console and read successfully; seven key pages were

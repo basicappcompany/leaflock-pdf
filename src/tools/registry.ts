@@ -83,6 +83,11 @@ export const landings = [
   { id: 'pdfToPng', slug: 'pdf-to-png', toolId: 'pdfToImages', preset: { format: 'png' } },
   { id: 'reversePages', slug: 'reverse-pdf-pages', toolId: 'organize', preset: { apply: 'reverse' } },
   { id: 'addBlankPage', slug: 'add-blank-page-to-pdf', toolId: 'organize' },
+  { id: 'combinePdf', slug: 'combine-pdf', toolId: 'merge' },
+  { id: 'deletePdfPages', slug: 'delete-pdf-pages', toolId: 'removePages' },
+  { id: 'pdfPasswordRemover', slug: 'pdf-password-remover', toolId: 'unlock' },
+  { id: 'rearrangePdfPages', slug: 'rearrange-pdf-pages', toolId: 'organize' },
+  { id: 'reducePdfSize', slug: 'reduce-pdf-size', toolId: 'compress' },
 ] as const satisfies readonly { id: string; slug: string; toolId: ToolId; preset?: Record<string, string> }[];
 
 export type LandingId = (typeof landings)[number]['id'];

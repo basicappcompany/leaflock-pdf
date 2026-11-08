@@ -90,7 +90,11 @@ export default {
       "copyright": "© {year} LeafLock PDF"
     },
     "home": {
-      "viewAll": "Tüm {category} araçlarını gör"
+      "viewAll": "Tüm {category} araçlarını gör",
+      "whatIsHeading": "LeafLock PDF nedir?",
+      "whatIsBody": "LeafLock PDF, birleştirme, bölme, sıkıştırma, OCR, imzalama, karartma ve Word, Excel ile görsellere dönüştürmeyi de içeren {count} PDF aracından oluşan ücretsiz bir settir. Her araç doğrudan web tarayıcınızda çalışır, bu yüzden dosyalarınız hiçbir zaman yüklenmez.",
+      "whatIsProof": "Bize körü körüne güvenmeniz gerekmez. Her sayfa tarayıcınıza yalnızca leaflockpdf.com adresine geri bağlanabileceğini söyler ve bunu tarayıcı uygular. Sayfa yüklendikten sonra ağınızı kapatabilirsiniz, araçlar çalışmaya devam eder.",
+      "whatIsFor": "Sözleşmeler, kimlikler, faturalar veya tıbbi belgelerle ilgilenen ve bunları başkasının sunucusuna vermek istemeyen herkes içindir."
     },
     "pageLinks": {
       "about": "Hakkında",
@@ -3050,6 +3054,171 @@ export default {
         {
           "q": "PDF'm yüklenir mi?",
           "a": "Hayır. Sayfa tarayıcınızda cihazınızda eklenir ve dosya hiçbir yere gönderilmez."
+        }
+      ]
+    },
+    "combinePdf": {
+      "title": "PDF dosyalarını birleştir",
+      "metaTitle": "PDF dosyalarını tek dosyada birleştirin, gizlilikle | LeafLock PDF",
+      "metaDescription": "Birkaç PDF’yi seçtiğiniz sırayla tek dosyada birleştirin. Tarayıcınızda çalışır, hiçbir şey yüklenmez. Filigran yok, kayıt gerekmez.",
+      "summary": "Birkaç PDF’yi seçtiğiniz sırayla tek dosyada birleştirin.",
+      "howTo": [
+        "Birleştirmek istediğiniz PDF dosyalarını seçin, en az iki.",
+        "Ok düğmeleriyle sıraya koyun.",
+        "PDF'leri birleştir seçeneğine basın ve birleştirilmiş dosyayı indirin."
+      ],
+      "faq": [
+        {
+          "q": "PDF’leri birleştirmek, bunları kaynaştırmakla aynı şey mi?",
+          "a": "Evet. Birleştirmek ve kaynaştırmak aynı işin iki adıdır: her dosyanın sayfaları sizin sıranızla yeni bir PDF’de bir araya getirilir."
+        },
+        {
+          "q": "Bir PDF’yi fotoğraf veya Word belgesiyle birleştirebilir miyim?",
+          "a": "Bu adımda hayır, yalnızca PDF alır. Fotoğrafı JPG'den PDF'ye ile, Word dosyasını Word'den PDF'ye ile PDF’ye çevirin, sonra sonuçları birleştirin."
+        },
+        {
+          "q": "Her dosyanın yalnızca bazı sayfalarını birleştirebilir miyim?",
+          "a": "Evet, PDF düzenle ile: tüm dosyaları ekleyin, istemediğiniz sayfaları kaldırın, kalanları sıraya sürükleyin ve tek dosya kaydedin."
+        },
+        {
+          "q": "Kalite ve yer imleri korunur mu?",
+          "a": "Sayfalar yeniden sıkıştırılmadan kopyalanır, bu yüzden metin ve görseller öncekiyle aynı görünür. Yer imleri iç içe ve sıralı olarak taşınır. Başka bir belgeye atlayanlar gibi birkaç olağandışı tür atlanır."
+        },
+        {
+          "q": "Dosyalarım birleştirilmek için yükleniyor mu?",
+          "a": "Hayır. Tarayıcınız onları cihazınızda birleştirir, bu yüzden sözleşmeler veya kimlik taramaları cihazınızdan hiç çıkmaz."
+        }
+      ]
+    },
+    "deletePdfPages": {
+      "title": "PDF’den sayfa sil",
+      "metaTitle": "Bir PDF'den sayfaları gizlice silin | LeafLock PDF",
+      "metaDescription": "Gerekmeyen sayfaları tıklayarak veya sayfa numaraları yazarak PDF’den silin. Tarayıcınızda çalışır, hiçbir şey yüklenmez ve filigran yoktur.",
+      "summary": "PDF’den gerekmeyen sayfaları silin.",
+      "howTo": [
+        "Bir PDF seçin.",
+        "Silinecek sayfalara tıklayın veya 1-3, 5, 8- gibi numaralarını ve aralıklarını yazın.",
+        "Sayfaları kaldır'ı seçin ve yeni PDF'yi indirin."
+      ],
+      "faq": [
+        {
+          "q": "Sayfaları silmek mi, istediklerimi çıkarmak mı daha hızlı?",
+          "a": "Birkaç sayfayı kaldırıyorsanız burada silin. Yalnızca birkaçını tutmak istiyorsanız Sayfaları ayıkla daha hızlıdır."
+        },
+        {
+          "q": "Son sayfaları saymadan nasıl silerim?",
+          "a": "Sayfa 8’den sona kadar anlamına gelen 8- gibi açık bir aralık yazın."
+        },
+        {
+          "q": "Özgün dosyam değişir mi?",
+          "a": "Hayır. Bu sayfalar olmadan yeni bir kopya indirirsiniz; sayfalara yeniden ihtiyaç duyabilirseniz özgün dosyayı saklayın."
+        },
+        {
+          "q": "Tüm sayfaları silebilir miyim?",
+          "a": "Hayır. En az bir sayfanın kalması gerekir."
+        },
+        {
+          "q": "Hassas metni gizlemenin yolu bu mu?",
+          "a": "Silme, sayfanın tamamını kaldırır. Bir sayfanın yalnızca bir kısmını karartmak için bunun yerine PDF karartma kullanın."
+        }
+      ]
+    },
+    "pdfPasswordRemover": {
+      "title": "PDF parola kaldırıcı",
+      "metaTitle": "Kendi PDF’nizin parolasını kaldırın, gizlilikle | LeafLock PDF",
+      "metaDescription": "Açmaya yetkili olduğunuz bir PDF’nin parolasını kaldırın. Parola ve dosya tarayıcınızda kalır; hiçbir şey yüklenmez.",
+      "summary": "Açmaya yetkili olduğunuz bir PDF’nin parolasını kaldırın.",
+      "howTo": [
+        "Parola korumalı PDF'yi seçin.",
+        "Parolasını yazın.",
+        "PDF kilidini aç'ı seçin ve parolasız bir kopyayı indirin."
+      ],
+      "faq": [
+        {
+          "q": "Unuttuğum bir parolayı kaldırabilir mi?",
+          "a": "Hayır. PDF açmak için parola gerektiriyorsa o parolaya ihtiyacınız var. Bu araç parolayı tahmin edemez veya kıramaz. Zaten açabildiğiniz bir dosyadan parolayı kaldırmak içindir."
+        },
+        {
+          "q": "PDF yalnızca yazdırmayı veya kopyalamayı engelliyorsa?",
+          "a": "Serbestçe açılan ama yazdırmayı, kopyalamayı veya düzenlemeyi sınırlayan bir PDF’nin kilidi hiçbir şey yazmadan açılabilir."
+        },
+        {
+          "q": "Bir web sitesine parola yazmak güvenli mi?",
+          "a": "Burada evet. Parola yalnızca tarayıcınız tarafından dosyanın şifresini cihazınızda çözmek için kullanılır ve ne parola ne de PDF yüklenir."
+        },
+        {
+          "q": "İçerik değişir mi?",
+          "a": "Hayır. Aynı sayfalara, metne ve görsellere sahip, parolasız bir kopya alırsınız."
+        },
+        {
+          "q": "Bir PDF'nin kilidini açmak yasal mı?",
+          "a": "Yalnızca sahibi olduğunuz ya da değiştirme izniniz olan dosyaların kilidini açın."
+        }
+      ]
+    },
+    "rearrangePdfPages": {
+      "title": "PDF sayfalarını yeniden düzenle",
+      "metaTitle": "PDF sayfalarını yeniden düzenleyin, sıralayın ve döndürün, gizlilikle | LeafLock PDF",
+      "metaDescription": "PDF sayfalarını yeni bir sıraya sürükleyin, sayfaları döndürün veya kaldırın, hatta birkaç dosyadan sayfaları karıştırın. Tarayıcınızda çalışır, hiçbir şey yüklenmez.",
+      "summary": "Bir PDF’nin sayfalarını yeni bir sıraya sürükleyin ve gereken sayfaları döndürün veya kaldırın.",
+      "howTo": [
+        "Bir veya daha fazla PDF seçin.",
+        "Sayfaları sürükleyerek sıraya koyun, gerekenleri döndürün ya da kaldırın.",
+        "PDF'yi kaydet'i seçin ve sonucu indirin."
+      ],
+      "faq": [
+        {
+          "q": "Sayfaları telefonda veya tablette yeniden düzenleyebilir miyim?",
+          "a": "Evet. Sürükleme dokunmatik ekranınızda çalışmazsa, her sayfanın altındaki ok düğmeleriyle sayfayı daha öne veya daha geriye taşıyın."
+        },
+        {
+          "q": "Farklı PDF’lerden sayfaları karıştırabilir miyim?",
+          "a": "Evet. Birden fazla PDF ekleyin; tüm sayfaları birlikte görünür, böylece bunları karıştırıp yeniden sıralayabilir ve tek bir dosya kaydedebilirsiniz."
+        },
+        {
+          "q": "Bir hatayı geri alabilir miyim?",
+          "a": "Evet. Kaldırılan bir sayfa altındaki düğmeyle geri yüklenebilir ve Tüm değişiklikleri geri al, dosyaları eklediğiniz andaki haline her sayfayı geri getirir."
+        },
+        {
+          "q": "Yeniden düzenlemek kaliteyi değiştirir mi?",
+          "a": "Hayır. Sayfalar olduğu gibi kopyalanır ve döndürme yalnızca yönlerini değiştirir, bu yüzden hiçbir şey yeniden sıkıştırılmaz."
+        },
+        {
+          "q": "Sayfaları düzenlerken yüklenirler mi?",
+          "a": "Hayır. Sayfa önizlemeleri ve son PDF tarayıcınızda oluşturulur, bu yüzden dosyalarınız boyunca cihazınızda kalır."
+        }
+      ]
+    },
+    "reducePdfSize": {
+      "title": "PDF boyutunu küçült",
+      "metaTitle": "PDF dosya boyutunu yüklemeden küçültün | LeafLock PDF",
+      "metaDescription": "İçindeki görselleri küçülterek bir PDF’yi daha küçük yapın. Boyutu öncesi ve sonrasıyla görürsünüz, hiçbir şey yüklenmez. Ücretsiz, filigransız.",
+      "summary": "Bir PDF'yi, çoğunlukla içindeki görselleri küçülterek küçültün.",
+      "howTo": [
+        "Bir PDF seçin.",
+        "Ne kadar güçlü sıkıştırılacağını seçin: Hafif, Önerilen veya Güçlü.",
+        "PDF sıkıştır'ı seçin, yeni boyutu kontrol edin ve indirin."
+      ],
+      "faq": [
+        {
+          "q": "İstediğim tam boyutu seçebilir miyim?",
+          "a": "Hayır. Hedef boyut değil, bir düzey seçersiniz; çünkü dosyanın ne kadar küçüleceği içindekilere bağlıdır. Boyutu öncesi ve sonrasıyla görürsünüz ve hâlâ büyükse daha güçlü bir düzey deneyebilirsiniz."
+        },
+        {
+          "q": "En çok ne küçülür?",
+          "a": "Fotoğraflarla veya taranmış sayfalarla dolu PDF’ler. Çoğunlukla metinden oluşan bir dosya genellikle zaten küçüktür."
+        },
+        {
+          "q": "Metin bulanıklaşır mı?",
+          "a": "Hayır. Metin ve çizimler her düzeyde net kalır. Fotoğraflar ve taramalar küçültülür ve JPG olarak kaydedilir, bu yüzden daha yumuşak görünebilir, en çok Güçlü ile."
+        },
+        {
+          "q": "PDF’im neden küçülmedi?",
+          "a": "Muhtemelen zaten iyi sıkıştırılmış veya çoğunlukla metin. Araç size hiçbir zaman daha büyük bir dosya vermez; görselleri daha da küçültmek için Güçlü deneyin."
+        },
+        {
+          "q": "PDF'm sıkıştırılmak için yüklenir mi?",
+          "a": "Hayır. Sıkıştırma tarayıcınızda çalışır, bu yüzden PDF'niz baştan sona cihazınızda kalır."
         }
       ]
     }
