@@ -2402,8 +2402,17 @@ export default {
         {
           "q": "Existe limite de tamanho de arquivo?",
           "a": "Não há um limite fixo. Arquivos grandes dependem da memória do seu dispositivo, porque a compressão acontece nele."
+        },
+        {
+          "q": "Posso comprimir um PDF para um tamanho específico, como 200 KB?",
+          "a": "Sim. Escolha «Para um tamanho» e digite-o. Usamos os ajustes de imagem mais suaves que ficam abaixo do número, para que as fotos mantenham o máximo de detalhe que o tamanho permitir. Se o arquivo não puder ficar tão pequeno, você recebe o menor que conseguimos fazer, e avisamos."
         }
       ],
+      "modeLabel": "Como comprimir",
+      "modes": {
+        "level": "Por nível",
+        "size": "Para um tamanho"
+      },
       "levelLabel": "Compressão",
       "levels": {
         "light": "Leve",
@@ -2415,6 +2424,14 @@ export default {
         "recommended": "Boa qualidade para leitura na tela, bem menor.",
         "strong": "Menor arquivo. As fotos ficam mais suaves."
       },
+      "targetLabel": "Tamanho desejado",
+      "unitLabel": "Unidade",
+      "targetPresets": "Tamanhos comuns",
+      "targetHint": "Usamos os ajustes mais suaves que o alcancem, para que as fotos mantenham o máximo de detalhe que o tamanho permitir.",
+      "targetInvalid": "Digite um tamanho de pelo menos {min}.",
+      "targetReached": "Pronto: {after} está dentro da sua meta de {target}.",
+      "targetMissed": "Não conseguimos chegar a {target}. Este é o menor arquivo que conseguimos fazer: {after}. As imagens já estão no menor ajuste aqui, então o que sobra é texto, fontes e desenhos, que esta ferramenta não mexe.",
+      "alreadyUnderTarget": "Este PDF já tem {before}, abaixo da sua meta de {target}, então não há nada a fazer.",
       "textNote": "Texto e desenhos continuam nítidos em todos os níveis; só fotos e imagens digitalizadas são reduzidas.",
       "action": "Comprimir PDF",
       "outputSuffix": "comprimido",
@@ -3196,13 +3213,13 @@ export default {
       "summary": "Deixe um PDF menor, principalmente reduzindo as imagens que há nele.",
       "howTo": [
         "Escolha um PDF.",
-        "Escolha o quanto comprimir: Leve, Recomendado ou Forte.",
+        "Escolha o quanto comprimir, ou digite um tamanho a alcançar.",
         "Selecione Comprimir PDF, confira o novo tamanho e baixe."
       ],
       "faq": [
         {
           "q": "Posso escolher o tamanho exato que quero?",
-          "a": "Não. Você escolhe um nível, não um tamanho-alvo, porque quão pequeno o arquivo fica depende do que há dentro dele. Você vê o tamanho antes e depois e pode tentar um nível mais forte se ainda estiver grande."
+          "a": "Sim, desde que seja possível. Escolha «Para um tamanho» e digite-o, por exemplo 200 KB. Usamos os ajustes mais suaves que fiquem abaixo. Se o arquivo não puder ficar tão pequeno, você recebe o menor que conseguimos fazer, e avisamos."
         },
         {
           "q": "O que diminui mais?",

@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto';
 import { PDFArray, PDFDocument, PDFName, PDFNumber, PDFRawStream, StandardFonts } from '@cantoo/pdf-lib';
 import { expect, test, type Page } from '@playwright/test';
 import { en } from '../../src/i18n/en';
@@ -105,6 +106,98 @@ test('compress shrinks a PDF with a large photo', async ({ page, baseURL }) => {
   expect(images).toHaveLength(1);
   expect((images[0]!.dict.get(PDFName.of('Width')) as PDFNumber).asNumber()).toBe(1000);
   watch.assertClean();
+});
+
+/** A PDF with one big photo, and optionally data that cannot be shrunk (an incompressible attachment). */
+async function photoPdf(page: Page, incompressibleBytes = 0): Promise<Uint8Array> {
+  const doc = await PDFDocument.create();
+  const image = await doc.embedJpg(await bigJpeg(page));
+  doc.addPage([600, 450]).drawImage(image, { x: 0, y: 0, width: 600, height: 450 });
+  if (incompressibleBytes > 0) await doc.attach(randomBytes(incompressibleBytes), 'data.bin', { mimeType: 'application/octet-stream' });
+  return doc.save();
+}
+
+async function openSizeMode(page: Page, file: Uint8Array) {
+  await page.goto('/compress-pdf');
+  await page.locator('input[type="file"]').setInputFiles(pdfUpload('input.pdf', file));
+  await page.getByText(t.compress.modes.size, { exact: true }).click();
+}
+
+test('compress to a size: reaches the target with the gentlest settings that fit, and says so', async ({ page, baseURL }) => {
+  const watch = watchPage(page, baseURL!);
+  await page.goto('/compress-pdf');
+  const original = await photoPdf(page);
+  expect(original.byteLength).toBeGreaterThan(350_000);
+  await page.locator('input[type="file"]').setInputFiles(pdfUpload('photo.pdf', original));
+  await page.getByText(t.compress.modes.size, { exact: true }).click();
+  await page.getByLabel(t.compress.targetLabel).fill('250');
+  await page.getByRole('button', { name: t.compress.action }).click();
+
+  await expect(page.getByText(/is within your .* target./)).toBeVisible({ timeout: 90_000 });
+  const result = await download(page, () => page.getByRole('link', { name: 'Download', exact: true }).click());
+  expect(result.bytes.byteLength).toBeLessThanOrEqual(250_000);
+  expect(result.bytes.byteLength).toBeLessThan(original.byteLength);
+  // Gentlest first: this target does not need the smallest image the ladder can make.
+  const compressed = await PDFDocument.load(result.bytes);
+  const images = compressed.context
+    .enumerateIndirectObjects()
+    .map(([, object]) => object)
+    .filter((object): object is PDFRawStream => object instanceof PDFRawStream && object.dict.get(PDFName.of('Subtype')) === PDFName.of('Image'));
+  expect(images).toHaveLength(1);
+  expect((images[0]!.dict.get(PDFName.of('Width')) as PDFNumber).asNumber()).toBeGreaterThan(500);
+  watch.assertClean();
+});
+
+test('compress to a size: a target it cannot reach is said plainly, and the smallest file is still offered', async ({ page, baseURL }) => {
+  const watch = watchPage(page, baseURL!);
+  await page.goto('/compress-pdf');
+  // 300 kB that no image setting can touch, so 100 kB is out of reach.
+  const original = await photoPdf(page, 300_000);
+  await page.locator('input[type="file"]').setInputFiles(pdfUpload('stubborn.pdf', original));
+  await page.getByText(t.compress.modes.size, { exact: true }).click();
+  await page.getByLabel(t.compress.targetLabel).fill('100');
+  await page.getByRole('button', { name: t.compress.action }).click();
+
+  await expect(page.getByText(/couldn.t reach 100 kB/)).toBeVisible({ timeout: 90_000 });
+  await expect(page.getByText(/smallest we could make it/).first()).toBeVisible();
+  const result = await download(page, () => page.getByRole('link', { name: 'Download', exact: true }).click());
+  expect(result.bytes.byteLength).toBeGreaterThan(100_000);
+  expect(result.bytes.byteLength).toBeLessThan(original.byteLength);
+  watch.assertClean();
+});
+
+test('compress to a size: a file already under the target is left alone', async ({ page }) => {
+  await openSizeMode(page, await textPdf(['small']));
+  await page.getByText('1 MB', { exact: true }).click();
+  await page.getByRole('button', { name: t.compress.action }).click();
+  await expect(page.getByText(/is already .* under your 1 MB target|under your .* target/)).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole('link', { name: 'Download', exact: true })).toHaveCount(0);
+});
+
+test('compress to a size: an unusable size is refused before anything runs', async ({ page }) => {
+  await openSizeMode(page, await textPdf(['small']));
+  const input = page.getByLabel(t.compress.targetLabel);
+  await input.fill('5');
+  await expect(page.getByText('Enter a size of at least 10 kB.')).toBeVisible();
+  await expect(input).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.getByRole('button', { name: t.compress.action })).toBeDisabled();
+  await input.fill('');
+  await expect(page.getByRole('button', { name: t.compress.action })).toBeDisabled();
+  await input.fill('250');
+  await expect(page.getByRole('button', { name: t.compress.action })).toBeEnabled();
+});
+
+test('compress to a size: common sizes fill the field, and the unit is a switch', async ({ page }) => {
+  await openSizeMode(page, await textPdf(['small']));
+  const input = page.getByLabel(t.compress.targetLabel);
+  await expect(input).toHaveValue('200');
+  await page.getByRole('group', { name: t.compress.targetPresets }).getByRole('button', { name: '500 KB' }).click();
+  await expect(input).toHaveValue('500');
+  await page.getByRole('group', { name: t.compress.targetPresets }).getByRole('button', { name: '2 MB' }).click();
+  await expect(input).toHaveValue('2');
+  await expect(page.getByRole('radio', { name: 'MB' })).toBeChecked();
+  // The level choices belong to the other mode.
+  await expect(page.getByText(t.compress.levels.strong, { exact: true })).toHaveCount(0);
 });
 
 test('repair rebuilds a truncated PDF', async ({ page, baseURL }) => {

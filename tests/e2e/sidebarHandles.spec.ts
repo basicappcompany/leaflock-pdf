@@ -131,3 +131,21 @@ test('the page keeps clear of the handles, open or hidden', async ({ page }) => 
     expect(heading.x, `h1 starts right of the handles (${visible})`).toBeGreaterThanOrEqual(handles.x + handles.width - 1);
   }
 });
+
+test.describe('on a phone, drawer hidden', () => {
+  test.use({ viewport: { width: 390, height: 800 }, hasTouch: true });
+
+  test('the lone handle floats in the bottom corner, so it cannot cover a heading', async ({ page }) => {
+    await page.goto('/compress-pdf');
+    await expect(page.locator('#sidebarToggle')).toBeVisible();
+    const handle = (await page.locator('#sidebarToggle').boundingBox())!;
+    const viewport = page.viewportSize()!;
+    // Bottom-left (the default dock), clear of the page's own text at the top.
+    expect(handle.y + handle.height, 'near the bottom').toBeGreaterThan(viewport.height - 40);
+    expect(handle.x, 'on the docked side').toBeLessThan(40);
+    const heading = (await page.getByRole('heading', { level: 1 }).boundingBox())!;
+    const overlaps = !(handle.y + handle.height <= heading.y || handle.y >= heading.y + heading.height);
+    expect(overlaps, 'not over the heading').toBe(false);
+    expect(Math.min(handle.width, handle.height), 'still a comfortable tap target').toBeGreaterThanOrEqual(40);
+  });
+});

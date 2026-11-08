@@ -7,18 +7,43 @@ import { pdfFile, type OpContext, type OutputFile } from '../types';
 
 export type CompressLevel = 'light' | 'recommended' | 'strong';
 
-/** Longest image side in pixels, and JPEG quality, per level. */
-export const compressSettings: Record<CompressLevel, { maxSide: number; quality: number }> = {
+/** Longest image side in pixels, and JPEG quality. */
+export interface CompressStep {
+  maxSide: number;
+  quality: number;
+}
+
+/** The three levels a person can pick. */
+export const compressSettings: Record<CompressLevel, CompressStep> = {
   light: { maxSide: 2400, quality: 0.82 },
   recommended: { maxSide: 1600, quality: 0.7 },
   strong: { maxSide: 1000, quality: 0.5 },
 };
 
-export interface CompressArgs {
+/**
+ * What "to a size" tries, from the gentlest to the most aggressive. The first three are the
+ * levels above; the rest go further than any level does and are reached only when a target
+ * needs them, so nobody lands on a 500-pixel image by accident. The ladder ends where photos
+ * stop being worth looking at, and a target below what it can reach is reported as missed
+ * rather than chased with ever-worse images.
+ */
+export const targetLadder: readonly CompressStep[] = [
+  compressSettings.light,
+  compressSettings.recommended,
+  compressSettings.strong,
+  { maxSide: 800, quality: 0.42 },
+  { maxSide: 640, quality: 0.35 },
+  { maxSide: 500, quality: 0.3 },
+];
+
+/** Passes a binary search over the ladder can need, which is what progress is divided by. */
+const MAX_PASSES = Math.ceil(Math.log2(targetLadder.length + 1));
+
+/** Either a level, or a size to reach. */
+export type CompressArgs = {
   input: PdfInput;
-  level: CompressLevel;
   outputName: string;
-}
+} & ({ level: CompressLevel; targetBytes?: undefined } | { targetBytes: number; level?: undefined });
 
 export interface CompressResult {
   file: OutputFile;
@@ -28,6 +53,8 @@ export interface CompressResult {
   images: number;
   /** True when nothing could be saved; `file` is then the original. */
   unchanged: boolean;
+  /** Set when a size was asked for: the size, and whether the file ended up at or under it. */
+  target?: { bytes: number; reached: boolean };
 }
 
 const name = (value: string) => PDFName.of(value);
@@ -35,45 +62,106 @@ const name = (value: string) => PDFName.of(value);
 /**
  * Makes a PDF smaller: re-encodes large or heavy images as JPEG (in the worker, with
  * OffscreenCanvas), drops embedded thumbnails and editor data, removes unused objects
- * and writes compact object streams.
+ * and writes compact object streams. With a level it does that once at that level; with a
+ * target size it searches for the gentlest setting that gets under the size.
  */
-export async function compress({ input, level, outputName }: CompressArgs, ctx: OpContext): Promise<CompressResult> {
-  const doc = await loadPdf(input);
+export async function compress(args: CompressArgs, ctx: OpContext): Promise<CompressResult> {
+  if (args.targetBytes !== undefined) return compressToTarget(args.input, args.outputName, args.targetBytes, ctx);
+
+  const before = args.input.bytes.byteLength;
+  const run = await compressOnce(args.input, compressSettings[args.level], (fraction) => ctx.progress(fraction));
+  ctx.progress(1);
+  if (run.bytes.byteLength >= before) return unchangedResult(args.input, args.outputName);
+  return { file: pdfFile(args.outputName, run.bytes), before, after: run.bytes.byteLength, images: run.images, unchanged: false };
+}
+
+function unchangedResult(input: PdfInput, outputName: string, target?: { bytes: number; reached: boolean }): CompressResult {
   const before = input.bytes.byteLength;
+  const result: CompressResult = { file: pdfFile(outputName, input.bytes.slice()), before, after: before, images: 0, unchanged: true };
+  if (target) result.target = target;
+  return result;
+}
+
+/**
+ * Finds the gentlest step of the ladder whose result fits under `targetBytes`.
+ *
+ * A binary search, not a walk from the top: each step costs a full pass over every image, so
+ * trying all six on a big file would be slow, and the search needs at most three. It assumes
+ * each stronger step gives a file no larger than the one before it, which holds in practice
+ * because the images only ever get smaller. If even the last step is too big, the smallest
+ * file seen is returned and the result says the target was missed.
+ */
+async function compressToTarget(input: PdfInput, outputName: string, targetBytes: number, ctx: OpContext): Promise<CompressResult> {
+  const before = input.bytes.byteLength;
+  // Already under it: nothing to do, and no reason to touch the file.
+  if (before <= targetBytes) return unchangedResult(input, outputName, { bytes: targetBytes, reached: true });
+
+  let low = 0;
+  let high = targetLadder.length - 1;
+  let fits: Run | undefined;
+  let smallest: Run | undefined;
+  let pass = 0;
+
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    const done = pass;
+    const run = await compressOnce(input, targetLadder[mid]!, (fraction) => ctx.progress(Math.min(0.99, (done + fraction) / MAX_PASSES)));
+    pass++;
+    if (!smallest || run.bytes.byteLength < smallest.bytes.byteLength) smallest = run;
+    if (run.bytes.byteLength <= targetBytes) {
+      fits = run;
+      high = mid - 1;
+    } else {
+      low = mid + 1;
+    }
+  }
+  ctx.progress(1);
+
+  const best = fits ?? smallest;
+  if (!best || best.bytes.byteLength >= before) return unchangedResult(input, outputName, { bytes: targetBytes, reached: false });
+  return {
+    file: pdfFile(outputName, best.bytes),
+    before,
+    after: best.bytes.byteLength,
+    images: best.images,
+    unchanged: false,
+    target: { bytes: targetBytes, reached: fits !== undefined },
+  };
+}
+
+interface Run {
+  bytes: Uint8Array;
+  images: number;
+}
+
+/** One full pass at one step: recode the images, tidy the file, write it out. */
+async function compressOnce(input: PdfInput, step: CompressStep, onProgress: (fraction: number) => void): Promise<Run> {
+  const doc = await loadPdf(input);
 
   let images = 0;
   if (canRecodeImages()) {
     const candidates = imageStreams(doc);
     for (const [index, stream] of candidates.entries()) {
       try {
-        if (await recompressImage(doc, stream, compressSettings[level])) images++;
+        if (await recompressImage(doc, stream, step)) images++;
       } catch {
         // An image we can't decode stays exactly as it was.
       }
-      ctx.progress((index + 1) / (candidates.length + 1));
+      onProgress((index + 1) / (candidates.length + 1));
     }
   }
 
   removeExtras(doc);
   pruneUnreachableObjects(doc);
   const bytes = await doc.save({ useObjectStreams: true, rewrite: true });
-  ctx.progress(1);
-
-  if (bytes.byteLength >= before) {
-    return { file: pdfFile(outputName, input.bytes.slice()), before, after: before, images: 0, unchanged: true };
-  }
-  return { file: pdfFile(outputName, bytes), before, after: bytes.byteLength, images, unchanged: false };
+  return { bytes, images };
 }
 
 function canRecodeImages(): boolean {
   return typeof OffscreenCanvas !== 'undefined' && typeof createImageBitmap === 'function';
 }
 
-async function recompressImage(
-  doc: PDFDocument,
-  stream: PDFRawStream,
-  settings: { maxSide: number; quality: number },
-): Promise<boolean> {
+async function recompressImage(doc: PDFDocument, stream: PDFRawStream, settings: CompressStep): Promise<boolean> {
   const dict = stream.dict;
   const width = numberOf(dict, 'Width');
   const height = numberOf(dict, 'Height');

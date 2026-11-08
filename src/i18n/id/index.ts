@@ -2402,8 +2402,17 @@ export default {
         {
           "q": "Apakah ada batas ukuran file?",
           "a": "Tidak ada batas tetap. File besar bergantung pada memori perangkat Anda, karena kompresi terjadi di sana."
+        },
+        {
+          "q": "Bisakah saya mengompres PDF ke ukuran tertentu, misalnya 200 KB?",
+          "a": "Bisa. Pilih «Ke ukuran» lalu masukkan angkanya. Kami memakai pengaturan gambar paling lembut yang masih di bawah angka itu, sehingga foto mempertahankan detail sebanyak yang diizinkan ukuran tersebut. Jika berkas tidak bisa sekecil itu, Anda mendapat yang terkecil yang bisa kami buat, dan kami memberi tahu Anda."
         }
       ],
+      "modeLabel": "Cara mengompres",
+      "modes": {
+        "level": "Menurut tingkat",
+        "size": "Ke ukuran"
+      },
       "levelLabel": "Kompresi",
       "levels": {
         "light": "Ringan",
@@ -2415,6 +2424,14 @@ export default {
         "recommended": "Kualitas baik untuk dibaca di layar, jauh lebih kecil.",
         "strong": "File terkecil. Foto tampak lebih lembut."
       },
+      "targetLabel": "Ukuran target",
+      "unitLabel": "Satuan",
+      "targetPresets": "Ukuran umum",
+      "targetHint": "Kami memakai pengaturan paling lembut yang mencapainya, sehingga foto mempertahankan detail sebanyak yang diizinkan ukuran tersebut.",
+      "targetInvalid": "Masukkan ukuran minimal {min}.",
+      "targetReached": "Selesai: {after} berada dalam target {target} Anda.",
+      "targetMissed": "Kami tidak bisa mencapai {target}. Ini berkas terkecil yang bisa kami buat: {after}. Gambar di sini sudah di pengaturan terkecil, jadi yang tersisa adalah teks, font, dan gambar garis, yang tidak disentuh alat ini.",
+      "alreadyUnderTarget": "PDF ini sudah {before}, di bawah target {target} Anda, jadi tidak ada yang perlu dilakukan.",
       "textNote": "Teks dan gambar garis tetap tajam di setiap tingkat; hanya foto dan gambar hasil pindaian yang dikurangi.",
       "action": "Kompres PDF",
       "outputSuffix": "compressed",
@@ -3196,13 +3213,13 @@ export default {
       "summary": "Perkecil PDF, terutama dengan menyusutkan gambar di dalamnya.",
       "howTo": [
         "Pilih PDF.",
-        "Pilih seberapa kuat kompresinya: Ringan, Disarankan, atau Kuat.",
+        "Pilih seberapa kuat kompresinya, atau masukkan ukuran yang ingin dicapai.",
         "Pilih Kompres PDF, periksa ukuran barunya, lalu unduh."
       ],
       "faq": [
         {
           "q": "Bisakah saya memilih ukuran persis yang saya mau?",
-          "a": "Tidak. Anda memilih tingkat, bukan ukuran target, karena seberapa kecil berkas jadinya bergantung pada isinya. Anda melihat ukuran sebelum dan sesudah, dan bisa mencoba tingkat yang lebih kuat jika masih terlalu besar."
+          "a": "Bisa, selama masih dalam jangkauan. Pilih «Ke ukuran» lalu masukkan angkanya, misalnya 200 KB. Kami memakai pengaturan paling lembut yang masih di bawahnya. Jika berkas tidak bisa sekecil itu, Anda mendapat yang terkecil yang bisa kami buat, dan kami memberi tahu Anda."
         },
         {
           "q": "Apa yang paling mengecil?",

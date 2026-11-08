@@ -285,13 +285,13 @@ export const landings = {
     summary: 'Make a PDF smaller, mostly by shrinking the images inside it.',
     howTo: [
       'Choose a PDF.',
-      'Pick how strongly to compress it: Light, Recommended or Strong.',
+      'Pick how strongly to compress it, or enter a size to reach.',
       'Select Compress PDF, check the new size and download it.',
     ],
     faq: [
       {
         q: 'Can I choose the exact size I want?',
-        a: 'No. You choose a level, not a target size, because how small a file gets depends on what is inside it. You see the size before and after, and can try a stronger level if it is still too big.',
+        a: 'Yes, as long as it is within reach. Choose To a size and enter it, for example 200 KB. We use the gentlest settings that get under it. If the file cannot get that small, you get the smallest we could make it, and we say so.',
       },
       {
         q: 'What shrinks the most?',
