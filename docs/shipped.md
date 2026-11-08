@@ -61,7 +61,7 @@ and `tests/unit/compress.test.ts`.
 
 ## 8 November 2026 — Search answers: a definition on the front page, five more search names
 
-The front page now opens with a plain "What is LeafLock PDF?" block (the tool count is computed, never
+The front page has a plain "What is LeafLock PDF?" block (moved below the tools on 9 November, on the owner's instruction: the tools come first) (the tool count is computed, never
 typed) so a person, a search engine or an assistant that quotes the first clear statement gets a true
 one, and every one of its own category sections starts open. Five search names for tools that already
 exist became pages of their own: **Combine PDF** (Merge), **Delete pages from a PDF** (Remove pages),

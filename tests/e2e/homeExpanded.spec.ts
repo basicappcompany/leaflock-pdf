@@ -42,3 +42,14 @@ test("the sidebar is unchanged: a tool page opens only that tool's own category 
   await expect(page.locator('.tools-sidebar__group[open]')).toHaveCount(1);
   await expect(page.locator('.tools-sidebar__group[open]')).toHaveAttribute('data-category', 'organize');
 });
+
+test('the tools come first and "What is LeafLock PDF?" sits below the last category', async ({ page }) => {
+  await page.goto('/');
+  const firstTool = (await page.locator('details.category').first().boundingBox())!;
+  const lastCategory = (await page.locator('details.category').last().boundingBox())!;
+  const answer = (await page.locator('.answer').boundingBox())!;
+  const hero = (await page.locator('.hero').first().boundingBox())!;
+  expect(firstTool.y, 'tools follow the hero').toBeGreaterThanOrEqual(hero.y + hero.height - 1);
+  expect(answer.y, 'the definition is below every category').toBeGreaterThanOrEqual(lastCategory.y + lastCategory.height - 1);
+  await expect(page.locator('.answer h2')).toHaveText('What is LeafLock PDF?');
+});
