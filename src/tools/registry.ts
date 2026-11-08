@@ -88,6 +88,8 @@ export const landings = [
   { id: 'pdfPasswordRemover', slug: 'pdf-password-remover', toolId: 'unlock' },
   { id: 'rearrangePdfPages', slug: 'rearrange-pdf-pages', toolId: 'organize' },
   { id: 'reducePdfSize', slug: 'reduce-pdf-size', toolId: 'compress' },
+  { id: 'compressPdfTo200kb', slug: 'compress-pdf-to-200kb', toolId: 'compress', preset: { mode: 'size', size: '200', unit: 'KB' } },
+  { id: 'compressPdfTo1mb', slug: 'compress-pdf-to-1mb', toolId: 'compress', preset: { mode: 'size', size: '1', unit: 'MB' } },
 ] as const satisfies readonly { id: string; slug: string; toolId: ToolId; preset?: Record<string, string> }[];
 
 export type LandingId = (typeof landings)[number]['id'];

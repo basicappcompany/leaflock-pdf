@@ -3238,6 +3238,56 @@ export default {
           "a": "Tidak. Kompresi berjalan di browser Anda, sehingga PDF Anda tetap di perangkat Anda dari awal sampai akhir."
         }
       ]
+    },
+    "compressPdfTo200kb": {
+      "title": "Kompres PDF ke 200 KB",
+      "metaTitle": "Kompres PDF ke 200 KB tanpa mengunggahnya | LeafLock PDF",
+      "metaDescription": "Perkecil PDF hingga 200 KB atau kurang dengan mengurangi gambar di dalamnya. Tidak ada yang diunggah, dan Anda diberi tahu dengan jelas jika berkas tidak bisa sekecil itu. Gratis, tanpa watermark.",
+      "summary": "Buat PDF di bawah 200 KB, terutama dengan memperkecil gambar di dalamnya.",
+      "howTo": [
+        "Pilih PDF.",
+        "Ukurannya sudah diatur ke 200 KB. Ubah jika Anda memerlukan ukuran lain.",
+        "Pilih «Kompres PDF», periksa ukuran barunya, lalu unduh."
+      ],
+      "faq": [
+        {
+          "q": "Apakah PDF saya pasti bisa di bawah 200 KB?",
+          "a": "Tidak selalu. PDF yang penuh foto atau hasil pindaian biasanya bisa. Berkas yang kebanyakan teks sering sudah kecil, dan yang berisi berkas tersemat besar mungkin tidak bisa mengecil sejauh itu. Jika tidak mencapai 200 KB, Anda mendapat yang terkecil yang bisa kami buat, dan kami memberi tahu Anda."
+        },
+        {
+          "q": "Apakah foto akan rusak?",
+          "a": "Kami mencoba pengaturan gambar paling lembut terlebih dahulu dan baru melangkah lebih jauh jika ukuran menuntutnya, sehingga foto mempertahankan detail sebanyak yang diizinkan 200 KB. Teks dan gambar garis tetap tajam."
+        },
+        {
+          "q": "Apakah PDF saya diunggah untuk dikompres?",
+          "a": "Tidak. Kompresi berjalan di browser Anda, jadi PDF tetap di perangkat Anda dari awal sampai akhir."
+        }
+      ]
+    },
+    "compressPdfTo1mb": {
+      "title": "Kompres PDF ke 1 MB",
+      "metaTitle": "Kompres PDF ke 1 MB tanpa mengunggahnya | LeafLock PDF",
+      "metaDescription": "Perkecil PDF hingga 1 MB atau kurang dengan mengurangi gambar di dalamnya. Tidak ada yang diunggah, dan Anda diberi tahu dengan jelas jika berkas tidak bisa sekecil itu. Gratis, tanpa watermark.",
+      "summary": "Buat PDF di bawah 1 MB, terutama dengan memperkecil gambar di dalamnya.",
+      "howTo": [
+        "Pilih PDF.",
+        "Ukurannya sudah diatur ke 1 MB. Ubah jika Anda memerlukan ukuran lain.",
+        "Pilih «Kompres PDF», periksa ukuran barunya, lalu unduh."
+      ],
+      "faq": [
+        {
+          "q": "Apakah PDF saya pasti bisa di bawah 1 MB?",
+          "a": "Tidak selalu. PDF yang penuh foto atau hasil pindaian biasanya bisa. Berkas yang kebanyakan teks sering sudah kecil, dan yang berisi berkas tersemat besar mungkin tidak bisa mengecil sejauh itu. Jika tidak mencapai 1 MB, Anda mendapat yang terkecil yang bisa kami buat, dan kami memberi tahu Anda."
+        },
+        {
+          "q": "Apakah foto akan rusak?",
+          "a": "Kami mencoba pengaturan gambar paling lembut terlebih dahulu dan baru melangkah lebih jauh jika ukuran menuntutnya, sehingga foto mempertahankan detail sebanyak yang diizinkan 1 MB. Teks dan gambar garis tetap tajam."
+        },
+        {
+          "q": "Apakah PDF saya diunggah untuk dikompres?",
+          "a": "Tidak. Kompresi berjalan di browser Anda, jadi PDF tetap di perangkat Anda dari awal sampai akhir."
+        }
+      ]
     }
   },
   "auth": {

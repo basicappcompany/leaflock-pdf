@@ -17,6 +17,19 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 9 November 2026 — Two size landings: 200 KB and 1 MB
+
+**Compress PDF to 200 KB** and **Compress PDF to 1 MB** are pages of their own now that the tool can
+really do it (the earlier "deliberately not built" note is resolved). Each opens Compress already in
+size mode with the number and unit filled in. The text promises only what the tool does: photo and
+scan PDFs usually get there, text-only or attachment-heavy ones may not, and when a file cannot, the
+person is told and given the smallest result. Both share one set of 12 strings per language (the size
+is the only difference), translated by hand into all nine languages; the button name in each is read
+from that language's own catalogue. Two share images added. Other sizes (100 KB, 500 KB, 2 MB) are
+left until these two show search traffic. Spec: `tests/e2e/secure.spec.ts`.
+
+---
+
 ## 9 November 2026 — Compress to a size
 
 Compress PDF now has **By level / To a size**. In size mode the person enters a number (KB or MB, with

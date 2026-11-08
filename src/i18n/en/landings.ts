@@ -311,4 +311,56 @@ export const landings = {
       },
     ],
   },
+  compressPdfTo200kb: {
+    title: 'Compress PDF to 200 KB',
+    metaTitle: 'Compress a PDF to 200 KB without uploading it | LeafLock PDF',
+    metaDescription:
+      'Shrink a PDF to 200 KB or less by reducing the images inside it. Nothing is uploaded, and you are told plainly if the file cannot get that small. Free, no watermark.',
+    summary: 'Get a PDF under 200 KB, mostly by shrinking the images inside it.',
+    howTo: [
+      'Choose a PDF.',
+      'The size is already set to 200 KB. Change it if you need a different one.',
+      'Select Compress PDF, check the new size and download it.',
+    ],
+    faq: [
+      {
+        q: 'Will my PDF definitely get under 200 KB?',
+        a: 'Not always. PDFs full of photos or scans usually can. A file that is mostly text is often small already, and one with large embedded files may not shrink that far. If it cannot reach 200 KB, you get the smallest we could make it, and we say so.',
+      },
+      {
+        q: 'Will the photos be ruined?',
+        a: 'We try the gentlest image settings first and only go further if the size needs it, so photos keep as much detail as 200 KB allows. Text and drawings stay sharp.',
+      },
+      {
+        q: 'Is my PDF uploaded to be compressed?',
+        a: 'No. Compression runs in your browser, so your PDF stays on your device from start to finish.',
+      },
+    ],
+  },
+  compressPdfTo1mb: {
+    title: 'Compress PDF to 1 MB',
+    metaTitle: 'Compress a PDF to 1 MB without uploading it | LeafLock PDF',
+    metaDescription:
+      'Shrink a PDF to 1 MB or less by reducing the images inside it. Nothing is uploaded, and you are told plainly if the file cannot get that small. Free, no watermark.',
+    summary: 'Get a PDF under 1 MB, mostly by shrinking the images inside it.',
+    howTo: [
+      'Choose a PDF.',
+      'The size is already set to 1 MB. Change it if you need a different one.',
+      'Select Compress PDF, check the new size and download it.',
+    ],
+    faq: [
+      {
+        q: 'Will my PDF definitely get under 1 MB?',
+        a: 'Not always. PDFs full of photos or scans usually can. A file that is mostly text is often small already, and one with large embedded files may not shrink that far. If it cannot reach 1 MB, you get the smallest we could make it, and we say so.',
+      },
+      {
+        q: 'Will the photos be ruined?',
+        a: 'We try the gentlest image settings first and only go further if the size needs it, so photos keep as much detail as 1 MB allows. Text and drawings stay sharp.',
+      },
+      {
+        q: 'Is my PDF uploaded to be compressed?',
+        a: 'No. Compression runs in your browser, so your PDF stays on your device from start to finish.',
+      },
+    ],
+  },
 };

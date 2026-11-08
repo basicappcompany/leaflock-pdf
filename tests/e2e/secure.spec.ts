@@ -200,6 +200,19 @@ test('compress to a size: common sizes fill the field, and the unit is a switch'
   await expect(page.getByText(t.compress.levels.strong, { exact: true })).toHaveCount(0);
 });
 
+for (const [slug, size, unit] of [['compress-pdf-to-200kb', '200', 'KB'], ['compress-pdf-to-1mb', '1', 'MB']] as const) {
+  test(`/${slug} opens the compress tool already set to ${size} ${unit}`, async ({ page, baseURL }) => {
+    const watch = watchPage(page, baseURL!);
+    await page.goto(`/${slug}`);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(`Compress PDF to ${size} ${unit}`);
+    await page.locator('input[type="file"]').setInputFiles(pdfUpload('input.pdf', await textPdf(['small'])));
+    await expect(page.getByLabel(t.compress.targetLabel)).toHaveValue(size);
+    await expect(page.getByRole('radio', { name: unit })).toBeChecked();
+    await expect(page.getByRole('radio', { name: t.compress.modes.size })).toBeChecked();
+    watch.assertClean();
+  });
+}
+
 test('repair rebuilds a truncated PDF', async ({ page, baseURL }) => {
   const watch = watchPage(page, baseURL!);
   const doc = await PDFDocument.create();
