@@ -68,14 +68,6 @@ const jsonLd = [
     <li>{common.trust.noFileSizeLimit}</li>
   </ul>
 
-  {/* A plain definition, near the top, for people and for the assistants and search engines that
-      quote the first clear statement of what a site is. The count is computed, never typed. */}
-  <section class="answer">
-    <h2>{common.home.whatIsHeading}</h2>
-    <p>{format(common.home.whatIsBody, { count: tools.length })}</p>
-    <p>{common.home.whatIsProof}</p>
-    <p>{common.home.whatIsFor}</p>
-  </section>
   {
     categories.map((category, index) => {
       const inCategory = tools.filter((tool) => tool.category === category);
@@ -120,4 +112,14 @@ const jsonLd = [
       );
     })
   }
+  {/* A plain definition for people and for the assistants and search engines that quote the first
+      clear statement of what a site is. It sits below the tools: a visitor came to use one, and the
+      hero and the headings above already say what the site is for. It is still real text in the page,
+      so it is read the same either way. The count is computed, never typed. */}
+  <section class="answer">
+    <h2>{common.home.whatIsHeading}</h2>
+    <p>{format(common.home.whatIsBody, { count: tools.length })}</p>
+    <p>{common.home.whatIsProof}</p>
+    <p>{common.home.whatIsFor}</p>
+  </section>
 </Base>

@@ -1567,19 +1567,33 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
 
 /* A column of text as wide as the hero grid allows is hard to read and breaks the
    headline at awkward points. Both are held to a comfortable measure instead. */
-/* The front page's plain definition: a short, readable column under the hero. */
+/* The front page's plain definition, after the tools: a quiet card in the site's panel style. */
 .answer {
-  max-width: 44rem;
-  margin: 0 0 calc(var(--space) * 2);
+  margin: calc(var(--space) * 2) 0 0;
+  padding: var(--space) calc(var(--space) * 1.25);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
 }
 
 .answer h2 {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.6rem;
   font-size: 1.25rem;
 }
 
 .answer p {
+  max-width: 62ch;
   margin: 0 0 0.6rem;
+  color: var(--color-muted);
+}
+
+.answer p:first-of-type {
+  color: var(--color-text);
+  font-size: 1.05rem;
+}
+
+.answer p:last-child {
+  margin-bottom: 0;
 }
 
 .hero__text h1 {
