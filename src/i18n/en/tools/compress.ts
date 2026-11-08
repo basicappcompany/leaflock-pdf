@@ -36,7 +36,13 @@ export default {
       q: 'Is there a file size limit?',
       a: 'There’s no fixed limit. Large files depend on your device’s memory, because the compression happens there.',
     },
+    {
+      q: 'Can I compress a PDF to a particular size, such as 200 KB?',
+      a: 'Yes. Choose To a size and enter it. We use the gentlest image settings that get under the number, so photos keep as much detail as the size allows. If the file can’t get that small, you get the smallest we could make it, and we say so.',
+    },
   ],
+  modeLabel: 'How to compress',
+  modes: { level: 'By level', size: 'To a size' },
   levelLabel: 'Compression',
   levels: {
     light: 'Light',
@@ -48,6 +54,17 @@ export default {
     recommended: 'Good quality for reading on screen, much smaller.',
     strong: 'Smallest file. Photos look softer.',
   },
+  targetLabel: 'Target size',
+  unitLabel: 'Unit',
+  targetPresets: 'Common sizes',
+  targetHint: 'We use the gentlest settings that reach it, so photos keep as much detail as the size allows.',
+  /** {min} is a formatted size, such as "10 kB". */
+  targetInvalid: 'Enter a size of at least {min}.',
+  /** {after} and {target} are formatted sizes. */
+  targetReached: 'Done: {after} is within your {target} target.',
+  targetMissed:
+    'We couldn’t reach {target}. This is the smallest we could make it: {after}. Images are already at their smallest setting here, so what remains is text, fonts and drawings, which this tool leaves alone.',
+  alreadyUnderTarget: 'This PDF is already {before}, under your {target} target, so there’s nothing to do.',
   textNote: 'Text and drawings stay sharp at every level; only photos and scanned images are reduced.',
   action: 'Compress PDF',
   outputSuffix: 'compressed',

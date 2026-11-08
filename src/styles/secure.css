@@ -232,3 +232,49 @@
   gap: var(--space);
   margin-top: 0.75rem;
 }
+
+/* Compress, "to a size": the number, its unit, and a row of common sizes. */
+.size-target {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.size-target input {
+  width: 8rem;
+}
+
+/* The unit switch is named for assistive technology, not shown as a second heading. */
+.size-target .segmented > legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.size-target__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.size-target__presets .secondary-button[aria-pressed='true'] {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.size-change__target {
+  margin: 0.5rem 0 0;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Missing the target is not an error: the file is still smaller, so it is said plainly in the
+   normal text colour rather than in an alarm one. */
+.size-change__target--missed {
+  color: var(--color-text);
+}

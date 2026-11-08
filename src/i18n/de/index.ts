@@ -2402,8 +2402,17 @@ export default {
         {
           "q": "Gibt es eine Dateigrößenbeschränkung?",
           "a": "Es gibt keine feste Grenze. Bei großen Dateien kommt es auf den Speicher Ihres Geräts an, da die Komprimierung dort stattfindet."
+        },
+        {
+          "q": "Kann ich ein PDF auf eine bestimmte Größe komprimieren, etwa 200 KB?",
+          "a": "Ja. Wählen Sie „Auf eine Größe“ und geben Sie sie ein. Wir verwenden die schonendsten Bildeinstellungen, die unter die Zahl kommen, damit Fotos so viel Detail behalten, wie die Größe zulässt. Kann die Datei nicht so klein werden, erhalten Sie die kleinste Datei, die wir erzeugen konnten, und wir sagen es Ihnen."
         }
       ],
+      "modeLabel": "So komprimieren",
+      "modes": {
+        "level": "Nach Stufe",
+        "size": "Auf eine Größe"
+      },
       "levelLabel": "Komprimierung",
       "levels": {
         "light": "Leicht",
@@ -2415,6 +2424,14 @@ export default {
         "recommended": "Gute Qualität zum Lesen am Bildschirm, deutlich kleiner.",
         "strong": "Kleinste Datei. Fotos wirken weicher."
       },
+      "targetLabel": "Zielgröße",
+      "unitLabel": "Einheit",
+      "targetPresets": "Gängige Größen",
+      "targetHint": "Wir verwenden die schonendsten Einstellungen, die sie erreichen, damit Fotos so viel Detail behalten, wie die Größe zulässt.",
+      "targetInvalid": "Geben Sie eine Größe von mindestens {min} ein.",
+      "targetReached": "Fertig: {after} liegt innerhalb Ihres Ziels von {target}.",
+      "targetMissed": "Wir konnten {target} nicht erreichen. Das ist die kleinste Datei, die wir erzeugen konnten: {after}. Bilder sind hier schon auf der kleinsten Einstellung, der Rest besteht aus Text, Schriften und Zeichnungen, die dieses Werkzeug nicht anfasst.",
+      "alreadyUnderTarget": "Dieses PDF hat schon {before} und liegt damit unter Ihrem Ziel von {target}, es gibt also nichts zu tun.",
       "textNote": "Text und Zeichnungen bleiben auf jeder Stufe scharf; nur Fotos und gescannte Bilder werden reduziert.",
       "action": "PDF komprimieren",
       "outputSuffix": "komprimiert",
@@ -3196,13 +3213,13 @@ export default {
       "summary": "Machen Sie ein PDF kleiner, vor allem durch Verkleinern der darin enthaltenen Bilder.",
       "howTo": [
         "Wählen Sie ein PDF.",
-        "Wählen Sie, wie stark komprimiert werden soll: Leicht, Empfohlen oder Stark.",
+        "Wählen Sie, wie stark komprimiert werden soll, oder geben Sie eine Zielgröße ein.",
         "Wählen Sie PDF komprimieren, prüfen Sie die neue Größe und laden Sie es herunter."
       ],
       "faq": [
         {
           "q": "Kann ich die genaue gewünschte Größe wählen?",
-          "a": "Nein. Sie wählen eine Stufe, keine Zielgröße, denn wie klein eine Datei wird, hängt davon ab, was darin steckt. Sie sehen die Größe vorher und nachher und können eine stärkere Stufe versuchen, wenn sie noch zu groß ist."
+          "a": "Ja, solange es erreichbar ist. Wählen Sie „Auf eine Größe“ und geben Sie sie ein, zum Beispiel 200 KB. Wir verwenden die schonendsten Einstellungen, die darunter kommen. Kann die Datei nicht so klein werden, erhalten Sie die kleinste Datei, die wir erzeugen konnten, und wir sagen es Ihnen."
         },
         {
           "q": "Was wird am meisten kleiner?",

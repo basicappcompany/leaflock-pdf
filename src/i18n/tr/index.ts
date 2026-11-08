@@ -2402,8 +2402,17 @@ export default {
         {
           "q": "Dosya boyutu sınırı var mı?",
           "a": "Sabit bir sınır yoktur. Büyük dosyalar, sıkıştırma orada gerçekleştiği için cihazınızın belleğine bağlıdır."
+        },
+        {
+          "q": "200 KB gibi belirli bir boyuta PDF sıkıştırabilir miyim?",
+          "a": "Evet. “Bir boyuta” seçeneğini seçin ve boyutu girin. O sayının altında kalan en yumuşak görsel ayarlarını kullanırız, böylece fotoğraflar boyutun izin verdiği kadar ayrıntıyı korur. Dosya o kadar küçülemiyorsa, yapabildiğimiz en küçük dosyayı alırsınız ve bunu size söyleriz."
         }
       ],
+      "modeLabel": "Nasıl sıkıştırılsın",
+      "modes": {
+        "level": "Düzeye göre",
+        "size": "Bir boyuta"
+      },
       "levelLabel": "Sıkıştırma",
       "levels": {
         "light": "Hafif",
@@ -2415,6 +2424,14 @@ export default {
         "recommended": "Ekranda okumak için iyi kalite, çok daha küçük.",
         "strong": "En küçük dosya. Fotoğraflar daha yumuşak görünür."
       },
+      "targetLabel": "Hedef boyut",
+      "unitLabel": "Birim",
+      "targetPresets": "Yaygın boyutlar",
+      "targetHint": "Boyuta ulaşan en yumuşak ayarları kullanırız, böylece fotoğraflar boyutun izin verdiği kadar ayrıntıyı korur.",
+      "targetInvalid": "En az {min} bir boyut girin.",
+      "targetReached": "Tamam: {after}, {target} hedefinizin içinde.",
+      "targetMissed": "{target} hedefine ulaşamadık. Yapabildiğimiz en küçük dosya bu: {after}. Görseller burada zaten en küçük ayarda; geriye metin, yazı tipleri ve çizimler kalıyor, bu araç onlara dokunmaz.",
+      "alreadyUnderTarget": "Bu PDF zaten {before}, {target} hedefinizin altında, yani yapılacak bir şey yok.",
       "textNote": "Metin ve çizimler her düzeyde net kalır; yalnızca fotoğraflar ve taranmış görseller küçültülür.",
       "action": "PDF sıkıştır",
       "outputSuffix": "sikistirildi",
@@ -3196,13 +3213,13 @@ export default {
       "summary": "Bir PDF'yi, çoğunlukla içindeki görselleri küçülterek küçültün.",
       "howTo": [
         "Bir PDF seçin.",
-        "Ne kadar güçlü sıkıştırılacağını seçin: Hafif, Önerilen veya Güçlü.",
+        "Ne kadar güçlü sıkıştırılacağını seçin ya da ulaşılacak bir boyut girin.",
         "PDF sıkıştır'ı seçin, yeni boyutu kontrol edin ve indirin."
       ],
       "faq": [
         {
           "q": "İstediğim tam boyutu seçebilir miyim?",
-          "a": "Hayır. Hedef boyut değil, bir düzey seçersiniz; çünkü dosyanın ne kadar küçüleceği içindekilere bağlıdır. Boyutu öncesi ve sonrasıyla görürsünüz ve hâlâ büyükse daha güçlü bir düzey deneyebilirsiniz."
+          "a": "Evet, ulaşılabilir olduğu sürece. “Bir boyuta” seçeneğini seçin ve boyutu girin, örneğin 200 KB. Altında kalan en yumuşak ayarları kullanırız. Dosya o kadar küçülemiyorsa, yapabildiğimiz en küçük dosyayı alırsınız ve bunu size söyleriz."
         },
         {
           "q": "En çok ne küçülür?",

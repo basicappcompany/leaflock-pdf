@@ -17,6 +17,25 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 9 November 2026 — Compress to a size
+
+Compress PDF now has **By level / To a size**. In size mode the person enters a number (KB or MB, with
+common sizes one tap away) and the tool tries image settings from gentlest to harshest until the file
+fits, using a binary search over a six-step ladder so it needs at most three passes. The first three
+steps are the three levels; the other three go further than any level does and exist only for targets.
+**Stated limits, all shown to the person:** a target below what the images can give is *missed*, said
+plainly ("the smallest we could make it is X"), and the smallest file is still offered; a file already
+under the target is left alone; the ladder stops at 500-pixel images because below that a photo is no
+longer a photo. Sizes are decimal (1 KB = 1,000 bytes), like every other size on the site. This is
+what the "Reduce PDF size" page and its nine translations had to be corrected for: they said there
+was no target-size option. Found on the way: a hand-built fix for a phone problem the sidebar handles
+introduced (the lone hide/show handle covered the first letters of every heading) first padded the
+page, which broke the 320px reflow; it is now a round button in the bottom corner, as the old reopen
+button was. Spec: `tests/e2e/secure.spec.ts` (reached, missed, already under, validation, common sizes)
+and `tests/unit/compress.test.ts`.
+
+---
+
 ## 8 November 2026 — Search answers: a definition on the front page, five more search names
 
 The front page now opens with a plain "What is LeafLock PDF?" block (the tool count is computed, never
