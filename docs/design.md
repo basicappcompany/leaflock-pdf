@@ -1038,7 +1038,7 @@ them from the request origin: `http://localhost:8788/api/auth/google/callback` a
   - `leaflockpdf.com` was re-confirmed unregistered by RDAP on 30 October and **bought the
     same day**, so gate (2) is closed for the name we are keeping and the shortlist above is
     the only part of this section still hypothetical. What the purchase did *not* settle is
-    in `docs/TODO.md` §0: auto-renew, registrar 2FA, and a mailbox for `hello@`.
+    in `docs/TODO.md` §0: auto-renew and registrar 2FA. (The `hello@` mailbox was set up on 9 November 2026.)
 - **Self-serve only, and bespoke enterprise is deferred rather than declined — decided
   30 October 2026.** Everything in a paid tier must be zero-touch: a click-through DPA, a
   published trust page instead of per-prospect questionnaires, provider-issued invoices,
@@ -1108,6 +1108,27 @@ them from the request origin: `http://localhost:8788/api/auth/google/callback` a
   locale with no translation is `noindex` and absent from hreflang and the sitemap. The
   safeguard that replaced "a person translates" is "a person reviews the trust claims, pricing
   and error strings before the Claims statement can be dropped" (roadmap item 5.7).
+
+- **Compress "to a size" is a promise with a stated limit — decided 9 November 2026.** The tool
+  tries the gentlest image setting that fits, over a six-step ladder, and stops at 500-pixel
+  images; a target it cannot reach is reported as missed and the smallest file is still offered,
+  never a worse-looking file chased in silence. Only the 200 KB and 1 MB landings were built;
+  further sizes wait for search traffic. This reverses the 8 November note that a target-size
+  landing "would promise what it cannot do" — it was true while the tool had only levels.
+- **Sidebar controls hang off the sidebar's inner edge; hidden, one round corner button remains —
+  decided 7–8 November 2026.** Stars are stored in the browser and merged into the account on
+  sign-in (op-based, so a removal on one device is not undone by another). A page-edge handle
+  covered headings on a phone and padding the page for it broke the 320 px reflow; a corner
+  button covers nothing.
+- **Mail: `hello@` is Cloudflare Email Routing into the owner's Gmail — 9 November 2026.**
+  Resend only sends the service's own emails. Named in `privacy.md`. Replying *from* `hello@`
+  is deliberately not set up yet.
+- **When the translation key is rejected, translate by hand and import — 8 November 2026.**
+  `scripts/translate.mjs --import` validates placeholders and numbers either way; machine or
+  hand, the status stays `machine` until a person reviews it.
+- **An agent working in this repo does not change security or account settings — standing.**
+  Cloudflare policies (bot and AI-crawler rules), production database migrations and secrets are
+  the owner's to apply; the repo records the command in `docs/TODO.md` instead.
 
 ## 14. Known gaps in this design
 

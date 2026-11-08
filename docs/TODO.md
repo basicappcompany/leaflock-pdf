@@ -1,5 +1,25 @@
 # TODO: credentials, config and deferred setup
 
+## At a glance — 9 November 2026
+
+A dated snapshot; the sections below are the detail and the source of truth.
+
+**Pending on you** (accounts, dashboards, people):
+- Valid `ANTHROPIC_API_KEY` (§9); a person to review translated trust claims (§9).
+- Apply migration `0007` to the preview database; decide `FEEDBACK_NOTIFY_EMAIL` and confirm the Resend
+  secrets exist in production (§4); try the feedback form end to end with `pnpm feedback`.
+- Send a test email to `hello@leaflockpdf.com` from another account; decide on replying from it (§0).
+- Auto-renew and registrar 2FA (§0); TLS 1.2 and Bot Fight Mode decisions (§8).
+- Google OAuth client, Dodo products and webhook, Paddle (§1, §3); legal review (`legal-checklist.md`).
+- Bing Webmaster Tools; look at Search Console in a few days; post the launch drafts when signed in.
+
+**Pending on me** (engineering, no input needed to start):
+- More size landings (100 KB, 500 KB, 2 MB) only if the 200 KB and 1 MB pages show traffic.
+- An about page naming a person, dates on guides, `sameAs` links; more search-name landings.
+- Guides (6 of one-per-tool), the remaining 10 locales, server-backed retention (2.12) — see the tracker.
+
+Counts and dates are not kept here: run `pnpm counts` and `pnpm tracker`.
+
 Everything that is stubbed, empty or waiting on an external account. The code for each
 item is written and working; only the real values are missing. Started 23 October 2026.
 
@@ -44,20 +64,13 @@ spread — so it gated everything below it rather than being a branding task.
       from the **request origin**, and only the apex and `localhost:8788` are registered
       (`docs/design.md` §12), so Google rejects the callback for anyone who arrives on
       `www`. A 301 from `www` to the apex at the edge is the whole fix. It is in place.
-- [ ] **A mailbox for `hello@leaflockpdf.com` is still missing, and Resend is not it.**
-      Resend only *sends* (magic links, receipts); it provides nothing to receive at. A free
-      forwarder to an existing mailbox is enough to start and is the simplest thing to
-      disclose, which matters because `docs/legal-checklist.md` §2 requires the email
-      provider to be **named in `privacy.md`** — so this choice goes into the 6.3 brief.
-      DNS is now set, so this is unblocked. State on 5 November 2026: Resend's records exist
-      (`send.leaflockpdf.com` SPF and `resend._domainkey` DKIM) but there is **no MX record
-      at the apex** and no apex SPF, so nothing can be received yet. SPF/DKIM TXT records are
-      Resend's, MX is the mailbox's, and neither collides with the apex record — MX, TXT and
-      A/CNAME are different record types on the same name, so mail and the site coexist on
-      the bare domain. **A DMARC record already exists** (`p=quarantine`, reports going to an
-      `onsecureserver.net` address), which looks like a registrar default rather than a
-      choice — replace its `rua` with an address we read once the mailbox exists, rather
-      than adding a second record.
+- [x] **A mailbox for `hello@leaflockpdf.com` — done, 9 November 2026.** Cloudflare Email Routing
+      forwards `hello@` to `basicappcompany@gmail.com` (destination verified; MX records route1–3
+      `.mx.cloudflare.net` and apex SPF `include:_spf.mx.cloudflare.net` live; the catch-all is off, so
+      only `hello@` is received). Resend still only *sends*. Named in `privacy.md` (Cloudflare for
+      forwarding, Google for the mailbox). **Not done:** replying *from* `hello@` (Gmail "send as"
+      would need an SMTP login; until then replies come from the Gmail address) and an end-to-end
+      test email from another account.
 - [ ] Note what is *not* needed: `leaflock.com` is a live gutter-guard product and is not
       obtainable. That is why the wordmark keeps "PDF" (`docs/design.md` §13).
 
@@ -194,18 +207,20 @@ now sits in `.dev.vars` beside the other three, and needs a real id like them.
 - [x] `wrangler d1 create leaflock-pdf` — database id `75b792bb-eef2-4a99-8090-56b77cb55e4d`
       (APAC region), now in `wrangler.toml`.
 - [x] All four migrations applied remotely (`0001_auth` through `0004_practice_plan`).
-- [ ] **Apply migration `0007_feedback`** (8 November 2026), the table behind the feature-request and
-      feedback forms. From the repo: `pnpm exec wrangler d1 migrations apply leaflock-pdf --remote`, and
-      `pnpm exec wrangler d1 migrations apply leaflock-pdf-preview --remote --env preview` for previews.
-      Until then the form answers "could not send" and shows the contact address; nothing breaks.
+- [x] **Migration `0007_feedback` applied to production**, 8 November 2026, by the owner (a first try
+      timed out reaching Cloudflare's API before anything ran; the second succeeded):
+      `cd /c/Claude/leaflock-pdf && pnpm exec wrangler d1 migrations apply leaflock-pdf --remote`.
+      The feature-request and feedback forms now store messages; read them with `pnpm feedback`.
+- [ ] **Apply `0007` to the preview database too**: `pnpm exec wrangler d1 migrations apply
+      leaflock-pdf-preview --remote --env preview`. Only branch previews need it; there the form says
+      it could not send until it is done.
 - [ ] **Decide where feedback alerts go.** Messages are stored and read with `pnpm feedback`. For an
       email per message, set a production Pages secret: `pnpm exec wrangler pages secret put
       FEEDBACK_NOTIFY_EMAIL --project-name leaflock-pdf` (any address you read; sending uses Resend).
       Not verified: that `RESEND_API_KEY` and `EMAIL_FROM` are set as *production* secrets (§2 only
       records them in `.dev.vars`).
-- [ ] **`hello@leaflockpdf.com` still has no mailbox (§0), and the feedback form's error message tells
-      people to write to it.** Until a mailbox exists, a visitor who hits that message has nowhere to
-      send it. Either add the mailbox or change `contactEmail` in `ToolsSidebar.astro`.
+- [x] **The feedback form’s fallback address now has a mailbox** (9 November 2026, §0): a visitor who
+      hits the "could not send" message can write to `hello@leaflockpdf.com` and it arrives.
 - [x] **Migration `0006_starred_tools` applied to production**, 8 November 2026, by the owner
       (the coding session's auto-mode classifier refuses production database changes, which is
       the right default): `cd /c/Claude/leaflock-pdf && pnpm exec wrangler d1 migrations apply
@@ -427,7 +442,10 @@ Dashboard settings only; the code findings from the same review are in `docs/shi
 
 `scripts/translate.mjs` is written and works; only the value and the human step are missing.
 
-- [ ] **`ANTHROPIC_API_KEY` for the translation script.** Read from the environment of
+- [ ] **`ANTHROPIC_API_KEY` for the translation script — the one in the owner's shell is rejected (HTTP
+      401, "invalid x-api-key"), found 8 November 2026.** Translation was done by hand in-session
+      instead (`--import`) for the 8–9 November strings; it works but costs a lot of output per
+      batch. Read from the environment of
       whoever runs `node scripts/translate.mjs --locale <code>`; it is never in the repo or
       `.dev.vars`, and the site does not use it at run time. Decide whose account pays: a run
       is about 58,000 tokens per locale (`--dry-run` prints the estimate).

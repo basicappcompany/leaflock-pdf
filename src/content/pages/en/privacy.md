@@ -66,7 +66,7 @@ Please don't send us your documents. We never need them to help you.
 - **Purpose:** answering your question and providing support.
 - **Legal basis (GDPR):** our legitimate interest in responding to people who contact us (Article 6(1)(f)), or taking steps at your request before entering into a contract (Article 6(1)(b)) if you ask about buying a plan.
 - **Retention:** as long as needed to deal with your request, and then for up to [TO CONFIRM: email retention period] in case of follow-up questions.
-- **Email service:** Resend.
+- **Email handling:** messages sent to hello@leaflockpdf.com are forwarded by Cloudflare (Email Routing) to a Google Gmail mailbox that we read. Resend is used only to send you the emails the service itself sends, such as sign-in links.
 
 ### Payments (once paid plans launch)
 
@@ -111,7 +111,7 @@ We cannot read any of this data; it stays on your device, except for your starre
 We share personal data only with the service providers that help us run LeafLock PDF, and only as far as needed:
 
 - **Hosting:** Cloudflare, for server access logs.
-- **Email:** Resend, for emails you send us.
+- **Email:** Cloudflare (forwarding) and Google (the mailbox we read), for emails you send us; Resend, for emails we send you.
 - **Payments:** Dodo Payments (India) and Paddle (everywhere else), once paid plans launch.
 - **Error reports:** stored with our hosting provider, Cloudflare, as part of our own systems.
 

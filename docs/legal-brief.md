@@ -58,8 +58,8 @@ reason 6.3 has not begun.
 
 **#6 was resolved on 3 November 2026:** Resend is the sending provider and is named in
 `privacy.md`; the domain is verified there. What remains is not a question for the lawyer:
-Resend only *sends*, so receiving at `hello@` needs a mailbox or a forwarder, and whichever
-is chosen will also have to be named in `privacy.md` (`docs/TODO.md` §0).
+Resend only *sends*, so receiving at `hello@` needed a forwarder: **Cloudflare Email Routing to a
+Gmail mailbox, set up 9 November 2026 and named in `privacy.md`** (`docs/TODO.md` §0).
 
 ## 3. The fact the whole review turns on
 

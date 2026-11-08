@@ -101,7 +101,7 @@ while the rest is built.
 | | LeafLock | iLovePDF | Smallpdf | Adobe online | Sejda | Stirling-PDF | ihatepdf.cv |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Tools | **43** (37 free, 6 Practice) | ~30 | ~40 | ~25 | 40+ | 50+ | 28–60 (claims differ) |
-| Landing variants | 5 | many | many | many | many | — | — |
+| Landing variants | see `pnpm counts` | many | many | many | many | — | — |
 | Comparison pages | **7** | — | — | — | — | — | 3 |
 | Guides | 6 | large library | large library | large library | — | — | 40+ |
 | Locales live | 10 (`en`, plus `hi`, `bn`, `pt-BR`, `id`, `ru`, `de`, `es`, `fr`, `tr` machine-translated); 10 more routed, deferred | 21+ | 24 | ~30 | — | — | 1 |
@@ -457,7 +457,9 @@ what building it now does. No new tools, no new pages; the machinery under both.
   3 November, hidden by default there) the home page now carries, added here after the
   fact on owner instruction rather than left undocumented. Default skin changed from the
   original ("Soft Product") to "Playful Rounded"; remembering a choice between visits is
-  a Pro/Practice perk. `docs/design.md` §10, §10a.
+  a Pro/Practice perk. `docs/design.md` §10, §10a. **Extended 7–8 November:** Recent and
+  Starred tools (stars synced to the account), handles on the sidebar's inner edge,
+  feature-request and feedback dialogs.
 
 **Done when:** the site installs, works with the network off, a new tool page arrives
 with complete structured data and internal links for free, and every tool/category page
@@ -957,7 +959,7 @@ Every page here is tagged **as it is written** for whether it belongs to the tra
 surface or stays English-only; Phase 5 settles which is which. Tagging at authoring time
 is free, and working it out afterwards means re-reading a hundred pages.
 
-- **Programmatic landings.** 3 today → 40+. Extend the `landings` array: every image
+- **Programmatic landings.** 40+ is the target (`pnpm counts` has today's number; 12 on 9 November 2026, including compress-to-200-KB and -1-MB). Extend the `landings` array: every image
   format in and out, every "A to B" pair we can genuinely do, every phrasing people
   search for. Distinct copy, not thin duplicates.
 - **Comparison pages. Done 1 November 2026** (item 3.2) — all seven, the last five
