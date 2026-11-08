@@ -500,13 +500,13 @@
     tools: 43,
     pro: 0,
     practice: 6,
-    commits: 63,
+    commits: 64,
     ops: 29,
     landings: 12,
     guides: 6,
     compares: 7,
     unit: 592,
-    browser: 351,
+    browser: 353,
     browserFiles: 33,
     anonymousDaily: 20,
     freeAccountDaily: 60,
@@ -530,6 +530,7 @@
         { id: "1.3", name: "Performance budget enforced in CI", state: "done", when: "by 28 Oct", note: "and actually run since 31 Oct: it is part of the suite the first GitHub Actions run passed" },
         { id: "1.4", name: "Related-tools + category hub pages", state: "done", when: "by 28 Oct" },
         { id: "1.5", name: "Tools sidebar and a 15-skin picker", state: "done", when: "2 Nov, extended 3 Nov", note: "ToolsSidebar.astro — categorised, collapsible, dockable left/right, search — on every tool page, category-hub page, and (since 3 Nov, hidden by default there) the home page; SkinPicker.astro, a header dropdown (an earlier full-page /appearance route was replaced with this), 15 skins in src/styles/skins.css, default changed from \"Soft Product\" (kept as an alternate) to \"Playful Rounded\". Remembering a choice between visits is gated to Pro/Practice, checked only at the moment of picking; free/signed-out gets a session cookie instead. Not originally a roadmap item — a design-exploration session that ended with real shipped features, added here after the fact on owner instruction. Follow-up fixes on 2 Nov: a live-recolouring favicon/theme-color (found and fixed a light-dark() resolution bug along the way), a scroll gap above the sidebar, and a ragged footer/sidebar link grid. On 3 Nov: one-line trust badges on every tool and the home page; six CI-breaking bugs found and fixed (a CSP gap around is:inline scripts, the coral accent failing WCAG AA contrast, a dock-button/crop-handle name collision, a 320px reflow, and the performance budget raised to match the sidebar's real weight). docs/design.md §10, §10a" },
+        { id: "1.6", name: "Recent and starred tools; sidebar handles on its inner edge", state: "done", when: "7–8 Nov", note: "Recent tools (device-local) and Starred tools in the sidebar, stars kept per browser and synced to the account (functions/api/starred.ts, migration 0006); move, hide/show and reset handles hang off the sidebar's inner edge, a lone round corner button when it is hidden. Icon-only theme and flag-only language buttons. Not a roadmap item — added on owner instruction" },
       ],
     },
     {
@@ -548,6 +549,8 @@
         { id: "2.10", name: "HEIC decoding via libheif-wasm", state: "done", when: "29 Oct", note: "built; a confirmatory HEVC legal read stays open in TODO §6a" },
         { id: "2.11", name: "Device-local recent work (IndexedDB, 5 min / 1 hour / 24 hours, custom on Pro)", state: "done", when: "30 Oct", note: "nothing leaves the device — the CSP claim is untouched" },
         { id: "2.12", name: "Server-backed retention for Pro (R2 + browser AES-GCM, key in fragment)", state: "pending", estimate: "~4–5 days", days: 5, note: "replaces the retired 4.8; lifts 2.11's 7-day device ceiling", after: "after launch — and after demand proves it" },
+        { id: "2.13", name: "Compress to a target size — 200 KB, 1 MB, any size", state: "done", when: "9 Nov", note: "By level / To a size: a binary search over a six-step ladder (at most three passes), the gentlest settings that fit; a target it cannot reach is said plainly and the smallest file is still offered; a file already under it is left alone. Stops at 500-pixel images. Landings: compress-pdf-to-200kb and -1mb" },
+        { id: "2.14", name: "Feature requests and feedback from the sidebar", state: "done", when: "8 Nov", note: "stored in D1 (migration 0007, applied to production 8 Nov), read with pnpm feedback. The fallback address hello@ now has a mailbox. Still to do on the owner's side: apply 0007 to the preview database, decide FEEDBACK_NOTIFY_EMAIL (docs/TODO.md §4)" },
       ],
     },
     {
@@ -560,6 +563,7 @@
         { id: "3.4", name: "Verifiability page (live demo)", state: "done", when: "30 Oct", note: "/verify proves it without DevTools: the browser lists its own requests via Resource Timing, refuses a cross-origin fetch in front of you and reports the directive that blocked it, and the offline line changes by itself. Probed first — a CSP-blocked request fires securitypolicyviolation but leaves no timing entry, which is why the two panels answer different questions. 5 browser tests; WCAG clean" },
         { id: "3.5", name: "Citable claims page", state: "done", when: "30 Oct", note: "/claims ships the 2.12-proof wording (nothing leaves your device *unless you ask it to*), the five things we receive, and a questionnaire table — which is also the trust page Practice is sold on. Writing it found three claims already falsified by shipped features: security.md promised no cookies and no account, and said files were kept neither on your device nor ours, after the recent-work shelf started keeping them on the device. statedClaims.test.ts now fails on the absolute phrasings" },
         { id: "3.6", name: "Browser extension", state: "pending", estimate: "~2–3 days", days: 3, after: "additive after launch" },
+        { id: "3.7", name: "Search and AI-answer visibility pass", state: "done", when: "8–9 Nov", note: "a plain definition on the front page, five search-name landings (Combine, Delete pages, Password remover, Rearrange, Reduce size) and the two size landings, sitemap in Search Console, IndexNow for Bing/Yandex/Seznam/Naver, robots opened to AI crawlers (a Cloudflare setting the owner changed). Not done: an about page naming a person, dates on guides, sameAs" },
       ],
     },
     {
@@ -584,7 +588,7 @@
       summary: "Widened from es + de to 20 languages on 6 November 2026 (owner). Machine translation with auto-detection, built into per-locale static pages; trust strings get human review afterwards. Infrastructure shipped; the translation pipeline and the pilot are next.",
       items: [
         { id: "5.3", name: "Locale infrastructure — registry, routing, switcher, language suggestion, noindex rules, RTL", state: "done", when: "6 Nov", note: "20 locales route through Astro's fallback rewrite; a locale with no translation is noindex and left out of hreflang and the sitemap; the service worker precaches English only; the banner's sentences are fetched from /lang-offers.json, not embedded in every page" },
-        { id: "5.4", name: "Translation pipeline — script, glossary, placeholder checks", state: "pending", estimate: "~2 days", days: 2, after: "additive — no retrofit", note: "script and --import path done and used for es/de; the direct API path is untested (the key in this environment was rejected, 401). Needs a valid key, docs/TODO.md §9" },
+        { id: "5.4", name: "Translation pipeline — script, glossary, placeholder checks", state: "pending", estimate: "~2 days", days: 2, after: "additive — no retrofit", note: "script and --import path done and used for es/de and every batch since, including the 8–9 Nov strings translated by hand in-session; the direct API path is untested (the key in this environment was rejected, 401). Needs a valid key, docs/TODO.md §9" },
         { id: "5.1", name: "Spanish (es) — machine pilot", state: "done", when: "6 Nov", note: "1,922 strings, zero validation failures; published as machine-translated" },
         { id: "5.2", name: "German (de) — machine pilot", state: "done", when: "6 Nov", note: "1,922 strings, zero validation failures; published as machine-translated" },
         { id: "5.8", name: "Top-10 languages — Hindi, Bengali, Brazilian Portuguese, Indonesian, Russian, French, Turkish (machine pilot)", state: "done", when: "7 Nov", note: "1,922 strings each, zero validation failures; published as machine-translated alongside es and de. Owner scoped the launch set to the first ten registry languages \"for now\"" },
@@ -597,12 +601,13 @@
       num: 6, name: "Launch", state: "progress",
       summary: "6.4's accessibility audit closed 30 Oct and 6.2 pushed to GitHub with CI green on 31 Oct, so this phase has no build work left at all. Its remaining blockers wait entirely on other people — credentials and the legal review that sets the date.",
       items: [
-        { id: "6.1", name: "Credentials (Google, Resend, Dodo, Paddle, D1)", state: "external", note: "leaflockpdf.com bought 30 Oct, which was its first gate — the OAuth redirect URIs and the email sending domain can now be registered. D1 created and migrated 3 Nov, SESSION_IP_SALT set as a production secret (TODO §4). Dodo merchant account submitted for review 3 Nov (TODO §3) — outcome pending. Resend done 4 Nov (key and EMAIL_FROM, TODO §2). The site itself is live: leaflockpdf.com serves the build, www 301s to the apex and the Functions bundle publishes (verified 5 Nov, TODO §0, §4). Still open: Google, Paddle, and a mailbox for hello@ (TODO §0)", lead: 5,  owner: "you", blocker: true },
+        { id: "6.1", name: "Credentials (Google, Resend, Dodo, Paddle, D1)", state: "external", note: "leaflockpdf.com bought 30 Oct, which was its first gate — the OAuth redirect URIs and the email sending domain can now be registered. D1 created and migrated 3 Nov, SESSION_IP_SALT set as a production secret (TODO §4). Dodo merchant account submitted for review 3 Nov (TODO §3) — outcome pending. Resend done 4 Nov (key and EMAIL_FROM, TODO §2). The site itself is live: leaflockpdf.com serves the build, www 301s to the apex and the Functions bundle publishes (verified 5 Nov, TODO §0, §4). Still open: Google and Paddle. The hello@ mailbox is done (Cloudflare Email Routing to Gmail, 9 Nov, TODO §0)", lead: 5,  owner: "you", blocker: true },
         { id: "6.2", name: "GitHub repo, first commit, CI run", state: "done", when: "31 Oct", note: "basicappcompany/leaflock-pdf, private. Two commits (512 files), pushed 31 Oct, and run 41110988456 was green first time in 8m11s — 275 browser tests in 4.3m on a clean Linux runner, no retries used. The empty LeafLockPDF repo created 30 Oct was renamed rather than duplicated. gh needed the workflow scope before GitHub would accept a push containing ci.yml" },
         { id: "6.3", name: "Legal review of policy pages", state: "external", note: "brief ready to send (docs/legal-brief.md) — hosting and email provider resolved 3 Nov (Cloudflare, Resend — facts, not decisions; a questionnaire artifact exists for the rest). Four answers only you have left: entity name/address, governing law + courts, DPDP grievance officer, minimum age. Payment provider was already decided 28 Oct (Dodo + Paddle split) and is now named in privacy.md/terms.md too", lead: 21, owner: "lawyer", blocker: true },
         { id: "6.4", name: "Accessibility audit", state: "done", when: "30 Oct", note: "20 checks in accessibility.spec.ts, WCAG A/AA clean on 10 page kinds; fixed one real 1.4.10 Reflow failure (tables overflowed at 320px)" },
         { id: "6.5", name: "SOC 2 / ISO pursuit", state: "external", note: "post-launch, 6–12mo, not a blocker", lead: 270, owner: "auditor", afterLaunch: true, after: "after launch" },
         { id: "6.6", name: "Native wrapper (Capacitor/Tauri)", state: "pending", note: "post-launch", days: 3, afterLaunch: true, after: "after launch" },
+        { id: "6.7", name: "hello@leaflockpdf.com receives mail", state: "done", when: "9 Nov", note: "Cloudflare Email Routing to the owner's Gmail; destination verified, MX and SPF live, catch-all off. Not done: replying from hello@, and a test email from another account (docs/TODO.md §0)" },
       ],
     },
     {
@@ -682,6 +687,12 @@
     { date: "30 Oct 2026", what: "<span class='mono'>leaflockpdf.com</span> bought — <span>the domain the whole product already assumed, found unregistered that morning and registered the same day. Closes the first gate under 6.1: the Google OAuth redirect URIs and the email sending domain can now be registered against a real host. Still open in TODO §0 — auto-renew, registrar 2FA, and a mailbox for <span class='mono'>hello@</span>, which Resend does not provide</span>", count: "" },
     { date: "31 Oct 2026", what: "On GitHub, CI green (6.2) — <span>the project left this laptop for the first time: <span class='mono'>basicappcompany/leaflock-pdf</span>, private, two commits and 512 files. Run 41110988456 passed first time in 8m11s, <strong>275 browser tests in 4.3m</strong> with no retries — so the two flakes seen locally were load, not the suite. One blocker closed, two left, both owner-gated</span>", count: "" },
     { date: "1 Nov 2026", what: "Self-host guide shipped (4.10) — <span>the deliverable the Business pitch rests on: 'nothing to deploy' only beats Stirling-PDF if the deployment is written down. Kept in <span class='mono'>docs/</span> rather than <span class='mono'>src/content/</span>, because it is for licensees and not the public. It states plainly that no air-gapped install has been run yet, and lists what the first one should correct</span>", count: "" },
+    { date: "2–3 Nov 2026", what: "Tools sidebar and a 15-skin picker, Light default, condensing header, trust badges — <span>and a full-site proofread that found one stale cookie claim copied across six pages</span>", count: "" },
+    { date: "4 Nov 2026", what: "Resend key and sender set; <span>branch + pull-request gate adopted (docs/process.md §10)</span>", count: "" },
+    { date: "6 Nov 2026", what: "Locale infrastructure for 20 languages, Spanish and German published — <span>and a security pass: a lost-upgrade webhook, a default-to-Pro product and a login timing leak fixed</span>", count: "" },
+    { date: "7 Nov 2026", what: "Top-10 languages published, security.txt, preview database isolated, API answers only on the apex, HSTS, sign-in history, Recent tools, one theme button, flag-only language button", count: "" },
+    { date: "8 Nov 2026", what: "Starred tools, feature requests and feedback, sidebar handles; <span>Search Console sitemap and IndexNow; a front-page definition and five search-name landings; robots opened to AI crawlers by the owner in Cloudflare</span>", count: "" },
+    { date: "9 Nov 2026", what: "Compress to a size and two size landings (200 KB, 1 MB) — <span>the tool now does what the earlier 'deliberately not built' note said it could not; <span class='mono'>hello@leaflockpdf.com</span> receives mail</span>", count: "" },
   ];
 
   /**

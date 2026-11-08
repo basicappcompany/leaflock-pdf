@@ -25,6 +25,8 @@ brief does not duplicate it and is not updated as items close.
       docs say it sets no cookies by default, and only adds `__cf_bm`-style cookies if a
       bot-protection feature is switched on in the dashboard. Needs a direct check of
       the account's actual settings, not an assumption either way.
+- [x] Incoming mail: **Cloudflare Email Routing** forwards `hello@` to a Gmail mailbox; both named in
+      privacy.md, 9 November 2026. Sending stays with Resend, below.
 - [x] Email provider: **Resend** — named in privacy.md, 3 November 2026. Already implied
       by `RESEND_API_KEY` throughout `functions/`; also a fact, not a decision.
 - [x] Payment provider and merchant of record — **decided 28 October 2026: both,

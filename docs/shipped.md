@@ -17,6 +17,16 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 9 November 2026 — hello@leaflockpdf.com receives mail
+
+Cloudflare Email Routing forwards `hello@leaflockpdf.com` to the owner's Gmail (destination verified,
+MX and SPF live, catch-all off). This closes the long-open §0 item and gives the feedback form's
+"could not send" fallback somewhere real to land. The privacy page now names it accurately:
+Cloudflare forwards, Google holds the mailbox, Resend only sends the service's own emails. Not
+done: replying from `hello@`, and an end-to-end test from another account.
+
+---
+
 ## 9 November 2026 — Two size landings: 200 KB and 1 MB
 
 **Compress PDF to 200 KB** and **Compress PDF to 1 MB** are pages of their own now that the tool can
@@ -57,7 +67,7 @@ one, and every one of its own category sections starts open. Five search names f
 exist became pages of their own: **Combine PDF** (Merge), **Delete pages from a PDF** (Remove pages),
 **PDF password remover** (Unlock), **Rearrange PDF pages** (Organize) and **Reduce PDF size**
 (Compress). Each answer restates a fact the tool's own page already states. **Deliberately not
-built:** "compress to 200 KB" and its siblings. The compress tool has three levels and no target
+built at the time (built the next day, see 9 November):** "compress to 200 KB" and its siblings. The compress tool has three levels and no target
 size, so such a page would promise what it cannot do; the **Reduce PDF size** page says so
 plainly. That is a feature to build first (try levels until a size is reached, say honestly when it
 cannot be), not a page to write. Translated into all nine languages by hand, in-session, because the
