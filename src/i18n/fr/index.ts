@@ -3238,6 +3238,56 @@ export default {
           "a": "Non. La compression s’exécute dans votre navigateur ; votre PDF reste donc sur votre appareil du début à la fin."
         }
       ]
+    },
+    "compressPdfTo200kb": {
+      "title": "Compresser un PDF à 200 KB",
+      "metaTitle": "Compresser un PDF à 200 KB sans l’envoyer | LeafLock PDF",
+      "metaDescription": "Réduisez un PDF à 200 KB ou moins en diminuant les images qu’il contient. Rien n’est envoyé, et on vous dit clairement si le fichier ne peut pas devenir aussi petit. Gratuit, sans filigrane.",
+      "summary": "Passez un PDF sous 200 KB, surtout en réduisant les images qu’il contient.",
+      "howTo": [
+        "Choisissez un PDF.",
+        "La taille est déjà réglée sur 200 KB. Modifiez-la si vous en avez besoin d’une autre.",
+        "Sélectionnez « Compresser le PDF », vérifiez la nouvelle taille et téléchargez le fichier."
+      ],
+      "faq": [
+        {
+          "q": "Mon PDF passera-t-il forcément sous 200 KB ?",
+          "a": "Pas toujours. Les PDF remplis de photos ou de scans y arrivent en général. Un fichier surtout composé de texte est souvent déjà petit, et un fichier contenant de gros fichiers intégrés peut ne pas autant rétrécir. S’il n’atteint pas 200 KB, vous obtenez le plus petit fichier possible, et nous vous le disons."
+        },
+        {
+          "q": "Les photos seront-elles abîmées ?",
+          "a": "Nous essayons d’abord les réglages d’image les plus doux et n’allons plus loin que si la taille l’exige, pour que les photos gardent autant de détail que 200 KB le permet. Le texte et les dessins restent nets."
+        },
+        {
+          "q": "Mon PDF est-il envoyé pour être compressé ?",
+          "a": "Non. La compression s’exécute dans votre navigateur : votre PDF reste sur votre appareil du début à la fin."
+        }
+      ]
+    },
+    "compressPdfTo1mb": {
+      "title": "Compresser un PDF à 1 MB",
+      "metaTitle": "Compresser un PDF à 1 MB sans l’envoyer | LeafLock PDF",
+      "metaDescription": "Réduisez un PDF à 1 MB ou moins en diminuant les images qu’il contient. Rien n’est envoyé, et on vous dit clairement si le fichier ne peut pas devenir aussi petit. Gratuit, sans filigrane.",
+      "summary": "Passez un PDF sous 1 MB, surtout en réduisant les images qu’il contient.",
+      "howTo": [
+        "Choisissez un PDF.",
+        "La taille est déjà réglée sur 1 MB. Modifiez-la si vous en avez besoin d’une autre.",
+        "Sélectionnez « Compresser le PDF », vérifiez la nouvelle taille et téléchargez le fichier."
+      ],
+      "faq": [
+        {
+          "q": "Mon PDF passera-t-il forcément sous 1 MB ?",
+          "a": "Pas toujours. Les PDF remplis de photos ou de scans y arrivent en général. Un fichier surtout composé de texte est souvent déjà petit, et un fichier contenant de gros fichiers intégrés peut ne pas autant rétrécir. S’il n’atteint pas 1 MB, vous obtenez le plus petit fichier possible, et nous vous le disons."
+        },
+        {
+          "q": "Les photos seront-elles abîmées ?",
+          "a": "Nous essayons d’abord les réglages d’image les plus doux et n’allons plus loin que si la taille l’exige, pour que les photos gardent autant de détail que 1 MB le permet. Le texte et les dessins restent nets."
+        },
+        {
+          "q": "Mon PDF est-il envoyé pour être compressé ?",
+          "a": "Non. La compression s’exécute dans votre navigateur : votre PDF reste sur votre appareil du début à la fin."
+        }
+      ]
     }
   },
   "auth": {

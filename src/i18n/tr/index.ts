@@ -3238,6 +3238,56 @@ export default {
           "a": "Hayır. Sıkıştırma tarayıcınızda çalışır, bu yüzden PDF'niz baştan sona cihazınızda kalır."
         }
       ]
+    },
+    "compressPdfTo200kb": {
+      "title": "PDF’yi 200 KB boyutuna sıkıştırın",
+      "metaTitle": "PDF’yi yüklemeden 200 KB boyutuna sıkıştırın | LeafLock PDF",
+      "metaDescription": "İçindeki görselleri küçülterek bir PDF’yi 200 KB veya altına indirin. Hiçbir şey yüklenmez ve dosya o kadar küçülemiyorsa bu açıkça söylenir. Ücretsiz, filigran yok.",
+      "summary": "Bir PDF’yi, çoğunlukla içindeki görselleri küçülterek 200 KB altına indirin.",
+      "howTo": [
+        "Bir PDF seçin.",
+        "Boyut zaten 200 KB olarak ayarlı. Başka bir boyut gerekiyorsa değiştirin.",
+        "“PDF sıkıştır” düğmesini seçin, yeni boyutu kontrol edin ve indirin."
+      ],
+      "faq": [
+        {
+          "q": "PDF’im kesinlikle 200 KB altına inecek mi?",
+          "a": "Her zaman değil. Fotoğraf ya da tarama dolu PDF’ler genellikle başarır. Çoğunlukla metinden oluşan bir dosya çoğu zaman zaten küçüktür, büyük gömülü dosyalar içeren bir dosya ise o kadar küçülmeyebilir. 200 KB hedefine ulaşamazsa yapabildiğimiz en küçük dosyayı alırsınız ve bunu size söyleriz."
+        },
+        {
+          "q": "Fotoğraflar bozulacak mı?",
+          "a": "Önce en yumuşak görsel ayarlarını deneriz ve ancak boyut gerektiriyorsa daha ileri gideriz; böylece fotoğraflar 200 KB boyutunun izin verdiği kadar ayrıntıyı korur. Metin ve çizimler keskin kalır."
+        },
+        {
+          "q": "PDF’im sıkıştırılmak için yükleniyor mu?",
+          "a": "Hayır. Sıkıştırma tarayıcınızda çalışır, yani PDF’iniz baştan sona cihazınızda kalır."
+        }
+      ]
+    },
+    "compressPdfTo1mb": {
+      "title": "PDF’yi 1 MB boyutuna sıkıştırın",
+      "metaTitle": "PDF’yi yüklemeden 1 MB boyutuna sıkıştırın | LeafLock PDF",
+      "metaDescription": "İçindeki görselleri küçülterek bir PDF’yi 1 MB veya altına indirin. Hiçbir şey yüklenmez ve dosya o kadar küçülemiyorsa bu açıkça söylenir. Ücretsiz, filigran yok.",
+      "summary": "Bir PDF’yi, çoğunlukla içindeki görselleri küçülterek 1 MB altına indirin.",
+      "howTo": [
+        "Bir PDF seçin.",
+        "Boyut zaten 1 MB olarak ayarlı. Başka bir boyut gerekiyorsa değiştirin.",
+        "“PDF sıkıştır” düğmesini seçin, yeni boyutu kontrol edin ve indirin."
+      ],
+      "faq": [
+        {
+          "q": "PDF’im kesinlikle 1 MB altına inecek mi?",
+          "a": "Her zaman değil. Fotoğraf ya da tarama dolu PDF’ler genellikle başarır. Çoğunlukla metinden oluşan bir dosya çoğu zaman zaten küçüktür, büyük gömülü dosyalar içeren bir dosya ise o kadar küçülmeyebilir. 1 MB hedefine ulaşamazsa yapabildiğimiz en küçük dosyayı alırsınız ve bunu size söyleriz."
+        },
+        {
+          "q": "Fotoğraflar bozulacak mı?",
+          "a": "Önce en yumuşak görsel ayarlarını deneriz ve ancak boyut gerektiriyorsa daha ileri gideriz; böylece fotoğraflar 1 MB boyutunun izin verdiği kadar ayrıntıyı korur. Metin ve çizimler keskin kalır."
+        },
+        {
+          "q": "PDF’im sıkıştırılmak için yükleniyor mu?",
+          "a": "Hayır. Sıkıştırma tarayıcınızda çalışır, yani PDF’iniz baştan sona cihazınızda kalır."
+        }
+      ]
     }
   },
   "auth": {

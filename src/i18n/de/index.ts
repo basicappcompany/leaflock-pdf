@@ -3238,6 +3238,56 @@ export default {
           "a": "Nein. Die Komprimierung läuft in Ihrem Browser, Ihr PDF bleibt also von Anfang bis Ende auf Ihrem Gerät."
         }
       ]
+    },
+    "compressPdfTo200kb": {
+      "title": "PDF auf 200 KB komprimieren",
+      "metaTitle": "PDF auf 200 KB komprimieren, ohne es hochzuladen | LeafLock PDF",
+      "metaDescription": "Verkleinern Sie ein PDF auf 200 KB oder weniger, indem die Bilder darin reduziert werden. Nichts wird hochgeladen, und Sie erfahren klar, wenn die Datei nicht so klein werden kann. Kostenlos, ohne Wasserzeichen.",
+      "summary": "Bringen Sie ein PDF unter 200 KB, vor allem durch das Verkleinern der Bilder darin.",
+      "howTo": [
+        "Wählen Sie ein PDF.",
+        "Die Größe ist bereits auf 200 KB eingestellt. Ändern Sie sie, falls Sie eine andere brauchen.",
+        "Wählen Sie „PDF komprimieren“, prüfen Sie die neue Größe und laden Sie die Datei herunter."
+      ],
+      "faq": [
+        {
+          "q": "Kommt mein PDF bestimmt unter 200 KB?",
+          "a": "Nicht immer. PDFs voller Fotos oder Scans schaffen das meist. Eine Datei, die hauptsächlich aus Text besteht, ist oft schon klein, und eine mit großen eingebetteten Dateien wird vielleicht nicht so klein. Wird 200 KB nicht erreicht, erhalten Sie die kleinste Datei, die wir erzeugen konnten, und wir sagen es Ihnen."
+        },
+        {
+          "q": "Werden die Fotos ruiniert?",
+          "a": "Wir probieren zuerst die schonendsten Bildeinstellungen und gehen nur weiter, wenn die Größe es verlangt, sodass Fotos so viel Detail behalten, wie 200 KB zulässt. Text und Zeichnungen bleiben scharf."
+        },
+        {
+          "q": "Wird mein PDF zum Komprimieren hochgeladen?",
+          "a": "Nein. Die Komprimierung läuft in Ihrem Browser, Ihr PDF bleibt also von Anfang bis Ende auf Ihrem Gerät."
+        }
+      ]
+    },
+    "compressPdfTo1mb": {
+      "title": "PDF auf 1 MB komprimieren",
+      "metaTitle": "PDF auf 1 MB komprimieren, ohne es hochzuladen | LeafLock PDF",
+      "metaDescription": "Verkleinern Sie ein PDF auf 1 MB oder weniger, indem die Bilder darin reduziert werden. Nichts wird hochgeladen, und Sie erfahren klar, wenn die Datei nicht so klein werden kann. Kostenlos, ohne Wasserzeichen.",
+      "summary": "Bringen Sie ein PDF unter 1 MB, vor allem durch das Verkleinern der Bilder darin.",
+      "howTo": [
+        "Wählen Sie ein PDF.",
+        "Die Größe ist bereits auf 1 MB eingestellt. Ändern Sie sie, falls Sie eine andere brauchen.",
+        "Wählen Sie „PDF komprimieren“, prüfen Sie die neue Größe und laden Sie die Datei herunter."
+      ],
+      "faq": [
+        {
+          "q": "Kommt mein PDF bestimmt unter 1 MB?",
+          "a": "Nicht immer. PDFs voller Fotos oder Scans schaffen das meist. Eine Datei, die hauptsächlich aus Text besteht, ist oft schon klein, und eine mit großen eingebetteten Dateien wird vielleicht nicht so klein. Wird 1 MB nicht erreicht, erhalten Sie die kleinste Datei, die wir erzeugen konnten, und wir sagen es Ihnen."
+        },
+        {
+          "q": "Werden die Fotos ruiniert?",
+          "a": "Wir probieren zuerst die schonendsten Bildeinstellungen und gehen nur weiter, wenn die Größe es verlangt, sodass Fotos so viel Detail behalten, wie 1 MB zulässt. Text und Zeichnungen bleiben scharf."
+        },
+        {
+          "q": "Wird mein PDF zum Komprimieren hochgeladen?",
+          "a": "Nein. Die Komprimierung läuft in Ihrem Browser, Ihr PDF bleibt also von Anfang bis Ende auf Ihrem Gerät."
+        }
+      ]
     }
   },
   "auth": {
