@@ -6,10 +6,14 @@
 <title>LeafLock Build Status</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
   /* ==========================================================================
-     Neo-brutalist / indie-web skin.
+     Calm product-dashboard skin (replaced the neo-brutalist one on 9 November: too harsh to read for long).
+     The rules below this comment describe the earlier skin; the "Skin v2" block at the end of this
+     stylesheet overrides its tokens and shapes, so the markup and scripts did not change.
+
+     Earlier skin:
 
      The rules, kept deliberately narrow so the look cannot drift:
        - monochrome. Pure black on off-white, inverted in dark mode.
@@ -58,7 +62,7 @@
   :root[data-theme="light"] { color-scheme: light; }
   :root[data-theme="dark"] { color-scheme: dark; }
 
-  * { box-sizing: border-box; border-radius: 0 !important; }
+  * { box-sizing: border-box; }
   html, body { margin: 0; }
   body {
     background: var(--bg);
@@ -419,6 +423,169 @@
   .url-table .kind { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
   .filters .found { flex-basis: 100%; margin: 0; color: var(--muted); font-family: var(--mono); font-size: 0.72rem; }
   .item[hidden], .phase[hidden] { display: none !important; }
+
+  /* ==========================================================================
+     Skin v2 — soft, readable, one leaf-green accent.
+       - Inter for text; the monospace face is kept only for ids, dates and figures.
+       - Rounded cards on a warm off-white, hairline borders, soft shadows.
+       - State is colour AND label: green done, blue in progress, amber blocks the launch,
+         grey waiting. Every pill still says its state in words.
+       - Same markup and script as before; only tokens and shapes change here.
+     ========================================================================== */
+  :root {
+    --bg: light-dark(#f5f6f2, #0e1210);
+    --surface: light-dark(#ffffff, #161b18);
+    --surface-2: light-dark(#eef1ea, #1e2521);
+    --text: light-dark(#17201a, #e9efea);
+    --muted: light-dark(#56635a, #9eaca3);
+    --border: light-dark(#dadfd6, #2b352f);
+    --hot: light-dark(#17803d, #5fd08a);
+    --hot-ink: light-dark(#ffffff, #07130c);
+    --accent: var(--hot);
+    --done: light-dark(#17803d, #5fd08a);
+    --done-soft: light-dark(#e2f3e8, #14301f);
+    --prog: light-dark(#2457c5, #8db6ff);
+    --prog-soft: light-dark(#e4ecfb, #172745);
+    --danger: light-dark(#b9470f, #ffa970);
+    --danger-soft: light-dark(#fdebdd, #3a2314);
+    --warning: light-dark(#8a6a0a, #e6c35c);
+    --warning-soft: light-dark(#f8f0d3, #332b10);
+    --wait: light-dark(#6b4aa8, #c4a8f5);
+    --wait-soft: light-dark(#ece6f7, #2a2140);
+    --shadow: 0 1px 2px rgb(20 30 20 / 0.06), 0 8px 24px rgb(20 30 20 / 0.07);
+    --shadow-sm: 0 1px 2px rgb(20 30 20 / 0.07), 0 3px 10px rgb(20 30 20 / 0.05);
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+    --radius: 14px;
+  }
+  body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 15px; line-height: 1.55; }
+  .mono, .item .item-num, .tl-date, .tl-count, .act-time, .act-id, .stat .value, .path .path-range, .scope-count, .phase-num, .phase-effort, .kpi .v { font-family: var(--mono); }
+
+  /* Type: sentence case, no shouting. */
+  h1 { text-transform: none; font-size: clamp(1.8rem, 4.6vw, 2.7rem); line-height: 1.08; letter-spacing: -0.03em; font-weight: 800; }
+  h1 mark { background: var(--done-soft); color: var(--done); padding: 0 0.25em; border-radius: 10px !important; }
+  .eyebrow { text-transform: none; letter-spacing: 0.02em; font-size: 0.78rem; font-weight: 600; background: var(--done-soft); color: var(--done); border: 0; border-radius: 999px; padding: 0.2rem 0.7rem; }
+  .subtitle { font-size: 0.95rem; border-left: 0; padding-left: 0; max-width: 72ch; }
+  section > h2, .launch h2 { text-transform: none; letter-spacing: -0.01em; font-size: 1.2rem !important; font-weight: 700; border-bottom: 0; padding-bottom: 0; margin-bottom: 0.5rem; }
+  h2 .badge { background: var(--done-soft); color: var(--done); border-radius: 999px; font-size: 0.74rem; padding: 0.05rem 0.6rem; }
+  section > p { font-size: 0.93rem !important; }
+
+  /* Header facts as a quiet row of chips, not a ruled box. */
+  .meta-row { border: 0; gap: 0.45rem; text-transform: none; letter-spacing: 0; font-size: 0.82rem; }
+  .meta-row > span { border: 1px solid var(--border); border-radius: 999px; background: var(--surface); padding: 0.3rem 0.8rem; }
+  .theme-toggle { text-transform: none; letter-spacing: 0; font-weight: 600; font-size: 0.8rem; border-radius: 999px; box-shadow: var(--shadow-sm); transition: background 120ms, transform 120ms; }
+  .theme-toggle:hover { transform: none; box-shadow: var(--shadow-sm); background: var(--surface-2); color: var(--text); }
+
+  /* Stat tiles become separate cards. */
+  .stats { gap: 0.75rem; border: 0; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+  .stat { border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 0.95rem 1.05rem; }
+  .stat .value { font-size: 1.55rem; font-weight: 700; }
+  .stat .label { text-transform: none; letter-spacing: 0; font-size: 0.8rem; line-height: 1.35; }
+  .stat--danger { background: var(--danger-soft); border-color: transparent; }
+  .stat--danger .value, .stat--danger .label { color: var(--danger) !important; }
+  .stat--market { background: var(--prog-soft); border-color: transparent; }
+  .stat--market .value, .stat--market .label { color: var(--prog) !important; }
+
+  /* Section index: a frosted top bar on narrow screens, a floating card beside the page on wide ones. */
+  .index { background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-block: 0; border-bottom: 1px solid var(--border); padding: 0.4rem 0.5rem; gap: 0.25rem; }
+  .index a { border: 0; border-radius: 999px; text-transform: none; letter-spacing: 0; font-size: 0.8rem; font-weight: 600; padding: 0.35rem 0.8rem; background: transparent; }
+  .index a:hover { background: var(--surface-2); }
+  .index a[aria-current="true"] { background: var(--done-soft); color: var(--done); }
+  @media (min-width: 1320px) {
+    .index { border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); background: var(--surface); padding: 0.5rem; gap: 0.1rem; }
+    .index a { border: 0; border-radius: 9px; background: transparent; padding: 0.4rem 0.7rem; }
+    .index a.is-child { font-size: 0.76rem; font-weight: 500; padding-left: 1.3rem; }
+  }
+
+  /* Phase rail */
+  .rail { gap: 0.5rem; border: 0; }
+  .rail-step { border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-sm); padding: 0.7rem 0.65rem; }
+  .rail a:last-child .rail-step { border-right: 1px solid var(--border); }
+  .rail-step:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .rail-step .num { letter-spacing: 0.04em; }
+  .rail-step .name { text-transform: none; font-size: 0.82rem; font-weight: 650; }
+  .rail-step[data-state="done"] { background: var(--done-soft); border-color: transparent; }
+  .rail-step[data-state="done"] .num, .rail-step[data-state="done"] .name, .rail-step[data-state="done"] .split { color: var(--done); }
+  .rail-step[data-state="progress"] { box-shadow: inset 0 -4px 0 0 var(--prog), var(--shadow-sm); }
+  .rail-step[data-state="pending"] { background: var(--surface); color: var(--muted); }
+  @media (max-width: 760px) { .rail-step { border-bottom: 1px solid var(--border); } }
+
+  /* Cards */
+  .phase, .launch, .verdict, .act, .kpi { border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+  .verdict { border-width: 1px; box-shadow: var(--shadow); }
+  .phase { padding: 1.1rem 1.2rem; }
+  .phase-head h2 { text-transform: none; letter-spacing: -0.01em; font-size: 1.1rem; font-weight: 700; }
+  .phase-head .split { border-radius: 999px; border: 0; background: var(--surface-2); padding: 0.1rem 0.6rem; }
+  .verdict h3, .owner-card h3, .path .path-label, .next-col h3 { text-transform: none; letter-spacing: 0; font-size: 0.9rem; font-weight: 700; }
+  .next-col h3 { border-bottom: 0; }
+
+  /* Pills carry state in colour and in words. */
+  .pill { text-transform: none; letter-spacing: 0; font-size: 0.74rem; font-weight: 600; border: 0; border-radius: 999px; padding: 0.14rem 0.6rem; background: var(--surface-2); color: var(--muted); }
+  .pill::before { width: 6px; height: 6px; border: 0; border-radius: 50%; background: currentColor; }
+  .pill-done { background: var(--done-soft); color: var(--done); }
+  .pill-done::before { background: currentColor; }
+  .pill-progress { background: var(--prog-soft); color: var(--prog); }
+  .pill-progress::before { background: currentColor; border: 0; }
+  .pill-pending { background: var(--warning-soft); color: var(--warning); }
+  .pill-pending::before { background: currentColor; }
+  .pill-external { background: var(--wait-soft); color: var(--wait); }
+  .pill-external::before { background: currentColor; border: 0; }
+
+  /* Item rows */
+  .items, .timeline, .shipped-mini, .scope-key, .owner-grid, .launch-paths { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface); }
+  .item, .tl-row, .shipped-mini li, .scope-row { border-color: var(--border); }
+  .item { padding: 0.55rem 0.8rem; transition: background 120ms; }
+  .item:hover { background: var(--surface-2); }
+  .item .name { font-size: 0.9rem; }
+  .tl-row { padding: 0.6rem 0.85rem; }
+  .tl-row[data-gap="true"] { background: var(--surface-2); }
+  .owner-grid, .launch-paths { gap: 0; }
+  .owner-card { background: transparent; border-color: var(--border); }
+  .owner-card h3 { border-bottom: 0; }
+  .owner-card li::before { content: "\25CB"; color: var(--muted); }
+  .path, .path:last-child { border-color: var(--border); }
+  .path .path-label { color: var(--muted); }
+
+  /* Scope bar */
+  .scope-bar { height: 12px; border: 0; border-radius: 999px; gap: 3px; background: transparent; }
+  .scope-seg { border: 0; border-radius: 999px; }
+  .scope-dot { border: 0; border-radius: 50%; }
+  .scope-label { text-transform: none; letter-spacing: 0; font-size: 0.84rem; font-weight: 600; }
+
+  /* Next up cards */
+  .act { padding: 0.8rem 0.95rem; }
+  .act-title { font-size: 0.92rem; font-weight: 650; }
+  .act-time { border: 0; border-radius: 999px; background: var(--surface-2); padding: 0.05rem 0.55rem; font-size: 0.7rem; }
+  .act--quick .act-time { background: var(--done-soft); color: var(--done); border: 0; }
+  .shipped-mini time { text-transform: none; letter-spacing: 0; }
+
+  /* Filters */
+  .filters input { border-radius: 999px; padding: 0.5rem 0.95rem; border-color: var(--border); }
+  .filters input:focus-visible { outline: 3px solid var(--done-soft); outline-offset: 0; border-color: var(--done); }
+  .chip { border-radius: 999px; text-transform: none; letter-spacing: 0; font-family: Inter, system-ui, sans-serif; font-size: 0.78rem; font-weight: 600; padding: 0.3rem 0.8rem; }
+  .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  /* Tables */
+  table { border: 0 !important; }
+  .scroller { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+  th { text-transform: none; letter-spacing: 0; font-size: 0.78rem !important; color: var(--muted); background: var(--surface-2); }
+  th, td { border-bottom: 1px solid var(--border) !important; }
+  tr:last-child td { border-bottom: 0 !important; }
+  .kpi { padding: 0.9rem 1rem; }
+  .kpi .k { text-transform: none; letter-spacing: 0; font-size: 0.85rem; font-weight: 650; }
+  .kpi .v { font-weight: 700; }
+
+  footer { border-top: 1px solid var(--border); text-transform: none; letter-spacing: 0; font-size: 0.8rem; }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline-color: var(--done); }
+  .group-note { text-transform: none !important; letter-spacing: 0 !important; font-family: Inter, system-ui, sans-serif !important; font-size: 0.8rem !important; font-weight: 600; }
+  .eyebrow, .url-table .kind { font-family: Inter, system-ui, sans-serif; }
+  /* On a phone an item is two lines: id and name, then its state and estimate underneath. */
+  @media (max-width: 560px) {
+    .item { grid-template-columns: 2.4rem minmax(0, 1fr); }
+    .item > :nth-child(n + 3) { grid-column: 2; justify-self: start; }
+    .item .name { overflow-wrap: anywhere; }
+    .item .estimate { white-space: normal; min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+    .item > :nth-child(n + 3) { min-width: 0; max-width: 100%; }
+  }
 </style>
 </head>
 <body>
@@ -633,7 +800,7 @@
     tools: 43,
     pro: 0,
     practice: 6,
-    commits: 73,
+    commits: 74,
     ops: 29,
     landings: 12,
     guides: 6,
