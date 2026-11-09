@@ -393,7 +393,7 @@
     <h1>LeafLock PDF — where the build stands</h1>
     <p class="subtitle">A local mirror of <span class="mono">docs/roadmap.md</span>. Edited in place whenever something ships — not published, not fetched, just a file to reopen. Each row carries a fixed <span class="mono">phase.item</span> id — point at one, e.g. “start 4.3”, to pick where I work next. Ids are written into the data, not counted from position, so inserting a row can’t renumber the ones below it.</p>
     <div class="meta-row">
-      <span>Last verified <b id="lastVerified">31 Oct 2026</b></span>
+      <span>Last verified <b id="lastVerified">—</b></span>
       <span>Repo: <b class="mono" id="repoState">—</b></span>
       <span>Free tier: <b class="mono" id="freeTier">—</b></span>
       <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle colour theme">
@@ -514,13 +514,13 @@
     tools: 43,
     pro: 0,
     practice: 6,
-    commits: 64,
+    commits: 71,
     ops: 29,
     landings: 12,
     guides: 6,
     compares: 7,
     unit: 592,
-    browser: 353,
+    browser: 354,
     browserFiles: 33,
     anonymousDaily: 20,
     freeAccountDaily: 60,
@@ -640,10 +640,9 @@
       title: "Accounts & credentials",
       items: [
         "Google OAuth client + redirect URIs",
-        "Resend API key + verified sending domain",
         "Dodo: confirm product IDs, webhook, go live",
         "A Paddle account — new, nothing built yet",
-        "Cloudflare D1: create + apply migrations remotely",
+        "A valid ANTHROPIC_API_KEY (the current one is rejected, so translation is done by hand)",
       ],
     },
     {
@@ -669,7 +668,7 @@
       title: "Decisions only you can make",
       items: [
         "Launch all-at-once, or stage the home + policy pages early",
-        "Who translates es / de — a real translator, not a tool",
+        "A person to review the trust claims, prices and error strings in each published language",
         "SOC 2 / ISO auditor + budget ($10–50k+, 6–12mo)",
         "After launch: whether 4.8 is earned — it needs real demand, an R2 account and a second legal pass",
       ],
@@ -1012,7 +1011,7 @@
       <p class="phase-summary">${p.summary}</p>
       <div class="items">
         ${p.items.map((i) => `
-          <div class="item">
+          <div class="item" data-state="${i.state}" data-text="${(i.id + " " + i.name + " " + (i.note || "")).toLowerCase().replace(/[<>"&]/g, " ")}">
             <span class="item-num">${i.id}</span>
             <span class="name">${i.name}${i.note ? ` <span style="color:var(--muted); font-size:0.82rem;">— ${i.note}</span>` : ""}</span>
             ${pill(i.state)}
@@ -1060,6 +1059,120 @@
       <ul>${group.items.map(i => `<li>${i}</li>`).join("")}</ul>
     </div>
   `).join("");
+
+  /**
+   * The newest dated entry is the freshest thing the page can honestly claim. It used to say
+   * "Last verified 1 Nov 2026", typed, and stayed that way for a week while eight days of work
+   * landed, so it is read from the timeline now.
+   */
+  (function latestEntry() {
+    const last = TIMELINE[TIMELINE.length - 1]?.date ?? "";
+    const m = last.match(/(\d+)\s+([A-Za-z]+)\s+(\d{4})\s*$/);
+    if (m) document.getElementById("lastVerified").textContent = m[1] + " " + m[2] + " " + m[3];
+  })();
+
+  /**
+   * What needs the owner. Typed, because it is advice with steps rather than data, and dated by
+   * the page's own "latest entry". Each carries a time box so a quick win can be found at a glance.
+   * What does NOT need the owner is not typed here: it is read from the item rows.
+   */
+  const NEXT_FOR_YOU = [
+    { t: "Check your inbox for two test messages", min: 2, why: "A test went to feedback@ when the notification secret was set; mail to hello@ has not been tried from outside yet.", steps: ["In basicappcompany@gmail.com, look for “Feedback: TEST from the coding session” (spam folder too).", "From another account, send one message to hello@leaflockpdf.com and one to feedback@leaflockpdf.com.", "Both should arrive; the To line shows which address was used. Tell me if either is missing."] },
+    { t: "Label feedback@ mail in Gmail", min: 3, why: "So hello@ and feedback@ are told apart at a glance.", steps: ["Gmail: search “to:feedback@leaflockpdf.com”, then Show search options, then Create filter.", "Apply a label such as Feedback."] },
+    { t: "Import Search Console into Bing Webmaster Tools", min: 5, why: "Bing feeds ChatGPT search and Copilot. IndexNow already tells Bing about new pages.", steps: ["Sign in at bing.com/webmasters.", "Choose Import from Google Search Console and approve."] },
+    { t: "Decide on TLS 1.2 and Bot Fight Mode", min: 5, why: "Both flagged by Cloudflare Security Insights. They are dashboard settings only the owner changes.", steps: ["Cloudflare: SSL/TLS, Edge Certificates, Minimum TLS version 1.2.", "Security, Bots: decide on Bot Fight Mode (off is defensible for a static site)."] },
+    { t: "Get a valid Anthropic API key", min: 10, why: "The key in the shell is rejected (HTTP 401), so translations are done by hand, which costs a lot per batch.", steps: ["Create a key in the Anthropic console.", "Set ANTHROPIC_API_KEY in your shell, never in the repo.", "Tell me; I confirm with the script's dry run."] },
+    { t: "Turn on domain auto-renew and registrar 2FA", min: 10, why: "The domain is the one asset the whole site hangs on.", steps: ["Registrar: leaflockpdf.com, auto-renew on, with a card that does not expire.", "Turn on two-factor sign-in for the registrar account."] },
+    { t: "Create the Google OAuth client", min: 30, why: "Gates sign-in, and with it starred-tool sync and every paid plan.", steps: ["Google Cloud Console, APIs and Services, Credentials, OAuth client (Web application).", "Register both redirect URIs listed in docs/TODO.md §1.", "Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET as production secrets."] },
+    { t: "Send the legal brief to a reviewer", min: 20, why: "The longest wait on the list, and the brief is already written.", steps: ["Choose a reviewer and send docs/legal-brief.md with the six answers it asks for.", "Tell me what comes back and I update the policy pages."] },
+  ];
+
+  const MINUTES_QUICK = 10;
+  const yourQuick = NEXT_FOR_YOU.filter((a) => a.min <= MINUTES_QUICK);
+  const yourLonger = NEXT_FOR_YOU.filter((a) => a.min > MINUTES_QUICK);
+  const actCard = (a) => `
+    <article class="act${a.min <= MINUTES_QUICK ? " act--quick" : ""}">
+      <div class="act-top"><span class="act-title">${a.t}</span><span class="act-time">${a.min} min</span></div>
+      <p class="act-why">${a.why}</p>
+      <ol>${a.steps.map((x) => `<li>${x}</li>`).join("")}</ol>
+    </article>`;
+
+  // Open, not waiting on anyone, not the owner's: sorted so blockers lead, then the smallest.
+  const mineOpen = allItems
+    .filter((i) => i.state === "pending" && !i.owner)
+    .sort((a, b) => (b.blocker ? 1 : 0) - (a.blocker ? 1 : 0) || (a.afterLaunch ? 1 : 0) - (b.afterLaunch ? 1 : 0) || (a.days ?? 99) - (b.days ?? 99));
+  const MINE_SHOWN = 6;
+  const mineCard = (i) => `
+    <article class="act">
+      <div class="act-top"><span class="act-title"><span class="act-id">${i.id}</span>${i.name}</span><span class="act-time">${i.days ? i.days + " d" : (i.estimate ?? "")}</span></div>
+      ${i.after ? `<p class="act-why">${i.after}</p>` : ""}
+    </article>`;
+
+  const justShipped = TIMELINE.slice(-4).reverse();
+  // The older skin (status2.html) shares this script but has no Next up section, so everything here
+  // is skipped when the section is absent rather than throwing and taking the rest of the page with it.
+  const nextEl = document.getElementById("nextUp");
+  if (nextEl) nextEl.innerHTML = `
+    <div class="next-col">
+      <h3>Needs you <span class="n">${NEXT_FOR_YOU.length}</span></h3>
+      ${yourQuick.length ? `<p class="group-note" style="margin:0 0 0.5rem; font-family:var(--mono); font-size:0.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;">Quick wins · ${MINUTES_QUICK} minutes or less</p>${yourQuick.map(actCard).join("")}` : ""}
+      ${yourLonger.length ? `<p class="group-note" style="margin:0.8rem 0 0.5rem; font-family:var(--mono); font-size:0.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;">Longer</p>${yourLonger.map(actCard).join("")}` : ""}
+    </div>
+    <div class="next-col">
+      <h3>I can do, without you <span class="n">${mineOpen.length}</span></h3>
+      ${mineOpen.slice(0, MINE_SHOWN).map(mineCard).join("") || '<p class="act-why">Nothing open that does not wait on someone.</p>'}
+      ${mineOpen.length > MINE_SHOWN ? `<p class="act-why">${mineOpen.length - MINE_SHOWN} more, mostly after launch: search them under Phases.</p>` : ""}
+    </div>
+    <div class="next-col">
+      <h3>Just shipped</h3>
+      <ul class="shipped-mini">${justShipped.map((e) => `<li><time>${e.date}</time><span>${e.what}</span></li>`).join("")}</ul>
+    </div>`;
+
+  /**
+   * Find an item. A filter chip per state with its count, and a text box over id, name and note.
+   * A phase with nothing left to show hides itself, and the line under the toolbar says how many
+   * rows match, so an empty result reads as "no matches" and not as a broken page.
+   */
+  (function filters() {
+    if (!nextEl) return;
+    const states = [["all", "All"], ["done", "Done"], ["progress", "In progress"], ["pending", "To do"], ["external", "Waiting on others"]];
+    const count = (st) => (st === "all" ? allItems.length : allItems.filter((i) => i.state === st).length);
+    phasesEl.insertAdjacentHTML("afterbegin", `
+      <div class="filters" role="search">
+        <label class="visually-hidden" for="itemSearch" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Search items</label>
+        <input id="itemSearch" type="search" placeholder="Search items, e.g. sitemap, Dodo, OCR, 4.3…" autocomplete="off">
+        <span role="group" aria-label="Filter by state" style="display:contents">
+          ${states.map(([k, label]) => `<button type="button" class="chip" data-state="${k}" aria-pressed="${k === "all"}">${label} <span class="c">${count(k)}</span></button>`).join("")}
+        </span>
+        <p class="found" id="itemFound" role="status"></p>
+      </div>`);
+    const input = document.getElementById("itemSearch");
+    const found = document.getElementById("itemFound");
+    const chips = [...phasesEl.querySelectorAll(".chip")];
+    let state = "all";
+    const apply = () => {
+      const q = input.value.trim().toLowerCase();
+      let shown = 0;
+      for (const item of phasesEl.querySelectorAll(".item")) {
+        const ok = (state === "all" || item.dataset.state === state) && (!q || item.dataset.text.includes(q));
+        item.hidden = !ok;
+        if (ok) shown++;
+      }
+      const filtering = state !== "all" || q !== "";
+      for (const phase of phasesEl.querySelectorAll(".phase")) {
+        phase.hidden = filtering && !phase.querySelector(".item:not([hidden])");
+      }
+      found.textContent = filtering ? `${shown} of ${allItems.length} items match` : "";
+    };
+    input.addEventListener("input", apply);
+    for (const chip of chips) {
+      chip.addEventListener("click", () => {
+        state = chip.dataset.state;
+        for (const c of chips) c.setAttribute("aria-pressed", String(c === chip));
+        apply();
+      });
+    }
+  })();
 
   const LAUNCH_PATHS = [
     {

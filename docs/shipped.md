@@ -17,6 +17,20 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 9 November 2026 — The status page opens on what to do next
+
+`docs/status.html` gains a **Next up** section at the top: what needs the owner (eight cards with a
+time box and numbered steps, quick wins first), what can move without them (read from the item rows,
+so it cannot go stale), and the four latest timeline entries. The phase list gets a search box and
+state filters with counts. Taken from a sister project's status page: lead with actions, not
+statistics, and make the list findable. Also fixed: "Last verified" was a typed date eight days
+old (now read from the newest timeline entry), the owner checklist still listed Resend and D1 as
+open, a sentence promised "2 locales", the timeline stopped at 1 November, and the pricing table
+widened the whole page on a phone (its scroll wrapper had no style). The older skin shares the
+script and skips the new section; `pnpm tracker` checks both.
+
+---
+
 ## 9 November 2026 — hello@leaflockpdf.com receives mail
 
 Cloudflare Email Routing forwards `hello@leaflockpdf.com` to the owner's Gmail (destination verified,
