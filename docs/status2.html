@@ -573,7 +573,7 @@
     tools: 43,
     pro: 0,
     practice: 6,
-    commits: 75,
+    commits: 76,
     ops: 29,
     landings: 12,
     guides: 6,
@@ -621,7 +621,7 @@
         { id: "2.9", name: "PDF→Markdown", state: "done", when: "29 Oct" },
         { id: "2.10", name: "HEIC decoding via libheif-wasm", state: "done", when: "29 Oct", note: "built; a confirmatory HEVC legal read stays open in TODO §6a" },
         { id: "2.11", name: "Device-local recent work (IndexedDB, 5 min / 1 hour / 24 hours, custom on Pro)", state: "done", when: "30 Oct", note: "nothing leaves the device — the CSP claim is untouched" },
-        { id: "2.12", name: "Server-backed retention for Pro (R2 + browser AES-GCM, key in fragment)", state: "pending", estimate: "~4–5 days", days: 5, note: "replaces the retired 4.8; lifts 2.11's 7-day device ceiling", after: "after launch — and after demand proves it" },
+        { id: "2.12", who: "both", name: "Server-backed retention for Pro (R2 + browser AES-GCM, key in fragment)", state: "pending", estimate: "~4–5 days", days: 5, note: "replaces the retired 4.8; lifts 2.11's 7-day device ceiling", after: "after launch — and after demand proves it" },
         { id: "2.13", name: "Compress to a target size — 200 KB, 1 MB, any size", state: "done", when: "9 Nov", note: "By level / To a size: a binary search over a six-step ladder (at most three passes), the gentlest settings that fit; a target it cannot reach is said plainly and the smallest file is still offered; a file already under it is left alone. Stops at 500-pixel images. Landings: compress-pdf-to-200kb and -1mb" },
         { id: "2.14", name: "Feature requests and feedback from the sidebar", state: "done", when: "8 Nov", note: "stored in D1 (migration 0007, applied to production 8 Nov), read with pnpm feedback. The fallback address hello@ now has a mailbox. 0007 applied to the preview database too (9 Nov). Notification email: feedback@leaflockpdf.com decided and set as a production secret 9 Nov, routed by Cloudflare to the same Gmail; the subject starts Feature request: or Feedback:. Not verified by me: that the test message arrived (docs/TODO.md §4)" },
       ],
@@ -645,14 +645,14 @@
       items: [
         { id: "4.1", name: "Re-tier whole catalogue", state: "done", when: "30 Oct", note: "owner confirmed the Pro set stays at six — no tool changed tier; the work was the copy, which named 2 of 6 gated tools" },
         { id: "4.2", name: "Teams / seats", state: "pending", estimate: "~2–3 days", days: 3, after: "after launch" },
-        { id: "4.3", name: "Dual-provider billing (Paddle + region router)", state: "pending", estimate: "~3–5 days", note: "net new — only Dodo exists", days: 5, after: "after launch — Dodo already works" },
+        { id: "4.3", who: "both", name: "Dual-provider billing (Paddle + region router)", state: "pending", estimate: "~3–5 days", note: "net new — only Dodo exists", days: 5, after: "after launch — Dodo already works" },
         { id: "4.4", name: "SSO (SAML/OIDC) for Business", state: "pending", estimate: "~3–4 days", days: 4, after: "after launch — Business tier" },
         { id: "4.5", name: "Free-tier caps", state: "done", when: "28 Oct" },
         { id: "4.6", name: "Saved workflows (on batch)", state: "pending", estimate: "~2–3 days", days: 3, after: "after launch" },
         { id: "4.7", name: "Simple API (Business edition)", state: "pending", estimate: "~2–3 days", days: 3, after: "after launch — category 6, lowest priority" },
         { id: "4.9", name: "Practice tier — the legal/compliance bundle, packaged", state: "done", when: "30 Oct", note: "the six professional tools moved Pro —> Practice and every price reset to the 30 Oct decision; access now ranks tiers against plans instead of toggling on any paid plan. Reached four places the estimate missed: the plan column's CHECK constraint (migration 0004), planCache's allow-list, the dashboard card offering batch to Pro, and CheckoutButton's drifted copy of the plan union. Still open, not code: the click-through DPA (6.3) and the trust page", after: "right after the price decision — do before Phase 3's landings" },
         { id: "4.10", name: "Self-host deployment guide (air-gapped, PUBLIC_USAGE_LIMITS=off)", state: "done", when: "1 Nov", note: "docs/self-hosting.md — the static build is the whole product, both build-time flags and why each matters, the five _headers rules a non-Cloudflare server must reproduce, and a verification that ends by pulling the network cable. Written against the code and says so: no install has been run on a real air-gapped network because there is no licensee yet, and the gaps are listed rather than smoothed over" },
-        { id: "4.12", name: "End early access — make the paid plans buyable", state: "pending", estimate: "~1 day", days: 1, owner: "you", blocker: true, note: "nothing on the board owned this until 31 Oct: paidPlansAvailable = false is why every paid card reads Coming soon, and flipping it is not one line. It also flips proToolsGated, so the six Practice tools stop being free, and it makes ~8 early-access strings wrong at once — pricing.ts earlyAccess, the tier notes, two tool FAQs, terms.md 5, about.md, help.md and both comparison tables — none of which interpolate. Needs the four real Dodo product ids from 6.1 first, and terms.md 5 promises the announcement comes before the change" },
+        { id: "4.12", who: "both", name: "End early access — make the paid plans buyable", state: "pending", estimate: "~1 day", days: 1, owner: "you", blocker: true, note: "nothing on the board owned this until 31 Oct: paidPlansAvailable = false is why every paid card reads Coming soon, and flipping it is not one line. It also flips proToolsGated, so the six Practice tools stop being free, and it makes ~8 early-access strings wrong at once — pricing.ts earlyAccess, the tier notes, two tool FAQs, terms.md 5, about.md, help.md and both comparison tables — none of which interpolate. Needs the four real Dodo product ids from 6.1 first, and terms.md 5 promises the announcement comes before the change" },
         { id: "4.11", name: "Audit logging for admin actions (seats, plan changes)", state: "pending", estimate: "~2 days", days: 2, note: "procurement asks for it; also a Phase 7 precondition. Was unscoped before 30 Oct", after: "after launch — category 5" },
       ],
     },
@@ -661,7 +661,7 @@
       summary: "Widened from es + de to 20 languages on 6 November 2026 (owner). Machine translation with auto-detection, built into per-locale static pages; trust strings get human review afterwards. Infrastructure shipped; the translation pipeline and the pilot are next.",
       items: [
         { id: "5.3", name: "Locale infrastructure — registry, routing, switcher, language suggestion, noindex rules, RTL", state: "done", when: "6 Nov", note: "20 locales route through Astro's fallback rewrite; a locale with no translation is noindex and left out of hreflang and the sitemap; the service worker precaches English only; the banner's sentences are fetched from /lang-offers.json, not embedded in every page" },
-        { id: "5.4", name: "Translation pipeline — script, glossary, placeholder checks", state: "pending", estimate: "~2 days", days: 2, after: "additive — no retrofit", note: "script and --import path done and used for es/de and every batch since, including the 8–9 Nov strings translated by hand in-session; the direct API path is untested (the key in this environment was rejected, 401). Needs a valid key, docs/TODO.md §9" },
+        { id: "5.4", who: "both", name: "Translation pipeline — script, glossary, placeholder checks", state: "pending", estimate: "~2 days", days: 2, after: "additive — no retrofit", note: "script and --import path done and used for es/de and every batch since, including the 8–9 Nov strings translated by hand in-session; the direct API path is untested (the key in this environment was rejected, 401). Needs a valid key, docs/TODO.md §9" },
         { id: "5.1", name: "Spanish (es) — machine pilot", state: "done", when: "6 Nov", note: "1,922 strings, zero validation failures; published as machine-translated" },
         { id: "5.2", name: "German (de) — machine pilot", state: "done", when: "6 Nov", note: "1,922 strings, zero validation failures; published as machine-translated" },
         { id: "5.8", name: "Top-10 languages — Hindi, Bengali, Brazilian Portuguese, Indonesian, Russian, French, Turkish (machine pilot)", state: "done", when: "7 Nov", note: "1,922 strings each, zero validation failures; published as machine-translated alongside es and de. Owner scoped the launch set to the first ten registry languages \"for now\"" },
@@ -674,12 +674,12 @@
       num: 6, name: "Launch", state: "progress",
       summary: "6.4's accessibility audit closed 30 Oct and 6.2 pushed to GitHub with CI green on 31 Oct, so this phase has no build work left at all. Its remaining blockers wait entirely on other people — credentials and the legal review that sets the date.",
       items: [
-        { id: "6.1", name: "Credentials (Google, Resend, Dodo, Paddle, D1)", state: "external", note: "leaflockpdf.com bought 30 Oct, which was its first gate — the OAuth redirect URIs and the email sending domain can now be registered. D1 created and migrated 3 Nov, SESSION_IP_SALT set as a production secret (TODO §4). Dodo merchant account submitted for review 3 Nov (TODO §3) — outcome pending. Resend done 4 Nov (key and EMAIL_FROM, TODO §2). The site itself is live: leaflockpdf.com serves the build, www 301s to the apex and the Functions bundle publishes (verified 5 Nov, TODO §0, §4). Still open: Google and Paddle. The hello@ mailbox is done (Cloudflare Email Routing to Gmail, 9 Nov, TODO §0)", lead: 5,  owner: "you", blocker: true },
+        { id: "6.1", who: "both", name: "Credentials (Google, Resend, Dodo, Paddle, D1)", state: "external", note: "leaflockpdf.com bought 30 Oct, which was its first gate — the OAuth redirect URIs and the email sending domain can now be registered. D1 created and migrated 3 Nov, SESSION_IP_SALT set as a production secret (TODO §4). Dodo merchant account submitted for review 3 Nov (TODO §3) — outcome pending. Resend done 4 Nov (key and EMAIL_FROM, TODO §2). The site itself is live: leaflockpdf.com serves the build, www 301s to the apex and the Functions bundle publishes (verified 5 Nov, TODO §0, §4). Still open: Google and Paddle. The hello@ mailbox is done (Cloudflare Email Routing to Gmail, 9 Nov, TODO §0)", lead: 5,  owner: "you", blocker: true },
         { id: "6.2", name: "GitHub repo, first commit, CI run", state: "done", when: "31 Oct", note: "basicappcompany/leaflock-pdf, private. Two commits (512 files), pushed 31 Oct, and run 41110988456 was green first time in 8m11s — 275 browser tests in 4.3m on a clean Linux runner, no retries used. The empty LeafLockPDF repo created 30 Oct was renamed rather than duplicated. gh needed the workflow scope before GitHub would accept a push containing ci.yml" },
         { id: "6.3", name: "Legal review of policy pages", state: "external", note: "brief ready to send (docs/legal-brief.md) — hosting and email provider resolved 3 Nov (Cloudflare, Resend — facts, not decisions; a questionnaire artifact exists for the rest). Four answers only you have left: entity name/address, governing law + courts, DPDP grievance officer, minimum age. Payment provider was already decided 28 Oct (Dodo + Paddle split) and is now named in privacy.md/terms.md too", lead: 21, owner: "lawyer", blocker: true },
         { id: "6.4", name: "Accessibility audit", state: "done", when: "30 Oct", note: "20 checks in accessibility.spec.ts, WCAG A/AA clean on 10 page kinds; fixed one real 1.4.10 Reflow failure (tables overflowed at 320px)" },
         { id: "6.5", name: "SOC 2 / ISO pursuit", state: "external", note: "post-launch, 6–12mo, not a blocker", lead: 270, owner: "auditor", afterLaunch: true, after: "after launch" },
-        { id: "6.6", name: "Native wrapper (Capacitor/Tauri)", state: "pending", note: "post-launch", days: 3, afterLaunch: true, after: "after launch" },
+        { id: "6.6", who: "both", name: "Native wrapper (Capacitor/Tauri)", state: "pending", note: "post-launch", days: 3, afterLaunch: true, after: "after launch" },
         { id: "6.7", name: "hello@leaflockpdf.com receives mail", state: "done", when: "9 Nov", note: "Cloudflare Email Routing to the owner's Gmail; destination verified, MX and SPF live, catch-all off. Not done: replying from hello@, and a test email from another account (docs/TODO.md §0)" },
       ],
     },
@@ -689,7 +689,7 @@
       items: [
         { id: "7.1", name: "Cyber liability + E&O insurance", state: "external", note: "signing indemnities without it is the one genuinely dangerous move for a solo entity; needs a broker quote", lead: 14, owner: "broker", afterLaunch: true, after: "Phase 7 — before any enterprise deal" },
         { id: "7.2", name: "Pre-drafted MSA, reusable without redlines", state: "external", note: "written once with the lawyer; redlining per deal is what makes enterprise unservable solo", lead: 14, owner: "lawyer", afterLaunch: true, after: "Phase 7 — before any enterprise deal" },
-        { id: "7.3", name: "Enterprise motion (procurement, questionnaires, deal desk)", state: "pending", note: "gated on 7.1, 7.2, 6.5 and a second pair of hands", days: 5, afterLaunch: true, after: "Phase 7 — only when all preconditions hold" },
+        { id: "7.3", who: "both", name: "Enterprise motion (procurement, questionnaires, deal desk)", state: "pending", note: "gated on 7.1, 7.2, 6.5 and a second pair of hands", days: 5, afterLaunch: true, after: "Phase 7 — only when all preconditions hold" },
       ],
     },
   ];
@@ -765,7 +765,7 @@
     { date: "7 Nov 2026", what: "Top-10 languages published, security.txt, preview database isolated, API answers only on the apex, HSTS, sign-in history, Recent tools, one theme button, flag-only language button", count: "" },
     { date: "8 Nov 2026", what: "Starred tools, feature requests and feedback, sidebar handles; <span>Search Console sitemap and IndexNow; a front-page definition and five search-name landings; robots opened to AI crawlers by the owner in Cloudflare</span>", count: "" },
     { date: "9 Nov 2026", what: "Compress to a size and two size landings (200 KB, 1 MB) — <span>the tool now does what the earlier 'deliberately not built' note said it could not; <span class='mono'>hello@leaflockpdf.com</span> receives mail</span>", count: "" },
-    { date: "9 Nov 2026", what: "Front page tools first, the definition card below them; a slim edge tab replaces the phone sidebar button; <span class='mono'>feedback@</span> routed and set as the notification address; status page reworked with a Next up section, search and filters, and a date that follows the newest entry; then a scorecard, a generated tool and URL table, and a calmer, more readable skin in place of the neo-brutalist one</span>", count: "" },
+    { date: "9 Nov 2026", what: "Front page tools first, the definition card below them; a slim edge tab replaces the phone sidebar button; <span class='mono'>feedback@</span> routed and set as the notification address; status page reworked with a Next up section, search and filters, and a date that follows the newest entry; then a scorecard, a generated tool and URL table, and a calmer, more readable skin in place of the neo-brutalist one; every open item now says who acts, Me, You or Both, with a filter</span>", count: "" },
   ];
 
   /**
@@ -808,6 +808,16 @@
 
   const start = new Date(today());
   const allItems = PHASES.flatMap((p) => p.items);
+
+  /**
+   * Who acts on an open item. Derived, so it cannot disagree with the rest of the data:
+   *   an item that names a third party (lawyer, broker, auditor, translator) is the owner's to start;
+   *   an item with `who: "both"` needs the owner's account, key or decision and then my work;
+   *   anything else I can do alone. Done items need nobody.
+   */
+  const whoOf = (i) => (i.state === "done" ? null : i.who || (i.owner ? "you" : "me"));
+  const WHO = { me: ["Me", "I can do this on my own"], you: ["You", "only you can do this"], both: ["Both", "needs you and me"] };
+
 
   // Launch blockers only. Engineering runs one item at a time (one pair of hands);
   // anything waiting on another person runs in parallel from today, since none of it
@@ -1071,10 +1081,10 @@
       <p class="phase-summary">${p.summary}</p>
       <div class="items">
         ${p.items.map((i) => `
-          <div class="item" data-state="${i.state}" data-text="${(i.id + " " + i.name + " " + (i.note || "")).toLowerCase().replace(/[<>"&]/g, " ")}">
+          <div class="item" data-state="${i.state}" data-who="${whoOf(i) || ""}" data-text="${(i.id + " " + i.name + " " + (i.note || "")).toLowerCase().replace(/[<>"&]/g, " ")}">
             <span class="item-num">${i.id}</span>
             <span class="name">${i.name}${i.note ? ` <span style="color:var(--muted); font-size:0.82rem;">— ${i.note}</span>` : ""}</span>
-            ${pill(i.state)}
+            <span class="badges">${pill(i.state)}${whoOf(i) ? `<span class="who who-${whoOf(i)}" title="${WHO[whoOf(i)][1]}">${WHO[whoOf(i)][0]}</span>` : ""}</span>
             <span class="estimate">${rightColumn(i)}</span>
           </div>
         `).join("")}
@@ -1159,7 +1169,7 @@
 
   // Open, not waiting on anyone, not the owner's: sorted so blockers lead, then the smallest.
   const mineOpen = allItems
-    .filter((i) => i.state === "pending" && !i.owner)
+    .filter((i) => i.state === "pending" && whoOf(i) === "me")
     .sort((a, b) => (b.blocker ? 1 : 0) - (a.blocker ? 1 : 0) || (a.afterLaunch ? 1 : 0) - (b.afterLaunch ? 1 : 0) || (a.days ?? 99) - (b.days ?? 99));
   const MINE_SHOWN = 6;
   const mineCard = (i) => `
@@ -1247,27 +1257,40 @@
         <span role="group" aria-label="Filter by state" style="display:contents">
           ${states.map(([k, label]) => `<button type="button" class="chip" data-state="${k}" aria-pressed="${k === "all"}">${label} <span class="c">${count(k)}</span></button>`).join("")}
         </span>
+        <span class="filter-sep" aria-hidden="true"></span>
+        <span role="group" aria-label="Filter by who acts" style="display:contents">
+          ${[["any", "Anyone", "every open and finished item"], ["me", WHO.me[0], WHO.me[1]], ["you", WHO.you[0], WHO.you[1]], ["both", WHO.both[0], WHO.both[1]]].map(([k, label, hint]) => '<button type="button" class="chip chip-who" data-who="' + k + '" title="' + hint + '" aria-pressed="' + (k === "any") + '">' + label + (k === "any" ? "" : ' <span class="c">' + allItems.filter((i) => whoOf(i) === k).length + '</span>') + '</button>').join("")}
+        </span>
         <p class="found" id="itemFound" role="status"></p>
       </div>`);
     const input = document.getElementById("itemSearch");
     const found = document.getElementById("itemFound");
-    const chips = [...phasesEl.querySelectorAll(".chip")];
+    const chips = [...phasesEl.querySelectorAll(".chip:not(.chip-who)")];
+    const whoChips = [...phasesEl.querySelectorAll(".chip-who")];
     let state = "all";
+    let who = "any";
     const apply = () => {
       const q = input.value.trim().toLowerCase();
       let shown = 0;
       for (const item of phasesEl.querySelectorAll(".item")) {
-        const ok = (state === "all" || item.dataset.state === state) && (!q || item.dataset.text.includes(q));
+        const ok = (state === "all" || item.dataset.state === state) && (who === "any" || item.dataset.who === who) && (!q || item.dataset.text.includes(q));
         item.hidden = !ok;
         if (ok) shown++;
       }
-      const filtering = state !== "all" || q !== "";
+      const filtering = state !== "all" || who !== "any" || q !== "";
       for (const phase of phasesEl.querySelectorAll(".phase")) {
         phase.hidden = filtering && !phase.querySelector(".item:not([hidden])");
       }
       found.textContent = filtering ? `${shown} of ${allItems.length} items match` : "";
     };
     input.addEventListener("input", apply);
+    for (const chip of whoChips) {
+      chip.addEventListener("click", () => {
+        who = chip.dataset.who;
+        for (const c of whoChips) c.setAttribute("aria-pressed", String(c === chip));
+        apply();
+      });
+    }
     for (const chip of chips) {
       chip.addEventListener("click", () => {
         state = chip.dataset.state;
