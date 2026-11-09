@@ -514,7 +514,7 @@
     tools: 43,
     pro: 0,
     practice: 6,
-    commits: 71,
+    commits: 72,
     ops: 29,
     landings: 12,
     guides: 6,
@@ -564,7 +564,7 @@
         { id: "2.11", name: "Device-local recent work (IndexedDB, 5 min / 1 hour / 24 hours, custom on Pro)", state: "done", when: "30 Oct", note: "nothing leaves the device — the CSP claim is untouched" },
         { id: "2.12", name: "Server-backed retention for Pro (R2 + browser AES-GCM, key in fragment)", state: "pending", estimate: "~4–5 days", days: 5, note: "replaces the retired 4.8; lifts 2.11's 7-day device ceiling", after: "after launch — and after demand proves it" },
         { id: "2.13", name: "Compress to a target size — 200 KB, 1 MB, any size", state: "done", when: "9 Nov", note: "By level / To a size: a binary search over a six-step ladder (at most three passes), the gentlest settings that fit; a target it cannot reach is said plainly and the smallest file is still offered; a file already under it is left alone. Stops at 500-pixel images. Landings: compress-pdf-to-200kb and -1mb" },
-        { id: "2.14", name: "Feature requests and feedback from the sidebar", state: "done", when: "8 Nov", note: "stored in D1 (migration 0007, applied to production 8 Nov), read with pnpm feedback. The fallback address hello@ now has a mailbox. 0007 applied to the preview database too (9 Nov). Still to do on the owner's side: decide FEEDBACK_NOTIFY_EMAIL (docs/TODO.md §4)" },
+        { id: "2.14", name: "Feature requests and feedback from the sidebar", state: "done", when: "8 Nov", note: "stored in D1 (migration 0007, applied to production 8 Nov), read with pnpm feedback. The fallback address hello@ now has a mailbox. 0007 applied to the preview database too (9 Nov). Notification email: feedback@leaflockpdf.com decided and set as a production secret 9 Nov, routed by Cloudflare to the same Gmail; the subject starts Feature request: or Feedback:. Not verified by me: that the test message arrived (docs/TODO.md §4)" },
       ],
     },
     {
@@ -706,6 +706,7 @@
     { date: "7 Nov 2026", what: "Top-10 languages published, security.txt, preview database isolated, API answers only on the apex, HSTS, sign-in history, Recent tools, one theme button, flag-only language button", count: "" },
     { date: "8 Nov 2026", what: "Starred tools, feature requests and feedback, sidebar handles; <span>Search Console sitemap and IndexNow; a front-page definition and five search-name landings; robots opened to AI crawlers by the owner in Cloudflare</span>", count: "" },
     { date: "9 Nov 2026", what: "Compress to a size and two size landings (200 KB, 1 MB) — <span>the tool now does what the earlier 'deliberately not built' note said it could not; <span class='mono'>hello@leaflockpdf.com</span> receives mail</span>", count: "" },
+    { date: "9 Nov 2026", what: "Front page tools first, the definition card below them; a slim edge tab replaces the phone sidebar button; <span class='mono'>feedback@</span> routed and set as the notification address; status page reworked with a Next up section, search and filters, and a date that follows the newest entry</span>", count: "" },
   ];
 
   /**
