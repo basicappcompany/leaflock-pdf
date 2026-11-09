@@ -510,11 +510,70 @@
    * the script rewrites means adding a metric is a field here plus a line there, and no
    * figure on this page is ever a copy someone has to remember to update.
    */
+  /* Written by pnpm counts from src/tools/registry.ts: [slug, category, tier, kind, tool id]. */
+  const TOOLS = [
+    ["merge-pdf", "organize", "free", "tool", "merge"],
+    ["split-pdf", "organize", "free", "tool", "split"],
+    ["remove-pages", "organize", "free", "tool", "removePages"],
+    ["extract-pages", "organize", "free", "tool", "extractPages"],
+    ["organize-pdf", "organize", "free", "tool", "organize"],
+    ["rotate-pdf", "organize", "free", "tool", "rotate"],
+    ["crop-pdf", "organize", "free", "tool", "crop"],
+    ["mix-pdf-pages", "organize", "free", "tool", "mixPages"],
+    ["multiple-pages-per-sheet", "organize", "free", "tool", "nUp"],
+    ["booklet-pdf", "organize", "free", "tool", "booklet"],
+    ["word-to-pdf", "convert", "free", "tool", "wordToPdf"],
+    ["excel-to-pdf", "convert", "free", "tool", "excelToPdf"],
+    ["csv-to-pdf", "convert", "free", "tool", "csvToPdf"],
+    ["rtf-to-pdf", "convert", "free", "tool", "rtfToPdf"],
+    ["jpg-to-pdf", "convert", "free", "tool", "imagesToPdf"],
+    ["pdf-to-jpg", "convert", "free", "tool", "pdfToImages"],
+    ["pdf-to-text", "convert", "free", "tool", "pdfToText"],
+    ["extract-images-from-pdf", "convert", "free", "tool", "extractImages"],
+    ["pdf-to-markdown", "convert", "free", "tool", "pdfToMarkdown"],
+    ["pdf-to-word", "convert", "free", "tool", "pdfToWord"],
+    ["pdf-to-excel", "convert", "free", "tool", "pdfToExcel"],
+    ["extract-tables-from-pdf", "convert", "practice", "tool", "extractTables"],
+    ["ocr-pdf", "convert", "free", "tool", "ocr"],
+    ["scan-to-pdf", "convert", "free", "tool", "scan"],
+    ["add-page-numbers", "edit", "free", "tool", "pageNumbers"],
+    ["add-page-labels", "edit", "free", "tool", "pageLabels"],
+    ["bates-numbering", "edit", "practice", "tool", "batesNumber"],
+    ["add-watermark", "edit", "free", "tool", "watermark"],
+    ["sign-pdf", "edit", "free", "tool", "sign"],
+    ["edit-pdf", "edit", "free", "tool", "edit"],
+    ["fill-pdf-form", "edit", "free", "tool", "fillForm"],
+    ["edit-metadata", "edit", "free", "tool", "editMetadata"],
+    ["redact-pdf", "edit", "practice", "tool", "redact"],
+    ["protect-pdf", "secure", "free", "tool", "protect"],
+    ["unlock-pdf", "secure", "free", "tool", "unlock"],
+    ["compress-pdf", "secure", "free", "tool", "compress"],
+    ["repair-pdf", "secure", "free", "tool", "repair"],
+    ["flatten-pdf", "secure", "free", "tool", "flatten"],
+    ["remove-metadata", "secure", "free", "tool", "removeMetadata"],
+    ["remove-annotations", "secure", "free", "tool", "removeAnnotations"],
+    ["pdf-to-pdfa", "secure", "practice", "tool", "pdfToPdfA"],
+    ["compare-pdf", "secure", "practice", "tool", "compare"],
+    ["batch-pdf", "secure", "practice", "tool", "batch"],
+    ["png-to-pdf", "convert", "free", "landing", "imagesToPdf"],
+    ["webp-to-pdf", "convert", "free", "landing", "imagesToPdf"],
+    ["pdf-to-png", "convert", "free", "landing", "pdfToImages"],
+    ["reverse-pdf-pages", "organize", "free", "landing", "organize"],
+    ["add-blank-page-to-pdf", "organize", "free", "landing", "organize"],
+    ["combine-pdf", "organize", "free", "landing", "merge"],
+    ["delete-pdf-pages", "organize", "free", "landing", "removePages"],
+    ["pdf-password-remover", "secure", "free", "landing", "unlock"],
+    ["rearrange-pdf-pages", "organize", "free", "landing", "organize"],
+    ["reduce-pdf-size", "secure", "free", "landing", "compress"],
+    ["compress-pdf-to-200kb", "secure", "free", "landing", "compress"],
+    ["compress-pdf-to-1mb", "secure", "free", "landing", "compress"],
+  ];
+
   const COUNTS = {
     tools: 43,
     pro: 0,
     practice: 6,
-    commits: 72,
+    commits: 73,
     ops: 29,
     landings: 12,
     guides: 6,
@@ -1134,6 +1193,49 @@
    * A phase with nothing left to show hides itself, and the line under the toolbar says how many
    * rows match, so an empty result reads as "no matches" and not as a broken page.
    */
+  (function scorecardAndTools() {
+    const kpis = document.getElementById("kpis");
+    if (!kpis) return; // the older skin shares this script but has neither section
+    const free = COUNTS.tools - COUNTS.pro - COUNTS.practice;
+    const tile = (v, k, d) => `<div class="kpi"><span class="v">${v}</span><span class="k">${k}</span><span class="d">${d}</span></div>`;
+    kpis.innerHTML = [
+      tile(COUNTS.tools, "Tools", `${free} free, ${COUNTS.pro} Pro, ${COUNTS.practice} Practice`),
+      tile(COUNTS.ops, "Worker operations", "the PDF work itself, run in a web worker on the device"),
+      tile(COUNTS.unit, "Unit tests", "Vitest, run on every pull request"),
+      tile(COUNTS.browser, "Browser tests", `Playwright, across ${COUNTS.browserFiles} files`),
+      tile(COUNTS.landings + COUNTS.guides + COUNTS.compares, "Search pages", `${COUNTS.landings} landings, ${COUNTS.guides} guides, ${COUNTS.compares} comparisons`),
+      tile(`${COUNTS.anonymousDaily} / ${COUNTS.freeAccountDaily}`, "Daily allowance", "anonymous / free account, counted by the server"),
+    ].join("");
+
+    const ACRONYMS = { pdf: "PDF", png: "PNG", jpg: "JPG", jpeg: "JPEG", webp: "WebP", ocr: "OCR", heic: "HEIC", html: "HTML", tiff: "TIFF", docx: "DOCX", kb: "KB", mb: "MB" };
+    const title = (slug) => slug.split("-").map((w) => ACRONYMS[w] ?? w[0].toUpperCase() + w.slice(1)).join(" ");
+    const rows = TOOLS.map(([slug, category, tier, kind]) => ({ slug, category, tier, kind, name: title(slug) }));
+    document.getElementById("toolBadge").textContent = rows.length;
+    const cats = ["all", ...new Set(rows.map((r) => r.category)), "landing"];
+    const box = document.getElementById("toolFilters");
+    box.innerHTML = `
+      <input id="toolSearch" type="search" placeholder="Filter pages or URLs, e.g. compress, heic…" autocomplete="off" aria-label="Filter pages">
+      <span role="group" aria-label="Filter by category" style="display:contents">${cats.map((c) => `<button type="button" class="chip" data-cat="${c}" aria-pressed="${c === "all"}">${c === "all" ? "All" : c === "landing" ? "Landings" : c[0].toUpperCase() + c.slice(1)} <span class="c">${c === "all" ? rows.length : c === "landing" ? rows.filter((r) => r.kind === "landing").length : rows.filter((r) => r.category === c && r.kind === "tool").length}</span></button>`).join("")}</span>
+      <p class="found" id="toolFound" role="status"></p>`;
+    const input = document.getElementById("toolSearch");
+    const found = document.getElementById("toolFound");
+    const body = document.getElementById("toolRows");
+    let cat = "all";
+    const render = () => {
+      const q = input.value.trim().toLowerCase();
+      const list = rows.filter((r) => (cat === "all" || (cat === "landing" ? r.kind === "landing" : r.category === cat && r.kind === "tool")) && (!q || (r.name + " " + r.slug).toLowerCase().includes(q)));
+      body.innerHTML = list.map((r) => `<tr><td>${r.name}${r.kind === "landing" ? ' <span class="kind">landing</span>' : ""}</td><td><a class="mono" href="https://leaflockpdf.com/${r.slug}/" target="_blank" rel="noopener">/${r.slug}/</a></td><td>${r.category}</td><td>${r.tier === "free" ? "Free" : r.tier === "pro" ? "Pro" : "Practice"}</td></tr>`).join("") || '<tr><td colspan="4">Nothing matches.</td></tr>';
+      found.textContent = `${list.length} of ${rows.length} pages`;
+    };
+    input.addEventListener("input", render);
+    box.querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => {
+      cat = b.dataset.cat;
+      box.querySelectorAll(".chip").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+      render();
+    }));
+    render();
+  })();
+
   (function filters() {
     if (!nextEl) return;
     const states = [["all", "All"], ["done", "Done"], ["progress", "In progress"], ["pending", "To do"], ["external", "Waiting on others"]];
