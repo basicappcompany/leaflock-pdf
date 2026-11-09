@@ -81,7 +81,7 @@ try {
 /**
  * Commits and the remote, read from git rather than typed. The status page carried
  * "two commits pushed" for about an hour before it was wrong, which is the same mistake
- * as every other hand-kept figure here (`docs/process.md` �8) — and a commit count is
+ * as every other hand-kept figure here (`docs/process.md` �8) — and a commit count is
  * the fastest-moving number in the project, so it is the worst one to store.
  *
  * Both degrade quietly: before the first commit there is nothing to count, and a clone
@@ -201,7 +201,35 @@ async function syncStatusHtml() {
   return `rewritten (${Object.keys(figures).length} figures)`;
 }
 
+/**
+ * The tool and landing URLs, written into the page as one `TOOLS` block so its "Every tool and
+ * its URL" table is read from the registry and cannot list a page that does not exist. Each row
+ * is [slug, category, tier, kind, tool id]; a landing's category and tier are its tool's.
+ */
+async function syncToolList() {
+  const path = 'docs/status.html';
+  const html = await read(path);
+  const pattern = /(const TOOLS = )\[[\s\S]*?\n {2}\](;)/;
+  if (!pattern.test(html)) return 'skipped — no TOOLS block in the page';
+  const rows = [...toolsBlock.matchAll(/\{ id: '(\w+)', slug: '([\w-]+)', category: '(\w+)', tier: '(\w+)' \}/g)].map(
+    ([, id, slug, category, tier]) => ({ id, slug, category, tier, kind: 'tool', tool: id }),
+  );
+  const landingsBlock = registry.slice(registry.indexOf('export const landings'));
+  const byId = new Map(rows.map((r) => [r.id, r]));
+  for (const [, id, slug, toolId] of landingsBlock.matchAll(/\{ id: '(\w+)', slug: '([\w-]+)', toolId: '(\w+)'/g)) {
+    const base = byId.get(toolId);
+    if (base) rows.push({ id, slug, category: base.category, tier: base.tier, kind: 'landing', tool: toolId });
+  }
+  const line = (r) => '    [' + [r.slug, r.category, r.tier, r.kind, r.tool].map((v) => JSON.stringify(v)).join(', ') + '],';
+  const block = '[\n' + rows.map(line).join('\n') + '\n  ]';
+  const next = html.replace(pattern, (_, head, tail) => head + block + tail);
+  if (next === html) return `already current (${rows.length} URLs)`;
+  await writeFile(path, next, 'utf8');
+  return `rewritten (${rows.length} URLs)`;
+}
+
 const statusNote = await syncStatusHtml();
+const toolsNote = await syncToolList();
 // After, not before: the mirror has to carry the COUNTS block that was just rewritten.
 const mirrorNote = await mirrorSkins();
 
@@ -218,6 +246,7 @@ console.log(
     `free-tier cap    ${anonymousDaily}/day anonymous, ${freeAccountDaily}/day free account`,
     '',
     `status.html COUNTS ${statusNote}`,
+    `status.html TOOLS  ${toolsNote}`,
     `other skins       ${mirrorNote}`,
     'Pages: `pnpm build` prints "N page(s) built" — the only count that needs a build.',
   ].join('\n'),
