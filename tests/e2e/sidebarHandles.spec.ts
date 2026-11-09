@@ -135,17 +135,22 @@ test('the page keeps clear of the handles, open or hidden', async ({ page }) => 
 test.describe('on a phone, drawer hidden', () => {
   test.use({ viewport: { width: 390, height: 800 }, hasTouch: true });
 
-  test('the lone handle floats in the bottom corner, so it cannot cover a heading', async ({ page }) => {
+  test('the lone handle is a slim edge tab inside the page gutter, so it covers no text', async ({ page }) => {
     await page.goto('/compress-pdf');
     await expect(page.locator('#sidebarToggle')).toBeVisible();
     const handle = (await page.locator('#sidebarToggle').boundingBox())!;
     const viewport = page.viewportSize()!;
-    // Bottom-left (the default dock), clear of the page's own text at the top.
-    expect(handle.y + handle.height, 'near the bottom').toBeGreaterThan(viewport.height - 40);
-    expect(handle.x, 'on the docked side').toBeLessThan(40);
     const heading = (await page.getByRole('heading', { level: 1 }).boundingBox())!;
-    const overlaps = !(handle.y + handle.height <= heading.y || handle.y >= heading.y + heading.height);
-    expect(overlaps, 'not over the heading').toBe(false);
-    expect(Math.min(handle.width, handle.height), 'still a comfortable tap target').toBeGreaterThanOrEqual(40);
+    const crumbs = (await page.locator('.breadcrumb').boundingBox())!;
+    expect(handle.x, 'flush to the docked edge').toBeLessThanOrEqual(1);
+    // Everything on the page starts to its right: the handle sits in the empty side margin.
+    expect(handle.x + handle.width, 'clear of the heading').toBeLessThanOrEqual(heading.x);
+    expect(handle.x + handle.width, 'clear of the breadcrumb').toBeLessThanOrEqual(crumbs.x);
+    // Low on the screen, and tall enough to hit with a thumb.
+    expect(handle.y, 'in the lower half').toBeGreaterThan(viewport.height / 2);
+    expect(handle.height, 'tall enough to tap').toBeGreaterThanOrEqual(48);
+    // One tap opens the drawer.
+    await page.locator('#sidebarToggle').tap();
+    await expect(page.locator('html')).toHaveAttribute('data-sidebar-state', 'visible');
   });
 });

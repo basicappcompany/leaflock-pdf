@@ -53,8 +53,7 @@ longer a photo. Sizes are decimal (1 KB = 1,000 bytes), like every other size on
 what the "Reduce PDF size" page and its nine translations had to be corrected for: they said there
 was no target-size option. Found on the way: a hand-built fix for a phone problem the sidebar handles
 introduced (the lone hide/show handle covered the first letters of every heading) first padded the
-page, which broke the 320px reflow; it is now a round button in the bottom corner, as the old reopen
-button was. Spec: `tests/e2e/secure.spec.ts` (reached, missed, already under, validation, common sizes)
+page, which broke the 320px reflow; it first became a round button in the bottom corner, which covered text scrolled under it, and is now a slim tab on the screen edge exactly as wide as the page gutter, with an invisible 44px tappable reach, so it covers nothing. Spec: `tests/e2e/secure.spec.ts` (reached, missed, already under, validation, common sizes)
 and `tests/unit/compress.test.ts`.
 
 ---
