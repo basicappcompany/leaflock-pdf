@@ -1124,6 +1124,13 @@ them from the request origin: `http://localhost:8788/api/auth/google/callback` a
 - **Mail: `hello@` is Cloudflare Email Routing into the owner's Gmail — 9 November 2026.**
   Resend only sends the service's own emails. Named in `privacy.md`. Replying *from* `hello@`
   is deliberately not set up yet.
+- **The status page uses a calm skin, not the neo-brutalist one — 9 November 2026.** The owner
+  found the monochrome, monospace, all-caps look hard to read. `docs/status.html` now uses Inter,
+  rounded cards, soft shadows and one leaf-green accent, with state in tinted colour *and* in
+  words (green done, blue in progress, amber blocks the launch, purple waiting). It was done as a
+  token swap plus an override block ("Skin v2") at the end of the stylesheet, so markup and script
+  are unchanged; `status2.html` keeps the older design. The page also gained a Scorecard and an
+  Every-tool-and-URL table that `pnpm counts` writes from the registry.
 - **When the translation key is rejected, translate by hand and import — 8 November 2026.**
   `scripts/translate.mjs --import` validates placeholders and numbers either way; machine or
   hand, the status stays `machine` until a person reviews it.
