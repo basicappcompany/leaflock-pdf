@@ -88,6 +88,7 @@ for (const item of all) {
     problems.push(`${where}: marked a blocker and also deferred`);
   }
   if (item.lead && !item.owner) problems.push(`${where}: waits on someone, but names no owner`);
+  if (item.who && !['me', 'you', 'both'].includes(item.who)) problems.push(`${where}: who must be me, you or both`);
 }
 
 for (const phase of PHASES) {
