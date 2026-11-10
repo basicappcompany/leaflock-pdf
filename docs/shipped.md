@@ -25,6 +25,9 @@ when the pages are live), then runs `scripts/indexnow.mjs`, which still refuses 
 and the sitemap are served. A push that only touches `docs/`, `tests/`, `.github/`, `CLAUDE.md` or a README is
 skipped. Stated limit: it sends the whole sitemap, not just the changed pages, and a manual run from the
 Actions tab ("Run workflow") or `pnpm indexnow` pings regardless. Google does not use IndexNow.
+Found: the first run from GitHub's runner got a 403 on `/sitemap.xml` (the same request worked from a PC and the
+key file loaded); once the script sent a named `User-Agent` the same workflow passed, and a refused fetch now
+prints the response headers and first lines so the cause is visible. The edge rule itself was not identified.
 
 ---
 
