@@ -17,6 +17,17 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 10 November 2026 — IndexNow pings by itself after each deploy
+
+`.github/workflows/indexnow.yml` runs on every push to `main`: it waits for the "Cloudflare Pages" check
+Cloudflare posts on that commit (the deploy is Cloudflare's own git integration, so CI cannot otherwise know
+when the pages are live), then runs `scripts/indexnow.mjs`, which still refuses to send unless the key file
+and the sitemap are served. A push that only touches `docs/`, `tests/`, `.github/`, `CLAUDE.md` or a README is
+skipped. Stated limit: it sends the whole sitemap, not just the changed pages, and a manual run from the
+Actions tab ("Run workflow") or `pnpm indexnow` pings regardless. Google does not use IndexNow.
+
+---
+
 ## 9 November 2026 — The status page: scorecard, every URL, a calmer skin, who acts
 
 `docs/status.html` gains a **Scorecard** (six tiles read from `pnpm counts`) and **Every tool and its
