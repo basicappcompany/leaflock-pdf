@@ -21,6 +21,8 @@ export const KEY = '97861d465f538d1490791113182b383e';
 export const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;
 export const SITEMAP = `https://${HOST}/sitemap.xml`;
 export const ENDPOINT = 'https://api.indexnow.org/indexnow';
+/** Says who is asking, so an edge rule or a log can tell this script from an anonymous client. */
+const HEADERS = { 'User-Agent': 'LeafLock-IndexNow/1.0 (+https://leaflockpdf.com)', Accept: 'application/xml,text/plain,*/*' };
 /** IndexNow accepts up to 10,000 URLs per request. */
 export const MAX_PER_REQUEST = 10_000;
 
@@ -51,16 +53,19 @@ export function requestBody(urlList) {
 async function main() {
   const dryRun = process.argv.includes('--dry-run');
 
-  const keyFile = await fetch(KEY_LOCATION);
+  const keyFile = await fetch(KEY_LOCATION, { headers: HEADERS });
   const served = (await keyFile.text()).trim();
   if (!keyFile.ok || served !== KEY) {
     console.error(`The key file is not live yet at ${KEY_LOCATION} (status ${keyFile.status}). Deploy it first; engines check it before they trust a request.`);
     process.exit(1);
   }
 
-  const sitemap = await fetch(SITEMAP);
+  const sitemap = await fetch(SITEMAP, { headers: HEADERS });
   if (!sitemap.ok) {
     console.error(`Could not read ${SITEMAP} (status ${sitemap.status}).`);
+    // say why: a 403 from a cloud runner is usually an edge rule, and its headers and first lines name it
+    console.error(`server: ${sitemap.headers.get('server')}, cf-ray: ${sitemap.headers.get('cf-ray')}, cf-mitigated: ${sitemap.headers.get('cf-mitigated')}, content-type: ${sitemap.headers.get('content-type')}`);
+    console.error((await sitemap.text()).slice(0, 300).replace(/\s+/g, ' '));
     process.exit(1);
   }
   const urls = urlsFromSitemap(await sitemap.text());
