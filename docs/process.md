@@ -175,7 +175,7 @@ Two things follow, and both are now in place:
 
 The figures in `docs/status.html` that the page cannot derive from its own item data were
 the other hand-kept numbers, and are not any more. `pnpm counts` owns one **`COUNTS`
-block** in that page and rewrites it whole; everything on the page — the tiles, the
+block** in that page (and a second, **`TOOLS`**, the registry's URLs for the page's table) and rewrites it whole; everything on the page — the tiles, the
 Phase 3 item names, the free-tier line — reads from that block. Adding a metric is a field
 in the script's `figures` object plus a reference in the page. **Never type a figure into
 that page**: by definition it is a copy, and the free-tier line is what a typed copy looks

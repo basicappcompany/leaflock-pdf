@@ -98,7 +98,7 @@ On the owner's laptop, run `source ~/tools/leaflock-env.sh` first (portable Node
 - `pnpm build` runs the type check and production build.
 - `pnpm test` runs the unit tests (Vitest).
 - **`/docs-sync`** is the whole docs sweep as one command (shipped log, tracker, roadmap, design, TODO, CLAUDE.md, claims in content pages); `/status` reports where the project stands. Prefer them to editing docs file by file.
-- `pnpm counts` prints every count and writes the `COUNTS` block in `docs/status.html`.
+- `pnpm counts` prints every count and writes the `COUNTS` and `TOOLS` blocks in `docs/status.html` (`TOOLS` is the registry's tool and landing URLs, for the page's URL table; never type into either block). On the page, an open item's `who: "both"` means it needs the owner and then me; no `who` means the owner field decides.
 - `pnpm tracker` validates that tracker's item data and prints every date it computes. This
   one runs in CI, so an inconsistent item fails the build; `pnpm counts` does not, because
   it writes rather than checks — run it yourself after anything that moves a count.

@@ -1,14 +1,13 @@
 # TODO: credentials, config and deferred setup
 
-## At a glance — 9 November 2026
+## At a glance — 10 November 2026
 
 A dated snapshot; the sections below are the detail and the source of truth.
 
 **Pending on you** (accounts, dashboards, people):
 - Valid `ANTHROPIC_API_KEY` (§9); a person to review translated trust claims (§9).
-- Set the `FEEDBACK_NOTIFY_EMAIL` secret to `feedback@leaflockpdf.com` (routing is done) and confirm the
-  Resend secrets exist in production (§4); try the feedback form end to end with `pnpm feedback`.
-- Send a test email to `hello@leaflockpdf.com` from another account; decide on replying from it (§0).
+- Check Gmail for the "Feedback: TEST" message sent to `feedback@`, and send one test email each to `hello@`
+  and `feedback@` from another account (§0, §4); decide on replying from `hello@`. The secrets are set.
 - Auto-renew and registrar 2FA (§0); TLS 1.2 and Bot Fight Mode decisions (§8).
 - Google OAuth client, Dodo products and webhook, Paddle (§1, §3); legal review (`legal-checklist.md`).
 - Bing Webmaster Tools; look at Search Console in a few days; post the launch drafts when signed in.
@@ -215,15 +214,16 @@ now sits in `.dev.vars` beside the other three, and needs a real id like them.
       session's Cloudflare login is refused by that database, code 7403, so it is run from the
       owner's shell): `pnpm exec wrangler d1 migrations apply leaflock-pdf-preview --remote --env
       preview`. Branch previews now store feedback too.
-- [ ] **Set `FEEDBACK_NOTIFY_EMAIL` to `feedback@leaflockpdf.com`** (decided 9 November 2026; Cloudflare
+- [x] **Set `FEEDBACK_NOTIFY_EMAIL` to `feedback@leaflockpdf.com`** (decided and set 9 November 2026, redeployed twice; Cloudflare
       Email Routing already forwards `feedback@` to the owner's Gmail, so mail to `hello@` and to
       `feedback@` arrives in one inbox, told apart by the To address and by the subject, which starts
       "Feature request:" or "Feedback:"; a Gmail filter on `to:feedback@leaflockpdf.com` can label them).
-      The secret is the owner's to set, and a new deploy is needed after: `pnpm exec wrangler pages
-      secret put FEEDBACK_NOTIFY_EMAIL --project-name leaflock-pdf`. Messages are also stored and read
-      with `pnpm feedback`; sending uses Resend.
-      Not verified: that `RESEND_API_KEY` and `EMAIL_FROM` are set as *production* secrets (§2 only
-      records them in `.dev.vars`).
+      The secret is the owner's to set (the value is piped in, since the command is not interactive):
+      `printf 'feedback@leaflockpdf.com' | pnpm exec wrangler pages secret put FEEDBACK_NOTIFY_EMAIL
+      --project-name leaflock-pdf`, then a new deploy. `wrangler pages secret list` shows production has
+      `EMAIL_FROM`, `FEEDBACK_NOTIFY_EMAIL`, `RESEND_API_KEY` and `SESSION_IP_SALT` (checked 10 November).
+      Messages are also stored and read with `pnpm feedback`; sending uses Resend. Not verified: that the
+      test message actually reached the inbox. Only the owner can see that.
 - [x] **The feedback form’s fallback address now has a mailbox** (9 November 2026, §0): a visitor who
       hits the "could not send" message can write to `hello@leaflockpdf.com` and it arrives.
 - [x] **Migration `0006_starred_tools` applied to production**, 8 November 2026, by the owner
