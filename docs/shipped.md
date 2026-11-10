@@ -17,6 +17,20 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 9 November 2026 — The status page: scorecard, every URL, a calmer skin, who acts
+
+`docs/status.html` gains a **Scorecard** (six tiles read from `pnpm counts`) and **Every tool and its
+URL**, a filterable table that `pnpm counts` now writes from `src/tools/registry.ts` as a `TOOLS`
+block (55 rows: 43 tools and 12 landings), so a page cannot be listed that does not exist. The
+monochrome monospace skin was replaced because the owner found it hard to read: Inter, rounded cards,
+soft shadows, one leaf-green accent, state in tinted colour *and* words, done as an override block
+("Skin v2") so markup and script are unchanged. Every open item now says who acts: **Me**, **You** or
+**Both** (derived from `owner`, with `who: "both"` on seven items), with a filter, and "I can do,
+without you" lists only the Me items. `pnpm tracker` validates `who`. Phone: item rows restack so the
+pill is not clipped. The file is internal and is not deployed to leaflockpdf.com.
+
+---
+
 ## 9 November 2026 — The status page opens on what to do next
 
 `docs/status.html` gains a **Next up** section at the top: what needs the owner (eight cards with a
