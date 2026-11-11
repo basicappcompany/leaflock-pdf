@@ -29,6 +29,6 @@ export async function onRequestGet({ request, env }: { request: Request; env: En
 
   const response = new Response(null, { status: 302, headers: { Location: `${url.origin}/account` } });
   response.headers.append('Set-Cookie', sessionSetCookieHeader(cookieValue));
-  response.headers.append('Set-Cookie', signedInHintCookieHeader());
+  response.headers.append('Set-Cookie', signedInHintCookieHeader(user.plan));
   return response;
 }

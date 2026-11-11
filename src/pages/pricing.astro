@@ -4,7 +4,7 @@ import Article from '../layouts/Article.astro';
 import '../styles/early-notice.css';
 import '../styles/member-panel.css';
 import CheckoutButton from '../components/billing/CheckoutButton';
-import MemberPanel from '../components/billing/MemberPanel';
+import MemberPanel from '../components/billing/MemberPanel.astro';
 import { format, getMessages } from '../i18n';
 import {
   formatEarlyAccessEnd,
@@ -14,7 +14,6 @@ import {
   launchPrice,
   offerOpen,
   paidPlansAvailable,
-  plansStartAt,
   prices,
   yearlySavingPercent,
 } from '../lib/pricing';
@@ -112,18 +111,17 @@ const jsonLd = buyable
 
 ---
 
-<Article title={t.title} description={t.metaDescription} path="pricing" extraJsonLd={jsonLd}>
+<Article title={t.title} description={t.metaDescription} path="pricing" extraJsonLd={jsonLd} memberHint>
   <p class="lead">{t.intro}</p>
   <MemberPanel
-    client:only="react"
     t={t.member}
     names={{ pro: t.plans.pro.name, lifetime: t.plans.lifetime.name, practice: t.plans.practice.name, business: t.plans.business.name }}
-    plansStartAt={plansStartAt}
     startDate={dates.startDate}
     endDate={dates.endDate}
     offerPrice={price(launchPrice('practiceYearly'))}
     standardPrice={price(prices.practiceYearly)}
     businessHref={getRelativeLocaleUrl(locale, 'business')}
+    locale={locale}
   />
   {!paidPlansAvailable && <p class="notice for-new">{format(t.earlyAccess, dates)}</p>}
   {
