@@ -2875,6 +2875,21 @@ export default {
     "oneTime": "pagamento único",
     "perCompanyYear": "/ empresa / ano",
     "yearlySaving": "Economize {percent}% em relação ao mensal",
+    "member": {
+      "planLabel": "Seu plano: {plan}",
+      "startsOn": "Seu plano começa em {startDate}. Até lá, todas as ferramentas são gratuitas.",
+      "active": "Seu plano está ativo.",
+      "upgradeHeading": "Fazer upgrade para o Practice",
+      "upgradeBody": "Inclui tarjamento, comparação, lote, extração de tabelas, numeração Bates e PDF/A.",
+      "upgradePriceOffer": "Preço de upgrade {price} no primeiro ano, disponível até {endDate}. O preço padrão é {standard}.",
+      "upgradePrice": "O Practice custa {price} por ano.",
+      "upgradeDifference": "Você paga apenas a diferença do que já pagou.",
+      "upgrade": "Fazer upgrade para o Practice",
+      "upgrading": "Fazendo upgrade…",
+      "upgraded": "Pronto. Seu plano será atualizado em instantes.",
+      "failed": "Não foi possível fazer o upgrade do seu plano. Tente novamente.",
+      "top": "Você está no plano mais alto para pessoas físicas. Para usar o LeafLock na sua própria rede, veja a edição Business."
+    },
     "plans": {
       "free": {
         "name": "Grátis",
@@ -2935,6 +2950,8 @@ export default {
       }
     },
     "checkout": {
+      "alreadyOwned": "Você já tem este plano ou um superior.",
+      "useUpgrade": "Você já tem o Pro. Use a opção de upgrade no topo desta página.",
       "buy": "Escolher este plano",
       "buyYearly": "Escolher o plano anual",
       "buyMonthly": "Escolher o plano mensal",

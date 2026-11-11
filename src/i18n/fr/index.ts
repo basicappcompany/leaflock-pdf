@@ -2875,6 +2875,21 @@ export default {
     "oneTime": "paiement unique",
     "perCompanyYear": "/ entreprise / an",
     "yearlySaving": "Économisez {percent} % par rapport au mensuel",
+    "member": {
+      "planLabel": "Votre forfait : {plan}",
+      "startsOn": "Votre forfait démarre le {startDate}. D’ici là, tous les outils sont gratuits.",
+      "active": "Votre forfait est actif.",
+      "upgradeHeading": "Passer à Practice",
+      "upgradeBody": "Ajoute le caviardage, la comparaison, le traitement par lots, l’extraction de tableaux, la numérotation Bates et le PDF/A.",
+      "upgradePriceOffer": "Prix de mise à niveau {price} la première année, disponible jusqu’au {endDate}. Le prix standard est {standard}.",
+      "upgradePrice": "Practice coûte {price} par an.",
+      "upgradeDifference": "Vous ne payez que la différence avec ce que vous avez déjà payé.",
+      "upgrade": "Passer à Practice",
+      "upgrading": "Mise à niveau…",
+      "upgraded": "C’est fait. Votre forfait sera mis à jour dans un instant.",
+      "failed": "Nous n’avons pas pu mettre à niveau votre forfait. Veuillez réessayer.",
+      "top": "Vous avez le forfait le plus élevé pour les particuliers. Pour utiliser LeafLock sur votre propre réseau, découvrez l’édition Business."
+    },
     "plans": {
       "free": {
         "name": "Gratuit",
@@ -2935,6 +2950,8 @@ export default {
       }
     },
     "checkout": {
+      "alreadyOwned": "Vous avez déjà ce forfait ou un forfait supérieur.",
+      "useUpgrade": "Vous avez déjà Pro. Utilisez plutôt l’option de mise à niveau en haut de cette page.",
       "buy": "Choisir ce forfait",
       "buyYearly": "Choisir le forfait annuel",
       "buyMonthly": "Choisir le forfait mensuel",

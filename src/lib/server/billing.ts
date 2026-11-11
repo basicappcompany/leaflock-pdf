@@ -53,6 +53,54 @@ export function planForProduct(env: Env, productId: string | null): UserRow['pla
   return null;
 }
 
+/** How the plans rank against each other. A ten-year Pro term is Pro; Business is not sold here. */
+const PLAN_RANK: Record<UserRow['plan'], number> = { free: 0, pro: 1, lifetime: 1, practice: 2, business: 3 };
+
+/**
+ * What a signed-in account may do when it asks to buy `plan`:
+ *
+ * - `ok`: start a new checkout.
+ * - `owned`: it already has this plan or a higher one, so a second purchase would be a duplicate
+ *   charge for nothing. Also the answer while a payment is failing: that is fixed in Dodo, not
+ *   by buying again.
+ * - `upgrade`: it has a live Pro subscription and wants Practice, which is a change of plan on
+ *   that subscription (`upgradePractice` in functions/api/billing/upgrade.ts), not a second one.
+ *
+ * A ten-year Pro holder has no subscription to change, so Practice is a fresh checkout for them
+ * (no credit for the Pro term; decided 12 November 2026). A cancelled plan may be bought again.
+ */
+export function purchaseDecision(
+  user: Pick<UserRow, 'plan' | 'plan_status' | 'current_period_end' | 'subscription_id'>,
+  plan: PlanKey,
+  now: number = Date.now(),
+): 'ok' | 'owned' | 'upgrade' {
+  const current = effectivePlan(user, now);
+  if (current === 'free') return 'ok';
+
+  const wanted = plan === 'practiceYearly' ? 2 : 1;
+  const have = PLAN_RANK[current];
+  if (wanted < have) return 'owned';
+  if (user.plan_status === 'past_due') return 'owned';
+  if (user.plan_status === 'cancelled') return 'ok';
+  if (wanted === have) return 'owned';
+  if (current === 'pro' && user.subscription_id && user.plan_status === 'active') return 'upgrade';
+  return 'ok';
+}
+
+/**
+ * What to ask Dodo for when a Pro subscriber upgrades to Practice. During the launch offer the
+ * first year carries the upgrade code (50% off, one billing cycle); afterwards it is the
+ * standard price. Undefined when something needed is missing, so the route answers 503 rather
+ * than charging the full price under an advertised discount.
+ */
+export function upgradeFor(env: Env, now: number = Date.now()): { productId: string; discountCodes?: string[] } | undefined {
+  const productId = env.DODO_PRODUCT_PRACTICE_YEARLY;
+  if (!productId) return undefined;
+  if (!offerOpen(now)) return { productId };
+  const code = env.DODO_DISCOUNT_PRACTICE_UPGRADE;
+  return code ? { productId, discountCodes: [code] } : undefined;
+}
+
 /** When the first paid year of a launch-offer yearly plan ends and the standard price takes over. */
 const FIRST_TERM_ENDS_AT = Date.UTC(2028, 0, 1);
 const DAY_MS = 24 * 60 * 60 * 1000;

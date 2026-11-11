@@ -30,6 +30,9 @@ interface Env {
   DODO_PRODUCT_PRACTICE_YEARLY_LAUNCH?: string;
   /** The Dodo discount code (25% off, the ten-year product only) pre-applied during the launch offer. */
   DODO_DISCOUNT_TEN_YEAR?: string;
+  /** The Dodo discount code (50% off, one billing cycle, the standard Practice product only) applied
+   * when a Pro subscriber upgrades to Practice during the launch offer (`upgradeFor`). */
+  DODO_DISCOUNT_PRACTICE_UPGRADE?: string;
 
   /** Google sign-in. Without these the button is hidden and the route redirects back. */
   GOOGLE_CLIENT_ID?: string;

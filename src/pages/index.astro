@@ -72,7 +72,7 @@ const jsonLd = [
   </ul>
   {
     !paidPlansAvailable && (
-      <p class="early-notice">
+      <p class="early-notice for-new">
         <a href={getRelativeLocaleUrl(locale, 'pricing')}>
           {format(messages.pricing.homeNotice, {
             endDate: formatEarlyAccessEnd(locale),

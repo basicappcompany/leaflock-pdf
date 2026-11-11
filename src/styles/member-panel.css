@@ -1,0 +1,17 @@
+/* The plan summary and upgrade panel at the top of the pricing page for a signed-in paying member
+   (components/billing/MemberPanel.tsx). Pricing page only, so it stays out of the shared stylesheets. */
+.member-panel {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.member-panel h2 {
+  margin: 0 0 0.25rem;
+}
+
+.member-panel p {
+  margin: 0.25rem 0;
+}
