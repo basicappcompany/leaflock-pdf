@@ -91,7 +91,6 @@ export default {
     },
     "home": {
       "viewAll": "Ver todas as ferramentas de {category}",
-      "earlyAccessNotice": "As ferramentas marcadas como Pro ou Practice são gratuitas para todos até {endDate}. Compre um plano antes e economize até {percent}%.",
       "whatIsHeading": "O que é o LeafLock PDF?",
       "whatIsBody": "O LeafLock PDF é um conjunto gratuito de {count} ferramentas de PDF, incluindo juntar, dividir, comprimir, OCR, assinar, tarjar e converter de e para Word, Excel e imagens. Cada ferramenta roda dentro do seu navegador, então seus arquivos nunca são enviados.",
       "whatIsProof": "Você não precisa acreditar só na nossa palavra. Cada página avisa ao seu navegador que ele só pode se conectar de volta a leaflockpdf.com, e o navegador faz cumprir isso. Depois que a página carrega, você pode desligar a rede e as ferramentas continuam funcionando.",
@@ -218,7 +217,6 @@ export default {
     },
     "toolPage": {
       "howItWorks": "Como funciona",
-      "freeNow": "Grátis agora",
       "privacyHeading": "Privacidade desde a concepção",
       "privacyBody": "Esta ferramenta roda inteiramente no seu navegador. Seus arquivos nunca são enviados a um servidor, e a página é tecnicamente impedida de enviá-los para qualquer lugar.",
       "related": "Ferramentas relacionadas",
@@ -2864,6 +2862,8 @@ export default {
     "metaDescription": "O LeafLock PDF é gratuito, sem limite de tamanho de arquivo. O Pro remove o limite diário por US$4 por mês ou US$24 por ano, e o Practice adiciona as seis ferramentas profissionais por US$249 por ano. Sem testes que viram cobrança.",
     "intro": "Toda ferramenta básica é gratuita, sem conta. O Pro é para quem trabalha com PDFs todos os dias.",
     "earlyAccess": "Pro e Practice estão em acesso antecipado até {endDate}: todas as ferramentas, inclusive as seis profissionais, são gratuitas para todos até lá. Os planos pagos começam em {startDate}.",
+    "homeNotice": "As ferramentas marcadas como Pro ou Practice são gratuitas para todos até {endDate}. Compre um plano antes e economize até {percent}%.",
+    "freeNow": "Grátis agora",
     "offer": {
       "heading": "Oferta de lançamento: até {percent}% de desconto até {endDate}",
       "body": "Compre um plano anual antes de {endDate} e pague {yearlyPercent}% menos no primeiro ano, ou {tenYearPercent}% menos no plano de dez anos. A cobrança é feita no checkout e seu plano começa em {startDate}. Os planos anuais renovam pelo preço padrão após o primeiro ano.",

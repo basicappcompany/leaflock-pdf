@@ -91,7 +91,6 @@ export default {
     },
     "home": {
       "viewAll": "Alle {category}-Werkzeuge ansehen",
-      "earlyAccessNotice": "Als Pro oder Practice gekennzeichnete Werkzeuge sind bis zum {endDate} für alle kostenlos. Kaufen Sie vorher einen Plan und sparen Sie bis zu {percent}%.",
       "whatIsHeading": "Was ist LeafLock PDF?",
       "whatIsBody": "LeafLock PDF ist eine kostenlose Sammlung von {count} PDF-Werkzeugen, darunter Zusammenführen, Teilen, Komprimieren, OCR, Signieren, Schwärzen sowie die Umwandlung von und nach Word, Excel und Bildern. Jedes Werkzeug läuft direkt in Ihrem Webbrowser, Ihre Dateien werden also nie hochgeladen.",
       "whatIsProof": "Sie müssen uns das nicht einfach glauben. Jede Seite teilt Ihrem Browser mit, dass sie nur Verbindungen zurück zu leaflockpdf.com aufbauen darf, und der Browser setzt das durch. Sobald eine Seite geladen ist, können Sie Ihr Netzwerk ausschalten und die Werkzeuge funktionieren weiter.",
@@ -218,7 +217,6 @@ export default {
     },
     "toolPage": {
       "howItWorks": "So funktioniert es",
-      "freeNow": "Jetzt kostenlos",
       "privacyHeading": "Datenschutz von Grund auf",
       "privacyBody": "Dieses Werkzeug läuft vollständig in Ihrem Browser. Ihre Dateien werden nie auf einen Server hochgeladen, und die Seite ist technisch daran gehindert, sie irgendwohin zu senden.",
       "related": "Verwandte Werkzeuge",
@@ -2864,6 +2862,8 @@ export default {
     "metaDescription": "LeafLock PDF ist kostenlos nutzbar, ohne Dateigrößenbeschränkung. Pro hebt das Tageslimit auf für $4 im Monat oder $24 im Jahr, und Practice ergänzt die sechs professionellen Tools für $249 im Jahr. Keine Testphasen, die in Abbuchungen münden.",
     "intro": "Jedes Kern-Tool ist kostenlos, ohne Konto. Pro ist für Menschen, die täglich mit PDFs arbeiten.",
     "earlyAccess": "Pro und Practice befinden sich bis zum {endDate} im frühen Zugang: Jedes Werkzeug, auch die sechs professionellen, ist bis dahin für alle kostenlos. Bezahlte Pläne starten am {startDate}.",
+    "homeNotice": "Als Pro oder Practice gekennzeichnete Werkzeuge sind bis zum {endDate} für alle kostenlos. Kaufen Sie vorher einen Plan und sparen Sie bis zu {percent}%.",
+    "freeNow": "Jetzt kostenlos",
     "offer": {
       "heading": "Startangebot: bis zu {percent}% Rabatt bis zum {endDate}",
       "body": "Kaufen Sie vor dem {endDate} einen Jahresplan und zahlen Sie {yearlyPercent}% weniger für Ihr erstes Jahr, oder {tenYearPercent}% weniger für den Zehnjahresplan. Die Abbuchung erfolgt an der Kasse, Ihr Plan startet am {startDate}. Jahrespläne verlängern sich nach dem ersten Jahr zum Standardpreis.",

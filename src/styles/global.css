@@ -1573,20 +1573,6 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
   vertical-align: middle;
 }
 
-/* Early-access line above the home page's tool grid: stronger than .notice, which is muted text. */
-.early-notice {
-  margin: 0 0 1rem;
-  padding: 0.6rem 1rem;
-  border-radius: var(--radius);
-  background: var(--color-pro-soft);
-  color: var(--color-pro);
-  font-weight: 600;
-}
-
-.early-notice a {
-  color: inherit;
-}
-
 /* ---------- Home ---------- */
 
 /* The diagram sits beside the headline, not under it: the promise the whole

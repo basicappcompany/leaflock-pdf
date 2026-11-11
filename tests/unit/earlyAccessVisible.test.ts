@@ -27,7 +27,7 @@ describe('early access is visible wherever a tier badge is drawn', () => {
 
   it('the home page states early access above the tool grid', () => {
     const source = read('src/pages/index.astro');
-    expect(source).toContain('common.home.earlyAccessNotice');
-    expect(source.indexOf('earlyAccessNotice')).toBeLessThan(source.indexOf('categories.map'));
+    expect(source).toContain('pricing.homeNotice');
+    expect(source.indexOf('homeNotice')).toBeLessThan(source.indexOf('categories.map'));
   });
 });

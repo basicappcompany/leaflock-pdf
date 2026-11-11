@@ -114,9 +114,6 @@ export const common = {
   home: {
     /** `{category}` is one of the common.categories labels, e.g. "Organize". */
     viewAll: 'See all {category} tools',
-    /** Shown above the tool grid while paid plans are not on sale (src/lib/pricing.ts). */
-    earlyAccessNotice:
-      'Tools marked Pro or Practice are free for everyone until {endDate}. Buy a plan before then and save up to {percent}%.',
     /** A plain definition near the top of the front page. `{count}` is the number of tools, computed. */
     whatIsHeading: 'What is LeafLock PDF?',
     whatIsBody:
@@ -272,8 +269,6 @@ export const common = {
   },
   toolPage: {
     howItWorks: 'How it works',
-    /** Added to a Pro or Practice badge while paid plans are not on sale, so the badge never reads as a paywall. */
-    freeNow: 'Free now',
     privacyHeading: 'Private by design',
     privacyBody:
       'This tool runs entirely in your browser. Your files are never uploaded to a server, and the page is technically blocked from sending them anywhere.',

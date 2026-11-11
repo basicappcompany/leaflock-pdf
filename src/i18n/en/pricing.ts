@@ -9,6 +9,17 @@ export const pricing = {
   earlyAccess:
     'Pro and Practice are in early access until {endDate}: every tool, including the six professional ones, is free for everyone until then. Paid plans start on {startDate}.',
   /**
+   * These two live here, not in common.ts: every tool page serialises the whole `common` catalogue
+   * into its React island's props, so a string added there costs bytes on all ~80 tool pages and
+   * the HTML budgets in tests/e2e/performance.spec.ts count them. `pricing` is not passed down.
+   *
+   * `homeNotice`: above the home page's tool grid while paid plans are not on sale.
+   * `freeNow`: added to a Pro or Practice badge in the same period, so a badge never reads as a paywall.
+   */
+  homeNotice:
+    'Tools marked Pro or Practice are free for everyone until {endDate}. Buy a plan before then and save up to {percent}%.',
+  freeNow: 'Free now',
+  /**
    * The launch offer, shown while it can be taken (src/lib/pricing.ts `offerOpen`). `{percent}` is the
    * largest discount, `{yearlyPercent}` and `{tenYearPercent}` the two actual ones, the dates as above.
    */
