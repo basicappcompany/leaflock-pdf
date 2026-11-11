@@ -2,7 +2,9 @@
 import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
 import Article from '../layouts/Article.astro';
 import '../styles/early-notice.css';
+import '../styles/member-panel.css';
 import CheckoutButton from '../components/billing/CheckoutButton';
+import MemberPanel from '../components/billing/MemberPanel';
 import { format, getMessages } from '../i18n';
 import {
   formatEarlyAccessEnd,
@@ -12,6 +14,7 @@ import {
   launchPrice,
   offerOpen,
   paidPlansAvailable,
+  plansStartAt,
   prices,
   yearlySavingPercent,
 } from '../lib/pricing';
@@ -111,10 +114,21 @@ const jsonLd = buyable
 
 <Article title={t.title} description={t.metaDescription} path="pricing" extraJsonLd={jsonLd}>
   <p class="lead">{t.intro}</p>
-  {!paidPlansAvailable && <p class="notice">{format(t.earlyAccess, dates)}</p>}
+  <MemberPanel
+    client:only="react"
+    t={t.member}
+    names={{ pro: t.plans.pro.name, lifetime: t.plans.lifetime.name, practice: t.plans.practice.name, business: t.plans.business.name }}
+    plansStartAt={plansStartAt}
+    startDate={dates.startDate}
+    endDate={dates.endDate}
+    offerPrice={price(launchPrice('practiceYearly'))}
+    standardPrice={price(prices.practiceYearly)}
+    businessHref={getRelativeLocaleUrl(locale, 'business')}
+  />
+  {!paidPlansAvailable && <p class="notice for-new">{format(t.earlyAccess, dates)}</p>}
   {
     offer && (
-      <p class="early-notice">
+      <p class="early-notice for-new">
         <strong>{format(t.offer.heading, { ...dates, percent: Math.max(...Object.values(launchPercentOff)) })}</strong>{' '}
         {format(t.offer.body, {
           ...dates,
@@ -128,7 +142,7 @@ const jsonLd = buyable
     <ul class="pricing-grid">
       {
         plans.map(({ id, plan, price, period, note, href, available, planKeys }) => (
-          <li class={`pricing-card pricing-card--${id}`}>
+          <li class={`pricing-card pricing-card--${id}${id === 'business' ? '' : ' for-new'}`}>
             <h2>{plan.name}</h2>
             <p class="pricing-card__price">
               <strong>{price}</strong> {period && <span class="muted">{period}</span>}

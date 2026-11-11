@@ -31,6 +31,10 @@ export function useSession(): SessionState {
       .then((data) => {
         // Cached so a job can skip the usage round trip on paid plans (src/lib/usage.ts).
         setCachedPlan(data ? data.plan : 'anonymous');
+        // Lets a stylesheet tell a paying member from a new visitor: the launch offer is for new buyers
+        // (`html[data-plan='pro'] .for-new { display: none }`, in styles/early-notice.css).
+        if (data) document.documentElement.dataset.plan = data.plan;
+        else delete document.documentElement.dataset.plan;
         if (!cancelled) setState(data ? { state: 'in', email: data.email, plan: data.plan } : { state: 'out' });
       })
       .catch(() => {

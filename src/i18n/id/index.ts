@@ -2875,6 +2875,21 @@ export default {
     "oneTime": "sekali bayar",
     "perCompanyYear": "/ perusahaan / tahun",
     "yearlySaving": "Hemat {percent}% dibandingkan bulanan",
+    "member": {
+      "planLabel": "Paket Anda: {plan}",
+      "startsOn": "Paket Anda dimulai pada {startDate}. Sampai saat itu semua alat gratis.",
+      "active": "Paket Anda aktif.",
+      "upgradeHeading": "Upgrade ke Practice",
+      "upgradeBody": "Menambahkan redaksi, perbandingan, pemrosesan massal, ekstraksi tabel, penomoran Bates, dan PDF/A.",
+      "upgradePriceOffer": "Harga upgrade {price} untuk tahun pertama, tersedia hingga {endDate}. Harga standar adalah {standard}.",
+      "upgradePrice": "Practice seharga {price} per tahun.",
+      "upgradeDifference": "Anda hanya membayar selisih dari yang sudah Anda bayar.",
+      "upgrade": "Upgrade ke Practice",
+      "upgrading": "Sedang upgrade…",
+      "upgraded": "Selesai. Paket Anda akan diperbarui sebentar lagi.",
+      "failed": "Kami tidak dapat meng-upgrade paket Anda. Silakan coba lagi.",
+      "top": "Anda berada di paket tertinggi untuk perorangan. Untuk menjalankan LeafLock di jaringan Anda sendiri, lihat edisi Business."
+    },
     "plans": {
       "free": {
         "name": "Gratis",
@@ -2935,6 +2950,8 @@ export default {
       }
     },
     "checkout": {
+      "alreadyOwned": "Anda sudah memiliki paket ini atau yang lebih tinggi.",
+      "useUpgrade": "Anda sudah memiliki Pro. Gunakan opsi upgrade di bagian atas halaman ini.",
       "buy": "Ambil paket ini",
       "buyYearly": "Ambil paket tahunan",
       "buyMonthly": "Ambil paket bulanan",

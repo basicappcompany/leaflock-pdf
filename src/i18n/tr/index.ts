@@ -2875,6 +2875,21 @@ export default {
     "oneTime": "tek seferlik",
     "perCompanyYear": "/ şirket / yıl",
     "yearlySaving": "Aylık ödemeye göre %{percent} tasarruf edin",
+    "member": {
+      "planLabel": "Planınız: {plan}",
+      "startsOn": "Planınız {startDate} tarihinde başlar. O zamana kadar tüm araçlar ücretsizdir.",
+      "active": "Planınız etkin.",
+      "upgradeHeading": "Practice’e yükselt",
+      "upgradeBody": "Karartma, karşılaştırma, toplu işleme, tablo ayıklama, Bates numaralandırma ve PDF/A ekler.",
+      "upgradePriceOffer": "İlk yıl için yükseltme fiyatı {price}, {endDate} tarihine kadar geçerlidir. Standart fiyat {standard}.",
+      "upgradePrice": "Practice yılda {price}.",
+      "upgradeDifference": "Yalnızca daha önce ödediğiniz tutarla aradaki farkı ödersiniz.",
+      "upgrade": "Practice’e yükselt",
+      "upgrading": "Yükseltiliyor…",
+      "upgraded": "Tamam. Planınız birazdan güncellenecek.",
+      "failed": "Planınızı yükseltemedik. Lütfen tekrar deneyin.",
+      "top": "Bireyler için en üst plandasınız. LeafLock’u kendi ağınızda çalıştırmak için Business sürümüne bakın."
+    },
     "plans": {
       "free": {
         "name": "Ücretsiz",
@@ -2935,6 +2950,8 @@ export default {
       }
     },
     "checkout": {
+      "alreadyOwned": "Bu plana ya da daha yükseğine zaten sahipsiniz.",
+      "useUpgrade": "Zaten Pro’nuz var. Bunun yerine bu sayfanın üstündeki yükseltme seçeneğini kullanın.",
       "buy": "Bu planı al",
       "buyYearly": "Yıllık planı al",
       "buyMonthly": "Aylık planı al",

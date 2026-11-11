@@ -21,7 +21,7 @@ export default function CheckoutButton({
   t: Messages['pricing']['checkout'];
 }) {
   const session = useSession();
-  const [status, setStatus] = useState<'idle' | 'starting' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'starting' | 'error' | 'owned' | 'upgrade'>('idle');
 
   // Buying needs an account, so the payment has something to attach to.
   if (session.state === 'out') {
@@ -40,9 +40,14 @@ export default function CheckoutButton({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan }),
       });
-      const body = (await response.json().catch(() => null)) as { url?: string } | null;
+      const body = (await response.json().catch(() => null)) as { url?: string; error?: string } | null;
       if (response.ok && body?.url) {
         window.location.href = body.url;
+        return;
+      }
+      // The account already has this plan (or a higher one): a second purchase would be a duplicate charge.
+      if (response.status === 409) {
+        setStatus(body?.error === 'use_upgrade' ? 'upgrade' : 'owned');
         return;
       }
       setStatus('error');
@@ -64,6 +69,11 @@ export default function CheckoutButton({
       {status === 'error' && (
         <p className="error" role="alert">
           {t.failed}
+        </p>
+      )}
+      {(status === 'owned' || status === 'upgrade') && (
+        <p className="notice" role="status">
+          {status === 'upgrade' ? t.useUpgrade : t.alreadyOwned}
         </p>
       )}
     </>

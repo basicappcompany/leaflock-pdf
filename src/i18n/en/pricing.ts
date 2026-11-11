@@ -39,6 +39,26 @@ export const pricing = {
   oneTime: 'one time',
   perCompanyYear: '/ company / year',
   yearlySaving: 'Save {percent}% compared with monthly',
+  /**
+   * What a signed-in member on a paid plan sees at the top of the pricing page, in place of the launch
+   * offer (which is for new buyers). Plain "upgrade" and "standard price" wording, not "launch offer".
+   * `{plan}` is the plan's name, `{price}` and `{standard}` formatted prices, the dates as above.
+   */
+  member: {
+    planLabel: 'Your plan: {plan}',
+    startsOn: 'Your plan starts on {startDate}. Until then every tool is free.',
+    active: 'Your plan is active.',
+    upgradeHeading: 'Upgrade to Practice',
+    upgradeBody: 'Adds redaction, compare, batch, table extraction, Bates numbering and PDF/A.',
+    upgradePriceOffer: 'Upgrade price {price} for the first year, available until {endDate}. The standard price is {standard}.',
+    upgradePrice: 'Practice is {price} a year.',
+    upgradeDifference: 'You only pay the difference for what you have already paid.',
+    upgrade: 'Upgrade to Practice',
+    upgrading: 'Upgrading…',
+    upgraded: 'Done. Your plan will update in a moment.',
+    failed: 'We could not upgrade your plan. Please try again.',
+    top: 'You are on the top plan for individuals. To run LeafLock on your own network, see the Business edition.',
+  },
   plans: {
     free: {
       name: 'Free',
@@ -110,6 +130,8 @@ export const pricing = {
     },
   },
   checkout: {
+    alreadyOwned: 'You already have this plan or a higher one.',
+    useUpgrade: 'You already have Pro. Use the upgrade option at the top of this page instead.',
     buy: 'Get this plan',
     buyYearly: 'Get the yearly plan',
     buyMonthly: 'Get the monthly plan',

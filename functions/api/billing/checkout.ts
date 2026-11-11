@@ -6,7 +6,8 @@
  * script, so the strict CSP is untouched. Dodo is the merchant of record (terms.md §5).
  */
 
-import { apiBase, checkoutFor, isPlanKey } from '../../../src/lib/server/billing';
+import { apiBase, checkoutFor, isPlanKey, purchaseDecision } from '../../../src/lib/server/billing';
+import { getUserById } from '../../../src/lib/server/db';
 import { readSessionFromRequest } from '../../../src/lib/server/session';
 
 const MAX_BODY = 256;
@@ -27,6 +28,16 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
   }
   const plan = (parsed as Record<string, unknown> | null)?.['plan'];
   if (!isPlanKey(plan)) return new Response(null, { status: 400 });
+
+  // A second purchase on top of a plan the account already has would be a duplicate charge.
+  const user = await getUserById(env.DB, session.userId);
+  const decision = user ? purchaseDecision(user, plan) : 'ok';
+  if (decision !== 'ok') {
+    return new Response(JSON.stringify({ error: decision === 'upgrade' ? 'use_upgrade' : 'already_owned' }), {
+      status: 409,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
   const sale = checkoutFor(env, plan);
   if (!sale || !env.DODO_API_KEY) {

@@ -13,3 +13,11 @@
 .early-notice a {
   color: inherit;
 }
+
+/* Marketing aimed at new buyers (the launch offer, the plan cards a member already has) is hidden for a
+   signed-in member on a paid plan, who sees the upgrade panel instead. `data-plan` is set on <html> by
+   useSession(); a free account (data-plan="free") keeps everything. One short selector, because this file
+   is inlined into the home page, whose HTML budget has little room. */
+html[data-plan]:not([data-plan='free']) .for-new {
+  display: none;
+}
