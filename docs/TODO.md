@@ -8,7 +8,8 @@ A dated snapshot; the sections below are the detail and the source of truth.
 - Valid `ANTHROPIC_API_KEY` (§9); a person to review translated trust claims (§9).
 - Check Gmail for the "Feedback: TEST" message sent to `feedback@`, and send one test email each to `hello@`
   and `feedback@` from another account (§0, §4); decide on replying from `hello@`. The secrets are set.
-- Auto-renew and registrar 2FA (§0); TLS 1.2 and Bot Fight Mode decisions (§8).
+- Auto-renew and registrar 2FA (§0); TLS 1.2 and Bot Fight Mode decisions (§8); whether an edge rule blocks
+  GitHub's runners from `/sitemap.xml` (§8).
 - Google OAuth client, Dodo products and webhook, Paddle (§1, §3); legal review (`legal-checklist.md`).
 - Bing Webmaster Tools; look at Search Console in a few days; post the launch drafts when signed in.
 
@@ -425,6 +426,9 @@ Dashboard settings only; the code findings from the same review are in `docs/shi
       `www.leaflockpdf.com` as accepting older TLS.
 - [ ] **Decide on Bot Fight Mode** (Security → Bots) — flagged Moderate. Free, but it can block
       legitimate scripted visitors; leaving it off is a defensible choice for a static site.
+- [ ] **Check what returned 403 to GitHub's runner on `/sitemap.xml`** (Security → Events, 10 Nov 2026).
+      The IndexNow workflow got a 403 with no User-Agent; a named one passes, so a bot or user-agent rule
+      is involved. Harmless for search engines, but worth knowing which rule it was. Owner's dashboard.
 - [x] **`security.txt`** — added 7 November 2026 at `public/.well-known/security.txt`
       (contact `basicappcompany@gmail.com`); clears the Low finding on the next scan. Its
       `Expires` date is tracked in §9. AI Labyrinth was skipped on purpose.
