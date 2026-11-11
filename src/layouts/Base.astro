@@ -12,6 +12,7 @@ import ToolsSidebar from '../components/ToolsSidebar.astro';
 import LanguageSuggestion from '../components/LanguageSuggestion.astro';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import { directionOf, getMessages, isTranslated, locales } from '../i18n';
+import { plansStartAt } from '../lib/pricing';
 import { graph, organization, siteName, website } from '../lib/seo';
 
 interface Props {
@@ -40,6 +41,13 @@ interface Props {
    * and category sections on a first visit. No effect without `toolsSidebar`, and no
    * effect once a visitor has made their own explicit choice (stored in localStorage). */
   toolsSidebarDefaultHidden?: boolean;
+  /**
+   * Run the member-view script before first paint (home and pricing). It reads the plan from the
+   * signed-in hint cookie and the start date, and sets data-plan / data-started on <html>, so a member
+   * never sees the new-visitor page for a moment. Off elsewhere: a tool page has nothing to switch, and
+   * the script is bytes in every page's HTML, which the performance budgets count.
+   */
+  memberHint?: boolean;
 }
 
 const {
@@ -52,6 +60,7 @@ const {
   noindex = false,
   toolsSidebar = false,
   toolsSidebarDefaultHidden = false,
+  memberHint = false,
 } = Astro.props;
 const locale = Astro.currentLocale ?? 'en';
 const t = getMessages(locale).common;
@@ -76,6 +85,10 @@ function cspInlineScript(source: string): string {
   Astro.csp?.insertScriptHash(`sha256-${createHash('sha256').update(source).digest('base64')}`);
   return source;
 }
+
+const memberHintScript = memberHint
+  ? cspInlineScript(`(function(){try{var d=document.documentElement,m=document.cookie.match(/(?:^|; )leaflock_signed_in=([a-z]+)/);if(m&&m[1]!=='free')d.dataset.plan=m[1];if(Date.now()>=${plansStartAt})d.dataset.started='1'}catch(e){}})()`)
+  : '';
 
 const preTheme = cspInlineScript(`
       // Apply a saved light/dark choice before first paint, so the page doesn't flash.
@@ -164,6 +177,7 @@ const chromeHeightScript = cspInlineScript(`
 
     <script type="application/ld+json" set:html={structuredData} />
     <script is:inline set:html={preTheme} />
+    {memberHint && <script is:inline set:html={memberHintScript} />}
     <script>
       // The favicon and the mobile theme-color meta both ship a static default (the
       // link/meta tags above) so there's something correct before this runs — then this

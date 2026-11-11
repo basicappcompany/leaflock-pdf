@@ -111,9 +111,22 @@ export function clearSessionCookieHeader(): string {
   return `${SESSION_COOKIE_NAME}=; Secure; HttpOnly; SameSite=Lax; Path=/; Max-Age=0`;
 }
 
-export function signedInHintCookieHeader(): string {
+/** The values the hint cookie may carry: the account's plan. Anything else is written as 'free'. */
+const HINT_PLANS: ReadonlySet<string> = new Set(['free', 'pro', 'lifetime', 'practice', 'business']);
+
+/**
+ * The non-HttpOnly cookie that says "someone is signed in here", and now which plan they are on.
+ *
+ * The plan is there so a page can pick the member's view before first paint, from a cookie, instead
+ * of showing the new-visitor view until a fetch to /api/auth/me comes back (a 1-2 second flash on the
+ * pricing page). It is a display hint and nothing more: the server never reads it, a visitor who edits
+ * it only changes what their own page looks like, and /api/auth/me rewrites it on every call so it
+ * follows a plan change. Readers that only ask "is it present?" are unaffected by the value.
+ */
+export function signedInHintCookieHeader(plan: string = 'free'): string {
   const maxAgeSeconds = Math.floor(SESSION_TTL_MS / 1000);
-  return `${SIGNED_IN_HINT_COOKIE_NAME}=1; Secure; SameSite=Lax; Path=/; Max-Age=${maxAgeSeconds}`;
+  const value = HINT_PLANS.has(plan) ? plan : 'free';
+  return `${SIGNED_IN_HINT_COOKIE_NAME}=${value}; Secure; SameSite=Lax; Path=/; Max-Age=${maxAgeSeconds}`;
 }
 
 export function clearSignedInHintCookieHeader(): string {

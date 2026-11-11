@@ -51,6 +51,6 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
 
   const response = new Response(null, { status: 204 });
   response.headers.append('Set-Cookie', sessionSetCookieHeader(cookieValue));
-  response.headers.append('Set-Cookie', signedInHintCookieHeader());
+  response.headers.append('Set-Cookie', signedInHintCookieHeader(user.plan));
   return response;
 }

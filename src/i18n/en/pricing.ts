@@ -54,8 +54,17 @@ export const pricing = {
     upgradePrice: 'Practice is {price} a year.',
     upgradeDifference: 'You only pay the difference for what you have already paid.',
     upgrade: 'Upgrade to Practice',
-    upgrading: 'Upgrading…',
-    upgraded: 'Done. Your plan will update in a moment.',
+    checking: 'Checking your upgrade…',
+    /** {amount} is the exact charge from the payment provider, in the customer's currency, tax included. */
+    confirmCharge: 'You will be charged {amount} now, tax included, on the card you paid with.',
+    /** {date} is the day the plan next renews. */
+    confirmRenews: 'Your plan then renews at the standard price on {date}.',
+    confirm: 'Confirm and pay',
+    cancel: 'Cancel',
+    working: 'Starting your upgrade…',
+    pending:
+      'Your bank is confirming the payment, which can take up to two days. Your plan changes to Practice on its own; there is nothing more to do.',
+    unavailable: 'Upgrading is not available right now. Please try again later.',
     failed: 'We could not upgrade your plan. Please try again.',
     top: 'You are on the top plan for individuals. To run LeafLock on your own network, see the Business edition.',
   },

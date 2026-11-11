@@ -9,10 +9,18 @@
  * cookie itself — this is what it calls on mount instead (see src/components/ui/useSession.ts).
  */
 
-import { readSessionFromRequest } from '../../../src/lib/server/session';
+import {
+  clearSignedInHintCookieHeader,
+  readSessionFromRequest,
+  signedInHintCookieHeader,
+} from '../../../src/lib/server/session';
 
 export async function onRequestGet({ request, env }: { request: Request; env: Env }): Promise<Response> {
   const session = await readSessionFromRequest(request, env.DB);
   const body = session ? { email: session.email, plan: session.plan } : null;
-  return new Response(JSON.stringify(body), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  const response = new Response(JSON.stringify(body), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  // Keeps the page-level hint in step with the plan (see signedInHintCookieHeader): a plan change shows
+  // from the next page on, with no flash. A stale hint for a signed-out browser is cleared here too.
+  response.headers.append('Set-Cookie', session ? signedInHintCookieHeader(session.plan) : clearSignedInHintCookieHeader());
+  return response;
 }

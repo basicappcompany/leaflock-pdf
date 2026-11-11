@@ -128,7 +128,11 @@ interface Budget {
 // HTML 105_000 -> 106_000 on 9 Nov 2026: the sidebar's phone rules (the lone hide/show handle as a
 // bottom-corner button) are inlined into every page's head, and the front page was already within
 // a few hundred bytes of the old limit. About 0.5 KB; the front page went from 104.9 to 105.4 KB.
-const CONTENT_BUDGET: Budget = { html: 106_000, jsCss: 320_000, lcpMs: 1500, cls: 0.1 };
+// HTML 106_000 -> 106_500 on 12 Nov 2026: the home and pricing pages carry a small inline script
+// (Base.astro `memberHint`, about 0.3 KB) that reads the plan from the signed-in cookie before first
+// paint, so a paying member sees their own view at once instead of the new-visitor page for a second or
+// two. Only these two pages carry it; tool pages (their own budget below) do not.
+const CONTENT_BUDGET: Budget = { html: 106_500, jsCss: 320_000, lcpMs: 1500, cls: 0.1 };
 // Tool pages' HTML 100_000 -> 102_000 on 7 Nov 2026: the language switcher (src/components/
 // LanguageSwitcher.astro) lists every translated language in every page so it works without
 // JS. Ten languages cost about 1.2 KB per page (~0.12 KB per language added); /ocr-pdf went

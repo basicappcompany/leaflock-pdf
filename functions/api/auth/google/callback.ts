@@ -62,7 +62,7 @@ export async function onRequestGet({ request, env }: { request: Request; env: En
 
   const response = new Response(null, { status: 302, headers: { Location: `${origin}/account` } });
   response.headers.append('Set-Cookie', sessionSetCookieHeader(cookieValue));
-  response.headers.append('Set-Cookie', signedInHintCookieHeader());
+  response.headers.append('Set-Cookie', signedInHintCookieHeader(user.plan));
   response.headers.append('Set-Cookie', `${GOOGLE_STATE_COOKIE}=; Secure; HttpOnly; SameSite=Lax; Path=/; Max-Age=0`);
   return response;
 }

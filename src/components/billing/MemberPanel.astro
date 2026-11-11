@@ -1,0 +1,72 @@
+---
+import UpgradeAction from './UpgradeAction';
+import { format } from '../../i18n';
+import type { Messages } from '../../i18n';
+
+/**
+ * What a signed-in member on a paid plan sees at the top of the pricing page, in place of the launch
+ * offer (which is for new buyers).
+ *
+ * Rendered into the page's HTML for every plan, then shown by CSS (styles/member-panel.css) for the one
+ * that matches `data-plan` on <html>. That attribute is set before first paint from the hint cookie
+ * (Base.astro `memberHint`), so a member's text is there on first paint with nothing fetched and nothing
+ * shifting. Only the upgrade button below it is dynamic (UpgradeAction), because the price it asks for
+ * and whether a charge is already in flight can only come from the payment provider.
+ *
+ * "Starts on" and "is active" are both rendered and chosen by `data-started` (also set before paint, from
+ * the real clock), so the wording is right on the day plans start even on a page built earlier.
+ */
+interface Props {
+  t: Messages['pricing']['member'];
+  names: { pro: string; lifetime: string; practice: string; business: string };
+  startDate: string;
+  endDate: string;
+  offerPrice: string;
+  standardPrice: string;
+  businessHref: string;
+  locale: string;
+}
+const { t, names, startDate, endDate, offerPrice, standardPrice, businessHref, locale } = Astro.props;
+
+const upgradeCopy = {
+  checking: t.checking,
+  upgrade: t.upgrade,
+  confirmCharge: t.confirmCharge,
+  confirmRenews: t.confirmRenews,
+  confirm: t.confirm,
+  cancel: t.cancel,
+  working: t.working,
+  pending: t.pending,
+  unavailable: t.unavailable,
+  failed: t.failed,
+};
+const upgradable = [
+  { plan: 'pro' as const, kind: 'upgrade' as const, difference: true },
+  { plan: 'lifetime' as const, kind: 'checkout' as const, difference: false },
+];
+---
+
+{
+  upgradable.map(({ plan, kind, difference }) => (
+    <section class={`member-panel member--${plan}`} aria-labelledby={`member-${plan}`}>
+      <h2 id={`member-${plan}`}>{format(t.planLabel, { plan: names[plan] })}</h2>
+      <p class="when-before">{format(t.startsOn, { startDate })}</p>
+      <p class="when-after">{t.active}</p>
+      <h3>{t.upgradeHeading}</h3>
+      <p>{t.upgradeBody}</p>
+      <p class="when-before">{format(t.upgradePriceOffer, { price: offerPrice, endDate, standard: standardPrice })}</p>
+      <p class="when-after">{format(t.upgradePrice, { price: standardPrice })}</p>
+      {difference && <p class="muted">{t.upgradeDifference}</p>}
+      <UpgradeAction client:only="react" kind={kind} t={upgradeCopy} locale={locale} />
+    </section>
+  ))
+}
+<section class="member-panel member--practice" aria-labelledby="member-practice">
+  <h2 id="member-practice">{format(t.planLabel, { plan: names.practice })}</h2>
+  <p class="when-before">{format(t.startsOn, { startDate })}</p>
+  <p class="when-after">{t.active}</p>
+  <p>{t.top} <a href={businessHref}>→</a></p>
+</section>
+<section class="member-panel member--business" aria-labelledby="member-business">
+  <h2 id="member-business">{format(t.planLabel, { plan: names.business })}</h2>
+</section>

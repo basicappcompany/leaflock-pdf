@@ -1,6 +1,7 @@
 /* The plan summary and upgrade panel at the top of the pricing page for a signed-in paying member
    (components/billing/MemberPanel.tsx). Pricing page only, so it stays out of the shared stylesheets. */
 .member-panel {
+  display: none;
   margin: 0 0 1.5rem;
   padding: 1rem 1.25rem;
   border-radius: var(--radius);
@@ -14,4 +15,30 @@
 
 .member-panel p {
   margin: 0.25rem 0;
+}
+
+/* Which section shows: the one for the plan on <html>, set before first paint (Base.astro memberHint). */
+html[data-plan='pro'] .member--pro,
+html[data-plan='lifetime'] .member--lifetime,
+html[data-plan='practice'] .member--practice,
+html[data-plan='business'] .member--business {
+  display: block;
+}
+
+/* Before the start date the "starts on" wording shows; from that day, "is active". */
+html[data-started] .when-before,
+html:not([data-started]) .when-after {
+  display: none;
+}
+
+/* Reserved so the page does not move when the upgrade button's state arrives. */
+.upgrade-slot {
+  min-height: 3.5rem;
+  margin-top: 0.75rem;
+}
+
+.member-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
