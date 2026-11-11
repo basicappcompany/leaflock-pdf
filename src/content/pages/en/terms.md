@@ -51,15 +51,19 @@ Some parts of the Service use open-source software under its own license terms, 
 
 ## 5. Paid plans
 
-### Early access
+### Early access and the launch offer
 
-Tools marked Pro or Practice are currently in early access and free to use. We may end early access and start charging for them. We'll announce this on the site before it happens. Nobody will be charged for early access, and you won't be enrolled in a paid plan without choosing one.
+Tools marked Pro or Practice are in early access until 31 December 2026 and are free to use until then. Paid plans start on 1 January 2027, and from that day those tools need a plan. The dates are also shown on the home page and the pricing page.
+
+Until 31 December 2026 you can buy a plan at a launch discount: 50% off the first year of a yearly plan, or 25% off the ten-year Pro plan. You are charged when you buy, and your paid term starts on 1 January 2027, not on the day you buy. A yearly plan bought in the launch offer renews on 1 January 2028 at the standard price unless you cancel first. The discount applies to the first term only.
+
+Nobody is charged for using the tools during early access, and you won't be enrolled in a paid plan without choosing one.
 
 ### Billing
 
 When paid plans launch, they will be sold by Dodo Payments (for customers in India) or Paddle (for customers everywhere else), each acting as the merchant of record for the purchases it handles. The payment provider is the seller of the plan, handles payment, invoicing, sales tax and VAT, and its own terms of sale apply to your purchase. These Terms continue to apply to your use of the Service.
 
-Prices are shown clearly before you buy. Plans available at launch are expected to be monthly, yearly, and a limited founding ten-year Pro plan ($120 once) for early supporters. [TO CONFIRM: number of founding ten-year plans offered]
+Prices are shown clearly before you buy. Plans are monthly, yearly, and a limited ten-year Pro plan ($240 once at the standard price) for early supporters. [TO CONFIRM: number of ten-year plans offered]
 
 ### Renewal and cancellation
 

@@ -24,6 +24,12 @@ interface Env {
   /** The ten-year Pro term. Named LIFETIME because the stored plan value still is. */
   DODO_PRODUCT_LIFETIME?: string;
   DODO_PRODUCT_PRACTICE_YEARLY?: string;
+  /** The launch-offer versions of the two yearly products (src/lib/server/billing.ts `checkoutFor`):
+   * the same recurring price, with the discounted price as the trial amount. Needed until 31 Dec 2026. */
+  DODO_PRODUCT_PRO_YEARLY_LAUNCH?: string;
+  DODO_PRODUCT_PRACTICE_YEARLY_LAUNCH?: string;
+  /** The Dodo discount code (25% off, the ten-year product only) pre-applied during the launch offer. */
+  DODO_DISCOUNT_TEN_YEAR?: string;
 
   /** Google sign-in. Without these the button is hidden and the route redirects back. */
   GOOGLE_CLIENT_ID?: string;

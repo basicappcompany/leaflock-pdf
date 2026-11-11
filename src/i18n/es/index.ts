@@ -91,6 +91,7 @@ export default {
     },
     "home": {
       "viewAll": "Ver todas las herramientas de {category}",
+      "earlyAccessNotice": "Las herramientas marcadas como Pro o Practice son gratuitas para todos hasta el {endDate}. Compra un plan antes y ahorra hasta un {percent}%.",
       "whatIsHeading": "¿Qué es LeafLock PDF?",
       "whatIsBody": "LeafLock PDF es un conjunto gratuito de {count} herramientas PDF, entre ellas unir, dividir, comprimir, OCR, firmar, tachar y convertir desde y hacia Word, Excel e imágenes. Cada herramienta se ejecuta dentro de tu navegador web, así que tus archivos nunca se suben.",
       "whatIsProof": "No tienes que creernos sin más. Cada página le indica a tu navegador que solo puede conectarse de vuelta a leaflockpdf.com, y el navegador lo hace cumplir. Una vez cargada la página, puedes apagar la red y las herramientas siguen funcionando.",
@@ -217,6 +218,7 @@ export default {
     },
     "toolPage": {
       "howItWorks": "Cómo funciona",
+      "freeNow": "Gratis ahora",
       "privacyHeading": "Privado por diseño",
       "privacyBody": "Esta herramienta se ejecuta por completo en su navegador. Sus archivos nunca se suben a un servidor, y la página está técnicamente bloqueada para enviarlos a ningún lugar.",
       "related": "Herramientas relacionadas",
@@ -2861,7 +2863,12 @@ export default {
     "metaTitle": "Precios: herramientas PDF gratuitas, Pro, Practice y Business | LeafLock PDF",
     "metaDescription": "LeafLock PDF es gratis, sin límite de tamaño de archivo. Pro elimina el límite diario por $4 al mes o $24 al año, y Practice agrega las seis herramientas profesionales por $249 al año. Sin pruebas que se conviertan en cobros.",
     "intro": "Todas las herramientas básicas son gratis, sin cuenta. Pro es para quienes trabajan con PDF todos los días.",
-    "earlyAccess": "Pro y Practice están en acceso anticipado: todas las herramientas, incluidas las seis profesionales, son gratis para todos hasta que se abran los planes de pago.",
+    "earlyAccess": "Pro y Practice están en acceso anticipado hasta el {endDate}: todas las herramientas, incluidas las seis profesionales, son gratuitas para todos hasta entonces. Los planes de pago empiezan el {startDate}.",
+    "offer": {
+      "heading": "Oferta de lanzamiento: hasta un {percent}% de descuento hasta el {endDate}",
+      "body": "Compra un plan anual antes del {endDate} y paga un {yearlyPercent}% menos por tu primer año, o un {tenYearPercent}% menos por el plan de diez años. Se te cobra al pagar y tu plan empieza el {startDate}. Los planes anuales se renuevan al precio estándar después del primer año.",
+      "was": "Precio estándar {price}"
+    },
     "comingToPro": "Próximamente en Pro: flujos de trabajo guardados, puestos de equipo y conservar un archivo más allá de lo que cabe en un dispositivo.",
     "perMonth": "/ mes",
     "perYear": "/ año",
@@ -2928,6 +2935,9 @@ export default {
       }
     },
     "checkout": {
+      "buy": "Obtener este plan",
+      "buyYearly": "Obtener el plan anual",
+      "buyMonthly": "Obtener el plan mensual",
       "logInToBuy": "Inicie sesión para suscribirse",
       "starting": "Llevándolo al pago…",
       "failed": "No pudimos iniciar el pago. Inténtelo de nuevo.",

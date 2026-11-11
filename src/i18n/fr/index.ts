@@ -91,6 +91,7 @@ export default {
     },
     "home": {
       "viewAll": "Voir tous les outils {category}",
+      "earlyAccessNotice": "Les outils marqués Pro ou Practice sont gratuits pour tous jusqu’au {endDate}. Achetez un forfait avant et économisez jusqu’à {percent} %.",
       "whatIsHeading": "Qu’est-ce que LeafLock PDF ?",
       "whatIsBody": "LeafLock PDF est un ensemble gratuit de {count} outils PDF, dont la fusion, la division, la compression, l’OCR, la signature, le caviardage et la conversion depuis et vers Word, Excel et les images. Chaque outil s’exécute dans votre navigateur web, vos fichiers ne sont donc jamais envoyés.",
       "whatIsProof": "Vous n’avez pas à nous croire sur parole. Chaque page indique à votre navigateur qu’il ne peut se connecter qu’à leaflockpdf.com, et le navigateur l’impose. Une fois la page chargée, vous pouvez couper votre réseau et les outils continuent de fonctionner.",
@@ -217,6 +218,7 @@ export default {
     },
     "toolPage": {
       "howItWorks": "Comment ça marche",
+      "freeNow": "Gratuit pour l’instant",
       "privacyHeading": "Confidentialité dès la conception",
       "privacyBody": "Cet outil s’exécute entièrement dans votre navigateur. Vos fichiers ne sont jamais téléversés vers un serveur, et la page est techniquement bloquée pour les empêcher d’être envoyés où que ce soit.",
       "related": "Outils associés",
@@ -2861,7 +2863,12 @@ export default {
     "metaTitle": "Tarifs : outils PDF gratuits, Pro, Practice et Business | LeafLock PDF",
     "metaDescription": "LeafLock PDF est gratuit, sans limite de taille de fichier. Pro supprime la limite quotidienne pour 4 $ par mois ou 24 $ par an, et Practice ajoute les six outils professionnels pour 249 $ par an. Pas d’essais qui se transforment en prélèvements.",
     "intro": "Chaque outil de base est gratuit, sans compte. Pro s’adresse à ceux qui travaillent sur des PDF tous les jours.",
-    "earlyAccess": "Pro et Practice sont en accès anticipé : chaque outil, y compris les six professionnels, est gratuit pour tous jusqu’à l’ouverture des offres payantes.",
+    "earlyAccess": "Pro et Practice sont en accès anticipé jusqu’au {endDate} : tous les outils, y compris les six outils professionnels, sont gratuits pour tous jusque-là. Les forfaits payants démarrent le {startDate}.",
+    "offer": {
+      "heading": "Offre de lancement : jusqu’à {percent} % de réduction jusqu’au {endDate}",
+      "body": "Achetez un forfait annuel avant le {endDate} et payez {yearlyPercent} % de moins la première année, ou {tenYearPercent} % de moins pour le forfait de dix ans. Vous êtes débité au paiement et votre forfait démarre le {startDate}. Les forfaits annuels se renouvellent au prix standard après la première année.",
+      "was": "Prix standard {price}"
+    },
     "comingToPro": "Prochainement avec Pro : flux de travail enregistrés, sièges d’équipe, et conservation d’un fichier au-delà de ce qu’un seul appareil peut contenir.",
     "perMonth": "/ mois",
     "perYear": "/ an",
@@ -2928,6 +2935,9 @@ export default {
       }
     },
     "checkout": {
+      "buy": "Choisir ce forfait",
+      "buyYearly": "Choisir le forfait annuel",
+      "buyMonthly": "Choisir le forfait mensuel",
       "logInToBuy": "Connectez-vous pour vous abonner",
       "starting": "Redirection vers le paiement…",
       "failed": "Nous n’avons pas pu démarrer le paiement. Veuillez réessayer.",

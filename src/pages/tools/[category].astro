@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import ToolIcon from '../../components/ToolIcon.astro';
 import { getMessages } from '../../i18n';
 import { breadcrumbs, itemList } from '../../lib/seo';
+import { tierBadgeText } from '../../lib/tierBadge';
 import { categories, tools, type ToolCategory } from '../../tools/registry';
 
 /**
@@ -77,7 +78,7 @@ const jsonLd = [
             </span>
             <strong>
               {messages.tools[tool.id].title}
-              {tool.tier !== 'free' && <span class="badge-pro">{common.toolPage.tiers[tool.tier].label}</span>}
+              {tool.tier !== 'free' && <span class="badge-pro">{tierBadgeText(common.toolPage.tiers[tool.tier].label, common.toolPage.freeNow)}</span>}
             </strong>
             <span>{messages.tools[tool.id].summary}</span>
           </a>

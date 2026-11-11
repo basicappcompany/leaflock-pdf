@@ -91,6 +91,7 @@ export default {
     },
     "home": {
       "viewAll": "Tüm {category} araçlarını gör",
+      "earlyAccessNotice": "Pro veya Practice işaretli araçlar {endDate} tarihine kadar herkes için ücretsizdir. Öncesinde bir plan alın, en fazla %{percent} tasarruf edin.",
       "whatIsHeading": "LeafLock PDF nedir?",
       "whatIsBody": "LeafLock PDF, birleştirme, bölme, sıkıştırma, OCR, imzalama, karartma ve Word, Excel ile görsellere dönüştürmeyi de içeren {count} PDF aracından oluşan ücretsiz bir settir. Her araç doğrudan web tarayıcınızda çalışır, bu yüzden dosyalarınız hiçbir zaman yüklenmez.",
       "whatIsProof": "Bize körü körüne güvenmeniz gerekmez. Her sayfa tarayıcınıza yalnızca leaflockpdf.com adresine geri bağlanabileceğini söyler ve bunu tarayıcı uygular. Sayfa yüklendikten sonra ağınızı kapatabilirsiniz, araçlar çalışmaya devam eder.",
@@ -217,6 +218,7 @@ export default {
     },
     "toolPage": {
       "howItWorks": "Nasıl çalışır",
+      "freeNow": "Şu an ücretsiz",
       "privacyHeading": "Tasarımdan gelen gizlilik",
       "privacyBody": "Bu araç tamamen tarayıcınızda çalışır. Dosyalarınız hiçbir sunucuya yüklenmez ve sayfa, bunları herhangi bir yere göndermekten teknik olarak engellenmiştir.",
       "related": "İlgili araçlar",
@@ -2861,7 +2863,12 @@ export default {
     "metaTitle": "Fiyatlandırma: ücretsiz PDF araçları, Pro, Practice ve Business | LeafLock PDF",
     "metaDescription": "LeafLock PDF ücretsizdir ve dosya boyutu sınırı yoktur. Pro, günlük sınırı ayda $4 ya da yılda $24 karşılığında kaldırır; Practice altı profesyonel aracı yılda $249 karşılığında ekler. Ücrete dönüşen deneme sürümü yok.",
     "intro": "Her temel araç ücretsizdir, hesap gerekmez. Pro, her gün PDF'lerle çalışanlar içindir.",
-    "earlyAccess": "Pro ve Practice erken erişimde: ücretli planlar açılana kadar altı profesyonel araç dahil her araç herkes için ücretsizdir.",
+    "earlyAccess": "Pro ve Practice {endDate} tarihine kadar erken erişimde: altı profesyonel araç dahil her araç, o tarihe kadar herkes için ücretsizdir. Ücretli planlar {startDate} tarihinde başlar.",
+    "offer": {
+      "heading": "Lansman teklifi: {endDate} tarihine kadar en fazla %{percent} indirim",
+      "body": "{endDate} tarihinden önce yıllık plan alın, ilk yılda %{yearlyPercent} daha az ödeyin; on yıllık planda %{tenYearPercent} daha az ödeyin. Ödeme alışveriş sırasında alınır ve planınız {startDate} tarihinde başlar. Yıllık planlar ilk yıldan sonra standart fiyatla yenilenir.",
+      "was": "Standart fiyat {price}"
+    },
     "comingToPro": "Pro'ya daha sonra geliyor: kayıtlı iş akışları, ekip koltukları ve tek bir cihazın tutabileceğinden fazla bir dosyayı saklama.",
     "perMonth": "/ ay",
     "perYear": "/ yıl",
@@ -2928,6 +2935,9 @@ export default {
       }
     },
     "checkout": {
+      "buy": "Bu planı al",
+      "buyYearly": "Yıllık planı al",
+      "buyMonthly": "Aylık planı al",
       "logInToBuy": "Abone olmak için giriş yapın",
       "starting": "Ödemeye yönlendiriliyorsunuz…",
       "failed": "Ödemeyi başlatamadık. Lütfen tekrar deneyin.",

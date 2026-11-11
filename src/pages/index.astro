@@ -4,7 +4,9 @@ import Base from '../layouts/Base.astro';
 import PrivacyDiagram from '../components/PrivacyDiagram.astro';
 import ToolIcon from '../components/ToolIcon.astro';
 import { format, getMessages } from '../i18n';
+import { formatEarlyAccessEnd, launchPercentOff, paidPlansAvailable } from '../lib/pricing';
 import { itemList } from '../lib/seo';
+import { tierBadgeText } from '../lib/tierBadge';
 import { categories, toolById, tools } from '../tools/registry';
 
 const locale = Astro.currentLocale ?? 'en';
@@ -67,6 +69,18 @@ const jsonLd = [
     <li>{common.trust.freeToStart}</li>
     <li>{common.trust.noFileSizeLimit}</li>
   </ul>
+  {
+    !paidPlansAvailable && (
+      <p class="early-notice">
+        <a href={getRelativeLocaleUrl(locale, 'pricing')}>
+          {format(common.home.earlyAccessNotice, {
+            endDate: formatEarlyAccessEnd(locale),
+            percent: Math.max(...Object.values(launchPercentOff)),
+          })}
+        </a>
+      </p>
+    )
+  }
 
   {
     categories.map((category, index) => {
@@ -94,7 +108,7 @@ const jsonLd = [
                   </span>
                   <strong>
                     {messages.tools[tool.id].title}
-                    {tool.tier !== 'free' && <span class="badge-pro">{common.toolPage.tiers[tool.tier].label}</span>}
+                    {tool.tier !== 'free' && <span class="badge-pro">{tierBadgeText(common.toolPage.tiers[tool.tier].label, common.toolPage.freeNow)}</span>}
                   </strong>
                   <span>{messages.tools[tool.id].summary}</span>
                 </a>

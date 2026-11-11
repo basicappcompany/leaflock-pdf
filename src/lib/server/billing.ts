@@ -9,6 +9,7 @@
  * exception: the browser never loads anything of theirs on our origin.
  */
 
+import { launchPercentOff, offerOpen } from '../pricing';
 import type { UserRow } from './db';
 
 export type PlanKey = 'proMonthly' | 'proYearly' | 'proTenYear' | 'practiceYearly';
@@ -39,9 +40,60 @@ export function productIdFor(env: Env, plan: PlanKey): string | undefined {
 export function planForProduct(env: Env, productId: string | null): UserRow['plan'] | null {
   if (!productId) return null;
   if (productId === env.DODO_PRODUCT_LIFETIME) return 'lifetime';
-  if (productId === env.DODO_PRODUCT_PRACTICE_YEARLY) return 'practice';
-  if (productId === env.DODO_PRODUCT_PRO_MONTHLY || productId === env.DODO_PRODUCT_PRO_YEARLY) return 'pro';
+  if (productId === env.DODO_PRODUCT_PRACTICE_YEARLY || productId === env.DODO_PRODUCT_PRACTICE_YEARLY_LAUNCH) {
+    return 'practice';
+  }
+  if (
+    productId === env.DODO_PRODUCT_PRO_MONTHLY ||
+    productId === env.DODO_PRODUCT_PRO_YEARLY ||
+    productId === env.DODO_PRODUCT_PRO_YEARLY_LAUNCH
+  ) {
+    return 'pro';
+  }
   return null;
+}
+
+/** When the first paid year of a launch-offer yearly plan ends and the standard price takes over. */
+const FIRST_TERM_ENDS_AT = Date.UTC(2028, 0, 1);
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** What to ask Dodo for when someone buys a plan. */
+export interface CheckoutRequest {
+  productId: string;
+  /** Pre-applied discount codes. */
+  discountCodes?: string[];
+  /** Overrides the product's trial length for this one purchase. */
+  trialPeriodDays?: number;
+}
+
+/**
+ * How a plan is sold right now.
+ *
+ * After the launch offer closes every plan is its standard product at its standard price.
+ * Before that, the buyer pays the launch price at checkout and the paid term runs from
+ * 1 January 2027 (src/lib/pricing.ts):
+ *
+ * - The yearly plans use a launch product whose *trial amount* is the discounted price: Dodo
+ *   charges that at checkout and bills the standard price at the first renewal. The trial
+ *   length is set per purchase so that renewal lands on 1 January 2028, whatever day they buy.
+ * - The ten-year term is a one-off payment, so it is the standard product with a percentage
+ *   discount code pre-applied.
+ *
+ * Returns undefined when a piece of that configuration is missing. Answering 503 is the
+ * point: falling back to the standard price would charge more than the page advertised.
+ */
+export function checkoutFor(env: Env, plan: PlanKey, now: number = Date.now()): CheckoutRequest | undefined {
+  const standard = productIdFor(env, plan);
+  if (!offerOpen(now) || launchPercentOff[plan] === 0) return standard ? { productId: standard } : undefined;
+
+  if (plan === 'proTenYear') {
+    const code = env.DODO_DISCOUNT_TEN_YEAR;
+    return standard && code ? { productId: standard, discountCodes: [code] } : undefined;
+  }
+
+  const launch = plan === 'proYearly' ? env.DODO_PRODUCT_PRO_YEARLY_LAUNCH : env.DODO_PRODUCT_PRACTICE_YEARLY_LAUNCH;
+  if (!launch) return undefined;
+  return { productId: launch, trialPeriodDays: Math.max(1, Math.ceil((FIRST_TERM_ENDS_AT - now) / DAY_MS)) };
 }
 
 /**

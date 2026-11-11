@@ -7,6 +7,7 @@ import Base from '../layouts/Base.astro';
 import { getMessages, type ToolMessagesBase } from '../i18n';
 import { guidesFor, slugOf } from '../lib/content';
 import { prices, proToolsGated } from '../lib/pricing';
+import { tierBadgeText } from '../lib/tierBadge';
 import { breadcrumbs, faqPage, howTo, webApplication } from '../lib/seo';
 import { landings, tools, type LandingId, type ToolId } from '../tools/registry';
 
@@ -69,7 +70,7 @@ const jsonLd = [
   <div class="tool-heading">
     <h1>
       {page.title}
-      {tool.tier !== 'free' && <span class="badge-pro">{common.toolPage.tiers[tool.tier].label}</span>}
+      {tool.tier !== 'free' && <span class="badge-pro">{tierBadgeText(common.toolPage.tiers[tool.tier].label, common.toolPage.freeNow)}</span>}
     </h1>
     <StarToolButton toolId={toolId} t={common.star} />
   </div>

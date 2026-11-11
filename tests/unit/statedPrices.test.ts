@@ -1,7 +1,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { businessYearlyTarget, prices } from '../../src/lib/pricing';
+import { businessYearlyTarget, launchPercentOff, launchPrice, prices } from '../../src/lib/pricing';
 
 /**
  * Every price the site states in words must be one the code actually charges.
@@ -34,7 +34,13 @@ const CLAIM_PATTERNS = [
  */
 // 0 is the Free plan's price. English writes it as a bare "$0", which no pattern above matches;
 // a locale that writes "US$0" (pt-BR does) would otherwise trip the check on a true statement.
-const ALLOWED = new Set<number>([0, ...Object.values(prices), businessYearlyTarget]);
+const ALLOWED = new Set<number>([
+  0,
+  ...Object.values(prices),
+  // The launch-offer prices, in case a page states one in words.
+  ...(Object.keys(launchPercentOff) as (keyof typeof launchPercentOff)[]).map(launchPrice),
+  businessYearlyTarget,
+]);
 
 const ROOTS = ['src/content', 'src/i18n'];
 const EXTENSIONS = ['.md', '.ts'];
@@ -139,9 +145,11 @@ describe('stated prices', () => {
     expect(prices.businessYearly).toBeLessThanOrEqual(businessYearlyTarget);
   });
 
-  it('prices ten years of Pro below ten years of the yearly plan', () => {
-    // What makes the prepaid term worth buying, and the check that stops it being
-    // repriced into a worse deal than simply renewing.
-    expect(prices.proTenYear).toBeLessThan(prices.proYearly * 10);
+  it('never prices ten years of Pro above ten years of the yearly plan', () => {
+    // The standard ten-year price is exactly ten yearly payments ($240) since 12 November
+    // 2026; the check stops it being repriced into a worse deal than simply renewing.
+    expect(prices.proTenYear).toBeLessThanOrEqual(prices.proYearly * 10);
+    // What makes buying it worth it: at the launch price it is the cheaper way to get ten years.
+    expect(launchPrice('proTenYear')).toBeLessThan(prices.proYearly * 10);
   });
 });

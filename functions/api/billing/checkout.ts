@@ -6,7 +6,7 @@
  * script, so the strict CSP is untouched. Dodo is the merchant of record (terms.md §5).
  */
 
-import { apiBase, isPlanKey, productIdFor } from '../../../src/lib/server/billing';
+import { apiBase, checkoutFor, isPlanKey } from '../../../src/lib/server/billing';
 import { readSessionFromRequest } from '../../../src/lib/server/session';
 
 const MAX_BODY = 256;
@@ -28,8 +28,8 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
   const plan = (parsed as Record<string, unknown> | null)?.['plan'];
   if (!isPlanKey(plan)) return new Response(null, { status: 400 });
 
-  const productId = productIdFor(env, plan);
-  if (!productId || !env.DODO_API_KEY) {
+  const sale = checkoutFor(env, plan);
+  if (!sale || !env.DODO_API_KEY) {
     // Paid plans aren't switched on yet: the products or key aren't configured.
     return new Response(JSON.stringify({ error: 'unavailable' }), {
       status: 503,
@@ -42,7 +42,9 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
     method: 'POST',
     headers: { Authorization: `Bearer ${env.DODO_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      product_cart: [{ product_id: productId, quantity: 1 }],
+      product_cart: [{ product_id: sale.productId, quantity: 1 }],
+      ...(sale.discountCodes ? { discount_codes: sale.discountCodes } : {}),
+      ...(sale.trialPeriodDays ? { subscription_data: { trial_period_days: sale.trialPeriodDays } } : {}),
       customer: { email: session.email },
       return_url: `${origin}/account`,
       // How the webhook finds the account again; email alone isn't reliable.
