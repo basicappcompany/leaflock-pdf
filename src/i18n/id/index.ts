@@ -2861,7 +2861,14 @@ export default {
     "metaTitle": "Harga: alat PDF gratis, Pro, Practice, dan Business | LeafLock PDF",
     "metaDescription": "LeafLock PDF gratis digunakan, tanpa batas ukuran file. Pro menghapus batas harian seharga $4 per bulan atau $24 per tahun, dan Practice menambahkan enam alat profesional seharga $249 per tahun. Tidak ada uji coba yang berubah menjadi tagihan.",
     "intro": "Setiap alat inti gratis, tanpa akun. Pro untuk orang yang bekerja dengan PDF setiap hari.",
-    "earlyAccess": "Pro dan Practice dalam akses awal: setiap alat, termasuk enam alat profesional, gratis untuk semua orang sampai paket berbayar dibuka.",
+    "earlyAccess": "Pro dan Practice dalam akses awal hingga {endDate}: setiap alat, termasuk enam alat profesional, gratis untuk semua orang sampai saat itu. Paket berbayar dimulai pada {startDate}.",
+    "homeNotice": "Alat bertanda Pro atau Practice gratis untuk semua orang sampai {endDate}. Beli paket sebelum itu dan hemat hingga {percent}%.",
+    "freeNow": "Gratis sekarang",
+    "offer": {
+      "heading": "Penawaran peluncuran: diskon hingga {percent}% sampai {endDate}",
+      "body": "Beli paket tahunan sebelum {endDate} dan bayar {yearlyPercent}% lebih murah untuk tahun pertama, atau {tenYearPercent}% lebih murah untuk paket sepuluh tahun. Anda ditagih saat pembayaran dan paket Anda dimulai pada {startDate}. Paket tahunan diperpanjang dengan harga standar setelah tahun pertama.",
+      "was": "Harga standar {price}"
+    },
     "comingToPro": "Hadir di Pro nanti: alur kerja tersimpan, kursi tim, dan menyimpan file melebihi kapasitas satu perangkat.",
     "perMonth": "/ bulan",
     "perYear": "/ tahun",
@@ -2928,6 +2935,9 @@ export default {
       }
     },
     "checkout": {
+      "buy": "Ambil paket ini",
+      "buyYearly": "Ambil paket tahunan",
+      "buyMonthly": "Ambil paket bulanan",
       "logInToBuy": "Masuk untuk berlangganan",
       "starting": "Membawa Anda ke pembayaran…",
       "failed": "Kami tidak dapat memulai pembayaran. Silakan coba lagi.",

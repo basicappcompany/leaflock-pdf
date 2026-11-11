@@ -1,0 +1,15 @@
+/* The early-access / launch-offer line on the home and pricing pages: stronger than .notice, which is
+   muted text. Its own file, imported only by those two pages, because global.css is inlined into every
+   page and the HTML budgets in tests/e2e/performance.spec.ts count it. */
+.early-notice {
+  margin: 0 0 1rem;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius);
+  background: var(--color-pro-soft);
+  color: var(--color-pro);
+  font-weight: 600;
+}
+
+.early-notice a {
+  color: inherit;
+}

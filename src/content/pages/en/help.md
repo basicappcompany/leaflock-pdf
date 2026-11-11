@@ -62,18 +62,20 @@ Results are saved by your browser like any other download, usually to your Downl
 
 ### What is Pro?
 
-Some tools carry a Pro or Practice badge and are part of a paid plan. Both are in early access: every tool is free to use for now, with no account and no payment details needed.
+Some tools carry a Pro or Practice badge and are part of a paid plan. Both are in early access until 31 December 2026: every tool is free to use until then, with no account and no payment details needed. Paid plans start on 1 January 2027.
 
 Pro removes the daily limit on every tool and lets you keep a finished file on your device for as long as you choose. Practice adds the six professional tools — redact, compare, batch, extract tables, Bates numbering and PDF/A — and a data processing agreement you can accept online.
 
 ### How much will the paid plans cost?
 
-When paid plans launch, the prices will be:
+The standard prices are:
 
 - **Pro, monthly:** US$4 per month
 - **Pro, yearly:** US$24 per year
-- **Pro, ten years:** US$120 once, available to a limited number of buyers
+- **Pro, ten years:** US$240 once, available to a limited number of buyers
 - **Practice, yearly:** US$249 per year
+
+**Launch offer, until 31 December 2026:** the first year of a yearly plan is 50% off, and the ten-year Pro plan is 25% off. You pay when you buy and your plan starts on 1 January 2027, so you lose nothing by buying early. Yearly plans renew at the standard price on 1 January 2028.
 
 Applicable taxes may be added at checkout. Organizations that need the tools on their own network can use the [Business edition](/business).
 
@@ -83,7 +85,7 @@ Yes. You'll be able to cancel any time in one click. Cancelling stops future ren
 
 ### Is there a free trial?
 
-There's no trial that turns into a charge. We won't ask for payment details to "try" Pro and then bill you automatically. During early access, Pro tools are simply free.
+There's no trial that turns into a charge. We won't ask for payment details to "try" Pro and then bill you automatically. Until early access ends, Pro tools are simply free. If you buy in the launch offer, you pay once at checkout for a term that starts on 1 January 2027, and the renewal price is shown before you buy.
 
 ### Will the free tools stay free?
 

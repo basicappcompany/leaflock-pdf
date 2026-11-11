@@ -2861,7 +2861,14 @@ export default {
     "metaTitle": "Tarifs : outils PDF gratuits, Pro, Practice et Business | LeafLock PDF",
     "metaDescription": "LeafLock PDF est gratuit, sans limite de taille de fichier. Pro supprime la limite quotidienne pour 4 $ par mois ou 24 $ par an, et Practice ajoute les six outils professionnels pour 249 $ par an. Pas d’essais qui se transforment en prélèvements.",
     "intro": "Chaque outil de base est gratuit, sans compte. Pro s’adresse à ceux qui travaillent sur des PDF tous les jours.",
-    "earlyAccess": "Pro et Practice sont en accès anticipé : chaque outil, y compris les six professionnels, est gratuit pour tous jusqu’à l’ouverture des offres payantes.",
+    "earlyAccess": "Pro et Practice sont en accès anticipé jusqu’au {endDate} : tous les outils, y compris les six outils professionnels, sont gratuits pour tous jusque-là. Les forfaits payants démarrent le {startDate}.",
+    "homeNotice": "Les outils marqués Pro ou Practice sont gratuits pour tous jusqu’au {endDate}. Achetez un forfait avant et économisez jusqu’à {percent} %.",
+    "freeNow": "Gratuit pour l’instant",
+    "offer": {
+      "heading": "Offre de lancement : jusqu’à {percent} % de réduction jusqu’au {endDate}",
+      "body": "Achetez un forfait annuel avant le {endDate} et payez {yearlyPercent} % de moins la première année, ou {tenYearPercent} % de moins pour le forfait de dix ans. Vous êtes débité au paiement et votre forfait démarre le {startDate}. Les forfaits annuels se renouvellent au prix standard après la première année.",
+      "was": "Prix standard {price}"
+    },
     "comingToPro": "Prochainement avec Pro : flux de travail enregistrés, sièges d’équipe, et conservation d’un fichier au-delà de ce qu’un seul appareil peut contenir.",
     "perMonth": "/ mois",
     "perYear": "/ an",
@@ -2928,6 +2935,9 @@ export default {
       }
     },
     "checkout": {
+      "buy": "Choisir ce forfait",
+      "buyYearly": "Choisir le forfait annuel",
+      "buyMonthly": "Choisir le forfait mensuel",
       "logInToBuy": "Connectez-vous pour vous abonner",
       "starting": "Redirection vers le paiement…",
       "failed": "Nous n’avons pas pu démarrer le paiement. Veuillez réessayer.",

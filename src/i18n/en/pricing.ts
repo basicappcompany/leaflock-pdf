@@ -5,7 +5,29 @@ export const pricing = {
   metaDescription:
     'LeafLock PDF is free to use, with no file-size limit. Pro removes the daily limit for $4 a month or $24 a year, and Practice adds the six professional tools for $249 a year. No trials that turn into charges.',
   intro: 'Every core tool is free, with no account. Pro is for people who work with PDFs every day.',
-  earlyAccess: 'Pro and Practice are in early access: every tool, including the six professional ones, is free for everyone until paid plans open.',
+  /** `{endDate}` is the last day of early access and `{startDate}` the day paid plans start (src/lib/pricing.ts). */
+  earlyAccess:
+    'Pro and Practice are in early access until {endDate}: every tool, including the six professional ones, is free for everyone until then. Paid plans start on {startDate}.',
+  /**
+   * These two live here, not in common.ts: every tool page serialises the whole `common` catalogue
+   * into its React island's props, so a string added there costs bytes on all ~80 tool pages and
+   * the HTML budgets in tests/e2e/performance.spec.ts count them. `pricing` is not passed down.
+   *
+   * `homeNotice`: above the home page's tool grid while paid plans are not on sale.
+   * `freeNow`: added to a Pro or Practice badge in the same period, so a badge never reads as a paywall.
+   */
+  homeNotice:
+    'Tools marked Pro or Practice are free for everyone until {endDate}. Buy a plan before then and save up to {percent}%.',
+  freeNow: 'Free now',
+  /**
+   * The launch offer, shown while it can be taken (src/lib/pricing.ts `offerOpen`). `{percent}` is the
+   * largest discount, `{yearlyPercent}` and `{tenYearPercent}` the two actual ones, the dates as above.
+   */
+  offer: {
+    heading: 'Launch offer: up to {percent}% off until {endDate}',
+    body: 'Buy a yearly plan before {endDate} and pay {yearlyPercent}% less for your first year, or {tenYearPercent}% less for the ten-year plan. You are charged at checkout, and your plan starts on {startDate}. Yearly plans renew at the standard price after the first year.',
+    was: 'Standard price {price}',
+  },
   /**
    * Only things that genuinely do not exist yet. This previously promised batch processing
    * — already a shipped Pro tool — and an installable offline app, which shipped in Phase 1
@@ -88,6 +110,9 @@ export const pricing = {
     },
   },
   checkout: {
+    buy: 'Get this plan',
+    buyYearly: 'Get the yearly plan',
+    buyMonthly: 'Get the monthly plan',
     logInToBuy: 'Log in to subscribe',
     starting: 'Taking you to checkout…',
     failed: 'We could not start checkout. Please try again.',

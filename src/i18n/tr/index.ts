@@ -2861,7 +2861,14 @@ export default {
     "metaTitle": "Fiyatlandırma: ücretsiz PDF araçları, Pro, Practice ve Business | LeafLock PDF",
     "metaDescription": "LeafLock PDF ücretsizdir ve dosya boyutu sınırı yoktur. Pro, günlük sınırı ayda $4 ya da yılda $24 karşılığında kaldırır; Practice altı profesyonel aracı yılda $249 karşılığında ekler. Ücrete dönüşen deneme sürümü yok.",
     "intro": "Her temel araç ücretsizdir, hesap gerekmez. Pro, her gün PDF'lerle çalışanlar içindir.",
-    "earlyAccess": "Pro ve Practice erken erişimde: ücretli planlar açılana kadar altı profesyonel araç dahil her araç herkes için ücretsizdir.",
+    "earlyAccess": "Pro ve Practice {endDate} tarihine kadar erken erişimde: altı profesyonel araç dahil her araç, o tarihe kadar herkes için ücretsizdir. Ücretli planlar {startDate} tarihinde başlar.",
+    "homeNotice": "Pro veya Practice işaretli araçlar {endDate} tarihine kadar herkes için ücretsizdir. Öncesinde bir plan alın, en fazla %{percent} tasarruf edin.",
+    "freeNow": "Şu an ücretsiz",
+    "offer": {
+      "heading": "Lansman teklifi: {endDate} tarihine kadar en fazla %{percent} indirim",
+      "body": "{endDate} tarihinden önce yıllık plan alın, ilk yılda %{yearlyPercent} daha az ödeyin; on yıllık planda %{tenYearPercent} daha az ödeyin. Ödeme alışveriş sırasında alınır ve planınız {startDate} tarihinde başlar. Yıllık planlar ilk yıldan sonra standart fiyatla yenilenir.",
+      "was": "Standart fiyat {price}"
+    },
     "comingToPro": "Pro'ya daha sonra geliyor: kayıtlı iş akışları, ekip koltukları ve tek bir cihazın tutabileceğinden fazla bir dosyayı saklama.",
     "perMonth": "/ ay",
     "perYear": "/ yıl",
@@ -2928,6 +2935,9 @@ export default {
       }
     },
     "checkout": {
+      "buy": "Bu planı al",
+      "buyYearly": "Yıllık planı al",
+      "buyMonthly": "Aylık planı al",
       "logInToBuy": "Abone olmak için giriş yapın",
       "starting": "Ödemeye yönlendiriliyorsunuz…",
       "failed": "Ödemeyi başlatamadık. Lütfen tekrar deneyin.",

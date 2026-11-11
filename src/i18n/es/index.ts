@@ -2861,7 +2861,14 @@ export default {
     "metaTitle": "Precios: herramientas PDF gratuitas, Pro, Practice y Business | LeafLock PDF",
     "metaDescription": "LeafLock PDF es gratis, sin límite de tamaño de archivo. Pro elimina el límite diario por $4 al mes o $24 al año, y Practice agrega las seis herramientas profesionales por $249 al año. Sin pruebas que se conviertan en cobros.",
     "intro": "Todas las herramientas básicas son gratis, sin cuenta. Pro es para quienes trabajan con PDF todos los días.",
-    "earlyAccess": "Pro y Practice están en acceso anticipado: todas las herramientas, incluidas las seis profesionales, son gratis para todos hasta que se abran los planes de pago.",
+    "earlyAccess": "Pro y Practice están en acceso anticipado hasta el {endDate}: todas las herramientas, incluidas las seis profesionales, son gratuitas para todos hasta entonces. Los planes de pago empiezan el {startDate}.",
+    "homeNotice": "Las herramientas marcadas como Pro o Practice son gratuitas para todos hasta el {endDate}. Compra un plan antes y ahorra hasta un {percent}%.",
+    "freeNow": "Gratis ahora",
+    "offer": {
+      "heading": "Oferta de lanzamiento: hasta un {percent}% de descuento hasta el {endDate}",
+      "body": "Compra un plan anual antes del {endDate} y paga un {yearlyPercent}% menos por tu primer año, o un {tenYearPercent}% menos por el plan de diez años. Se te cobra al pagar y tu plan empieza el {startDate}. Los planes anuales se renuevan al precio estándar después del primer año.",
+      "was": "Precio estándar {price}"
+    },
     "comingToPro": "Próximamente en Pro: flujos de trabajo guardados, puestos de equipo y conservar un archivo más allá de lo que cabe en un dispositivo.",
     "perMonth": "/ mes",
     "perYear": "/ año",
@@ -2928,6 +2935,9 @@ export default {
       }
     },
     "checkout": {
+      "buy": "Obtener este plan",
+      "buyYearly": "Obtener el plan anual",
+      "buyMonthly": "Obtener el plan mensual",
       "logInToBuy": "Inicie sesión para suscribirse",
       "starting": "Llevándolo al pago…",
       "failed": "No pudimos iniciar el pago. Inténtelo de nuevo.",

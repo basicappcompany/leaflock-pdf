@@ -1,15 +1,31 @@
 ---
 import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
 import Article from '../layouts/Article.astro';
+import '../styles/early-notice.css';
 import CheckoutButton from '../components/billing/CheckoutButton';
 import { format, getMessages } from '../i18n';
-import { formatPrice, paidPlansAvailable, prices, yearlySavingPercent } from '../lib/pricing';
+import {
+  formatEarlyAccessEnd,
+  formatPlansStart,
+  formatPrice,
+  launchPercentOff,
+  launchPrice,
+  offerOpen,
+  paidPlansAvailable,
+  prices,
+  yearlySavingPercent,
+} from '../lib/pricing';
 import { product } from '../lib/seo';
 
 const locale = Astro.currentLocale ?? 'en';
 const messages = getMessages(locale);
 const t = messages.pricing;
 const price = (amount: number) => formatPrice(amount, locale);
+// The launch offer (src/lib/pricing.ts): checkout is open and discounted while early access lasts.
+const offer = offerOpen() && !paidPlansAvailable;
+const buyable = paidPlansAvailable || offer;
+const dates = { endDate: formatEarlyAccessEnd(locale), startDate: formatPlansStart(locale) };
+const was = (amount: number) => format(t.offer.was, { price: price(amount) });
 const plans = [
   {
     id: 'free',
@@ -19,36 +35,43 @@ const plans = [
     note: '',
     href: getRelativeLocaleUrl(locale, ''),
     available: true,
+    planKeys: undefined,
   },
   {
     id: 'pro',
     plan: t.plans.pro,
     price: price(prices.proMonthly),
     period: t.perMonth,
-    note: `${price(prices.proYearly)} ${t.perYear} · ${format(t.yearlySaving, { percent: yearlySavingPercent() })}`,
+    note: offer
+      ? `${price(launchPrice('proYearly'))} ${t.perYear} · ${was(prices.proYearly)}`
+      : `${price(prices.proYearly)} ${t.perYear} · ${format(t.yearlySaving, { percent: yearlySavingPercent() })}`,
     href: undefined,
-    available: paidPlansAvailable,
-    planKey: 'proMonthly' as const,
+    available: buyable,
+    // The yearly plan first: it is the one the launch offer discounts.
+    planKeys: [
+      { key: 'proYearly' as const, label: t.checkout.buyYearly },
+      { key: 'proMonthly' as const, label: t.checkout.buyMonthly },
+    ],
   },
   {
     id: 'lifetime',
     plan: t.plans.lifetime,
-    price: price(prices.proTenYear),
+    price: price(offer ? launchPrice('proTenYear') : prices.proTenYear),
     period: t.oneTime,
-    note: '',
+    note: offer ? was(prices.proTenYear) : '',
     href: undefined,
-    available: paidPlansAvailable,
-    planKey: 'proTenYear' as const,
+    available: buyable,
+    planKeys: [{ key: 'proTenYear' as const, label: t.checkout.buy }],
   },
   {
     id: 'practice',
     plan: t.plans.practice,
-    price: price(prices.practiceYearly),
+    price: price(offer ? launchPrice('practiceYearly') : prices.practiceYearly),
     period: t.perYear,
-    note: '',
+    note: offer ? was(prices.practiceYearly) : '',
     href: undefined,
-    available: paidPlansAvailable,
-    planKey: 'practiceYearly' as const,
+    available: buyable,
+    planKeys: [{ key: 'practiceYearly' as const, label: t.checkout.buy }],
   },
   {
     id: 'business',
@@ -58,11 +81,12 @@ const plans = [
     note: '',
     href: getRelativeLocaleUrl(locale, 'business'),
     available: true,
+    planKeys: undefined,
   },
 ];
 // Offers only once there is a checkout behind them: markup for a plan nobody can buy
-// would be a false claim, and that is exactly what `paidPlansAvailable` gates.
-const jsonLd = paidPlansAvailable
+// would be a false claim, and that is exactly what `buyable` gates.
+const jsonLd = buyable
   ? [
       product({
         name: `${messages.common.site.name} Pro`,
@@ -71,9 +95,13 @@ const jsonLd = paidPlansAvailable
         site: Astro.site!,
         offers: [
           { name: t.plans.pro.name, price: prices.proMonthly, recurring: 'month' as const },
-          { name: t.plans.pro.name, price: prices.proYearly, recurring: 'year' as const },
-          { name: t.plans.lifetime.name, price: prices.proTenYear, recurring: null },
-          { name: t.plans.practice.name, price: prices.practiceYearly, recurring: 'year' as const },
+          { name: t.plans.pro.name, price: offer ? launchPrice('proYearly') : prices.proYearly, recurring: 'year' as const },
+          { name: t.plans.lifetime.name, price: offer ? launchPrice('proTenYear') : prices.proTenYear, recurring: null },
+          {
+            name: t.plans.practice.name,
+            price: offer ? launchPrice('practiceYearly') : prices.practiceYearly,
+            recurring: 'year' as const,
+          },
         ],
       }),
     ]
@@ -83,11 +111,23 @@ const jsonLd = paidPlansAvailable
 
 <Article title={t.title} description={t.metaDescription} path="pricing" extraJsonLd={jsonLd}>
   <p class="lead">{t.intro}</p>
-  <p class="notice">{t.earlyAccess}</p>
+  {!paidPlansAvailable && <p class="notice">{format(t.earlyAccess, dates)}</p>}
+  {
+    offer && (
+      <p class="early-notice">
+        <strong>{format(t.offer.heading, { ...dates, percent: Math.max(...Object.values(launchPercentOff)) })}</strong>{' '}
+        {format(t.offer.body, {
+          ...dates,
+          yearlyPercent: launchPercentOff.proYearly,
+          tenYearPercent: launchPercentOff.proTenYear,
+        })}
+      </p>
+    )
+  }
   <div slot="after">
     <ul class="pricing-grid">
       {
-        plans.map(({ id, plan, price, period, note, href, available, planKey }) => (
+        plans.map(({ id, plan, price, period, note, href, available, planKeys }) => (
           <li class={`pricing-card pricing-card--${id}`}>
             <h2>{plan.name}</h2>
             <p class="pricing-card__price">
@@ -100,8 +140,8 @@ const jsonLd = paidPlansAvailable
                 <li>{feature}</li>
               ))}
             </ul>
-            {available && planKey ? (
-              <CheckoutButton client:only="react" plan={planKey} label={plan.cta} t={t.checkout} />
+            {available && planKeys ? (
+              planKeys.map(({ key, label }) => <CheckoutButton client:only="react" plan={key} label={label} t={t.checkout} />)
             ) : available && href ? (
               <a class="primary-button" href={href}>
                 {plan.cta}

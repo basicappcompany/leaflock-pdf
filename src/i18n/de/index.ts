@@ -2861,7 +2861,14 @@ export default {
     "metaTitle": "Preise: kostenlose PDF-Tools, Pro, Practice und Business | LeafLock PDF",
     "metaDescription": "LeafLock PDF ist kostenlos nutzbar, ohne Dateigrößenbeschränkung. Pro hebt das Tageslimit auf für $4 im Monat oder $24 im Jahr, und Practice ergänzt die sechs professionellen Tools für $249 im Jahr. Keine Testphasen, die in Abbuchungen münden.",
     "intro": "Jedes Kern-Tool ist kostenlos, ohne Konto. Pro ist für Menschen, die täglich mit PDFs arbeiten.",
-    "earlyAccess": "Pro und Practice befinden sich im frühen Zugang: Jedes Tool, einschließlich der sechs professionellen, ist für alle kostenlos, bis bezahlte Pläne starten.",
+    "earlyAccess": "Pro und Practice befinden sich bis zum {endDate} im frühen Zugang: Jedes Werkzeug, auch die sechs professionellen, ist bis dahin für alle kostenlos. Bezahlte Pläne starten am {startDate}.",
+    "homeNotice": "Als Pro oder Practice gekennzeichnete Werkzeuge sind bis zum {endDate} für alle kostenlos. Kaufen Sie vorher einen Plan und sparen Sie bis zu {percent}%.",
+    "freeNow": "Jetzt kostenlos",
+    "offer": {
+      "heading": "Startangebot: bis zu {percent}% Rabatt bis zum {endDate}",
+      "body": "Kaufen Sie vor dem {endDate} einen Jahresplan und zahlen Sie {yearlyPercent}% weniger für Ihr erstes Jahr, oder {tenYearPercent}% weniger für den Zehnjahresplan. Die Abbuchung erfolgt an der Kasse, Ihr Plan startet am {startDate}. Jahrespläne verlängern sich nach dem ersten Jahr zum Standardpreis.",
+      "was": "Standardpreis {price}"
+    },
     "comingToPro": "Später für Pro geplant: gespeicherte Workflows, Team-Plätze und das Aufbewahren einer Datei über das hinaus, was ein einzelnes Gerät fassen kann.",
     "perMonth": "/ Monat",
     "perYear": "/ Jahr",
@@ -2928,6 +2935,9 @@ export default {
       }
     },
     "checkout": {
+      "buy": "Diesen Plan holen",
+      "buyYearly": "Jahresplan holen",
+      "buyMonthly": "Monatsplan holen",
       "logInToBuy": "Anmelden, um zu abonnieren",
       "starting": "Sie werden zur Kasse weitergeleitet…",
       "failed": "Wir konnten die Kasse nicht starten. Bitte versuchen Sie es erneut.",
