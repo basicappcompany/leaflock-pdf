@@ -573,12 +573,12 @@
     tools: 43,
     pro: 0,
     practice: 6,
-    commits: 81,
+    commits: 85,
     ops: 29,
     landings: 12,
     guides: 6,
     compares: 7,
-    unit: 592,
+    unit: 623,
     browser: 354,
     browserFiles: 33,
     anonymousDaily: 20,
@@ -652,7 +652,7 @@
         { id: "4.7", name: "Simple API (Business edition)", state: "pending", estimate: "~2–3 days", days: 3, after: "after launch — category 6, lowest priority" },
         { id: "4.9", name: "Practice tier — the legal/compliance bundle, packaged", state: "done", when: "30 Oct", note: "the six professional tools moved Pro —> Practice and every price reset to the 30 Oct decision; access now ranks tiers against plans instead of toggling on any paid plan. Reached four places the estimate missed: the plan column's CHECK constraint (migration 0004), planCache's allow-list, the dashboard card offering batch to Pro, and CheckoutButton's drifted copy of the plan union. Still open, not code: the click-through DPA (6.3) and the trust page", after: "right after the price decision — do before Phase 3's landings" },
         { id: "4.10", name: "Self-host deployment guide (air-gapped, PUBLIC_USAGE_LIMITS=off)", state: "done", when: "1 Nov", note: "docs/self-hosting.md — the static build is the whole product, both build-time flags and why each matters, the five _headers rules a non-Cloudflare server must reproduce, and a verification that ends by pulling the network cable. Written against the code and says so: no install has been run on a real air-gapped network because there is no licensee yet, and the gaps are listed rather than smoothed over" },
-        { id: "4.12", who: "both", name: "End early access — make the paid plans buyable", state: "pending", estimate: "~1 day", days: 1, owner: "you", blocker: true, note: "nothing on the board owned this until 31 Oct: paidPlansAvailable = false is why every paid card reads Coming soon, and flipping it is not one line. It also flips proToolsGated, so the six Practice tools stop being free, and it makes ~8 early-access strings wrong at once — pricing.ts earlyAccess, the tier notes, two tool FAQs, terms.md 5, about.md, help.md and both comparison tables — none of which interpolate. Needs the four real Dodo product ids from 6.1 first, and terms.md 5 promises the announcement comes before the change" },
+        { id: "4.12", who: "both", name: "End early access — make the paid plans buyable", state: "pending", estimate: "~1 day", days: 1, owner: "you", blocker: true, note: "partly done 12 Nov: the plans are buyable in Dodo test mode with a launch offer (50% off yearly, 25% off ten-year) and start on 1 Jan 2027; paidPlansAvailable is now computed from that date, so the six Practice tools gate themselves then, and members get their own pricing page and a Pro to Practice upgrade. Left: Dodo live mode (products, codes, secrets), the early-access copy sweep before the first build on or after 1 Jan (earlyAccessCopy.test.ts fails then, by design), refund wording for early buyers, and a deploy that day. The estimate is unchanged on purpose: it moves the projected dates" },
         { id: "4.11", name: "Audit logging for admin actions (seats, plan changes)", state: "pending", estimate: "~2 days", days: 2, note: "procurement asks for it; also a Phase 7 precondition. Was unscoped before 30 Oct", after: "after launch — category 5" },
       ],
     },
@@ -767,6 +767,7 @@
     { date: "9 Nov 2026", what: "Compress to a size and two size landings (200 KB, 1 MB) — <span>the tool now does what the earlier 'deliberately not built' note said it could not; <span class='mono'>hello@leaflockpdf.com</span> receives mail</span>", count: "" },
     { date: "9 Nov 2026", what: "Front page tools first, the definition card below them; a slim edge tab replaces the phone sidebar button; <span class='mono'>feedback@</span> routed and set as the notification address; status page reworked with a Next up section, search and filters, and a date that follows the newest entry; then a scorecard, a generated tool and URL table, and a calmer, more readable skin in place of the neo-brutalist one; every open item now says who acts, Me, You or Both, with a filter</span>", count: "" },
     { date: "10 Nov 2026", what: "IndexNow now pings Bing and the other engines by itself after each deploy (a GitHub Action that waits for the Cloudflare Pages check); the first run was refused with a 403 on the sitemap until the script sent a named User-Agent", count: "" },
+    { date: "12 Nov 2026", what: "Launch offer, member pricing page and Pro-to-Practice upgrade (4.12, in part) — <span>early access now ends 31 Dec 2026 and the plans start 1 Jan 2027; until then yearly plans are 50% off and the ten-year plan (repriced $120 to $240) 25% off, charged at checkout. Bought end to end in Dodo test mode on the live site, webhook verified. The first real upgrade found three faults — no price shown before the charge, a charge in <span class='mono'>processing</span> not represented, and a 1-2 second flash of the new-visitor page — all fixed the same day; <strong>the plan now rides in the sign-in cookie</strong></span>", count: "" },
   ];
 
   /**
@@ -1102,7 +1103,7 @@
   const PRICING = [
     { tier: "Free", price: "$0", adds: "37 tools, no size limit, 20/day anon · 60/day account, retention 5 min–24 h", beats: "nothing is cheaper than free" },
     { tier: "Pro", price: "$24/yr · $4/mo", adds: "no daily cap, custom retention length", beats: "iLovePDF ~$35–48" },
-    { tier: "Pro, 10 years", price: "$120 once", adds: "Pro for a defined ten-year term", beats: "$1/month equivalent" },
+    { tier: "Pro, 10 years", price: "$240 once", adds: "Pro for a defined ten-year term", beats: "$2/month equivalent" },
     { tier: "Practice", price: "$249/yr", adds: "the six professional tools, click-through DPA, trust page", beats: "SealedPDF $468" },
     { tier: "Business", price: "$499/yr → $750", adds: "self-hosted & air-gapped, SSO, invoicing, audit log", beats: "Stirling-PDF $1,188 team" },
   ];

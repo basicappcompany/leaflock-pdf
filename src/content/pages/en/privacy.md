@@ -1,7 +1,7 @@
 ---
 title: Privacy policy
 description: How LeafLock PDF handles personal data. Your files are processed on your device and never sent to us. What we do process, why, and your rights.
-updated: 2026-11-07
+updated: 2026-11-12
 awaitingLegalReview: true
 ---
 
@@ -94,7 +94,7 @@ When a tool fails because of a bug, your browser sends a short error report to o
 - **Theme choice:** if you press the theme button, your light or dark choice is saved in your browser's localStorage so the site remembers it. The default is light, and nothing is saved until you press it.
 - **Starred and recent tools:** the tools you star, and the tools you used recently with the time you used them, are saved in your browser's localStorage so the sidebar and your dashboard can show them. Tool names and times only, never a file or a file name. If you are signed in, your starred tools are also saved to your account (see above); the recent list stays on your device. Clear your site data to remove them.
 - **OCR language model:** after you first use OCR PDF, your browser stores the English text-recognition model so it doesn't need to download it again. This file is the same for everyone and contains no personal data.
-- **Cookies:** two if you sign in (`__Host-leaflock_session`, `leaflock_signed_in`), and a third (`leaflock_skin`) only if you pick a visual skin. None of them track you or carry a profile.
+- **Cookies:** two if you sign in (`__Host-leaflock_session`, and `leaflock_signed_in`, which holds only the name of your plan), and a third (`leaflock_skin`) only if you pick a visual skin. None of them track you or carry a profile.
 
 We cannot read any of this data; it stays on your device, except for your starred tools if you are signed in, which are saved to your account as described above. See the [Cookie policy](/cookies) for what each item contains and how to remove it.
 

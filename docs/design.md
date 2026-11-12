@@ -53,13 +53,13 @@ the one step that had no local equivalent, `playwright install --with-deps chrom
 fresh runner, is now tested rather than assumed. Remote is `basicappcompany/leaflock-pdf`,
 private.
 
-**Built but switched off:** paid plans (`paidPlansAvailable = false` in
-`src/lib/pricing.ts`). Checkout answers 503 until the Dodo keys exist.
+**Paid plans: on sale in Dodo's test mode, gated from 1 January 2027.** Since 12 November 2026
+production runs `DODO_MODE=test` with a launch offer until the end of 31 December 2026; the plans
+start, and the Pro and Practice tools need one, on 1 January 2027 (§8, §13). No real money moves
+until Dodo's live mode is set up; that checklist is in `docs/TODO.md` §3.
 
-**Not real yet:** Google OAuth credentials are `dummy-…`; `RESEND_API_KEY`, `EMAIL_FROM`
-and `DODO_API_KEY` are absent from `.dev.vars`; `wrangler.toml` has
-`database_id = ""`, so no remote D1 exists; the legal text is unreviewed. All of it is in
-`docs/TODO.md` and belongs to roadmap Phase 6.
+**Not real yet:** the legal text is unreviewed, and Dodo live mode, refund wording and the other
+owner-side items are in `docs/TODO.md` and belong to roadmap Phase 6.
 
 ## 3. Architecture
 
@@ -190,7 +190,7 @@ pricing flags rather than hard-coding anything:
 | Every page | `Organization`, `WebSite` |
 | Tool / landing | `WebApplication`, `HowTo`, `BreadcrumbList`, `FAQPage` |
 | Home | `ItemList` of all 25 tools, in registry order |
-| Pricing | `Product` with an offer per plan — **only when `paidPlansAvailable`** |
+| Pricing | `Product` with an offer per plan — **only when something can be bought** (paid plans started, or the launch offer is open), at the price actually charged |
 | Guides, comparisons | `Article`, `BreadcrumbList` |
 
 - `webApplication()` takes `tier`, `gated` (`proToolsGated`) and `proPrice`. A Pro tool
@@ -200,8 +200,8 @@ pricing flags rather than hard-coding anything:
   written — so `tests/unit/seo.test.ts` pins all three combinations.
 - `howTo()` is built from each tool's existing `howTo` strings, so the markup cannot
   describe a procedure different from the one the page shows a reader.
-- `product()` is gated on `paidPlansAvailable` for the same reason: offers for a plan with
-  no checkout behind it would be false.
+- `product()` is gated on something being buyable (`paidPlansAvailable` or the open launch
+  offer) for the same reason: offers for a plan with no checkout behind it would be false.
 
 **`/llms.txt`** (`src/pages/llms.txt.ts`) is a generated map of the site for assistants:
 the claim first, in prose written to survive being quoted out of context, then every tool,
@@ -441,7 +441,7 @@ account in any combination: a magic link, a password, and Google.
 | Cookie | Flags | Purpose |
 | --- | --- | --- |
 | `__Host-leaflock_session` | `Secure; HttpOnly; SameSite=Lax; Path=/` | `<sessionId>.<secret>`. Server stores only the id and a SHA-256 of the secret, so a database read alone cannot forge a session. Compared with a timing-safe equality. |
-| `leaflock_signed_in` | `Secure; SameSite=Lax` (readable by JS) | A hint, never proof. Lets `useSession()` skip `/api/auth/me` for signed-out visitors, who are nearly everyone. |
+| `leaflock_signed_in` | `Secure; SameSite=Lax` (readable by JS) | A hint, never proof. Its value is the account's plan (`free`, `pro`, `lifetime`, `practice`, `business`), written at login and rewritten by `/api/auth/me` on every call (cleared there when signed out). Lets `useSession()` skip `/api/auth/me` for signed-out visitors, who are nearly everyone, and lets the home and pricing pages choose the member view before first paint (§8). The server never reads it. |
 | `leaflock_oauth_state` | `Secure; HttpOnly; SameSite=Lax; Max-Age=600` | Rejects an OAuth callback we did not start. `Lax` because the browser returns from Google as a top-level navigation. |
 
 Session TTL is **30 days**, extended on use only when less than a day remains, so a
@@ -504,7 +504,7 @@ Prices (`src/lib/pricing.ts`, one place to change them). Decided 30 October 2026
 | | Price | Sells |
 | --- | --- | --- |
 | Pro | $4/month, $24/year | the daily limit removed, device retention |
-| Pro, ten years | $120 once | the same, for a defined ten-year term |
+| Pro, ten years | $240 once (was $120 until 12 November 2026) | the same, for a defined ten-year term |
 | Practice | $249/year | the six professional tools, the click-through DPA, the trust page |
 | Business | $499 early, $750 target | the self-hosted edition |
 
@@ -526,22 +526,70 @@ Four things 4.9 changed beyond the numbers, each worth knowing before touching t
   It earned its place immediately: it caught the Business page's frontmatter description
   still advertising $299 after the price section above it had been corrected.
 
-Two flags, and the dependency between them matters:
+**The launch schedule** (decided 12 November 2026, §13) is one instant in `src/lib/pricing.ts`:
+`plansStartAt`, midnight UTC at the start of 1 January 2027. Everything derives from it:
 
 ```ts
-export const paidPlansAvailable = false;   // can anything be bought at all
-export const proToolsGated = paidPlansAvailable;  // do Pro tools require a plan
+export const plansStartAt = Date.UTC(2027, 0, 1);
+export function offerOpen(now = Date.now()) { return now < plansStartAt; }   // checkout open, discount applies
+export const paidPlansAvailable = Date.now() >= plansStartAt;                // plans started: tools gated
+export const proToolsGated = paidPlansAvailable;                             // still derived, never set alone
 ```
 
-`proToolsGated` is *derived*, never set independently: locking a tool while there is no
-way to buy Pro would strand everyone using it. Payments may be open while Pro tools stay
-free, never the reverse. Switching either on also makes two pieces of text wrong —
-`toolPage.proNote` in `src/i18n/en/common.ts` and the early-access paragraph in terms.md
-§5 — so they change in the same breath.
+`proToolsGated` stays *derived*: locking a tool while there is no way to buy would strand
+everyone using it, and the offer opens checkout *before* the gate. A static page reads the
+date when it is built, so a deploy on or after 1 January 2027 is what changes the pages;
+`tests/unit/earlyAccessCopy.test.ts` starts failing on the first build after that date unless
+the "free during early access" copy has been swept (roadmap 4.12). `offerOpen()` is also checked at
+run time by the checkout function, so the discount ends on time even on a stale page.
+
+**The launch offer** (`launchPercentOff`, `launchPrice()`): 50% off the first year of Pro and
+Practice yearly, 25% off the ten-year term, none on monthly; charged at checkout, term from 1 January
+2027. How each is sold (`checkoutFor()` in `src/lib/server/billing.ts`, tested in
+`tests/unit/launchOffer.test.ts`):
+
+- **Yearly plans** use a separate *launch product* in Dodo (`DODO_PRODUCT_PRO_YEARLY_LAUNCH`,
+  `…PRACTICE_YEARLY_LAUNCH`) whose paid-trial **amount** is the discounted price. Dodo charges that at
+  checkout and bills the standard price at the first renewal; the trial length is set per purchase
+  (`subscription_data.trial_period_days`) so the renewal lands on 1 January 2028 whatever day it is bought.
+- **Ten-year** is the standard one-off product with a percentage code pre-applied
+  (`DODO_DISCOUNT_TEN_YEAR`, 25%, that product only).
+- A missing launch product or code answers **503**; it never falls back to the standard price under an
+  advertised discount.
+- Every subscription product needs a **long subscription period** (20 years; 240 months for monthly). The
+  Dodo default of one billing interval makes a subscription expire after its first charge.
+
+**While the tools are free** (before 1 January 2027) the site says so where a visitor decides: every Pro or
+Practice badge reads "Pro · Free now" (`tierBadgeText()`, derived from `paidPlansAvailable`, so flipping it
+removes the wording everywhere at once), the home page carries an early-access line above the tool grid, and
+the pricing page leads with the offer box. These strings live in the `pricing` catalogue, not `common`,
+because `common` is serialised into every tool page's island props (`CLAUDE.md`). Pinned by
+`tests/unit/earlyAccessVisible.test.ts`.
+
+**Members.** A signed-in member on a paid plan sees their own pricing page, not the new-visitor one:
+
+- `POST /api/billing/checkout` calls `purchaseDecision()` first and answers **409** (`already_owned` /
+  `use_upgrade`) for a plan the account has, ranks below, or is past due on. A ten-year Pro holder has no
+  subscription to change, so Practice is a fresh checkout for them (no credit; decided 12 November).
+- **Upgrade, Pro to Practice** (`functions/api/billing/upgrade.ts`, `src/lib/server/dodoUpgrade.ts`):
+  a change of plan on the existing subscription, `difference_immediately` with `prevent_change`, plus
+  the 50% code (`DODO_DISCOUNT_PRACTICE_UPGRADE`, one billing cycle, standard Practice product only)
+  during the offer. `GET` reports `none | pending | ready | unavailable`; `ready` carries the exact charge and
+  renewal date from Dodo's change-plan preview, which the page shows for confirmation because nothing
+  else asks for payment. **`pending`** is read from Dodo (a recent payment still `processing`), not stored:
+  an Indian card can sit in `processing` for up to two days, the plan only changes when it settles, and
+  a second charge fails meanwhile. No schema change; Dodo is the one place that knows.
+- **No flash.** The pricing page is static HTML, so the member view is chosen before first paint: the
+  hint cookie carries the plan, a ~0.3 KB inline script on home and pricing only (`Base.astro`
+  `memberHint`) sets `data-plan` and `data-started` on `<html>`, and the member panel
+  (`MemberPanel.astro`) is server-rendered for every plan and shown by CSS for the matching one. Only the
+  upgrade button (`UpgradeAction.tsx`) is a client island, with its space reserved. `useSession()`
+  corrects `data-plan` after fetching if the cookie was stale. Marketing for new buyers carries the class
+  `for-new` and is hidden for a paying member.
 
 **`POST /api/billing/checkout`** requires a session (so the webhook has an account to
-attach the plan to), accepts `{ plan: 'proMonthly' | 'proYearly' | 'lifetime' }`, caps the
-body at 256 bytes, and answers **503** when the products or API key are missing.
+attach the plan to), accepts `{ plan: 'proMonthly' | 'proYearly' | 'proTenYear' | 'practiceYearly' }`,
+caps the body at 256 bytes, and answers **503** when the products, codes or API key are missing.
 
 **`POST /api/billing/webhook`** is the only authority on who has a paid plan; the client
 is never trusted for it. Verification follows Standard Webhooks: HMAC-SHA256 over
@@ -549,7 +597,9 @@ is never trusted for it. Verification follows Standard Webhooks: HMAC-SHA256 ove
 base64-decoded, compared timing-safely, rejecting anything more than **5 minutes** out of
 date. Dodo retries until it gets a 2xx, so every delivery id is recorded in
 `webhook_events` and replays are ignored. An account is found by the `user_id` we sent at
-checkout, then by subscription id, then by email.
+checkout, then by subscription id, then by email. Verified end to end against the live site in test
+mode on 12 November 2026: a Pro launch purchase delivered `subscription.active`, `.renewed`,
+`payment.succeeded` and `.updated`, all answered 204, and the account became Pro.
 
 Test and live are **different hosts** (`test.` / `live.dodopayments.com`), selected by
 `DODO_MODE`, not a flag on the request.
@@ -1062,7 +1112,7 @@ them from the request origin: `http://localhost:8788/api/auth/google/callback` a
   | --- | --- | --- | --- |
   | **Free** | $0 | 37 tools, no file-size limit, 20/day anonymous and 60/day with an account, device retention at 5 min / 1 hour / 24 hours | everyone — nothing is cheaper than free |
   | **Pro** | **$24/yr** or **$4/mo** | no daily cap, custom retention length | iLovePDF ~$35–48 |
-  | **Pro, 10 years** | **$120 once** | Pro for a defined ten-year term | $1/month equivalent |
+  | **Pro, 10 years** | **$120 once** (raised to **$240** on 12 November 2026, below) | Pro for a defined ten-year term | $1/month equivalent, then $2 |
   | **Practice** | **$249/yr** | the six professional tools — redaction, Bates numbering, PDF/A, extract tables, compare, batch — plus the click-through DPA and the trust page | SealedPDF $468 |
   | **Business** | **$499/yr**, target $750 | self-hosted and air-gapped, SSO, invoicing, audit log | Stirling-PDF $1,188 team |
 
@@ -1079,7 +1129,8 @@ them from the request origin: `http://localhost:8788/api/auth/google/callback` a
   **Ten years rather than "lifetime", deliberately.** $120 against $240 of annual
   subscriptions is a 50% discount, accepted because cash now funds the lawyer, insurance
   and a possible SOC 2 — and a *defined term* is far easier to write terms for, and to
-  honour, than an indefinite promise. `docs/legal-checklist.md` §4 carries the wording.
+  honour, than an indefinite promise. `docs/legal-checklist.md` §4 carries the wording. *Repriced to
+  $240 on 12 November 2026: ten years at the yearly price, with 25% off in the launch offer.*
 
   Zero marginal cost is what makes all of this sustainable where server-side rivals cannot
   follow. The forfeit stays visible: we can never run ads, which is a revenue line iLovePDF
@@ -1138,6 +1189,22 @@ them from the request origin: `http://localhost:8788/api/auth/google/callback` a
   Cloudflare policies (bot and AI-crawler rules), production database migrations and secrets are
   the owner's to apply; the repo records the command in `docs/TODO.md` instead.
 
+- **Launch offer and a dated start — 12 November 2026.** Early access ends with 31 December 2026 and
+  paid plans start on 1 January 2027; until then everything is free and the plans can be bought at
+  50% off yearly, 25% off ten-year (first term only), charged at checkout with the term starting
+  1 January. The ten-year term was repriced **$120 → $240** the same day ($2/month equivalent; $120
+  was too little for ten years); the offer makes it $180. Moved: `paidPlansAvailable` went from a typed
+  `false` to a date, and checkout opens *before* the gate. Not changed: `proToolsGated` is still derived
+  from it, `lifetime` is still the stored plan value, and the hosted-redirect checkout keeps the CSP as it was.
+- **Paying members get their own pricing page, and Pro can upgrade to Practice — 12 November 2026.**
+  Pro to Practice is a change of plan on the existing subscription (the owner's pick: it was a day of work
+  against a "contact us" link). The offer price is shown as an **upgrade price**, not a "launch offer", and a
+  ten-year holder pays Practice's price with no credit for the Pro term. The first real upgrade found three
+  faults, all fixed the same day (§8): no price was shown before the charge, a charge in `processing` was not
+  represented so the page offered the button again, and the page flashed the new-visitor view for a second
+  or two. The fix keeps the state in Dodo rather than adding a column, and puts the plan in the existing
+  hint cookie rather than adding a fetch.
+
 ## 14. Known gaps in this design
 
 - The dashboard's browser tests stub `/api/auth/me` and `/api/usage/today`, because
@@ -1149,3 +1216,8 @@ them from the request origin: `http://localhost:8788/api/auth/google/callback` a
 - The header's signed-in link now goes to `/dashboard`, so account settings are one click
   further away (reached from the dashboard).
 - Daily allowances and `SESSION_TTL_MS` are still `[TO CONFIRM: owner]`.
+- The Pro to Practice upgrade has been previewed and its pending state seen once on a real charge, but
+  its settled outcome is not yet confirmed: whether the 50% one-cycle code also discounts the first
+  renewal, and that the webhook flips the plan to Practice. Check when the first real charge settles.
+- The member view is hidden by CSS from a cookie, so a visitor who edits the cookie sees a member page
+  with buttons that the server then refuses. Intended: the cookie is a display hint, never read by the server.

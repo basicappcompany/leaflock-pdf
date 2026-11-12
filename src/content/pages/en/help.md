@@ -1,7 +1,7 @@
 ---
 title: Help and FAQ
 description: "Answers to common questions about LeafLock PDF: privacy, supported browsers, file sizes, Pro pricing, and what to do when a PDF won't open or a tool fails."
-updated: 2026-11-03
+updated: 2026-11-12
 ---
 
 ## Privacy and security

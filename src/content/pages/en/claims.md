@@ -1,7 +1,7 @@
 ---
 title: What we claim, and how to check it
 description: "Every privacy claim LeafLock PDF makes, written to be quoted: what stays on your device, the six things we receive, what the browser forbids, and what would change each one."
-updated: 2026-11-07
+updated: 2026-11-12
 ---
 
 This page exists to be quoted. Each claim below is written so it can be copied into a security questionnaire, a procurement review or an assistant's answer without losing its meaning, and each one says how to check it and what would change it.
@@ -56,7 +56,7 @@ This is the distinction this page exists to make legible, because the honest ans
 - **Recent work, if you turn it on.** A finished file can be kept in your browser's own storage for five minutes, one hour, twenty-four hours, or a length you choose on a paid plan. It is off until you enable it, it expires on its own, and you can clear it whenever you like. It never leaves your device, so the claims above are unaffected.
 - **The OCR language model**, after you first use [OCR PDF](/ocr-pdf) — about 10 MB, kept so it is not downloaded twice. It contains nothing of yours.
 - **Your light or dark theme choice**, if you pick one.
-- **Two cookies, if you sign in**: `__Host-leaflock_session`, which identifies your session and nothing else, and `leaflock_signed_in`, a plain flag so the page knows you're signed in without asking our server. Neither carries a profile or a record of which tools you used.
+- **Two cookies, if you sign in**: `__Host-leaflock_session`, which identifies your session and nothing else, and `leaflock_signed_in`, a one-word label of which plan you are on (for example `free` or `pro`), so the page can show you the right view without asking our server. Neither carries a profile or a record of which tools you used.
 - **One more, only if you pick a visual skin**: `leaflock_skin`, which remembers your choice. Signed out, or on a free plan, it lasts only until you close the browser; signed in on Pro or Practice, it's kept for a year. See [Cookies](/cookies) for the full detail on all three and why none of them need a banner.
 
 You can remove all of it by clearing site data for leaflockpdf.com in your browser's settings.
