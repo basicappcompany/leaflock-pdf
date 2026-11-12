@@ -17,6 +17,20 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 12 November 2026 — Launch offer, member pricing page, Pro to Practice upgrade (PRs #49-#51)
+
+Early access now ends 31 December 2026 and the plans start 1 January 2027; until then yearly plans are 50% off and the
+ten-year plan (repriced $120 to $240) 25% off. **A Dodo "paid trial" is how a charge-now, renew-later plan is sold:** the trial
+amount is the discounted price, and `subscription_data.trial_period_days` is set per purchase so renewal lands on 1 January 2028.
+The ten-year plan is a pre-applied percentage code instead. A missing launch product or code answers 503 and never falls back
+to the standard price. **A Dodo subscription whose period equals its billing interval expires after one charge**; every product
+here was created that way and is now 20 years (240 months for monthly). The first real upgrade (test mode, an Indian card) showed
+that a plan-change charge goes to the saved card with no checkout page and can sit in `processing` for about two days, so the page
+now shows the exact charge to confirm and reports "pending" from Dodo itself. The pricing page flashed the new-visitor view for
+a second or two; the plan now rides in the `leaflock_signed_in` cookie and a 0.3 KB pre-paint script (home and pricing only)
+picks the member view before first paint. Two CI lessons: every tool page serialises the whole `common` catalogue into its island
+props, and `global.css` is inlined everywhere, so new strings and styles went to `pricing` and their own file.
+
 ## 10 November 2026 — IndexNow pings by itself after each deploy
 
 `.github/workflows/indexnow.yml` runs on every push to `main`: it waits for the "Cloudflare Pages" check

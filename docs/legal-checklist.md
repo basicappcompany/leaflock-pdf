@@ -96,10 +96,18 @@ own storage, which is the same category as the OCR model cache already covered i
 ## 4. Paid plans (terms.md)
 
 - [x] ~~Number of founding lifetime plans offered, and what "lifetime" covers.~~
-      **Replaced 30 October 2026 by a defined ten-year term: $120 once, for Pro.** This is
+      **Replaced 30 October 2026 by a defined ten-year term: $120 once, for Pro (repriced to $240 on 12 November 2026).** This is
       deliberately easier to draft and to honour than an indefinite promise — please confirm
       the wording for a fixed-term prepaid plan, including what happens if the service ends
       before the term expires (which the next item also covers).
+- [ ] **Money taken before the term starts (launch offer, from 12 November 2026).** A buyer pays at checkout
+      and the paid term starts on 1 January 2027, up to about seven weeks later; yearly plans then renew on
+      1 January 2028 at the standard price. `terms.md` §5 now says so. Confirm the refund and withdrawal wording
+      covers a purchase made before the term begins, and what happens to a prepaid ten-year term (also: Dodo's
+      60-day refund window runs from the payment, not the term start).
+- [ ] **Plan changes:** a Pro subscriber upgrading to Practice is charged the difference for what they paid
+      (Dodo `difference_immediately`) and the cycle restarts from the change. State the refund and proration
+      treatment of that in `terms.md` §5 before real money moves.
 - [ ] Renewal reminder emails for yearly plans, and their timing.
 - [ ] Refund policy, aligned with the merchant of record's terms and consumer law, including the EU 14-day withdrawal right for digital services.
 - [ ] Remedy if a paid feature is removed, or if we end a paid plan for a reason other than the user's breach.

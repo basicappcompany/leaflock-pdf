@@ -1,16 +1,20 @@
 # TODO: credentials, config and deferred setup
 
-## At a glance — 10 November 2026
+## At a glance — 12 November 2026
 
 A dated snapshot; the sections below are the detail and the source of truth.
 
 **Pending on you** (accounts, dashboards, people):
 - Valid `ANTHROPIC_API_KEY` (§9); a person to review translated trust claims (§9).
-- Check Gmail for the "Feedback: TEST" message sent to `feedback@`, and send one test email each to `hello@`
-  and `feedback@` from another account (§0, §4); decide on replying from `hello@`. The secrets are set.
+- Send one test email each to `hello@` and `feedback@` from another account (§0, §4); decide on replying
+  from `hello@`. (The feedback form was verified end to end on 12 November: stored, and the notification arrived.)
 - Auto-renew and registrar 2FA (§0); TLS 1.2 and Bot Fight Mode decisions (§8); whether an edge rule blocks
   GitHub's runners from `/sitemap.xml` (§8).
-- Google OAuth client, Dodo products and webhook, Paddle (§1, §3); legal review (`legal-checklist.md`).
+- Google OAuth client, Paddle (§1, §3); legal review (`legal-checklist.md`), including refund wording for the
+  launch offer, which takes money before the term starts.
+- **Dodo:** test mode is live on the site (12 November). Left: when the first real Pro to Practice upgrade settles,
+  check the plan flipped and the 50% code did not also discount the first renewal; go-live mode (§3); a deploy on
+  1 January 2027.
 - Bing Webmaster Tools; look at Search Console in a few days; post the launch drafts when signed in.
 
 **Pending on me** (engineering, no input needed to start):
@@ -89,7 +93,7 @@ number is open.
 
 - [x] **Pro $24/yr or $4/mo** (down from $59). Monthly is $4 rather than $2.50 because a
       flat 50¢ per transaction would otherwise take a quarter of it.
-- [x] **Pro, 10 years: $120 once** — a defined term rather than a "lifetime" plan.
+- [x] **Pro, 10 years: $120 once** — a defined term rather than a "lifetime" plan. **Repriced to $240 on 12 November 2026** (25% off in the launch offer).
 - [x] **Practice $249/yr** — the six professional tools, the click-through DPA, the trust page.
 - [x] **Business $499/yr**, target $750.
 - [x] Priced **per category**, not globally.
@@ -108,7 +112,7 @@ The code was item 4.9, **shipped 30 October 2026**:
       paid tier against the registry both ways round — including that no Practice tool is
       ever advertised as a Pro feature, which is the drift that would charge someone $24
       for $249 of tools.
-- [x] **The 10-year plan is Pro**, at $120 ($1/month equivalent); $120 for ten years of
+- [x] **The 10-year plan is Pro**, at $120 ($1/month equivalent; $240 from 12 November); $120 for ten years of
       Practice would be far below cost. It is sold as a defined ten-year term rather than
       a "lifetime" plan. The stored plan value is still `lifetime`: renaming it would mean
       a second table rebuild and a data update for no change in behaviour.
@@ -116,12 +120,12 @@ The code was item 4.9, **shipped 30 October 2026**:
       which carries the security-questionnaire answers a category 4 buyer asks for.
 - [ ] **Not code, and still open:** the click-through DPA Practice is sold on goes into the
       6.3 lawyer engagement. Until it exists, the pricing copy promises a DPA that does not
-      yet exist — which costs nothing while `paidPlansAvailable` is false, and must not
-      still be true when it flips.
+      yet exist — which costs nothing while the Practice tools are free (until 1 January
+      2027), and must not still be true when the plans start.
 - [ ] **`terms.md` and `legal-checklist.md` §4 need the ten-year term written**, replacing
       the open "what does lifetime cover" question — a fixed term is easier to honour and
       easier to draft.
-- [ ] **A CA question, not a lawyer one:** $120 taken for ten years of service is deferred
+- [ ] **A CA question, not a lawyer one:** $240 (or $180 in the launch offer) taken for ten years of service is deferred
       revenue recognised over that term. Worth asking once the entity exists.
 - [ ] If it changes, it touches `src/lib/pricing.ts` (the numbers),
       `src/i18n/en/pricing.ts` (the plan copy), and `tests/unit/proCopy.test.ts` (which
@@ -165,7 +169,7 @@ fails as soon as it is exercised locally.
       matching the verified domain.
 - [ ] `DODO_API_KEY` — creating checkout sessions.
 
-## 3. Dodo Payments — values present but unverified
+## 3. Dodo Payments — test mode live on the site; live mode not yet set up
 
 **Merchant account submitted for review — 3 November 2026.** Dodo's Product Information
 onboarding form is filled in and submitted (integration method: API/SDK, their
@@ -185,14 +189,58 @@ rather than ids copied from a real dashboard.
 returned undefined for Practice and its checkout would have found no product. A stand-in
 now sits in `.dev.vars` beside the other three, and needs a real id like them.
 
-- [ ] Confirm each product id against the Dodo test dashboard, or create the products.
-- [ ] Confirm the webhook secret belongs to a real endpoint pointed at
-      `/api/billing/webhook`.
+**Update, 12 November 2026 — test mode is real, not stand-ins, and on sale on the live site.** The four
+standard products exist and their ids match `.dev.vars`. A **launch offer** (50% off yearly plans, 25% off
+the ten-year plan, charged at checkout, term from 1 January 2027; `src/lib/pricing.ts`, `docs/design.md` §8) was
+set up and shipped the same day (PRs #49-#51):
+
+- [x] Confirm each product id against the Dodo test dashboard — all four match.
+- [x] **Ten-year product repriced $120 → $240** in the test dashboard (decided 12 November).
+- [x] **Two launch products created in test mode**: Pro Yearly (launch offer) `pdt_0NrjfwsSE7wuuqhajcW1C`
+      (trial amount $12) and Practice Yearly (launch offer) `pdt_0NrjgFBbqXaRKmQcoZMTE` (trial amount $124.50).
+      Each is a paid trial: the trial amount is charged at checkout and the full price renews at the end of
+      the trial, which `checkoutFor()` sets per purchase so renewal lands on 1 January 2028.
+- [x] **Discount codes**, both created in test mode: `LAUNCH10Y25` (25%, ten-year product only, pre-applied by
+      `checkoutFor()`) and `UPGRADEPRACTICE50` (50%, standard Practice product only, **limited to one billing
+      cycle**, applied by `upgradeFor()` when a Pro subscriber upgrades during the offer).
+- [x] **Subscription periods fixed** (12 November, read back from Dodo's API): the Dodo default of one billing
+      interval makes a subscription expire after its first charge, and the standard products had it. Pro
+      Monthly is now 240 months, Pro Yearly and Practice Yearly 20 years, and both launch products 20 years.
+- [x] Verified against Dodo's checkout preview: Pro yearly $12.00 today then $24 on 2028-01-01; Practice
+      $124.50 then $249; ten-year $180.
+- [x] **Webhook endpoint created** in the test dashboard for `https://leaflockpdf.com/api/billing/webhook`,
+      all events (`ep_3LyNCdV1elQXn30ezexqyIIkfzU`); its signing secret is set in `.dev.vars` and in production.
+- [x] **Production secrets set** (owner, 12 November): `DODO_API_KEY`, `DODO_WEBHOOK_SECRET`, `DODO_MODE=test`, the
+      four `DODO_PRODUCT_*` ids, `DODO_PRODUCT_PRO_YEARLY_LAUNCH`, `DODO_PRODUCT_PRACTICE_YEARLY_LAUNCH`,
+      `DODO_DISCOUNT_TEN_YEAR`, `DODO_DISCOUNT_PRACTICE_UPGRADE`. Without any of the launch ones, checkout or
+      upgrade answers 503 on purpose (it never falls back to the standard price).
+- [x] **End to end on the live site, test mode** (12 November): a Pro launch purchase delivered
+      `subscription.active`, `.renewed`, `payment.succeeded` and `.updated`, all answered 204, and the account
+      became Pro. Lesson: the webhook secret must be uploaded from a file, not via a prompt, in this harness (a prompt
+      reads empty input and still prints "Success").
+- [ ] **The first real Pro to Practice upgrade is waiting on the bank** (12 November, an Indian card: Dodo shows the
+      change-plan charge as `processing`, up to about two days; the plan only changes when it settles, and the page
+      says so). When it settles: confirm the account became Practice and the `subscription.plan_changed` webhook was
+      accepted, and check whether the 50% one-cycle code also discounted the **first renewal** (Dodo's preview
+      suggested it might; if so, the code needs adjusting before the offer is promoted).
+- [ ] **Go live** (Dodo live mode): create the same products (with the 20-year subscription periods), both
+      discount codes and a webhook endpoint in live mode; the ids and the signing secret differ. Then switch
+      `DODO_MODE` and the production secrets. Live and test are separate hosts and separate keys.
+- [ ] **A deploy on or after 1 January 2027 is what ends early access on the site**: `paidPlansAvailable` is
+      computed from the date at build time. Plan that deploy, and have the copy sweep for roadmap 4.12 ready
+      first — `earlyAccessCopy.test.ts` starts failing on the first build after that date, by design. The launch
+      offer closes at the end of 31 December in the checkout function at run time, but the pricing page and home
+      banner are static until the next deploy; deploy early on 1 January so a stale "50% off" is not left up.
+- [ ] **Terms and refunds**: the launch offer takes money up to about seven weeks before the term starts, and an
+      upgrade charges the difference for what was paid. `terms.md` §5 says so; the refund wording (`[TO CONFIRM]`
+      there, and in `legal-checklist.md` §4) must cover a purchase made before the start date and a plan change.
+- [x] **Docs quoting $120 for the ten-year plan** swept 12 November (`design.md`, `roadmap.md`, `status.html`,
+      `legal-checklist.md`; the history entries keep $120 on purpose and say where it changed).
 - [x] ~~Decide Paddle vs Dodo for good~~ — already decided 28 October 2026 (both, split by
       region; see legal-checklist.md §2) and now named in `privacy.md` and `terms.md`
       (3 November 2026). What's still open is wiring Paddle into the code — only Dodo
       exists in `functions/` and `.dev.vars` today.
-- [ ] Switch `DODO_MODE` to live and set the production secrets before launch.
+- [ ] Switch `DODO_MODE` to live and set the production secrets before launch (see "Go live" above).
 - [ ] **Paddle has no code yet.** The billing routes (`functions/api/billing/*`,
       `src/lib/server/billing.ts`) only know Dodo. Policy pages now promise Paddle
       handles non-India customers — that promise isn't true until Paddle is integrated.
@@ -223,8 +271,9 @@ now sits in `.dev.vars` beside the other three, and needs a real id like them.
       `printf 'feedback@leaflockpdf.com' | pnpm exec wrangler pages secret put FEEDBACK_NOTIFY_EMAIL
       --project-name leaflock-pdf`, then a new deploy. `wrangler pages secret list` shows production has
       `EMAIL_FROM`, `FEEDBACK_NOTIFY_EMAIL`, `RESEND_API_KEY` and `SESSION_IP_SALT` (checked 10 November).
-      Messages are also stored and read with `pnpm feedback`; sending uses Resend. Not verified: that the
-      test message actually reached the inbox. Only the owner can see that.
+      Messages are also stored and read with `pnpm feedback`; sending uses Resend. **Verified 12 November
+      2026:** a test POST to the live `/api/feedback` returned 204 and the owner received the notification
+      email, so storage and the Resend notification both work in production.
 - [x] **The feedback form’s fallback address now has a mailbox** (9 November 2026, §0): a visitor who
       hits the "could not send" message can write to `hello@leaflockpdf.com` and it arrives.
 - [x] **Migration `0006_starred_tools` applied to production**, 8 November 2026, by the owner

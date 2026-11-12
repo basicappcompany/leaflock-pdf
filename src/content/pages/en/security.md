@@ -1,7 +1,7 @@
 ---
 title: How your files stay private
 description: LeafLock PDF processes files in your browser and never uploads them. Here's how that works, and how to check it yourself with your browser's developer tools.
-updated: 2026-11-03
+updated: 2026-11-12
 ---
 
 When you use a LeafLock PDF tool, your file is processed by code running in your own browser. It is not uploaded to us or to anyone else. This page explains how that works, what is and isn't stored on your device, and how you can verify all of it yourself without taking our word for it.
@@ -82,7 +82,7 @@ LeafLock PDF stores very little, and almost all of it stays on your device. The 
 - **Your light or dark theme choice**, saved in your browser's localStorage under the key `theme` once you press the theme button. The default is light, and nothing is saved until you press it.
 - **Your starred and recent tools.** The names of tools you starred or used recently, with the times for the recent ones, in your browser's localStorage so the sidebar can show them. Tool names only, never a file or a file name. If you are signed in, your starred tools are also saved to your account so they follow you to other browsers; that is a list of tool names and nothing else.
 - **Recent work, if you turn it on.** A finished file, kept in your browser's own storage (IndexedDB) for five minutes, one hour, twenty-four hours, or a length you choose on a paid plan. Off until you enable it, deleted when it expires, and clearable at any time. It never leaves your device.
-- **Two cookies, if you sign in**: `__Host-leaflock_session`, which identifies your session and carries nothing else, and `leaflock_signed_in`, a plain flag so the page knows you're signed in without asking our server. A third, `leaflock_skin`, is set only if you pick a visual skin — see the [Cookie policy](/cookies) for how long each one lasts.
+- **Two cookies, if you sign in**: `__Host-leaflock_session`, which identifies your session and carries nothing else, and `leaflock_signed_in`, a one-word label of which plan you are on, so the page can show you the right view without asking our server. A third, `leaflock_skin`, is set only if you pick a visual skin — see the [Cookie policy](/cookies) for how long each one lasts.
 - **The OCR language model**, after you use [OCR PDF](/ocr-pdf) for the first time. It's a file of about 10 MB that teaches the OCR engine to recognize English text. Your browser saves it in its own storage (IndexedDB) so it doesn't have to download it again. It contains nothing about your documents.
 
 Like any website, your browser may also keep copies of our pages and scripts in its normal cache to load them faster next time.

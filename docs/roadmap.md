@@ -1055,7 +1055,7 @@ that needs the full catalogue in front of it.
   | Tier | Price | Category | Undercuts |
   | --- | --- | --- | --- |
   | Pro | **$24/yr** or **$4/mo** | 2 — prosumer online | iLovePDF ~$35–48 |
-  | Pro, 10 years | **$120 once** | 2 | $1/month equivalent |
+  | Pro, 10 years | **$240 once** (was $120 until 12 November 2026) | 2 | $2/month equivalent |
   | Practice | **$249/yr** | 4 — legal and compliance | SealedPDF $468 |
   | Business | **$499/yr**, target $750 | 5 — self-hosted | Stirling-PDF $1,188 team |
 
@@ -1084,6 +1084,15 @@ that needs the full catalogue in front of it.
   because it is the monetisation switch rather than a feature, and it is a **blocker** rather
   than additive for one reason — launching with every paid tier reading "Coming soon" is
   launching with no revenue, so it gates the launch the way the policy pages do.
+
+  **Update, 12 November 2026 — partly done, and the flag is now a date.** Early access ends with 31
+  December 2026 and the plans start on 1 January 2027; until then they can be bought at a launch
+  discount (50% off yearly, 25% off ten-year, first term only), charged at checkout with the term
+  starting 1 January. `paidPlansAvailable` is computed from `plansStartAt` rather than typed, so the
+  Practice tools gate themselves that day, and checkout opens before the gate (`docs/design.md` §8,
+  §13). Paying members get their own pricing page and Pro can upgrade to Practice. **Still to do under
+  this item:** Dodo live mode, the early-access copy sweep before the first build on or after 1 January
+  (`earlyAccessCopy.test.ts` fails then, by design), refund wording, and a deploy that day.
 
   It is not a one-line flip, which is why it carries a day rather than an hour:
 
