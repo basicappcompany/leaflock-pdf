@@ -31,3 +31,10 @@ Not started. `robots.txt` today is `User-agent: * / Allow: /` + sitemap (already
 
 ## Where I stopped
 After the ground-rules check and a header/library baseline. No code or live settings were changed.
+
+## Update — later on 14 November 2026
+- **fixed:** `isEvalSupported: false` added to `getDocument` in `src/lib/pdfjs.ts` (not yet deployed or browser-tested; run `pnpm test` and `pnpm test:e2e` before shipping).
+- **already fine:** git history scan for `sk_live`/`sk_test`/`whsec_`/private keys: only hit is a base64 *test fixture* `whsec_` in a unit test. No live secrets found.
+- **already fine:** service worker (`public/sw.js`): same-origin, `basic`-type, non-206 responses only; old caches deleted on activate by build id; `sw.js` served `no-cache`; vendor cache is versioned. Not yet checked: scope/path takeover, that user files are never cached (no code path found, not tested).
+- **needs review:** `innerHTML` uses — `src/components/ToolsSidebar.astro:361,400` and `dashboard/DashboardPanel.tsx:49` (`dangerouslySetInnerHTML` of `toolIcons[tool]`). The latter looks like static icon SVG, not user data; confirm. No `eval(`/`new Function` found in `src` or `functions`.
+- **not started** (unchanged): A1 grades, A2 network proof, A5 tool correctness, A8 paid plans, A9 forms, A10 account settings, all of Part B and C, OUTREACH.md.
