@@ -67,6 +67,9 @@ const t = getMessages(locale).common;
 // A locale with no translation serves English under its own URL. Indexing that would publish
 // thin duplicates of every page, so it is noindex until the locale has a catalogue.
 const keepOut = noindex || !isTranslated(locale);
+// Open Graph wants language_TERRITORY, not a bare language tag.
+const OG_LOCALES: Record<string, string> = { en: 'en_US', hi: 'hi_IN', bn: 'bn_BD', 'pt-BR': 'pt_BR', id: 'id_ID', ru: 'ru_RU', de: 'de_DE', es: 'es_ES', fr: 'fr_FR', tr: 'tr_TR', vi: 'vi_VN', it: 'it_IT', ja: 'ja_JP', pl: 'pl_PL', ko: 'ko_KR', ar: 'ar_AR', th: 'th_TH', nl: 'nl_NL', fil: 'fil_PH' };
+const ogLocale = OG_LOCALES[locale] ?? locale.replace('-', '_');
 const site = Astro.site!;
 const canonical = getAbsoluteLocaleUrl(locale, path);
 const image = new URL(`/og/${ogImage}.png`, site).href;
@@ -152,6 +155,7 @@ const chromeHeightScript = cspInlineScript(`
     <title>{title}</title>
     <meta name="description" content={description} />
     {keepOut && <meta name="robots" content="noindex" />}
+    {!keepOut && <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1" />}
     {!keepOut && <link rel="canonical" href={canonical} />}
     {
       !keepOut &&
@@ -172,8 +176,10 @@ const chromeHeightScript = cspInlineScript(`
     <meta property="og:image" content={image} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content={locale} />
+    <meta property="og:locale" content={ogLocale} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
 
     <script type="application/ld+json" set:html={structuredData} />
     <script is:inline set:html={preTheme} />

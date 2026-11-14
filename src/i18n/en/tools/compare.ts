@@ -2,7 +2,7 @@ import type { PluralForms } from '../../format';
 
 export default {
   title: 'Compare PDF',
-  metaTitle: 'Compare two PDFs and see the differences, privately | LeafLock PDF',
+  metaTitle: 'Compare two PDFs for differences, privately | LeafLock PDF',
   metaDescription:
     'Find what changed between two versions of a PDF: text differences and visual changes, page by page. No upload.',
   summary: 'See what changed between two versions of a document.',

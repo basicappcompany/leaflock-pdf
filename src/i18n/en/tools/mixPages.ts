@@ -1,6 +1,6 @@
 export default {
   title: 'Alternate & mix PDF pages',
-  metaTitle: 'Alternate and mix PDF pages — combine two scans | LeafLock PDF',
+  metaTitle: 'Mix and alternate PDF pages, privately | LeafLock PDF',
   metaDescription:
     'Interleave two PDFs page by page, the way you rejoin a stack scanned front-side then back-side. Runs in your browser; nothing is uploaded.',
   summary: 'Interleave two PDFs page by page — ideal for two-pass scans.',

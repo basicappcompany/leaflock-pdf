@@ -1,5 +1,5 @@
 ---
-title: How to turn a scanned PDF into searchable text
+title: Turn a scanned PDF into searchable text
 description: What OCR is, how to prepare scans for accurate text recognition, and how to make a scanned PDF searchable on your own device without uploading it.
 published: 2026-10-21
 tools: [ocr, scan, pdfToText, rotate]

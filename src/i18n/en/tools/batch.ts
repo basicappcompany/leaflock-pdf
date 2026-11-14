@@ -1,6 +1,6 @@
 export default {
   title: 'Batch PDF',
-  metaTitle: 'Batch process PDF files privately, in your browser | LeafLock PDF',
+  metaTitle: 'Batch process PDFs in your browser | LeafLock PDF',
   metaDescription:
     'Compress, protect or flatten many PDFs in one go, without uploading any of them. Everything runs on your device.',
   summary: 'Run the same job over many PDFs at once, without doing them one by one.',

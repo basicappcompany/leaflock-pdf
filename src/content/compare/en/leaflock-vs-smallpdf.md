@@ -1,5 +1,5 @@
 ---
-title: 'LeafLock PDF vs Smallpdf: privacy and features compared'
+title: 'LeafLock PDF vs Smallpdf: privacy compared'
 description: A factual comparison of LeafLock PDF and Smallpdf, covering where files are processed, file retention, the free plan, apps, languages and tools.
 competitor: Smallpdf
 checkedOn: 2026-10-21

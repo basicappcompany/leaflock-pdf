@@ -2,7 +2,7 @@ import type { PluralForms } from '../../format';
 
 export default {
   title: 'Compress PDF',
-  metaTitle: 'Compress a PDF and reduce its file size, privately | LeafLock PDF',
+  metaTitle: 'Compress a PDF privately, in your browser | LeafLock PDF',
   metaDescription:
     'Make PDFs smaller by shrinking images and tidying the file, in your browser. See the size before and after. No upload.',
   summary: 'Make a PDF smaller, mostly by shrinking the images inside it.',

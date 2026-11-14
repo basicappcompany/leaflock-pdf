@@ -1,5 +1,5 @@
 ---
-title: How to redact a PDF properly (and why black boxes often fail)
+title: How to redact a PDF properly
 description: Black boxes and highlighting don't remove text from a PDF. Learn how real redaction works, how to do it on your device, and what to check before sharing.
 published: 2026-10-21
 tools: [redact, flatten, compare]

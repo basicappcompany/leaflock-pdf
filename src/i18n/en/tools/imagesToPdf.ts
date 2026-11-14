@@ -2,7 +2,7 @@ import type { PluralForms } from '../../format';
 
 export default {
   title: 'JPG to PDF',
-  metaTitle: 'Convert JPG, PNG and other images to PDF, privately | LeafLock PDF',
+  metaTitle: 'Convert images to PDF without uploading | LeafLock PDF',
   metaDescription:
     'Turn photos and images (JPG, PNG, WebP and more) into a PDF in your browser. Choose page size and margins. No upload.',
   summary: 'Turn photos and images into a PDF, one image per page.',

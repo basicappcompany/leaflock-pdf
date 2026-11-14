@@ -1,6 +1,6 @@
 ---
-title: 'LeafLock PDF vs pdfFiller: privacy and features compared'
-description: A factual comparison of LeafLock PDF and pdfFiller, covering where documents are processed, how long they are kept, what personal data is collected, signatures and price.
+title: 'LeafLock PDF vs pdfFiller: privacy compared'
+description: "LeafLock PDF vs pdfFiller: where documents are processed, how long they are kept, data collected, signatures and price."
 competitor: pdfFiller
 checkedOn: 2026-11-01
 sources:

@@ -2,7 +2,7 @@ import type { PluralForms } from '../../format';
 
 export default {
   title: 'OCR PDF',
-  metaTitle: 'Make scanned PDFs searchable with OCR, privately | LeafLock PDF',
+  metaTitle: 'OCR a scanned PDF without uploading | LeafLock PDF',
   metaDescription:
     'Recognize text in scanned PDFs and images, and make them searchable and copyable. OCR runs on your device, not on a server.',
   summary: 'Recognize text in scans so you can search, select and copy it.',

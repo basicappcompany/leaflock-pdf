@@ -2,7 +2,7 @@ import type { PluralForms } from '../../format';
 
 export default {
   title: 'Edit PDF',
-  metaTitle: 'Edit a PDF: add text, images and shapes, privately | LeafLock PDF',
+  metaTitle: 'Edit a PDF: add text, images, shapes | LeafLock PDF',
   metaDescription:
     'Add text, images, shapes and highlights to a PDF, or white out mistakes. Edit in your browser without uploading.',
   summary: 'Add text, images, shapes and highlights, or white out mistakes.',

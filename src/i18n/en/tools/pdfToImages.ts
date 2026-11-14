@@ -1,6 +1,6 @@
 export default {
   title: 'PDF to JPG',
-  metaTitle: 'Convert PDF pages to JPG or PNG images, privately | LeafLock PDF',
+  metaTitle: 'Convert PDF to JPG or PNG, privately | LeafLock PDF',
   metaDescription:
     'Save every page of a PDF as a high-quality JPG or PNG image, right in your browser. No upload and no watermark.',
   summary: 'Save each page of a PDF as a JPG or PNG image.',

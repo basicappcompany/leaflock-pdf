@@ -2,7 +2,7 @@ export default {
   title: 'Add page labels',
   metaTitle: 'Add PDF page labels (i, ii, A-1…) privately | LeafLock PDF',
   metaDescription:
-    'Set what a PDF reader shows as each page number — roman numerals for a preface, a custom prefix, a different start — without drawing anything on the page. Free, private, in your browser.',
+    'Set the page numbers a PDF reader shows: roman numerals, a prefix or a new start, without drawing on the page. Free, in your browser.',
   summary: 'Set what your PDF reader shows as the page number, for one or more ranges.',
   howTo: [
     'Choose a PDF.',

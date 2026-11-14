@@ -1,6 +1,6 @@
 ---
 title: What we claim, and how to check it
-description: "Every privacy claim LeafLock PDF makes, written to be quoted: what stays on your device, the six things we receive, what the browser forbids, and what would change each one."
+description: "Every privacy claim LeafLock PDF makes, written to be quoted: what stays on your device, what we receive and what would change it."
 updated: 2026-11-12
 ---
 

@@ -1,6 +1,6 @@
 export default {
   title: 'Organize PDF',
-  metaTitle: 'Reorder, rotate and delete PDF pages, privately | LeafLock PDF',
+  metaTitle: 'Reorder, rotate, delete PDF pages privately | LeafLock PDF',
   metaDescription:
     'Rearrange PDF pages by dragging, rotate or delete them, and add blank pages. Runs entirely in your browser.',
   summary: 'Reorder, rotate, delete and add pages, all in one view.',

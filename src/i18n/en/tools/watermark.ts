@@ -1,6 +1,6 @@
 export default {
   title: 'Add watermark',
-  metaTitle: 'Add a text or image watermark to a PDF, privately | LeafLock PDF',
+  metaTitle: 'Add a watermark to a PDF, privately | LeafLock PDF',
   metaDescription:
     'Stamp text or a logo over your PDF pages. Set position, size, angle and transparency. Runs entirely in your browser.',
   summary: 'Stamp text or a logo across your pages.',

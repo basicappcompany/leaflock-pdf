@@ -3,7 +3,7 @@ export const pricing = {
   title: 'Pricing',
   metaTitle: 'Pricing: free PDF tools, Pro, Practice and Business | LeafLock PDF',
   metaDescription:
-    'LeafLock PDF is free to use, with no file-size limit. Pro removes the daily limit for $4 a month or $24 a year, and Practice adds the six professional tools for $249 a year. No trials that turn into charges.',
+    'LeafLock PDF is free with no file-size limit. Pro removes the daily limit for $4 a month or $24 a year; Practice is $249 a year.',
   intro: 'Every core tool is free, with no account. Pro is for people who work with PDFs every day.',
   /** `{endDate}` is the last day of early access and `{startDate}` the day paid plans start (src/lib/pricing.ts). */
   earlyAccess:

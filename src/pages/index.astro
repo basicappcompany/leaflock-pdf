@@ -31,7 +31,7 @@ const jsonLd = [
 ---
 
 <Base
-  title={`${common.site.name}: ${common.site.tagline}`}
+  title={`${common.site.name}: ${common.site.tagline.split(". ")[0]!.replace(/.$/, "")}`}
   description={common.site.metaDescription}
   path=""
   jsonLd={jsonLd}

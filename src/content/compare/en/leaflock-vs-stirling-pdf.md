@@ -1,6 +1,6 @@
 ---
-title: 'LeafLock PDF vs Stirling-PDF: privacy and features compared'
-description: A factual comparison of LeafLock PDF and Stirling-PDF, covering self-hosting, where files are processed, what you have to run and maintain, team pricing and air-gapped deployment.
+title: 'LeafLock vs Stirling-PDF: privacy compared'
+description: "LeafLock PDF vs Stirling-PDF: self-hosting, where files are processed, what you maintain, team pricing and air-gapped use."
 competitor: Stirling-PDF
 checkedOn: 2026-11-01
 sources:

@@ -1,6 +1,6 @@
 ---
-title: 'LeafLock PDF vs PDF24: privacy and features compared'
-description: A factual comparison of LeafLock PDF and PDF24 Tools, covering where files are processed, how long they are kept, the offline desktop option, trackers, price and tools.
+title: 'LeafLock PDF vs PDF24: privacy compared'
+description: "LeafLock PDF vs PDF24 Tools: where files are processed, how long they are kept, the offline desktop app, trackers and price."
 competitor: PDF24
 checkedOn: 2026-11-01
 sources:

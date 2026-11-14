@@ -132,7 +132,10 @@ interface Budget {
 // (Base.astro `memberHint`, about 0.3 KB) that reads the plan from the signed-in cookie before first
 // paint, so a paying member sees their own view at once instead of the new-visitor page for a second or
 // two. Only these two pages carry it; tool pages (their own budget below) do not.
-const CONTENT_BUDGET: Budget = { html: 106_500, jsCss: 320_000, lcpMs: 1500, cls: 0.1 };
+// HTML 106_500 -> 107_000 and tool pages 105_000 -> 105_500 on 15 Nov 2026: every page now carries a
+// robots meta (index,follow,max-image-preview,max-snippet) and twitter:title / twitter:description for
+// search and AI-answer visibility. About 0.3 KB per page.
+const CONTENT_BUDGET: Budget = { html: 107_000, jsCss: 320_000, lcpMs: 1500, cls: 0.1 };
 // Tool pages' HTML 100_000 -> 102_000 on 7 Nov 2026: the language switcher (src/components/
 // LanguageSwitcher.astro) lists every translated language in every page so it works without
 // JS. Ten languages cost about 1.2 KB per page (~0.12 KB per language added); /ocr-pdf went
@@ -142,7 +145,7 @@ const CONTENT_BUDGET: Budget = { html: 106_500, jsCss: 320_000, lcpMs: 1500, cls
 // (ToolsSidebar.astro) ships its wording in a <template> on every page with the sidebar, so it is in
 // the visitor's language and needs no request to open. About 1.9 KB; /ocr-pdf went from just under
 // the old limit to 103.5 KB. Build the dialog from a fetched fragment instead if this is raised again.
-const TOOL_BUDGET: Budget = { html: 105_000, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
+const TOOL_BUDGET: Budget = { html: 105_500, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
 
 /** One representative page per kind, not all 52: this is a real-browser measurement
  * with response-body capture, materially slower per page than site.spec.ts's "loads

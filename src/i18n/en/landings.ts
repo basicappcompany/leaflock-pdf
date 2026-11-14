@@ -179,7 +179,7 @@ export const landings = {
     title: 'Delete pages from a PDF',
     metaTitle: 'Delete pages from a PDF, privately | LeafLock PDF',
     metaDescription:
-      'Delete the pages you do not need from a PDF by clicking them or typing page numbers. It runs in your browser, nothing is uploaded, and there is no watermark.',
+      'Delete unwanted pages from a PDF by clicking them or typing page numbers. It runs in your browser; nothing is uploaded.',
     summary: 'Delete the pages you do not need from a PDF.',
     howTo: [
       'Choose a PDF.',
@@ -211,7 +211,7 @@ export const landings = {
   },
   pdfPasswordRemover: {
     title: 'PDF password remover',
-    metaTitle: 'Remove a password from a PDF you own, privately | LeafLock PDF',
+    metaTitle: 'Remove a PDF password you own, privately | LeafLock PDF',
     metaDescription:
       'Remove the password from a PDF you are allowed to open. The password and the file stay in your browser; nothing is uploaded.',
     summary: 'Remove the password from a PDF you are allowed to open.',
@@ -245,7 +245,7 @@ export const landings = {
   },
   rearrangePdfPages: {
     title: 'Rearrange PDF pages',
-    metaTitle: 'Rearrange, reorder and rotate PDF pages privately | LeafLock PDF',
+    metaTitle: 'Rearrange and rotate PDF pages privately | LeafLock PDF',
     metaDescription:
       'Drag PDF pages into a new order, rotate or remove pages, even mix pages from several files. It runs in your browser, so nothing is uploaded.',
     summary: 'Drag the pages of a PDF into a new order, and rotate or remove the ones you need to.',
@@ -315,7 +315,7 @@ export const landings = {
     title: 'Compress PDF to 200 KB',
     metaTitle: 'Compress a PDF to 200 KB without uploading it | LeafLock PDF',
     metaDescription:
-      'Shrink a PDF to 200 KB or less by reducing the images inside it. Nothing is uploaded, and you are told plainly if the file cannot get that small. Free, no watermark.',
+      'Shrink a PDF to 200 KB or less by reducing its images. Nothing is uploaded, and you are told if it cannot get that small.',
     summary: 'Get a PDF under 200 KB, mostly by shrinking the images inside it.',
     howTo: [
       'Choose a PDF.',
@@ -341,7 +341,7 @@ export const landings = {
     title: 'Compress PDF to 1 MB',
     metaTitle: 'Compress a PDF to 1 MB without uploading it | LeafLock PDF',
     metaDescription:
-      'Shrink a PDF to 1 MB or less by reducing the images inside it. Nothing is uploaded, and you are told plainly if the file cannot get that small. Free, no watermark.',
+      'Shrink a PDF to 1 MB or less by reducing its images. Nothing is uploaded, and you are told if it cannot get that small.',
     summary: 'Get a PDF under 1 MB, mostly by shrinking the images inside it.',
     howTo: [
       'Choose a PDF.',

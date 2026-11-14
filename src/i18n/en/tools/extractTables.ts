@@ -2,7 +2,7 @@ import type { PluralForms } from '../../format';
 
 export default {
   title: 'Extract tables from PDF',
-  metaTitle: 'Extract tables from a PDF to CSV or Excel, privately | LeafLock PDF',
+  metaTitle: 'Extract PDF tables to CSV or Excel privately | LeafLock PDF',
   metaDescription:
     'Pull just the tables out of a PDF, as CSV or .xlsx — the rest of the document is skipped. Runs on your device, never uploaded. Free, no sign-up.',
   summary: 'Pull just the tables out of a PDF, as CSV or Excel — nothing else.',

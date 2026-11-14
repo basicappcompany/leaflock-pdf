@@ -1,6 +1,6 @@
 ---
 title: Terms of use
-description: "The terms for using LeafLock PDF: browser-based PDF tools provided as is, your responsibility for the files you process, Pro subscriptions and cancellation."
+description: "The terms for LeafLock PDF: browser-based PDF tools provided as is, your responsibility for your files, and Pro cancellation."
 updated: 2026-11-12
 awaitingLegalReview: true
 ---

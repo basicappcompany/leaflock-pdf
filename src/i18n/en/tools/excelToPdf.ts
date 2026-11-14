@@ -2,7 +2,7 @@ import type { PluralForms } from '../../format';
 
 export default {
   title: 'Excel to PDF',
-  metaTitle: 'Convert Excel (.xlsx) to PDF privately, in your browser | LeafLock PDF',
+  metaTitle: 'Convert Excel to PDF without uploading | LeafLock PDF',
   metaDescription:
     'Turn a spreadsheet into a PDF, one sheet per page, as a plain bordered grid. Runs on your device — the file is never uploaded. Free, no sign-up.',
   summary: 'Turn a spreadsheet into a PDF, on your device.',

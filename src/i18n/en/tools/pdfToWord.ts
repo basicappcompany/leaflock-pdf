@@ -2,7 +2,7 @@ import type { PluralForms } from '../../format';
 
 export default {
   title: 'PDF to Word',
-  metaTitle: 'Convert PDF to Word (.docx) privately, in your browser | LeafLock PDF',
+  metaTitle: 'Convert PDF to Word without uploading | LeafLock PDF',
   metaDescription:
     'Turn a PDF into an editable Word document with headings, bold, italics and lists. Runs on your device — the file is never uploaded. Free, no sign-up.',
   summary: 'Turn a PDF into an editable Word document, on your device.',

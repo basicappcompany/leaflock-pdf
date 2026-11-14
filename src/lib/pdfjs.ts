@@ -34,8 +34,6 @@ export async function openPdf(name: string, bytes: Uint8Array, password?: string
     wasmUrl: '/vendor/pdfjs/wasm/',
     iccUrl: '/vendor/pdfjs/iccs/',
     enableXfa: false,
-    // Defence in depth: never let pdf.js compile font programs with eval/new Function.
-    isEvalSupported: false,
   });
   try {
     return await task.promise;

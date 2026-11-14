@@ -1,6 +1,6 @@
 export default {
   title: 'Protect PDF',
-  metaTitle: 'Password-protect a PDF with AES-256, privately | LeafLock PDF',
+  metaTitle: 'Password-protect a PDF with AES-256 | LeafLock PDF',
   metaDescription:
     'Add a password to a PDF with strong AES-256 encryption, and limit printing or copying. Encrypted on your device.',
   summary: 'Add a password so only people who know it can open the PDF.',

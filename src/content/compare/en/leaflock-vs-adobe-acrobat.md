@@ -1,6 +1,6 @@
 ---
-title: 'LeafLock PDF vs Adobe Acrobat: privacy and features compared'
-description: A factual comparison of LeafLock PDF and Adobe Acrobat online, covering what is free, what redaction costs, where files are processed and how to check it yourself.
+title: 'LeafLock vs Adobe Acrobat: privacy compared'
+description: "LeafLock PDF vs Adobe Acrobat online: what is free, what redaction costs, where files are processed and how to check it."
 competitor: Adobe Acrobat
 checkedOn: 2026-11-01
 sources:

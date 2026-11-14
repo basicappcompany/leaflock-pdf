@@ -1,5 +1,5 @@
 ---
-title: How to check if a PDF website uploads your files
+title: How to check if a PDF site uploads your files
 description: A step-by-step method to see whether an online PDF tool sends your files to a server, using your browser's developer tools, offline mode and the CSP.
 published: 2026-10-21
 tools: [merge, compress, sign, redact, ocr]

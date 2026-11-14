@@ -1,6 +1,6 @@
 ---
 title: How your files stay private
-description: LeafLock PDF processes files in your browser and never uploads them. Here's how that works, and how to check it yourself with your browser's developer tools.
+description: LeafLock PDF processes files in your browser and never uploads them. How that works, and how to check it with developer tools.
 updated: 2026-11-12
 ---
 

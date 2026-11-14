@@ -2,7 +2,7 @@ import type { PluralForms } from '../../format';
 
 export default {
   title: 'PDF to Markdown',
-  metaTitle: 'Convert PDF to Markdown (.md) privately, in your browser | LeafLock PDF',
+  metaTitle: 'Convert PDF to Markdown without uploading | LeafLock PDF',
   metaDescription:
     'Turn a PDF into plain-text Markdown with real headings, bold, italics and lists. Runs on your device — the file is never uploaded. Free, no sign-up.',
   summary: 'Turn a PDF into Markdown, on your device.',

@@ -12,7 +12,7 @@ export const verify = {
   title: 'See it for yourself',
   metaTitle: 'Check that your files never leave your device | LeafLock PDF',
   metaDescription:
-    'A live demonstration, not a promise: see every request this page has made, watch your browser refuse to let it contact another site, and keep working with the network off.',
+    'A live demonstration, not a promise: see every request this page made, watch your browser block other sites, and work offline.',
   intro:
     'Any website can say your files never leave your device. This page asks your own browser instead, while you watch.',
   lead:

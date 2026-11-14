@@ -1,6 +1,6 @@
 export default {
   title: 'Scan to PDF',
-  metaTitle: 'Scan documents to PDF with your camera, privately | LeafLock PDF',
+  metaTitle: 'Scan documents to PDF in your browser | LeafLock PDF',
   metaDescription:
     'Use your phone or laptop camera to scan paper documents into a PDF. Pictures stay on your device.',
   summary: 'Photograph paper documents with your camera and save them as a PDF.',

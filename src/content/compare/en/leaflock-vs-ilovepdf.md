@@ -1,5 +1,5 @@
 ---
-title: 'LeafLock PDF vs iLovePDF: privacy and features compared'
+title: 'LeafLock PDF vs iLovePDF: privacy compared'
 description: A factual comparison of LeafLock PDF and iLovePDF, covering where files are processed, file retention, free-tier limits, apps, languages and tools.
 competitor: iLovePDF
 checkedOn: 2026-10-21

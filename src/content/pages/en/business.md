@@ -1,6 +1,6 @@
 ---
 title: Business edition
-description: Run LeafLock PDF on your own internal server, with no internet connection needed. Now taking early-access enquiries from firms; US$499 per year during early access.
+description: Run LeafLock PDF on your own server with no internet connection. Early-access enquiries open for firms; US$499 per year.
 updated: 2026-10-28
 ---
 

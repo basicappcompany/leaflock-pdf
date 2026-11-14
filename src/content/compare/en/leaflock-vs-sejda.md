@@ -1,5 +1,5 @@
 ---
-title: 'LeafLock PDF vs Sejda: privacy and features compared'
+title: 'LeafLock PDF vs Sejda: privacy compared'
 description: A factual comparison of LeafLock PDF and Sejda, covering where files are processed, the desktop app, file retention, free-tier limits and price.
 competitor: Sejda
 checkedOn: 2026-11-01

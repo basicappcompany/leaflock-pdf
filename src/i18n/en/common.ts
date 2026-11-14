@@ -27,7 +27,7 @@ export const common = {
   offline: {
     metaTitle: 'Offline: LeafLock PDF',
     heading: 'This page isn’t available offline',
-    body: 'You have no connection, and this page hasn’t been opened on this device before. Every tool you have already used still works — including the ones that need no network at all, because the work happens here rather than on our server.',
+    body: 'You are offline and this page has not been opened here before. Tools you have already used still work, because the work happens on your device.',
     retry: 'Try again',
     home: 'Go to all tools',
   },
