@@ -102,6 +102,17 @@ describe('removeMetadata', () => {
     expect(asText(result.file.bytes)).not.toContain(XMP_AUTHOR);
   });
 
+  it('removes an embedded page thumbnail from the bytes', async () => {
+    const doc = await PDFDocument.load(await richPdf());
+    const thumb = doc.context.stream('THUMBNAIL-PIXELS-MARKER', { Type: 'XObject', Subtype: 'Image', Width: 1, Height: 1 });
+    doc.getPage(0).node.set(PDFName.of('Thumb'), doc.context.register(thumb));
+    const before = await doc.save();
+    expect(asText(before)).toContain('THUMBNAIL-PIXELS-MARKER');
+
+    const result = await run(before);
+    expect(asText(result.file.bytes)).not.toContain('THUMBNAIL-PIXELS-MARKER');
+  });
+
   it('removes the document ID and per-page editing leftovers', async () => {
     const result = await run(await richPdf());
     expect(result.documentId).toBe(true);

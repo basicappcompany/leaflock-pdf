@@ -37,8 +37,9 @@ const executableActions = new Set(['/Launch', '/JavaScript', '/SubmitForm', '/Im
  * what bookmarks and links point at (`outlines.ts`), so dropping it would break navigation. */
 const activeNameTrees = ['JavaScript', 'EmbeddedFiles'];
 
-/** Page entries that record who edited the file and when, left behind by editing software. */
-const pageLeftovers = ['PieceInfo', 'LastModified', 'Metadata'];
+/** Page entries that record who edited the file and when, left behind by editing software, plus
+ * embedded page thumbnails (a small picture of the page as it looked when last saved). */
+const pageLeftovers = ['PieceInfo', 'LastModified', 'Metadata', 'Thumb'];
 
 /**
  * Strips the identifying data a PDF carries outside its visible content: the Info

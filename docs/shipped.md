@@ -17,6 +17,15 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 15 November 2026 — Remove metadata also drops embedded page thumbnails
+
+- `/Thumb` joins the per-page leftovers `removeMetadata.ts` strips (`pageLeftovers`). A thumbnail is a
+  small picture of the page as it looked when last saved, so it can show text or an edit that was
+  since removed from the page itself.
+- Same finding as the original build: unlinking is not deleting. The new unit test plants a thumbnail
+  stream with a marker string and asserts the marker is absent from the output bytes, not that the key is gone.
+- Stated on the tool's FAQ (`src/i18n/en/tools/removeMetadata.ts`).
+
 ## 12 November 2026 — Launch offer, member pricing page, Pro to Practice upgrade (PRs #49-#51)
 
 Early access now ends 31 December 2026 and the plans start 1 January 2027; until then yearly plans are 50% off and the

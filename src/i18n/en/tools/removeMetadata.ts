@@ -30,7 +30,7 @@ export default {
     },
     {
       q: 'Is the removed data really gone from the file?',
-      a: 'Yes. Unlinking metadata is not the same as deleting it — some tools leave the old data sitting in the file where anyone can still read it. The clean copy is written from scratch and everything unreachable is dropped, so the bytes are gone, not just the reference to them.',
+      a: 'Yes. Unlinking metadata is not the same as deleting it — some tools leave the old data sitting in the file where anyone can still read it. The clean copy is written from scratch and everything unreachable is dropped, so the bytes are gone, not just the reference to them. This includes the small preview thumbnails some editors embed for each page.',
     },
     {
       q: 'Does this change what the pages say?',

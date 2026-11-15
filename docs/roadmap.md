@@ -695,7 +695,7 @@ launch is the home and policy pages, not the tool order.
      active content (JavaScript, embedded files, open and page actions) behind a checkbox.
      `src/lib/pdf/ops/removeMetadata.ts` strips the Info dictionary, the XMP packet, the
      trailer `/ID` and the per-page editing leftovers (`/PieceInfo`, `/LastModified`,
-     page-level XMP). Two things found while building it, both now guarded by tests:
+     page-level XMP; `/Thumb` page thumbnails added 15 November 2026). Two things found while building it, both now guarded by tests:
      **unlinking metadata does not remove it** — pdf-lib writes back every object it
      parsed, so an orphaned XMP packet stays readable in the output until
      `pruneUnreachableObjects` drops it, which is the difference between the claim and the
