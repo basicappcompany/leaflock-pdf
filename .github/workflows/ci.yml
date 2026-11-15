@@ -8,7 +8,15 @@ name: CI
 on:
   push:
     branches: [main]
+    paths-ignore: &docs_only
+      # Prose nothing builds or tests reads (checked: no test or script opens these). Deliberately
+      # NOT ignored: docs/status.html and status2.html, which `pnpm tracker` validates.
+      - 'docs/**/*.md'
+      - 'AUDIT.md'
+      - 'CLAUDE.md'
+      - '.claude/**'
   pull_request:
+    paths-ignore: *docs_only
 
 # A newer push on the same branch cancels an in-flight run rather than queuing behind it.
 concurrency:
