@@ -96,6 +96,14 @@ function storeToken(token: string | undefined): void {
   write(USED_KEY, null);
 }
 
+/**
+ * Signing out must not leave the last account's offline access on the device: a paid token would keep paid tools
+ * working offline for up to 48 hours after the person had signed out (or on a shared computer, for the next person).
+ */
+export function clearOfflineAccess(): void {
+  storeToken(undefined);
+}
+
 function isOffline(): boolean {
   return typeof navigator !== 'undefined' && navigator.onLine === false;
 }

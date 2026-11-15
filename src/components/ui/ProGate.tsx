@@ -1,3 +1,4 @@
+import { localePath } from '../../lib/localePath';
 import type { CommonMessages } from '../../i18n';
 
 /**
@@ -24,11 +25,11 @@ export function ProGate({
       <h2>{copy.gateHeading}</h2>
       <p>{copy.gateBody}</p>
       <div className="pro-gate__actions">
-        <a className="primary-button" href="/pricing/">
+        <a className="primary-button" href={localePath('/pricing/')}>
           {copy.gateAction}
         </a>
         {!signedIn && (
-          <a className="secondary-button" href="/login/">
+          <a className="secondary-button" href={localePath('/login/')}>
             {t.gateLogIn}
           </a>
         )}

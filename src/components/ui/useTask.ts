@@ -1,3 +1,4 @@
+import { localePath } from '../../lib/localePath';
 import { useCallback, useRef, useState } from 'react';
 import { format, type CommonMessages } from '../../i18n';
 import { JobError } from '../../lib/pdf/client';
@@ -57,13 +58,13 @@ function limitedStatus(reason: UsageLimitReason, errors: CommonMessages['errors'
         state: 'limited',
         message: errors.dailyLimitAnonymous,
         actionLabel: errors.dailyLimitAnonymousAction,
-        actionHref: '/login/',
+        actionHref: localePath('/login/'),
       }
     : {
         state: 'limited',
         message: errors.dailyLimitFree,
         actionLabel: errors.dailyLimitFreeAction,
-        actionHref: '/pricing/',
+        actionHref: localePath('/pricing/'),
       };
 }
 

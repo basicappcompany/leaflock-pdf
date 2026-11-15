@@ -1,4 +1,7 @@
 import { useEffect } from 'react';
+import { clearOfflineAccess } from '../../lib/usage';
+import { setCachedPlan } from '../../lib/planCache';
+import { localePath } from '../../lib/localePath';
 import type { Messages } from '../../i18n';
 import { useSession } from '../ui/useSession';
 import DataSection from './DataSection';
@@ -16,13 +19,18 @@ export default function AccountPanel({ t }: { t: Messages['auth']['account'] }) 
     fetch('/api/billing/refresh', { method: 'POST' })
       .then((response) => (response.ok ? (response.json() as Promise<{ plan: string }>) : null))
       .then((result) => {
-        if (!cancelled && result && result.plan !== 'free') window.location.replace('/account/');
+        if (!cancelled && result && result.plan !== 'free') window.location.replace(localePath('/account/'));
       })
       .catch(() => undefined);
     return () => {
       cancelled = true;
     };
   }, [onFree]);
+
+  // A redirect is a side effect, so it runs after render, never inside it.
+  useEffect(() => {
+    if (session.state === 'out') window.location.replace(localePath('/login/'));
+  }, [session.state]);
 
   if (session.state === 'loading') {
     return (
@@ -32,14 +40,14 @@ export default function AccountPanel({ t }: { t: Messages['auth']['account'] }) 
     );
   }
 
-  if (session.state === 'out') {
-    if (typeof window !== 'undefined') window.location.href = '/login/';
-    return null;
-  }
+  if (session.state === 'out') return null;
 
   async function logout() {
     await fetch('/api/auth/logout', { method: 'POST' });
-    window.location.href = '/login/';
+    clearOfflineAccess();
+    setCachedPlan('anonymous');
+    delete document.documentElement.dataset.plan;
+    window.location.href = localePath('/login/');
   }
 
   const onFreePlan = session.plan === 'free';
@@ -64,7 +72,7 @@ export default function AccountPanel({ t }: { t: Messages['auth']['account'] }) 
 
         <div className="account-actions">
           {onFreePlan && (
-            <a className="primary-button" href="/pricing/">
+            <a className="primary-button" href={localePath('/pricing/')}>
               {t.upgrade}
             </a>
           )}

@@ -1,3 +1,4 @@
+import { localePath } from '../../lib/localePath';
 import { useState } from 'react';
 import type { Messages } from '../../i18n';
 import { useSession } from '../ui/useSession';
@@ -26,7 +27,7 @@ export default function CheckoutButton({
   // Buying needs an account, so the payment has something to attach to.
   if (session.state === 'out') {
     return (
-      <a className="primary-button" href="/login/">
+      <a className="primary-button" href={localePath('/login/')}>
         {t.logInToBuy}
       </a>
     );

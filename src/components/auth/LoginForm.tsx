@@ -1,6 +1,8 @@
 import { useEffect, useState, type SubmitEvent } from 'react';
 import type { Messages } from '../../i18n';
+import { localePath } from '../../lib/localePath';
 import { Field } from '../ui/fields';
+import { useSession } from '../ui/useSession';
 
 type Status =
   | { state: 'idle' }
@@ -29,7 +31,13 @@ export default function LoginForm({ t }: { t: Messages['auth']['login'] }) {
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState<Status>(() => initialStatus(t));
   const [googleEnabled, setGoogleEnabled] = useState(false);
+  const session = useSession();
   const busy = status.state === 'sending' || status.state === 'loggingIn';
+
+  // Already signed in: this page has nothing to offer, so go where signing in would have gone.
+  useEffect(() => {
+    if (session.state === 'in') window.location.replace(localePath('/account/'));
+  }, [session.state]);
 
   // Only offer Google if the server actually has credentials for it.
   useEffect(() => {
@@ -58,7 +66,7 @@ export default function LoginForm({ t }: { t: Messages['auth']['login'] }) {
         body: JSON.stringify({ email, password }),
       });
       if (response.ok) {
-        window.location.href = '/account';
+        window.location.href = localePath('/account/');
         return;
       }
       setStatus({
