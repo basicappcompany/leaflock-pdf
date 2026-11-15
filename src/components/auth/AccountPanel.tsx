@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { Messages } from '../../i18n';
 import { useSession } from '../ui/useSession';
 import DataSection from './DataSection';
@@ -5,6 +6,23 @@ import PasswordSection from './PasswordSection';
 
 export default function AccountPanel({ t }: { t: Messages['auth']['account'] }) {
   const session = useSession();
+  const onFree = session.state === 'in' && session.plan === 'free';
+
+  // Back from Dodo's checkout (the return URL carries `checkout`) with no plan yet: the webhook may still be on
+  // its way, or may never come. Ask Dodo directly and reload once the plan is there. Nothing from the page is sent.
+  useEffect(() => {
+    if (!onFree || !new URLSearchParams(window.location.search).has('checkout')) return;
+    let cancelled = false;
+    fetch('/api/billing/refresh', { method: 'POST' })
+      .then((response) => (response.ok ? (response.json() as Promise<{ plan: string }>) : null))
+      .then((result) => {
+        if (!cancelled && result && result.plan !== 'free') window.location.replace('/account/');
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [onFree]);
 
   if (session.state === 'loading') {
     return (

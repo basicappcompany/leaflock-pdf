@@ -1085,6 +1085,9 @@ that needs the full catalogue in front of it.
   than additive for one reason — launching with every paid tier reading "Coming soon" is
   launching with no revenue, so it gates the launch the way the policy pages do.
 
+  **Item 4.13, 15 November 2026 — done: Dodo is the source of truth for plans** (re-check, ordering, refunds; see
+  `docs/design.md` §8). It sits here because go-live (4.12) sells plans through a copy that could otherwise drift.
+
   **Update, 12 November 2026 — partly done, and the flag is now a date.** Early access ends with 31
   December 2026 and the plans start on 1 January 2027; until then they can be bought at a launch
   discount (50% off yearly, 25% off ten-year, first term only), charged at checkout with the term

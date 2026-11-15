@@ -17,6 +17,20 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 15 November 2026 — Dodo is the source of truth for plans (4.13)
+
+- The webhook was the only writer of a plan and nothing re-read Dodo: a lost delivery (Dodo gives up after eight
+  attempts) left a payer on free for good, an out-of-order one could undo a newer state, refunds and disputes were
+  ignored, and `paused` kept access. Design in `docs/design.md` §8. The status mapping is one pure module shared by the
+  webhook and the re-check, so they cannot disagree.
+- Found by probing test mode first: list and retrieve carry `metadata.user_id`, and payments carry `refund_status` and
+  `dispute_status`, which is why a refund is checked by asking Dodo rather than trusting the event payload (whose
+  shape the docs do not give). **Not probed:** a ten-year payment; none existed in test mode.
+- Migration 0008 adds three columns. The code tolerates a database without it, so a deploy that lands first cannot break
+  billing. That tolerance has its own test, because the failure it prevents (a paying customer left on free) is silent.
+- Setup was done the same day (`docs/TODO.md` §3): 0008 applied to production and preview, `RECONCILE_TOKEN` set in
+  Cloudflare and GitHub. The three event types needed no change: the test webhook endpoint has no event filter.
+
 ## 15 November 2026 — Remove metadata also drops embedded page thumbnails
 
 - `/Thumb` joins the per-page leftovers `removeMetadata.ts` strips (`pageLeftovers`). A thumbnail is a

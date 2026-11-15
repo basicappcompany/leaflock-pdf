@@ -591,8 +591,42 @@ because `common` is serialised into every tool page's island props (`CLAUDE.md`)
 attach the plan to), accepts `{ plan: 'proMonthly' | 'proYearly' | 'proTenYear' | 'practiceYearly' }`,
 caps the body at 256 bytes, and answers **503** when the products, codes or API key are missing.
 
-**`POST /api/billing/webhook`** is the only authority on who has a paid plan; the client
-is never trusted for it. Verification follows Standard Webhooks: HMAC-SHA256 over
+**Dodo is the source of truth for who has paid; our `users` row is a copy** (item 4.13, 15 November 2026).
+The copy is kept in step by the webhook below and repaired by re-reading Dodo's API, because a webhook can
+be lost (Dodo stops after eight attempts, about 27 hours) or arrive out of order (its docs say so). The
+browser is never trusted for any of it: nothing a page sends changes a plan.
+
+- **One mapping.** `src/lib/server/planState.ts` (pure) turns a Dodo subscription status or payment into the
+  plan we store, and both the webhook and the re-check use it. `active` grants the plan the product sells;
+  `past_due` keeps it (Dodo's grace period); `cancelled` keeps it to the end of the paid period and grants
+  nothing without a future end date; `paused`, `on_hold`, `expired` and `failed` take it away (a paused plan
+  comes back on `active`); `pending` changes nothing. An unrecognised product throws, so the delivery is retried.
+- **Ordering.** A webhook carries Dodo's own `timestamp`; `users.billing_event_at` holds the newest one applied
+  and an older event is acknowledged and dropped. Dodo also sends the latest state with every delivery, so the
+  payload's `status` wins over the event name: an old `subscription.active` retried after a cancellation reads
+  `cancelled`. `subscription.updated` is handled the same way.
+- **Refunds and disputes.** `payment.succeeded` for the ten-year product stores `users.dodo_payment_id`.
+  `refund.succeeded` and `dispute.lost` do not trust their own payload: the payment is read from Dodo
+  (`refund_status: full` or `dispute_status: dispute_lost`) and the plan is taken back. A partial refund keeps it.
+  If Dodo cannot be asked, the delivery fails so it is retried.
+- **Re-check** (`src/lib/server/dodoSync.ts`, `reconcileUser`): reads `GET /subscriptions/{id}` (or the
+  payment) and overwrites our row with what Dodo says; it never throws, and a Dodo outage changes nothing.
+  Triggered three ways: when a paid member loads a page and was last read over six hours ago (`/api/auth/me`,
+  in `waitUntil`, so no page waits for it); by `POST /api/billing/refresh` when a buyer returns from checkout
+  (`?checkout=return`) without a plan, which finds the purchase by the `user_id` we attached and covers a
+  webhook that never came; and by `POST /api/billing/reconcile`, a bearer-token endpoint called every six hours
+  by `.github/workflows/billing-reconcile.yml`, which re-reads the 20 least recently read paid accounts and
+  fails the job on any error. It answers 404 until `RECONCILE_TOKEN` is set.
+- **Deploy order.** Migration `0008_billing_sync.sql` adds `billing_event_at`, `billing_synced_at` and
+  `dodo_payment_id`. The code tolerates a database without it (`missingBillingColumns` in `db.ts`), so a deploy
+  that lands first cannot break a plan update, but ordering and the re-check do nothing until it is applied.
+- **Probed against Dodo test mode, 15 November 2026:** subscription list and retrieve both carry
+  `metadata.user_id`, `status`, `next_billing_date`, `cancel_at_next_billing_date`, `paused_at`; payments carry
+  `metadata.user_id`, `refund_status` (`partial`/`full`) and `dispute_status`. **Not probed:** a one-off
+  ten-year payment (none existed in test mode), so its product id is read from `product_cart` and the claim path for
+  it is unverified until one is bought.
+
+**`POST /api/billing/webhook`** is the fast path from Dodo into that copy. Verification follows Standard Webhooks: HMAC-SHA256 over
 `id.timestamp.body`, keyed by the secret with its `whsec_` prefix stripped and the rest
 base64-decoded, compared timing-safely, rejecting anything more than **5 minutes** out of
 date. Dodo retries until it gets a 2xx, so every delivery id is recorded in
@@ -614,7 +648,8 @@ addresses.
   (`free|pro|lifetime|business`), `status` (`active|disabled`), `password_hash`,
   `google_sub` (unique where not null), `dodo_customer_id`, `subscription_id`,
   `plan_status` (`none|active|past_due|cancelled|expired`), `current_period_end`
-  (null for lifetime).
+  (null for lifetime), and since migration 0008 `billing_event_at`, `billing_synced_at`, `dodo_payment_id`
+  (§8: times and one payment id, nothing about the card).
 - **`magic_links`** — token hash, expiry, `consumed_at`, `request_ip_hash`.
 - **`sessions`** — `secret_hash`, expiry, last seen, and `browser` as family plus major
   version only ("Chrome 141").

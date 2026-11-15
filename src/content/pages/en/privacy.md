@@ -1,7 +1,7 @@
 ---
 title: Privacy policy
 description: How LeafLock PDF handles personal data. Your files are processed on your device and never sent to us. What we do process, why, and your rights.
-updated: 2026-11-12
+updated: 2026-11-15
 awaitingLegalReview: true
 ---
 
@@ -72,7 +72,7 @@ Please don't send us your documents. We never need them to help you.
 
 Paid plans are not yet available. When they launch, purchases will be handled by Dodo Payments (for customers in India) or Paddle (for customers everywhere else), each acting as the merchant of record for the purchases it handles. This means the payment provider is the seller in the transaction, processes your payment details, and handles sales tax and VAT. The payment provider processes your payment data as an independent controller under its own privacy policy, which it will show you at checkout.
 
-We will receive from the payment provider the information we need to provide and support your plan, such as your name, email address, country, the plan you bought, and the status of your subscription or purchase. We will not receive your full card or bank details.
+We will receive from the payment provider the information we need to provide and support your plan, such as your name, email address, country, the plan you bought, and the status of your subscription or purchase. We will not receive your full card or bank details. We keep the identifiers the payment provider gives us for your purchase (customer, subscription and payment), and the time we last checked them with the provider, so that a cancellation, refund or dispute handled by the provider is reflected in your plan.
 
 - **Purpose:** providing the plan you bought, managing your subscription, handling refunds, and meeting our accounting and tax obligations.
 - **Legal basis (GDPR):** performing our contract with you (Article 6(1)(b)) and complying with legal obligations (Article 6(1)(c)).

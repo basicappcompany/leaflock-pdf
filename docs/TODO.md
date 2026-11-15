@@ -223,6 +223,14 @@ set up and shipped the same day (PRs #49-#51):
       says so). When it settles: confirm the account became Practice and the `subscription.plan_changed` webhook was
       accepted, and check whether the 50% one-cycle code also discounted the **first renewal** (Dodo's preview
       suggested it might; if so, the code needs adjusting before the offer is promoted).
+- [x] **Dodo as source of truth (item 4.13) — setup done 15 November 2026.** Migration `0008_billing_sync.sql` applied to
+      production and preview (columns confirmed in production); `RECONCILE_TOKEN` set as a Pages production secret and a
+      GitHub Actions secret (a random 64-character value, never written down; to rotate it, set both again); the test-mode
+      webhook endpoint `ep_3LyNCdV1elQXn30ezexqyIIkfzU` has `filter_types: null`, which Dodo treats as every event, so
+      `subscription.updated`, `refund.succeeded` and `dispute.lost` already reach it.
+- [ ] **Still open for 4.13:** at go-live, create the live-mode webhook endpoint with no event filter (or with those three
+      events included). The sweep reads whichever mode `DODO_MODE` selects, so it needs no other change. Unverified until a ten-year purchase exists in test mode: that its payment carries `metadata.user_id` and a
+      `product_cart`.
 - [ ] **Go live** (Dodo live mode): create the same products (with the 20-year subscription periods), both
       discount codes and a webhook endpoint in live mode; the ids and the signing secret differ. Then switch
       `DODO_MODE` and the production secrets. Live and test are separate hosts and separate keys.
