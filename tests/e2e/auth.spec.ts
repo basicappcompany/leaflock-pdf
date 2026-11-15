@@ -152,7 +152,7 @@ test('the account page shows the signed-in user and logs out', async ({ page, ba
 test('a visitor who is already signed in is sent on from the login page', async ({ page, baseURL }) => {
   await signIn(page, baseURL!, { email: 'person@example.com', plan: 'free' });
   await page.goto('/login');
-  await expect(page).toHaveURL(//account/?$/);
+  await expect(page).toHaveURL(/\/account\/?$/);
 });
 
 test('the page that asked for a sign-in is where a password sign-in returns to', async ({ page, baseURL }) => {
@@ -162,5 +162,5 @@ test('the page that asked for a sign-in is where a password sign-in returns to',
   await page.getByLabel('Password').fill('super secret 123');
   await signIn(page, baseURL!, { email: 'person@example.com', plan: 'free' });
   await page.getByRole('button', { name: 'Log in', exact: true }).click();
-  await expect(page).toHaveURL(//pricing/?$/);
+  await expect(page).toHaveURL(/\/pricing\/?$/);
 });
