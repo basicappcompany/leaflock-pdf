@@ -21,8 +21,6 @@ export type OverlayItem =
   | (OverlayBase & { kind: 'whiteout' })
   | (OverlayBase & { kind: 'redaction' });
 
-export type OverlayKind = OverlayItem['kind'];
-
 export interface OverlayImage {
   bytes: Uint8Array;
   type: 'png' | 'jpeg';
