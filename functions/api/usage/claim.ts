@@ -14,7 +14,8 @@ import { decideClaim } from '../../../src/lib/server/claim';
 import { hashIp } from '../../../src/lib/server/ipHash';
 import { readSessionFromRequest } from '../../../src/lib/server/session';
 
-const MAX_BODY = 256;
+// Room for the offline report: one signed token (about 300 characters) and a count.
+const MAX_BODY = 1024;
 
 export async function onRequestPost({ request, env }: { request: Request; env: Env }): Promise<Response> {
   const raw = await request.text();
@@ -22,9 +23,13 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
 
   // An empty body is a free tool (older pages did not send one). Anything else must be a JSON object.
   let tool: unknown;
+  let offline: { token: string; used: number } | undefined;
   if (raw) {
     try {
-      tool = (JSON.parse(raw) as { tool?: unknown } | null)?.tool;
+      const parsed = JSON.parse(raw) as { tool?: unknown; offline?: { token?: unknown; used?: unknown } } | null;
+      tool = parsed?.tool;
+      const report = parsed?.offline;
+      if (report && typeof report.token === 'string' && typeof report.used === 'number') offline = { token: report.token, used: report.used };
     } catch {
       return new Response(null, { status: 400 });
     }
@@ -36,6 +41,8 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
     env,
     session: session ? { userId: session.userId, plan: session.plan } : null,
     tool,
+    host: new URL(request.url).hostname,
+    ...(offline ? { offline } : {}),
     anonymousKey: ip ? await hashIp(ip, env.SESSION_IP_SALT) : null,
   });
 

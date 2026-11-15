@@ -60,17 +60,18 @@ describe('the usage claim', () => {
     expect(await response.json()).toMatchObject({ allowed: true, reason: 'free-account' });
   });
 
-  it('counts an anonymous visitor by address, and never hands out a token', async () => {
+  it('counts an anonymous visitor by address, and gives it a token for today only', async () => {
     const { post } = await setup(null);
     const body = (await (await post('merge')).json()) as Record<string, unknown>;
     expect(body).toMatchObject({ allowed: true, reason: 'anonymous' });
-    expect(body['token']).toBeUndefined();
+    const claims = await verifyEntitlement(body['token'] as string, PUBLIC);
+    expect(claims).toMatchObject({ sub: 'anonymous', tier: 'free', runs: 19 });
   });
 
   it('refuses an unknown tool id and an oversized or malformed body', async () => {
     const { post, env } = await setup('free');
     expect((await post('not-a-tool')).status).toBe(400);
-    const big = await claim({ request: new Request('https://leaflockpdf.com/api/usage/claim', { method: 'POST', body: 'x'.repeat(300) }), env });
+    const big = await claim({ request: new Request('https://leaflockpdf.com/api/usage/claim', { method: 'POST', body: 'x'.repeat(2000) }), env });
     expect(big.status).toBe(413);
     const bad = await claim({ request: new Request('https://leaflockpdf.com/api/usage/claim', { method: 'POST', body: '{nope' }), env });
     expect(bad.status).toBe(400);

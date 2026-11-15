@@ -357,14 +357,16 @@ export async function getUserByPayment(db: D1Database, paymentId: string): Promi
 
 /**
  * Accounts whose billing has not been read from Dodo since `before`, stalest first: those holding a
- * subscription or a paid plan, which are the only ones Dodo can have something to say about.
+ * Dodo subscription or payment id, which are the only ones Dodo can have something to say about. A paid plan with
+ * no Dodo id (a manual grant) is left out on purpose: reconcileUser skips it without marking it read, so keeping
+ * it in would let such rows fill the whole batch for ever. If an id is later attached it qualifies again.
  */
 export async function listStaleBillingUsers(db: D1Database, before: number, limit: number): Promise<UserRow[]> {
   try {
     const result = await db
       .prepare(
         `SELECT * FROM users
-         WHERE (subscription_id IS NOT NULL OR dodo_payment_id IS NOT NULL OR plan != 'free')
+         WHERE (subscription_id IS NOT NULL OR dodo_payment_id IS NOT NULL)
            AND (billing_synced_at IS NULL OR billing_synced_at < ?)
          ORDER BY COALESCE(billing_synced_at, 0) ASC
          LIMIT ?`,

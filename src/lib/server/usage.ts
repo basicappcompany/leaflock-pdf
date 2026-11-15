@@ -49,15 +49,17 @@ export async function claimDailyJob(
   userId: string,
   limit: number,
   now = Date.now(),
+  /** How much to add: one run, or one plus the offline runs the browser reports (src/lib/server/claim.ts). */
+  by = 1,
 ): Promise<{ allowed: boolean; count: number }> {
   const row = await db
     .prepare(
-      `INSERT INTO usage_counters (user_id, period, metric, count) VALUES (?, ?, 'jobs', 1)
-       ON CONFLICT(user_id, period, metric) DO UPDATE SET count = usage_counters.count + 1
+      `INSERT INTO usage_counters (user_id, period, metric, count) VALUES (?, ?, 'jobs', ?)
+       ON CONFLICT(user_id, period, metric) DO UPDATE SET count = usage_counters.count + excluded.count
        RETURNING count`,
     )
-    .bind(userId, dayKey(now))
+    .bind(userId, dayKey(now), by)
     .first<{ count: number }>();
-  const count = row?.count ?? 1;
+  const count = row?.count ?? by;
   return { allowed: count <= limit, count };
 }

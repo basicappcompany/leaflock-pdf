@@ -195,28 +195,28 @@ export function createFakeD1() {
     }
 
     if (text.includes('INTO usage_counters')) {
-      const [userId, period] = params as [string, string];
+      const [userId, period, by = 1] = params as [string, string, number?];
       let row = usageCounters.find((row) => row['user_id'] === userId && row['period'] === period && row['metric'] === 'jobs');
       if (!row) {
-        row = { user_id: userId, period, metric: 'jobs', count: 1 };
+        row = { user_id: userId, period, metric: 'jobs', count: by };
         usageCounters.push(row);
       } else {
-        row['count'] = (row['count'] as number) + 1;
+        row['count'] = (row['count'] as number) + by;
       }
       return { row: { count: row['count'] }, rows: [] };
     }
 
     if (text.includes('INTO rate_limits')) {
-      const [key, windowStart] = params as [string, number];
+      const [key, windowStart, by = 1] = params as [string, number, number?];
       let row = rateLimits.find((row) => row['key'] === key);
       if (!row) {
-        row = { key, window_start: windowStart, count: 1 };
+        row = { key, window_start: windowStart, count: by };
         rateLimits.push(row);
       } else if (row['window_start'] === windowStart) {
-        row['count'] = (row['count'] as number) + 1;
+        row['count'] = (row['count'] as number) + by;
       } else {
         row['window_start'] = windowStart;
-        row['count'] = 1;
+        row['count'] = by;
       }
       return { row: { count: row['count'] }, rows: [] };
     }

@@ -18,3 +18,11 @@ migrations_dir = "migrations"
 
 # Secrets (RESEND_API_KEY, EMAIL_FROM, SESSION_IP_SALT) are set with
 # `wrangler pages secret put <NAME>` and, for local dev, in `.dev.vars` (gitignored).
+
+# Staging rehearsal of launch day (src/lib/proAccess.ts): every preview deployment gates the paid tools whatever the
+# date, so the 402s and offline checks can be probed before 1 January 2027. Preview only. Never add this to the
+# top-level [vars] (production); the claim also ignores it on leaflockpdf.com, and a test fails if it is set there.
+# The client half, PUBLIC_ENTITLEMENT_GATE_ALWAYS_ON=on, is a *build* variable on the preview environment in the
+# Cloudflare dashboard.
+[env.preview.vars]
+ENTITLEMENT_GATE_ALWAYS_ON = "on"
