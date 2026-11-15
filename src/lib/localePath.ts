@@ -11,3 +11,8 @@ export function localePath(path: string, pathname: string = typeof window === 'u
   const first = pathname.split('/')[1] ?? '';
   return prefixes.has(first) ? `/${first}${path}` : path;
 }
+
+/** The sign-in page, remembering the page to come back to afterwards. */
+export function loginPath(pathname: string = typeof window === 'undefined' ? '/' : window.location.pathname): string {
+  return `${localePath('/login/', pathname)}?next=${encodeURIComponent(pathname)}`;
+}

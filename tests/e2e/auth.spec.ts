@@ -56,12 +56,13 @@ test('logging in with a password signs you in', async ({ page, baseURL }) => {
     sent = JSON.parse(route.request().postData() ?? 'null') as { email?: string; password?: string };
     await route.fulfill({ status: 204 });
   });
-  // So the /account page it lands on resolves as signed in rather than bouncing back.
-  await signIn(page, baseURL!, { email: 'person@example.com', plan: 'free' });
-
   await page.goto('/login');
   await page.getByLabel('Email address').fill('person@example.com');
   await page.getByLabel('Password').fill('super secret 123');
+  // Signed in only now, as the server would after the password is accepted: a visitor who is already signed in is
+  // sent on from /login, so this has to come after the page has loaded signed out. The /account page it lands on
+  // then resolves as signed in rather than bouncing back.
+  await signIn(page, baseURL!, { email: 'person@example.com', plan: 'free' });
   await page.getByRole('button', { name: 'Log in', exact: true }).click();
 
   await expect(page).toHaveURL(/\/account\/?$/);
@@ -146,4 +147,20 @@ test('the account page shows the signed-in user and logs out', async ({ page, ba
   await expect(page).toHaveURL(/\/login\/$/);
   expect(loggedOut).toBe(true);
   watcher.assertClean();
+});
+
+test('a visitor who is already signed in is sent on from the login page', async ({ page, baseURL }) => {
+  await signIn(page, baseURL!, { email: 'person@example.com', plan: 'free' });
+  await page.goto('/login');
+  await expect(page).toHaveURL(//account/?$/);
+});
+
+test('the page that asked for a sign-in is where a password sign-in returns to', async ({ page, baseURL }) => {
+  await page.route('**/api/auth/password', (route) => route.fulfill({ status: 204 }));
+  await page.goto('/login/?next=%2Fpricing%2F');
+  await page.getByLabel('Email address').fill('person@example.com');
+  await page.getByLabel('Password').fill('super secret 123');
+  await signIn(page, baseURL!, { email: 'person@example.com', plan: 'free' });
+  await page.getByRole('button', { name: 'Log in', exact: true }).click();
+  await expect(page).toHaveURL(//pricing/?$/);
 });

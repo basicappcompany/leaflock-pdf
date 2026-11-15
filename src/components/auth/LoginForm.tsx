@@ -1,6 +1,7 @@
 import { useEffect, useState, type SubmitEvent } from 'react';
 import type { Messages } from '../../i18n';
 import { localePath } from '../../lib/localePath';
+import { safeNext } from '../../lib/safeNext';
 import { Field } from '../ui/fields';
 import { useSession } from '../ui/useSession';
 
@@ -19,6 +20,12 @@ const QUERY_ERRORS: Record<string, keyof Messages['auth']['login']> = {
   google_unavailable: 'errorGoogleUnavailable',
 };
 
+/** Where this visit asked to go after signing in (a page that sent the visitor here), or the account page. */
+function destination(): string {
+  const next = typeof window === 'undefined' ? null : safeNext(new URLSearchParams(window.location.search).get('next'));
+  return next ?? localePath('/account/');
+}
+
 function initialStatus(t: Messages['auth']['login']): Status {
   if (typeof window === 'undefined') return { state: 'idle' };
   const error = new URLSearchParams(window.location.search).get('error');
@@ -36,7 +43,7 @@ export default function LoginForm({ t }: { t: Messages['auth']['login'] }) {
 
   // Already signed in: this page has nothing to offer, so go where signing in would have gone.
   useEffect(() => {
-    if (session.state === 'in') window.location.replace(localePath('/account/'));
+    if (session.state === 'in') window.location.replace(destination());
   }, [session.state]);
 
   // Only offer Google if the server actually has credentials for it.
@@ -66,7 +73,7 @@ export default function LoginForm({ t }: { t: Messages['auth']['login'] }) {
         body: JSON.stringify({ email, password }),
       });
       if (response.ok) {
-        window.location.href = localePath('/account/');
+        window.location.href = destination();
         return;
       }
       setStatus({
@@ -85,7 +92,7 @@ export default function LoginForm({ t }: { t: Messages['auth']['login'] }) {
       const response = await fetch('/api/auth/request-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, next: safeNext(new URLSearchParams(window.location.search).get('next')) }),
       });
       if (response.status === 429) {
         setStatus({ state: 'error', message: t.errorRateLimited });

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { clearOfflineAccess } from '../../lib/usage';
-import { setCachedPlan } from '../../lib/planCache';
+import { forgetAccountOnDevice } from '../../lib/forgetAccount';
 import { localePath } from '../../lib/localePath';
 import type { Messages } from '../../i18n';
 import { useSession } from '../ui/useSession';
@@ -44,9 +43,7 @@ export default function AccountPanel({ t }: { t: Messages['auth']['account'] }) 
 
   async function logout() {
     await fetch('/api/auth/logout', { method: 'POST' });
-    clearOfflineAccess();
-    setCachedPlan('anonymous');
-    delete document.documentElement.dataset.plan;
+    forgetAccountOnDevice();
     window.location.href = localePath('/login/');
   }
 

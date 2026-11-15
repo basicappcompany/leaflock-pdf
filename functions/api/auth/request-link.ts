@@ -7,11 +7,12 @@
  */
 
 import { getEmailSender } from '../../../src/lib/email/sender';
+import { safeNext } from '../../../src/lib/safeNext';
 import { hashIp } from '../../../src/lib/server/ipHash';
 import { createMagicLink } from '../../../src/lib/server/magicLink';
 import { checkAndIncrement } from '../../../src/lib/server/rateLimit';
 
-const MAX_BODY = 256;
+const MAX_BODY = 512;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function onRequestPost({ request, env }: { request: Request; env: Env }): Promise<Response> {
@@ -46,7 +47,8 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
 
   const token = await createMagicLink(env.DB, email, ipHash);
   const origin = new URL(request.url).origin;
-  const link = `${origin}/api/auth/verify?token=${token}`;
+  const next = safeNext((parsed as Record<string, unknown>)['next']);
+  const link = `${origin}/api/auth/verify?token=${token}${next ? `&next=${encodeURIComponent(next)}` : ''}`;
 
   try {
     await getEmailSender(env).send({

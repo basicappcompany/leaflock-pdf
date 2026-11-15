@@ -1,4 +1,4 @@
-import { localePath } from '../../lib/localePath';
+import { localePath, loginPath } from '../../lib/localePath';
 import type { CommonMessages } from '../../i18n';
 
 /**
@@ -29,7 +29,7 @@ export function ProGate({
           {copy.gateAction}
         </a>
         {!signedIn && (
-          <a className="secondary-button" href={localePath('/login/')}>
+          <a className="secondary-button" href={loginPath()}>
             {t.gateLogIn}
           </a>
         )}

@@ -424,7 +424,18 @@ extra copy is made in isolation from the rest of the output.
 An account is identified by its **email address**, and three methods can reach the same
 account in any combination: a magic link, a password, and Google.
 
-- **Magic link** — `POST /api/auth/request-link` → emailed link → `GET /api/auth/verify`.
+- **Magic link** — `POST /api/auth/request-link` → emailed link → `GET /api/auth/verify` (a page with a button, no side
+  effects) → `POST /api/auth/verify` (spends the token, opens the session, 303 to `next` or `/account/`). Two steps because mail
+  scanners open every link in a message, and a GET that signed in would have its one-time token spent before the person
+  arrived. `next` is the page that sent the visitor to sign in (`loginPath()` in `src/lib/localePath.ts`), accepted only if
+  `safeNext()` says it is a plain path on this site, so it cannot become an open redirect. Google sign-in does not carry
+  it yet and lands on `/account/`.
+- **Every `/api/*` request that changes something** must be same-origin: `functions/api/_middleware.ts` answers 403 to a
+  POST/PUT/DELETE with no matching `Origin`/`Referer`, except the Dodo webhook and the sweep, which authenticate by
+  signature and bearer token. No handler has to remember it.
+- **Client islands never hard-code `/login/`, `/account/` or `/pricing/`:** `localePath()` keeps the reader's language, and a
+  test fails the build otherwise. A signed-in visitor on `/login/` is sent on; signing out or deleting the account runs
+  `forgetAccountOnDevice()` (offline token, cached plan, plan marker).
   Only a hash of the token is stored (`magic_links.token_hash`), single-use via
   `consumed_at`.
 - **Password** — PBKDF2-HMAC-SHA256, **210,000 iterations** (OWASP's figure; raise over
