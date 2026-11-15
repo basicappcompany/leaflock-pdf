@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { onRequestPost } from '../../functions/api/billing/webhook';
 import type { UserRow } from '../../src/lib/server/db';
 
@@ -91,7 +91,23 @@ const subscriptionEvent = (type: string, at: string, data: Record<string, unknow
   data: { subscription_id: 'sub_1', product_id: 'pdt_pro', next_billing_date: future, customer: { customer_id: 'cus_1' }, metadata: { user_id: 'u1' }, ...data },
 });
 
+/** Dodo answering GET /subscriptions/sub_1 with this status, and recording that it was asked. */
+function dodoSays(status: string) {
+  const asked: string[] = [];
+  vi.stubGlobal('fetch', async (url: string) => {
+    asked.push(url);
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ status, product_id: 'pdt_pro', next_billing_date: future, subscription_id: 'sub_1', customer: { customer_id: 'cus_1' } }),
+    };
+  });
+  return asked;
+}
+
 describe('the billing webhook', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
   it('rejects a delivery that is not signed by Dodo', async () => {
     const users = [makeUser()];
     expect(await deliver({ ...baseEnv, DB: memoryDb(users) } as Env, subscriptionEvent('subscription.active', '2027-01-01T00:00:00Z'), { badSignature: true })).toBe(401);
@@ -105,15 +121,53 @@ describe('the billing webhook', () => {
     expect(users[0]).toMatchObject({ plan: 'pro', plan_status: 'active', subscription_id: 'sub_1', billing_event_at: Date.parse('2027-01-01T00:00:00Z') });
   });
 
-  it('ignores an event older than the last one applied, so a late delivery cannot undo a newer state', async () => {
+  it('reads Dodo instead of trusting an event older than the last one applied', async () => {
     const users = [makeUser()];
-    const env = { ...baseEnv, DB: memoryDb(users) } as Env;
+    const env = { ...baseEnv, DODO_API_KEY: 'key', DB: memoryDb(users) } as Env;
     await deliver(env, subscriptionEvent('subscription.on_hold', '2027-03-01T00:00:00Z', { status: 'on_hold' }));
     expect(users[0]?.plan).toBe('free');
 
+    // A late "renewed" from February: Dodo is asked, and Dodo says the subscription is active.
+    const asked = dodoSays('active');
     const status = await deliver(env, subscriptionEvent('subscription.renewed', '2027-02-01T00:00:00Z', { status: 'active' }));
     expect(status).toBe(204);
+    expect(asked.some((url) => url.includes('/subscriptions/sub_1'))).toBe(true);
+    expect(users[0]?.plan).toBe('pro');
+  });
+
+  it('reads Dodo on a tie too, because two events with the same time cannot be ordered', async () => {
+    const users = [makeUser()];
+    const env = { ...baseEnv, DODO_API_KEY: 'key', DB: memoryDb(users) } as Env;
+    await deliver(env, subscriptionEvent('subscription.active', '2027-03-01T00:00:00Z', { status: 'active' }));
+    const asked = dodoSays('on_hold');
+    await deliver(env, subscriptionEvent('subscription.on_hold', '2027-03-01T00:00:00Z', { status: 'on_hold' }));
+    expect(asked).toHaveLength(1);
     expect(users[0]?.plan).toBe('free');
+  });
+
+  it('retries the delivery when it must read Dodo and cannot, rather than trust the order', async () => {
+    const users = [makeUser()];
+    const env = { ...baseEnv, DB: memoryDb(users) } as Env;
+    await deliver(env, subscriptionEvent('subscription.active', '2027-03-01T00:00:00Z', { status: 'active' }));
+    expect(await deliver(env, subscriptionEvent('subscription.renewed', '2027-02-01T00:00:00Z', { status: 'active' }))).toBe(500);
+  });
+
+  it('reads Dodo for an authenticated event type it has never heard of, instead of dropping it', async () => {
+    const users = [makeUser({ plan: 'pro', plan_status: 'active', subscription_id: 'sub_1', current_period_end: Date.parse(future) })];
+    const env = { ...baseEnv, DODO_API_KEY: 'key', DB: memoryDb(users) } as Env;
+    const asked = dodoSays('expired');
+    expect(await deliver(env, { type: 'subscription.something_new', timestamp: '2027-06-01T00:00:00Z', data: { subscription_id: 'sub_1', metadata: { user_id: 'u1' } } })).toBe(204);
+    expect(asked).toHaveLength(1);
+    expect(users[0]?.plan).toBe('free');
+  });
+
+  it('records but does not act on events that say nothing about who has paid', async () => {
+    const users = [makeUser({ plan: 'pro', plan_status: 'active', subscription_id: 'sub_1', current_period_end: Date.parse(future) })];
+    const env = { ...baseEnv, DODO_API_KEY: 'key', DB: memoryDb(users) } as Env;
+    const asked = dodoSays('expired');
+    expect(await deliver(env, { type: 'payment.failed', timestamp: '2027-06-01T00:00:00Z', data: { subscription_id: 'sub_1', metadata: { user_id: 'u1' } } })).toBe(204);
+    expect(asked).toHaveLength(0);
+    expect(users[0]?.plan).toBe('pro');
   });
 
   it('follows the status in the payload when an old event is retried, so it cannot grant a cancelled plan back', async () => {

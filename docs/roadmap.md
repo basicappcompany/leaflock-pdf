@@ -1085,6 +1085,9 @@ that needs the full catalogue in front of it.
   than additive for one reason — launching with every paid tier reading "Coming soon" is
   launching with no revenue, so it gates the launch the way the policy pages do.
 
+  **Item 4.14, 15 November 2026 — done: the server is the only authority for a run** (claim before every task, signed
+  offline token, CI guards; see `docs/design.md` section 7). Residual risk is recorded, not removed.
+
   **Item 4.13, 15 November 2026 — done: Dodo is the source of truth for plans** (re-check, ordering, refunds; see
   `docs/design.md` §8). It sits here because go-live (4.12) sells plans through a copy that could otherwise drift.
 

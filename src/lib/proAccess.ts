@@ -31,10 +31,28 @@ const PLAN_RANK: Record<CachedPlan, number> = {
 /**
  * Whether this visitor has to upgrade before using a tool.
  *
- * Worth being clear about what this is: a paywall, not a lock. Every tool runs on the
- * visitor's own device, so the code is already in their browser and a determined person
- * can always run it — there is no server-side work to withhold. The gate exists to make
- * the paid tools paid for the people willing to pay, not to make them impossible.
+ * **This is user experience, not authorization.** It decides which screen to show (the tool, or the upgrade
+ * prompt) from a plan the page learned from the server. It authorizes nothing: the server decides every run.
+ *
+ * - **Online:** before any tool does work, the page waits for `POST /api/usage/claim` (src/lib/usage.ts). The server
+ *   applies the account's real plan, counts a free run, and answers 402 for a tool above the plan. A run does
+ *   not start without its yes, and a failed or missing answer stops it. The page never looks at the plan or a
+ *   cookie to decide whether to ask.
+ * - **Offline:** there is no server, so a paid tool needs a signed token the server issued with a recent claim
+ *   (src/lib/entitlement.ts, Ed25519, 48 hours). The page can check a signature but cannot make one. Free tools
+ *   always run offline.
+ *
+ * **Residual risk, accepted on purpose.** Every tool runs on the visitor's own device, and the paid tools are not
+ * separate downloads: their operations are in the one shared worker bundle (`pdf.worker`), which is also what the
+ * installed offline app caches. So a determined person with developer tools can call those operations directly,
+ * skipping the page, the claim and the token, and nothing on a server can prevent it, because there is no
+ * server-side work to withhold. They can also claim one tool's id and run another, or work offline to avoid the
+ * free allowance being counted. What the checks achieve is that the supported way to use a paid tool is to pay,
+ * that an honest free account cannot exceed its daily allowance, and that editing the cached plan or a cookie
+ * changes nothing the server relies on. They are not a lock, and nothing here claims to be one.
+ *
+ * The self-hosted build (`PUBLIC_USAGE_LIMITS=off`) makes no claim at all and is an honor system by design: see
+ * docs/self-hosting.md.
  */
 export function requiresUpgrade(
   tier: ToolTier,

@@ -1,7 +1,7 @@
 ---
 title: Cookie policy
 description: The three strictly-necessary cookies LeafLock PDF sets, what else it stores in your browser (theme choice, the OCR model), and how to remove any of it.
-updated: 2026-11-12
+updated: 2026-11-15
 awaitingLegalReview: true
 ---
 
@@ -28,6 +28,15 @@ The site saves your theme choice in your browser's localStorage under the name `
 - **What it contains:** the word `light` or `dark`.
 - **When it's set:** the first time you open the site, and again whenever you change it with the theme switch.
 - **How long it lasts:** until you change the setting or clear the site's data.
+
+### localStorage: your offline access
+
+If you have a paid plan, the site saves a short-lived signed token in your browser's localStorage under the name `leaflock-entitlement` each time you run a tool while online. It lets the paid tools you have bought keep working if you are offline. It is only saved for a paid plan.
+
+- **What it contains:** an opaque account identifier (not your email address), the name of your plan, and when the token expires. It is signed by us, so it cannot be edited into something else.
+- **When it's set:** whenever you run a tool online on a paid plan. It is removed when an online check finds the plan has ended.
+- **Does it leave your device:** it is not sent anywhere by itself.
+- **How long it lasts:** it expires after 48 hours and is replaced the next time you run a tool online.
 
 ### localStorage: your starred and recent tools
 

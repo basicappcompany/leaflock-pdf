@@ -476,11 +476,26 @@ dashboard now shows the free one to users, so they are no longer invisible.
 - `POST /api/usage/claim` counts one job and says whether it was allowed. One row per user
   per UTC day, so the daily reset is implicit in the period key and needs no rollover job.
 - `GET /api/usage/today` reads the count **without incrementing**, for the dashboard meter.
-- Paid plans skip the call entirely client-side via `src/lib/planCache.ts`, so a paying
-  customer's work never waits on the network. The cache is a latency optimisation and
-  never a security boundary — the endpoint re-checks the real session.
-- The cap is a nudge, not a lock: the work runs on the visitor's device either way, which
-  is also why `requiresUpgrade()` is honest about being a paywall rather than a lock.
+- **The server is the only authority for a run** (changed 15 November 2026, item 4.14). Every run asks
+  `POST /api/usage/claim` first, naming the tool, and does not start without the answer. The old rule ("paid plans skip
+  the call", "if the request fails, the job runs") let a free user run unlimited jobs by skipping or failing the
+  call, and is gone. Decided in `src/lib/server/claim.ts`: a tool above the account's plan is a **402** with no count and no
+  token; a free or anonymous run is counted; a paid run is not counted and gets a signed token.
+- **One claim per task, not per operation.** `useTask.run` wraps its work in `withClaim` (src/lib/usage.ts) and the
+  operations it calls see that a claim is held. A task counts once however many operations it uses. This also meters the
+  main-thread tools that never went through `runPdfJob` and so were never counted: PDF to text, Word, Excel, Markdown and
+  images, Extract tables, and Compare, which has no run button and claims when both files are open.
+- **Offline** uses an Ed25519 token (`src/lib/entitlement.ts`): the server signs `{sub, plan, tier, exp}` with the
+  `ENTITLEMENT_PRIVATE_KEY` secret and the page verifies it with the public key in `src/lib/entitlementKey.ts`. 48-hour life,
+  refreshed by every successful online claim, stored in `localStorage` as `leaflock-entitlement`. Free tools run offline
+  with no token. A browser without Ed25519 support gets no offline paid access, never a wrong grant.
+- **"Online" is `navigator.onLine`.** While it says online, a claim that fails or gets no answer stops the run, free tools
+  included: a server outage blocks tool use. That is the decided trade-off (fail closed), not an oversight.
+- **Residual risk**, recorded in `src/lib/proAccess.ts`: the computation is on the visitor's device in a shared worker bundle, so a
+  determined person can call it directly, claim a free tool's id and run a paid one, or go offline so a free run is not
+  counted. The checks make paying the supported route; they are not a lock. The self-hosted build is ungated.
+- CI guards in `tests/unit/authorityGuards.test.ts`: only the webhook and the Dodo re-check write a plan, no client module
+  imports a server module or names a server secret, and no module that claims a run reads the cached plan or a cookie.
 
 ## 8. Payments
 

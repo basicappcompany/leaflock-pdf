@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { PDFDocument, StandardFonts } from '@cantoo/pdf-lib';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { download, pdfUpload, watchPage } from './helpers';
 
 test('PDF to Markdown: keeps headings, bold, italic and lists as real Markdown syntax', async ({ page, baseURL }) => {

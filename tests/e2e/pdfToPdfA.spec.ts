@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { PDFDocument, PDFName, StandardFonts } from '@cantoo/pdf-lib';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { en } from '../../src/i18n/en';
 import { loadPdf } from '../../src/lib/pdf/load';
 import { makePdf } from '../fixtures/pdfs';

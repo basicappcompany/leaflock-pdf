@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 import { makePdf } from '../fixtures/pdfs';
 import { download, pdfUpload, watchPage } from './helpers';
 

@@ -17,6 +17,21 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 15 November 2026 — The server is the only authority for a run (4.14)
+
+- A free user could run unlimited jobs: `claimJob` skipped the server when the cached plan was paid, passed when the
+  request failed, and seven tools never called it at all (Compare and Extract tables among the Practice six). Now every
+  task waits for `POST /api/usage/claim` and does not start without a 2xx; a tool above the plan is a 402.
+- Decisions, final: Ed25519 offline token (48 h, public key in the bundle), self-hosted ungated and written down as an
+  honor system, no worker split. Recorded in `proAccess.ts` and `docs/self-hosting.md`: a determined person can still call the
+  bundled operations, claim a free tool's id, or go offline to avoid being counted.
+- **Allowances moved**: a task now counts once however many operations it runs (tools that used several used to count
+  several), and the main-thread tools are counted for the first time. The stated 20 and 60 are unchanged.
+- Billing hygiene in the same pass: a tied or out-of-order webhook, and any authenticated event type we do not know,
+  re-read Dodo; `/api/billing/refresh` checks Origin and has a site-wide cap; a failed sweep emails the owner.
+- A guard found a real thing on its first run: `CheckoutButton` imports from `lib/server` (type only, erased at build). The
+  guard allows `import type` and forbids a value import.
+
 ## 15 November 2026 — Dodo is the source of truth for plans (4.13)
 
 - The webhook was the only writer of a plan and nothing re-read Dodo: a lost delivery (Dodo gives up after eight

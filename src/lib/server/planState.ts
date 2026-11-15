@@ -145,12 +145,61 @@ export function updateFromPayment(env: Env, payment: DodoPaymentState): PlanUpda
 }
 
 /**
- * Whether an event is newer than the last thing applied to the account. Dodo says events can arrive out
- * of order and to order them by their timestamp; an event with no usable time is applied, since refusing it
- * could lose a real change.
+ * Whether an event is strictly newer than the last thing applied to the account. Dodo says events can arrive
+ * out of order and to order them by their timestamp. A tie cannot be ordered either, so only a strictly newer
+ * event is trusted to be applied; an older or equal one makes the caller read Dodo instead. An event with no
+ * usable time is applied, since refusing it could lose a real change.
  */
 export function isNewerThan(lastAppliedAt: number | null | undefined, eventAt: number | null): boolean {
   // `undefined` is a database that has not had migration 0008 yet: nothing recorded, so nothing to compare.
   if (eventAt === null || lastAppliedAt == null) return true;
-  return eventAt >= lastAppliedAt;
+  return eventAt > lastAppliedAt;
+}
+
+export type EventKind = 'subscription' | 'payment' | 'reversal' | 'ignore' | 'unknown';
+
+const SUBSCRIPTION_EVENTS = new Set([
+  'subscription.active',
+  'subscription.renewed',
+  'subscription.unpaused',
+  'subscription.plan_changed',
+  'subscription.past_due',
+  'subscription.cancelled',
+  'subscription.paused',
+  'subscription.expired',
+  'subscription.on_hold',
+  'subscription.failed',
+  'subscription.updated',
+]);
+
+/** Events Dodo sends that say nothing about who has paid, so they are recorded and nothing more. */
+const IGNORED_EVENTS = new Set([
+  'subscription.update_payment_method',
+  'payment.failed',
+  'payment.processing',
+  'payment.cancelled',
+  'refund.failed',
+  'dispute.opened',
+  'dispute.challenged',
+  'dispute.won',
+  'dispute.accepted',
+  'dispute.cancelled',
+  'dispute.expired',
+  'dunning.started',
+  'dunning.recovered',
+  'abandoned_checkout.detected',
+  'abandoned_checkout.recovered',
+]);
+
+/**
+ * What to do with an authenticated event. Anything not listed is `unknown`: it is genuine (the signature has
+ * been checked) but we do not know what it means, so the caller re-reads Dodo rather than ignoring it, because
+ * a new event type is exactly how a change in who has paid could slip past.
+ */
+export function classifyEvent(type: string): EventKind {
+  if (SUBSCRIPTION_EVENTS.has(type)) return 'subscription';
+  if (type === 'payment.succeeded') return 'payment';
+  if (type === 'refund.succeeded' || type === 'dispute.lost') return 'reversal';
+  if (IGNORED_EVENTS.has(type)) return 'ignore';
+  return 'unknown';
 }

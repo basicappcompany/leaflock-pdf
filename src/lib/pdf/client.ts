@@ -1,4 +1,4 @@
-import { claimJob } from '../usage';
+import { claimJob, holdingClaim } from '../usage';
 import type { OpArgs, OpName, OpResult } from './ops';
 import type { JobFailure, JobMessage, JobRequest } from './protocol';
 
@@ -94,7 +94,7 @@ export async function runPdfJob<K extends OpName>(
     metered?: boolean;
   },
 ): Promise<OpResult<K>> {
-  if (options?.metered !== false) await claimJob();
+  if (options?.metered !== false && !holdingClaim()) await claimJob();
   const id = nextId++;
   const request: JobRequest = { id, op, args };
   return new Promise((resolve, reject) => {

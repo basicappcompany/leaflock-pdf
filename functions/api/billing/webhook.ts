@@ -20,7 +20,7 @@ import {
   type UserRow,
 } from '../../../src/lib/server/db';
 import { parsePayment, reconcileUser } from '../../../src/lib/server/dodoSync';
-import { isNewerThan, resolveStatus, updateFromPayment, updateFromSubscription } from '../../../src/lib/server/planState';
+import { classifyEvent, isNewerThan, resolveStatus, updateFromPayment, updateFromSubscription } from '../../../src/lib/server/planState';
 
 const MAX_BODY = 64 * 1024;
 
@@ -115,39 +115,54 @@ async function applyDelivery(env: Env, payload: WebhookPayload, data: Data, now:
   const customerId = data.customer?.customer_id ?? null;
   const subscriptionId = data.subscription_id ?? null;
 
-  if (payload.type.startsWith('subscription.')) {
-    // Dodo may deliver events out of order; one older than what is already applied is acknowledged and dropped.
-    if (!isNewerThan(user.billing_event_at, at)) {
-      console.log(JSON.stringify({ type: 'billing', event: payload.type, ignored: 'older than the last applied event' }));
-      return;
-    }
-    const update = updateFromSubscription(
-      env,
-      {
-        status: resolveStatus(payload.type, data.status),
-        productId: data.product_id ?? null,
-        nextBillingDate: data.next_billing_date,
-        customerId,
-        subscriptionId,
-      },
-      user,
-      now,
-    );
-    // A subscription event that changes nothing (a payment-method update, a pending sale) is recorded only.
-    if (update) await setUserPlan(env.DB, user.id, { ...update, eventAt: at }, now);
-  } else if (payload.type === 'payment.succeeded') {
-    // One-off purchase: the ten-year plan. A subscription's own payments are handled by its subscription events.
-    const update = updateFromPayment(env, parsePayment(data as unknown as Record<string, unknown>));
-    if (update && isNewerThan(user.billing_event_at, at)) {
-      await setUserPlan(env.DB, user.id, { ...update, paymentId: data.payment_id ?? null, eventAt: at }, now);
-    }
-  } else if ((payload.type === 'refund.succeeded' || payload.type === 'dispute.lost') && (user.subscription_id || user.dodo_payment_id)) {
-    // The payload's shape is not what decides this: Dodo is asked what the payment's state is now. A
-    // failure to ask is thrown so the delivery is retried, rather than a reversed purchase keeping its plan.
+  const kind = classifyEvent(payload.type);
+  const hasDodoBilling = Boolean(user.subscription_id || user.dodo_payment_id);
+
+  /** Asks Dodo instead of trusting the event. A failure to ask is thrown so the delivery is retried. */
+  const readDodo = async (why: string): Promise<void> => {
+    if (!hasDodoBilling) return;
     const outcome = await reconcileUser(env, env.DB, user, now);
-    if (outcome === 'error' || outcome === 'skipped') throw new Error(`could not re-check billing after ${payload.type} (${outcome})`);
+    if (outcome === 'error' || outcome === 'skipped') throw new Error(`could not re-check billing after ${payload.type} (${why}, ${outcome})`);
+  };
+
+  if (kind === 'subscription') {
+    // Dodo may deliver events out of order, and two with the same time cannot be ordered. Only a strictly newer
+    // event is trusted to apply; any other makes us read Dodo for the real state.
+    if (!isNewerThan(user.billing_event_at, at)) {
+      await readDodo('out of order or tied');
+    } else {
+      const update = updateFromSubscription(
+        env,
+        {
+          status: resolveStatus(payload.type, data.status),
+          productId: data.product_id ?? null,
+          nextBillingDate: data.next_billing_date,
+          customerId,
+          subscriptionId,
+        },
+        user,
+        now,
+      );
+      // A subscription event that changes nothing (a pending sale) is recorded only.
+      if (update) await setUserPlan(env.DB, user.id, { ...update, eventAt: at }, now);
+    }
+  } else if (kind === 'payment') {
+    // One-off purchase: the ten-year plan. A subscription's own payments are handled by its subscription events.
+    if (!isNewerThan(user.billing_event_at, at)) {
+      await readDodo('out of order or tied');
+    } else {
+      const update = updateFromPayment(env, parsePayment(data as unknown as Record<string, unknown>));
+      if (update) await setUserPlan(env.DB, user.id, { ...update, paymentId: data.payment_id ?? null, eventAt: at }, now);
+    }
+  } else if (kind === 'reversal') {
+    // The payload's shape is not what decides this: Dodo is asked what the payment's state is now.
+    await readDodo(payload.type);
+  } else if (kind === 'unknown') {
+    // Authenticated but not an event we know. Dropping it could hide a change in who has paid, so read Dodo.
+    console.log(JSON.stringify({ type: 'billing', event: payload.type, note: 'unknown event type, re-reading Dodo' }));
+    await readDodo('unknown event type');
   }
-  // Everything else is recorded but changes nothing.
+  // Events that say nothing about who has paid are recorded and change nothing.
 
   const updated = await getUserById(env.DB, user.id);
   console.log(

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  classifyEvent,
   isNewerThan,
   paymentIsReversed,
   resolveStatus,
@@ -111,14 +112,31 @@ describe('the ten-year payment', () => {
 });
 
 describe('isNewerThan', () => {
-  it('applies a newer or equal event and drops an older one', () => {
+  it('trusts only a strictly newer event; a tie or an older one cannot be ordered', () => {
     expect(isNewerThan(1000, 2000)).toBe(true);
-    expect(isNewerThan(1000, 1000)).toBe(true);
+    expect(isNewerThan(1000, 1000)).toBe(false);
     expect(isNewerThan(2000, 1000)).toBe(false);
   });
 
   it('applies an event that cannot be ordered, rather than risk losing a real change', () => {
     expect(isNewerThan(2000, null)).toBe(true);
     expect(isNewerThan(null, 1000)).toBe(true);
+  });
+});
+
+describe('classifyEvent', () => {
+  it('sorts authenticated events into what to do with them', () => {
+    expect(classifyEvent('subscription.active')).toBe('subscription');
+    expect(classifyEvent('subscription.updated')).toBe('subscription');
+    expect(classifyEvent('payment.succeeded')).toBe('payment');
+    expect(classifyEvent('refund.succeeded')).toBe('reversal');
+    expect(classifyEvent('dispute.lost')).toBe('reversal');
+    expect(classifyEvent('payment.failed')).toBe('ignore');
+    expect(classifyEvent('dispute.won')).toBe('ignore');
+  });
+
+  it('treats an event type it does not know as unknown, so the caller reads Dodo', () => {
+    expect(classifyEvent('subscription.something_new')).toBe('unknown');
+    expect(classifyEvent('mystery.event')).toBe('unknown');
   });
 });

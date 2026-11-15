@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { en } from '../../src/i18n/en';
 import { contentPages } from '../../src/lib/siteLinks';
 import { landings, tools } from '../../src/tools/registry';

@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { readFile } from 'node:fs/promises';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 import { makePdf, pageSizesOf } from '../fixtures/pdfs';
 import { pdfUpload, watchPage } from './helpers';
 

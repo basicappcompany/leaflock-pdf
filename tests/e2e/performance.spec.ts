@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { expect, test, type Page, type Response } from '@playwright/test';
+import { expect, test, type Page, type Response } from './fixtures';
 import { watchPage } from './helpers';
 
 /**
