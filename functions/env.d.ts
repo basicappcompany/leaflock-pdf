@@ -36,6 +36,10 @@ interface Env {
   /** Bearer token for POST /api/billing/reconcile, the scheduled re-check of paid accounts against Dodo
    * (the leaflock-billing-reconcile Worker, workers/billing-reconcile). Without it the endpoint answers 404 and the sweep is off. */
   RECONCILE_TOKEN?: string;
+  /** Ed25519 private key (PKCS8, base64) that signs the offline entitlement token (src/lib/server/entitlement.ts).
+   * The matching public key is in src/lib/entitlementKey.ts. Without it no token is issued: online runs are
+   * unaffected, paid tools just do not work offline. */
+  ENTITLEMENT_PRIVATE_KEY?: string;
 
   /** Google sign-in. Without these the button is hidden and the route redirects back. */
   GOOGLE_CLIENT_ID?: string;

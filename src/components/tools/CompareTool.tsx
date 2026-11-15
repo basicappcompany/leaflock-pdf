@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { format, plural, type CommonMessages, type ToolMessages } from '../../i18n';
 import { pageText, type PDFDocumentProxy } from '../../lib/pdfjs';
 import { diffWords, summarize, type DiffPart, type DiffSummary } from '../../lib/secure/textDiff';
+import { UsageLimitError, withClaim } from '../../lib/usage';
 import { Segmented } from '../ui/fields';
 import { FilePicker } from '../ui/FilePicker';
 import { PagePreview } from '../ui/PagePreview';
@@ -27,14 +28,21 @@ async function textOf(doc: PDFDocumentProxy, number: number): Promise<string> {
   return number <= doc.numPages ? pageText(await doc.getPage(number)) : '';
 }
 
-/** Text diff of every page pair, computed once both documents are open. */
+/**
+ * Text diff of every page pair, computed once both documents are open.
+ *
+ * This tool has no run button, so the comparison starting is the run: the server's yes (src/lib/usage.ts) comes
+ * first, and without it nothing is computed. `blocked` carries why, for the page to say.
+ */
 function useComparison(original: PDFDocumentProxy | undefined, changed: PDFDocumentProxy | undefined) {
   const [pages, setPages] = useState<PageComparison[]>();
+  const [blocked, setBlocked] = useState<unknown>();
   useEffect(() => {
     setPages(undefined);
+    setBlocked(undefined);
     if (!original || !changed) return;
     let cancelled = false;
-    (async () => {
+    withClaim(async () => {
       const count = Math.max(original.numPages, changed.numPages);
       const result: PageComparison[] = [];
       for (let number = 1; number <= count; number++) {
@@ -50,12 +58,14 @@ function useComparison(original: PDFDocumentProxy | undefined, changed: PDFDocum
         });
       }
       if (!cancelled) setPages(result);
-    })();
+    }).catch((error: unknown) => {
+      if (!cancelled) setBlocked(error);
+    });
     return () => {
       cancelled = true;
     };
   }, [original, changed]);
-  return pages;
+  return { pages, blocked };
 }
 
 export default function CompareTool({ locale, common, t }: ToolProps<'compare'>) {
@@ -67,7 +77,7 @@ export default function CompareTool({ locale, common, t }: ToolProps<'compare'>)
   const changed = usePdfDocument(changedFile);
   const originalDoc = original.state === 'ready' ? original.doc : undefined;
   const changedDoc = changed.state === 'ready' ? changed.doc : undefined;
-  const pages = useComparison(originalDoc, changedDoc);
+  const { pages, blocked } = useComparison(originalDoc, changedDoc);
 
   useEffect(() => setCurrent(1), [originalDoc, changedDoc]);
 
@@ -91,9 +101,19 @@ export default function CompareTool({ locale, common, t }: ToolProps<'compare'>)
         <Slot label={t.changed} file={changedFile} state={changed} common={common} locale={locale} onFile={setChangedFile} />
       </div>
 
-      {originalDoc && changedDoc && !pages && (
+      {originalDoc && changedDoc && !pages && !blocked && (
         <p className="muted" role="status">
           {t.analysing}
+        </p>
+      )}
+
+      {blocked !== undefined && (
+        <p className="notice" role="alert">
+          {blocked instanceof UsageLimitError
+            ? blocked.reason === 'anonymous'
+              ? common.errors.dailyLimitAnonymous
+              : common.errors.dailyLimitFree
+            : common.errors.unexpected}
         </p>
       )}
 

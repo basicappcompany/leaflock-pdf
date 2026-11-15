@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { PDFArray, PDFDict, PDFName, PDFNumber, PDFString } from '@cantoo/pdf-lib';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { loadPdf } from '../../src/lib/pdf/load';
 import { makePdf } from '../fixtures/pdfs';
 import { download, pdfUpload, watchPage } from './helpers';

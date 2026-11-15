@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { PDFDocument } from '@cantoo/pdf-lib';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { makeJpeg } from '../fixtures/images';
 import { download, pdfUpload, watchPage } from './helpers';
 

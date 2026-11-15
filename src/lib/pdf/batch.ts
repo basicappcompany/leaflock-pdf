@@ -1,4 +1,4 @@
-import { claimJob } from '../usage';
+import { claimJob, holdingClaim } from '../usage';
 import type { OutputFile } from './types';
 
 export type BatchRowState = 'waiting' | 'working' | 'done' | 'failed';
@@ -34,7 +34,7 @@ export async function runBatch<T>(
   report: (update: BatchUpdate) => void,
   onProgress?: (fraction: number) => void,
 ): Promise<BatchResult> {
-  await claimJob();
+  if (!holdingClaim()) await claimJob();
 
   const outputs: OutputFile[] = [];
   let failed = 0;

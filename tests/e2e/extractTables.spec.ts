@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { PDFDocument, StandardFonts } from '@cantoo/pdf-lib';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { strFromU8, unzipSync } from 'fflate';
 import { download, pdfUpload, watchPage } from './helpers';
 

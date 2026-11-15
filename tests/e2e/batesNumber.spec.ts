@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';

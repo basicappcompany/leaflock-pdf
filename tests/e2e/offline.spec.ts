@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 import { en } from '../../src/i18n/en';
 import { makePdf, pageSizesOf } from '../fixtures/pdfs';
 import { download, pdfUpload, watchPage } from './helpers';

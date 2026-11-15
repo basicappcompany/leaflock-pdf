@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 import { watchPage } from './helpers';
 
 // `astro preview` serves no Functions, so the account endpoints are mocked here.

@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 
 /**
  * The tools sidebar as a phone drawer. Reported 6 November 2026: the hide/show handle

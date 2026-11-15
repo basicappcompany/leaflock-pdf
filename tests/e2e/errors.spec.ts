@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('a crash sends one scrubbed report to our own server', async ({ page, baseURL }) => {
   const reports: unknown[] = [];

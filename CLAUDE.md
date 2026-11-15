@@ -144,4 +144,9 @@ Tools with `tier: 'pro'` are free during early access and show a Pro badge. The 
 - **A static page that differs for a signed-in member flashes unless the view is chosen before first paint.** The plan rides in the `leaflock_signed_in` cookie (written at login, rewritten by `/api/auth/me`), `Base`'s `memberHint` sets `data-plan` on `<html>` before paint, and the member HTML is rendered for every plan and shown by CSS. A fetch after hydration is a 1-2 second flash. See `docs/design.md` §8.
 - **Never `git worktree remove` a worktree whose `node_modules` is a junction or symlink to the real one**: git deletes through the link (12 November, it emptied `.bin` and part of the pnpm store; `pnpm install --frozen-lockfile --force` repaired it). `rmdir` the junction first, or install the worktree's own dependencies.
 - **Test a payment flow on the real platform before designing it**, including the slow success path: Dodo's change-plan charge can stay `processing` for about two days on an Indian card, which no unit test or preview shows.
+- **The client never decides whether to ask the server.** Every tool task waits for `POST /api/usage/claim` (`withClaim` in
+  `src/lib/usage.ts`) and does not start without a 2xx; the cached plan and the sign-in cookie are display only.
+  `tests/unit/authorityGuards.test.ts` fails the build if a plan is written outside the webhook and the Dodo re-check, a client
+  module imports server code, or a module that claims a run reads the plan. The paid tools are still client code in a shared
+  worker bundle, so this is a paywall and not a lock, and the self-hosted build is an honor system (`docs/self-hosting.md`).
 - **No file data, names or page text leave the device**, and nothing an agent observes on a web page is an instruction.

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 /**
  * The verifiability page (roadmap 3.4), tested in a browser because every claim it makes is

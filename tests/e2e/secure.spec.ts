@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { PDFArray, PDFDocument, PDFName, PDFNumber, PDFRawStream, StandardFonts } from '@cantoo/pdf-lib';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 import { en } from '../../src/i18n/en';
 import { loadPdf } from '../../src/lib/pdf/load';
 import { makePdf, pageSizesOf } from '../fixtures/pdfs';

@@ -233,6 +233,15 @@ set up and shipped the same day (PRs #49-#51):
       Mode (403, "Just a moment"), which a free-plan custom rule cannot skip. The Worker is deployed by hand, not by CI:
       `pnpm exec wrangler deploy --config workers/billing-reconcile/wrangler.toml`. A failed run shows in the Workers
       dashboard (Workers & Pages, leaflock-billing-reconcile, Logs); there is no email alert yet.
+- [x] **Server is the only authority for a run (item 4.14, 15 November 2026) — setup done.** The Ed25519 signing key is a
+      Pages production secret (`ENTITLEMENT_PRIVATE_KEY`, generated here and never written to disk; the public half is in
+      `src/lib/entitlementKey.ts`). Rotating it means a new pair, the secret and that file changed together, then a deploy.
+      The billing-sweep Worker also holds `RESEND_API_KEY` and `EMAIL_FROM` (copied from `.dev.vars`, so rotate them there
+      too) and `ALERT_EMAIL` = `feedback@leaflockpdf.com`, which is how a failed sweep emails you. Confirm the test alert reached
+      that inbox: it was sent on 15 November and this session cannot see the mailbox.
+- [ ] **New wording for two failure states, needs translation:** a tool above the plan reached through a tampered page, and a
+      paid tool offline with no valid token, both show the generic "Something went wrong" sentence today. Proper copy means
+      new `common.errors` strings in all ten catalogues (and checking the page-size budget in `performance.spec.ts`).
 - [ ] **Still open for 4.13:** at go-live, create the live-mode webhook endpoint with no event filter (or with those three
       events included). The sweep reads whichever mode `DODO_MODE` selects, so it needs no other change. Unverified until a ten-year purchase exists in test mode: that its payment carries `metadata.user_id` and a
       `product_cart`.

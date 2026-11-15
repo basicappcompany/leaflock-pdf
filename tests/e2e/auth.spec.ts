@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 import { watchPage } from './helpers';
 
 // `astro preview` has no Cloudflare Functions, so the API routes are mocked here the

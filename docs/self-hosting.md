@@ -131,6 +131,24 @@ Visitors pick up the new build the next time they load a page, provided `sw.js` 
 served with `Cache-Control: no-cache` as above. A visitor with the old build still open
 keeps working until they reload; nothing breaks mid-job.
 
+## 5a. Plan and usage checks are an honor system in this build
+
+The hosted site asks a server before every tool run (`POST /api/usage/claim`): it counts the free daily
+allowance, refuses a tool above the account's plan, and, for a paid account, issues a signed token so paid tools
+keep working offline. **A self-hosted build does none of this.** It is built with `PUBLIC_USAGE_LIMITS=off`, has no
+server to ask, and makes no request at all, so every tool runs ungated. That is deliberate: the Business edition
+is licensed per organisation, and it must work on a network with no internet.
+
+So the licence terms are what bind a licensee, not the software. Say that plainly in any conversation with one.
+
+**What the hosted site cannot prevent either.** Every tool runs on the visitor's own device and the paid tools'
+operations are in the shared worker bundle that is sent to every visitor, so a determined person with developer
+tools can run them directly. The hosted checks make paying the supported way to use them and keep an honest free
+account within its allowance; they do not make the tools impossible to run without paying. The same is true of the
+files you are given here. This was decided, not overlooked: keeping the computation on the device is the
+product's privacy promise, and gating it would mean either splitting the worker per tool or moving work to a
+server, which breaks the offline app and this edition.
+
 ## 6. What the licence covers
 
 One organisation, no limit on the number of people using it. The current price and the

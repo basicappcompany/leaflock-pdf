@@ -93,6 +93,7 @@ When a tool fails because of a bug, your browser sends a short error report to o
 
 - **Theme choice:** if you press the theme button, your light or dark choice is saved in your browser's localStorage so the site remembers it. The default is light, and nothing is saved until you press it.
 - **Starred and recent tools:** the tools you star, and the tools you used recently with the time you used them, are saved in your browser's localStorage so the sidebar and your dashboard can show them. Tool names and times only, never a file or a file name. If you are signed in, your starred tools are also saved to your account (see above); the recent list stays on your device. Clear your site data to remove them.
+- **Offline access token:** if you have a paid plan, a short-lived signed token (an opaque account identifier, your plan's name and an expiry time, never your email address) is saved in your browser's localStorage each time you run a tool online, so the tools you have paid for keep working offline for up to 48 hours. Clear your site data to remove it.
 - **OCR language model:** after you first use OCR PDF, your browser stores the English text-recognition model so it doesn't need to download it again. This file is the same for everyone and contains no personal data.
 - **Cookies:** two if you sign in (`__Host-leaflock_session`, and `leaflock_signed_in`, which holds only the name of your plan), and a third (`leaflock_skin`) only if you pick a visual skin. None of them track you or carry a profile.
 

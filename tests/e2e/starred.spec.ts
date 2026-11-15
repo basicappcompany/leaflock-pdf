@@ -1,4 +1,4 @@
-import { devices, expect, test, type Page } from '@playwright/test';
+import { devices, expect, test, type Page } from './fixtures';
 import { en } from '../../src/i18n/en';
 import { watchPage } from './helpers';
 

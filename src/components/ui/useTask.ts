@@ -5,7 +5,7 @@ import { reportError } from '../../lib/errorReporting';
 import { ToolError } from '../../lib/pdf/errors';
 import { PdfInputError, type PdfInputProblem } from '../../lib/pdf/inputError';
 import { recordRun } from '../../lib/recentActivity';
-import { UsageLimitError, type UsageLimitReason } from '../../lib/usage';
+import { ClaimUnavailableError, EntitlementError, UsageLimitError, withClaim, type UsageLimitReason } from '../../lib/usage';
 
 export type TaskStatus =
   | { state: 'idle' }
@@ -80,9 +80,12 @@ export function useTask(errors: CommonMessages['errors'], toolErrors?: Record<st
       const current = ++generation.current;
       setStatus({ state: 'working', progress: undefined });
       try {
-        const result = await work((fraction) => {
-          if (generation.current === current) setStatus({ state: 'working', progress: fraction });
-        });
+        // The server's yes comes first: the work does not start without it (src/lib/usage.ts).
+        const result = await withClaim(() =>
+          work((fraction) => {
+            if (generation.current === current) setStatus({ state: 'working', progress: fraction });
+          }),
+        );
         if (generation.current !== current) return undefined;
         setStatus({ state: 'done' });
         // Only the tool and the time, stored on this device, for the home dashboard.
@@ -90,12 +93,16 @@ export function useTask(errors: CommonMessages['errors'], toolErrors?: Record<st
         return result;
       } catch (error) {
         if (generation.current === current) {
-          // Hitting the daily allowance isn't a bug, so it must not reach describeFailure,
-          // which reports anything it doesn't recognise to /api/errors.
+          // Hitting the daily allowance, a tool above the plan, or a usage check that could not be made are not
+          // bugs, so none of them may reach describeFailure, which reports anything it doesn't recognise to
+          // /api/errors. A page that offers a tool the plan lacks hides it behind ProGate, so an honest visitor
+          // rarely sees the second and third; they get the generic sentence.
           setStatus(
             error instanceof UsageLimitError
               ? limitedStatus(error.reason, errors)
-              : { state: 'error', message: describeFailure(error, errors, toolErrors) },
+              : error instanceof EntitlementError || error instanceof ClaimUnavailableError
+                ? { state: 'error', message: errors.unexpected }
+                : { state: 'error', message: describeFailure(error, errors, toolErrors) },
           );
         }
         return undefined;

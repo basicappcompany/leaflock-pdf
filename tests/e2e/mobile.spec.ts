@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { contentPages } from '../../src/lib/siteLinks';
 import { landings, tools } from '../../src/tools/registry';
 import { makePdf } from '../fixtures/pdfs';

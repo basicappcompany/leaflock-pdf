@@ -2,7 +2,7 @@
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { PDFDocument, StandardFonts } from '@cantoo/pdf-lib';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { makePdf, pageSizesOf } from '../fixtures/pdfs';
 import { download, pdfUpload, watchPage } from './helpers';
