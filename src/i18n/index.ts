@@ -55,8 +55,6 @@ const translated = /*#__PURE__*/ buildLocales();
 /** Locales that have a catalogue. These are the ones emitted in hreflang and the sitemap. */
 export const locales: Record<string, Messages> = translated;
 
-export type Locale = string;
-
 export function getMessages(locale: string | undefined): Messages {
   return translated[locale ?? defaultLocale] ?? en;
 }

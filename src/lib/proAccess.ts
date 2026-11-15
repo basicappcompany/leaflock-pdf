@@ -50,12 +50,3 @@ export function requiresUpgrade(
 export function isPaidTier(tier: ToolTier): boolean {
   return tier !== 'free';
 }
-
-/**
- * The tier a paid tool is sold under, as a message key, so copy is looked up by tier
- * instead of through a chain of `tier === 'pro'` checks — which is exactly what would
- * have silently hidden the badge on all six tools the moment they moved to Practice.
- */
-export function tierKey(tier: ToolTier): 'pro' | 'practice' | null {
-  return tier === 'free' ? null : tier;
-}
