@@ -73,6 +73,13 @@ describe('claimJob online: the server is the only authority', () => {
     await expect(claimJob()).rejects.toBeInstanceOf(UsageLimitError);
   });
 
+  it('says which nudge to show: an account for a visitor, Pro for an account', async () => {
+    const visitor = await load({ tool: 'merge', reply: () => json(200, { allowed: false, remaining: 0, reason: 'anonymous' }) });
+    await expect(visitor.claimJob()).rejects.toMatchObject({ reason: 'anonymous' });
+    const member = await load({ tool: 'merge', reply: () => json(200, { allowed: false, remaining: 0, reason: 'free-account' }) });
+    await expect(member.claimJob()).rejects.toMatchObject({ reason: 'free-account' });
+  });
+
   it('stops a tool above the plan on a 402 and forgets any stored token', async () => {
     const { claimJob, EntitlementError, storage } = await load({ tool: 'redact', reply: () => json(402, { error: 'upgrade' }) });
     storage.setItem('leaflock-entitlement', 'stale');
