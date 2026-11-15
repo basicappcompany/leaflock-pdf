@@ -57,7 +57,8 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
       ...(sale.discountCodes ? { discount_codes: sale.discountCodes } : {}),
       ...(sale.trialPeriodDays ? { subscription_data: { trial_period_days: sale.trialPeriodDays } } : {}),
       customer: { email: session.email },
-      return_url: `${origin}/account`,
+      // `checkout` tells the account page to ask Dodo for the plan straight away (/api/billing/refresh).
+      return_url: `${origin}/account/?checkout=return`,
       // How the webhook finds the account again; email alone isn't reliable.
       metadata: { user_id: session.userId },
     }),

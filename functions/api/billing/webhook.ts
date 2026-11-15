@@ -2,26 +2,32 @@
  * Cloudflare Pages Function: receives Dodo Payments webhooks and keeps each account's
  * plan in step with what was actually paid for.
  *
- * This endpoint is the only authority on who has a paid plan; the client is never
- * trusted for it. Deliveries are verified (Standard Webhooks) and de-duplicated,
- * because Dodo retries until it gets a 2xx.
+ * Dodo is the source of truth for who has paid, and this endpoint is the fast path that mirrors it into
+ * our database; `src/lib/server/dodoSync.ts` repairs the mirror from Dodo's API when a delivery is missed
+ * or reordered. The client is never trusted for any of it. Deliveries are verified (Standard Webhooks)
+ * and de-duplicated, because Dodo retries until it gets a 2xx.
  */
 
-import { effectivePlan, planForProduct, verifyWebhook } from '../../../src/lib/server/billing';
+import { effectivePlan, verifyWebhook } from '../../../src/lib/server/billing';
 import {
   forgetWebhook,
   getUserByEmail,
   getUserById,
+  getUserByPayment,
   getUserBySubscription,
   recordWebhookOnce,
   setUserPlan,
   type UserRow,
 } from '../../../src/lib/server/db';
+import { parsePayment, reconcileUser } from '../../../src/lib/server/dodoSync';
+import { isNewerThan, resolveStatus, updateFromPayment, updateFromSubscription } from '../../../src/lib/server/planState';
 
 const MAX_BODY = 64 * 1024;
 
 interface WebhookPayload {
   type: string;
+  /** When the event happened, per Dodo (ISO 8601). */
+  timestamp?: string;
   data?: {
     subscription_id?: string;
     payment_id?: string;
@@ -34,8 +40,10 @@ interface WebhookPayload {
   };
 }
 
+type Data = NonNullable<WebhookPayload['data']>;
+
 /** Finds the account a delivery is about: by the id we sent at checkout, then by subscription, then by email. */
-async function findUser(db: D1Database, data: NonNullable<WebhookPayload['data']>): Promise<UserRow | null> {
+async function findUser(db: D1Database, data: Data): Promise<UserRow | null> {
   const userId = data.metadata?.['user_id'];
   if (typeof userId === 'string') {
     const byId = await getUserById(db, userId);
@@ -47,11 +55,6 @@ async function findUser(db: D1Database, data: NonNullable<WebhookPayload['data']
   }
   const email = data.customer?.email;
   return email ? getUserByEmail(db, email.toLowerCase()) : null;
-}
-
-function periodEnd(data: NonNullable<WebhookPayload['data']>): number | null {
-  const parsed = data.next_billing_date ? Date.parse(data.next_billing_date) : Number.NaN;
-  return Number.isFinite(parsed) ? parsed : null;
 }
 
 export async function onRequestPost({ request, env }: { request: Request; env: Env }): Promise<Response> {
@@ -99,98 +102,52 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
   return new Response(null, { status: 204 });
 }
 
-async function applyDelivery(
-  env: Env,
-  payload: WebhookPayload,
-  data: NonNullable<WebhookPayload['data']>,
-  now: number,
-): Promise<void> {
-  const user = await findUser(env.DB, data);
+async function applyDelivery(env: Env, payload: WebhookPayload, data: Data, now: number): Promise<void> {
+  const user = (data.payment_id ? await getUserByPayment(env.DB, data.payment_id) : null) ?? (await findUser(env.DB, data));
   if (!user) {
     // Nothing to attach this to. 204 so Dodo stops retrying a delivery we can never use.
     console.error('dodo webhook for unknown account', payload.type);
     return;
   }
 
+  const eventAt = payload.timestamp ? Date.parse(payload.timestamp) : Number.NaN;
+  const at = Number.isFinite(eventAt) ? eventAt : null;
   const customerId = data.customer?.customer_id ?? null;
   const subscriptionId = data.subscription_id ?? null;
 
-  switch (payload.type) {
-    case 'subscription.active':
-    case 'subscription.renewed':
-    case 'subscription.unpaused':
-    case 'subscription.plan_changed': {
-      const plan = planForProduct(env, data.product_id ?? null);
-      // A product we don't recognise is not a Pro purchase. Granting a tier by default would
-      // hand Pro to a Practice buyer whenever a product id is unset or mistyped, so refuse:
-      // the delivery fails, is retried, and succeeds once the configuration is fixed.
-      if (!plan) throw new Error(`unrecognised product ${data.product_id ?? '(none)'} on ${payload.type}`);
-      await setUserPlan(env.DB, user.id, {
-        plan,
-        planStatus: 'active',
-        currentPeriodEnd: periodEnd(data),
-        dodoCustomerId: customerId,
-        subscriptionId,
-      });
-      break;
+  if (payload.type.startsWith('subscription.')) {
+    // Dodo may deliver events out of order; one older than what is already applied is acknowledged and dropped.
+    if (!isNewerThan(user.billing_event_at, at)) {
+      console.log(JSON.stringify({ type: 'billing', event: payload.type, ignored: 'older than the last applied event' }));
+      return;
     }
-
-    // Renewal failed but the grace period is open: access continues to the paid-for date.
-    case 'subscription.past_due':
-      await setUserPlan(env.DB, user.id, {
-        plan: user.plan,
-        planStatus: 'past_due',
-        currentPeriodEnd: periodEnd(data) ?? user.current_period_end,
-        dodoCustomerId: customerId,
+    const update = updateFromSubscription(
+      env,
+      {
+        status: resolveStatus(payload.type, data.status),
+        productId: data.product_id ?? null,
+        nextBillingDate: data.next_billing_date,
+        customerId,
         subscriptionId,
-      });
-      break;
-
-    // Cancelled keeps the plan until the period already paid for runs out (terms.md §5).
-    case 'subscription.cancelled':
-    case 'subscription.paused':
-      await setUserPlan(env.DB, user.id, {
-        plan: user.plan,
-        planStatus: 'cancelled',
-        currentPeriodEnd: periodEnd(data) ?? user.current_period_end,
-        dodoCustomerId: customerId,
-        subscriptionId,
-      });
-      break;
-
-    case 'subscription.expired':
-    case 'subscription.on_hold':
-    case 'subscription.failed':
-      await setUserPlan(env.DB, user.id, {
-        plan: 'free',
-        planStatus: 'expired',
-        currentPeriodEnd: null,
-        dodoCustomerId: customerId,
-        subscriptionId,
-      });
-      break;
-
-    // One-off purchase: the founding lifetime plan. Subscriptions are handled above,
-    // so only grant here when the product bought really is a one-time plan.
-    case 'payment.succeeded': {
-      const productId = data.product_id ?? data.product_cart?.[0]?.product_id ?? null;
-      const plan = planForProduct(env, productId);
-      if (plan === 'lifetime') {
-        await setUserPlan(env.DB, user.id, {
-          plan: 'lifetime',
-          planStatus: 'active',
-          currentPeriodEnd: null,
-          dodoCustomerId: customerId,
-          subscriptionId: null,
-        });
-      }
-      break;
+      },
+      user,
+      now,
+    );
+    // A subscription event that changes nothing (a payment-method update, a pending sale) is recorded only.
+    if (update) await setUserPlan(env.DB, user.id, { ...update, eventAt: at }, now);
+  } else if (payload.type === 'payment.succeeded') {
+    // One-off purchase: the ten-year plan. A subscription's own payments are handled by its subscription events.
+    const update = updateFromPayment(env, parsePayment(data as unknown as Record<string, unknown>));
+    if (update && isNewerThan(user.billing_event_at, at)) {
+      await setUserPlan(env.DB, user.id, { ...update, paymentId: data.payment_id ?? null, eventAt: at }, now);
     }
-
-    default:
-      // Everything else is recorded but changes nothing.
-      break;
+  } else if ((payload.type === 'refund.succeeded' || payload.type === 'dispute.lost') && (user.subscription_id || user.dodo_payment_id)) {
+    // The payload's shape is not what decides this: Dodo is asked what the payment's state is now. A
+    // failure to ask is thrown so the delivery is retried, rather than a reversed purchase keeping its plan.
+    const outcome = await reconcileUser(env, env.DB, user, now);
+    if (outcome === 'error' || outcome === 'skipped') throw new Error(`could not re-check billing after ${payload.type} (${outcome})`);
   }
+  // Everything else is recorded but changes nothing.
 
   const updated = await getUserById(env.DB, user.id);
   console.log(

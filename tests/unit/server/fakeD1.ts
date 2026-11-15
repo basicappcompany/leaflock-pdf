@@ -36,6 +36,8 @@ export function createFakeD1() {
         id, email, created_at, last_login_at, plan, status,
         dodo_customer_id: null, subscription_id: null, plan_status: 'none', current_period_end: null,
         password_hash: null, google_sub: null,
+        // Migration 0008.
+        billing_event_at: null, billing_synced_at: null, dodo_payment_id: null,
       });
       return { row: null, rows: [] };
     }
@@ -172,16 +174,22 @@ export function createFakeD1() {
       if (index !== -1) webhookEvents.splice(index, 1);
       return { row: null, rows: [] };
     }
-    if (
-      text ===
-      'UPDATE users SET plan = ?, plan_status = ?, current_period_end = ?, dodo_customer_id = COALESCE(?, dodo_customer_id), subscription_id = COALESCE(?, subscription_id) WHERE id = ?'
-    ) {
-      const [plan, plan_status, current_period_end, customer, subscription, id] = params;
+    if (text.startsWith('UPDATE users SET plan = ?, plan_status = ?, current_period_end = ?')) {
+      // setUserPlan: the full form (migration 0008) carries a payment id, an event time and a sync time too.
+      const full = text.includes('billing_event_at');
+      const [plan, plan_status, current_period_end, customer, subscription] = params;
+      const id = params[params.length - 1];
       const row = users.find((row) => row['id'] === id);
       if (row) {
         Object.assign(row, { plan, plan_status, current_period_end });
         if (customer !== null) row['dodo_customer_id'] = customer;
         if (subscription !== null) row['subscription_id'] = subscription;
+        if (full) {
+          const [, , , , , payment, eventAt, syncedAt] = params;
+          if (payment !== null) row['dodo_payment_id'] = payment;
+          if (eventAt !== null) row['billing_event_at'] = eventAt;
+          row['billing_synced_at'] = syncedAt;
+        }
       }
       return { row: null, rows: [] };
     }

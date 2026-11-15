@@ -22,6 +22,12 @@ export interface UserRow {
   password_hash: string | null;
   /** Google's stable account id, when Google sign-in has been used. */
   google_sub: string | null;
+  /** Dodo's timestamp (ms) of the newest billing event applied; an older one arriving later is ignored. */
+  billing_event_at: number | null;
+  /** When Dodo's API was last read for this account (ms). */
+  billing_synced_at: number | null;
+  /** The one-off ten-year payment, so a refund or lost dispute on it can be found. */
+  dodo_payment_id: string | null;
 }
 
 export interface SessionRow {
@@ -75,6 +81,9 @@ export async function createUser(db: D1Database, email: string, now: number): Pr
     current_period_end: null,
     password_hash: null,
     google_sub: null,
+    billing_event_at: null,
+    billing_synced_at: null,
+    dodo_payment_id: null,
   };
 }
 
@@ -278,17 +287,95 @@ export interface PlanUpdate {
   currentPeriodEnd: number | null;
   dodoCustomerId: string | null;
   subscriptionId: string | null;
+  /** The ten-year payment, when this update is about one. Left alone when absent. */
+  paymentId?: string | null;
+  /** Dodo's time for the event behind this update (ms). Recorded so an older event can be told apart. */
+  eventAt?: number | null;
 }
 
-export async function setUserPlan(db: D1Database, userId: string, update: PlanUpdate): Promise<void> {
-  await db
-    .prepare(
-      `UPDATE users SET plan = ?, plan_status = ?, current_period_end = ?,
-       dodo_customer_id = COALESCE(?, dodo_customer_id), subscription_id = COALESCE(?, subscription_id)
-       WHERE id = ?`,
-    )
-    .bind(update.plan, update.planStatus, update.currentPeriodEnd, update.dodoCustomerId, update.subscriptionId, userId)
-    .run();
+/**
+ * Whether an error is only that migration 0008 (the billing sync columns) has not reached this database yet.
+ * Billing must keep working through that gap: a deploy can land before the migration is applied, and a webhook
+ * that failed here would leave a paying customer without their plan.
+ */
+function missingBillingColumns(error: unknown): boolean {
+  return error instanceof Error && /no such column|has no column/i.test(error.message);
+}
+
+export async function setUserPlan(db: D1Database, userId: string, update: PlanUpdate, now: number = Date.now()): Promise<void> {
+  try {
+    await db
+      .prepare(
+        `UPDATE users SET plan = ?, plan_status = ?, current_period_end = ?,
+         dodo_customer_id = COALESCE(?, dodo_customer_id), subscription_id = COALESCE(?, subscription_id),
+         dodo_payment_id = COALESCE(?, dodo_payment_id),
+         billing_event_at = COALESCE(?, billing_event_at), billing_synced_at = ?
+         WHERE id = ?`,
+      )
+      .bind(
+        update.plan,
+        update.planStatus,
+        update.currentPeriodEnd,
+        update.dodoCustomerId,
+        update.subscriptionId,
+        update.paymentId ?? null,
+        update.eventAt ?? null,
+        now,
+        userId,
+      )
+      .run();
+  } catch (error) {
+    if (!missingBillingColumns(error)) throw error;
+    await db
+      .prepare(
+        `UPDATE users SET plan = ?, plan_status = ?, current_period_end = ?,
+         dodo_customer_id = COALESCE(?, dodo_customer_id), subscription_id = COALESCE(?, subscription_id)
+         WHERE id = ?`,
+      )
+      .bind(update.plan, update.planStatus, update.currentPeriodEnd, update.dodoCustomerId, update.subscriptionId, userId)
+      .run();
+  }
+}
+
+/** Records that Dodo was read for this account and agreed with what we hold, so it is not read again soon. */
+export async function markBillingSynced(db: D1Database, userId: string, now: number): Promise<void> {
+  try {
+    await db.prepare('UPDATE users SET billing_synced_at = ? WHERE id = ?').bind(now, userId).run();
+  } catch (error) {
+    if (!missingBillingColumns(error)) throw error;
+  }
+}
+
+export async function getUserByPayment(db: D1Database, paymentId: string): Promise<UserRow | null> {
+  try {
+    return (await db.prepare('SELECT * FROM users WHERE dodo_payment_id = ?').bind(paymentId).first<UserRow>()) ?? null;
+  } catch (error) {
+    if (missingBillingColumns(error)) return null;
+    throw error;
+  }
+}
+
+/**
+ * Accounts whose billing has not been read from Dodo since `before`, stalest first: those holding a
+ * subscription or a paid plan, which are the only ones Dodo can have something to say about.
+ */
+export async function listStaleBillingUsers(db: D1Database, before: number, limit: number): Promise<UserRow[]> {
+  try {
+    const result = await db
+      .prepare(
+        `SELECT * FROM users
+         WHERE (subscription_id IS NOT NULL OR dodo_payment_id IS NOT NULL OR plan != 'free')
+           AND (billing_synced_at IS NULL OR billing_synced_at < ?)
+         ORDER BY COALESCE(billing_synced_at, 0) ASC
+         LIMIT ?`,
+      )
+      .bind(before, limit)
+      .all<UserRow>();
+    return result.results ?? [];
+  } catch (error) {
+    if (missingBillingColumns(error)) return [];
+    throw error;
+  }
 }
 
 export async function getUserBySubscription(db: D1Database, subscriptionId: string): Promise<UserRow | null> {

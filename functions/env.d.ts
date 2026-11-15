@@ -33,6 +33,9 @@ interface Env {
   /** The Dodo discount code (50% off, one billing cycle, the standard Practice product only) applied
    * when a Pro subscriber upgrades to Practice during the launch offer (`upgradeFor`). */
   DODO_DISCOUNT_PRACTICE_UPGRADE?: string;
+  /** Bearer token for POST /api/billing/reconcile, the scheduled re-check of paid accounts against Dodo
+   * (.github/workflows/billing-reconcile.yml). Without it the endpoint answers 404 and the sweep is off. */
+  RECONCILE_TOKEN?: string;
 
   /** Google sign-in. Without these the button is hidden and the route redirects back. */
   GOOGLE_CLIENT_ID?: string;

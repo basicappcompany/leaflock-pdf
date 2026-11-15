@@ -82,3 +82,36 @@ test('backing out leaves the account alone', async ({ page, baseURL }) => {
   await expect(page.getByLabel('Type your email address to confirm')).toHaveCount(0);
   expect(called).toBe(false);
 });
+
+test('back from checkout with no plan yet, the page asks for it and reloads once it is there', async ({ page, baseURL }) => {
+  const watcher = watchPage(page, baseURL!);
+  await page.context().addCookies([{ name: 'leaflock_signed_in', value: '1', url: baseURL! }]);
+  let paid = false;
+  await page.route('**/api/auth/me', (route) =>
+    route.fulfill({ json: { email: 'person@example.com', plan: paid ? 'pro' : 'free' } }),
+  );
+  await page.route('**/api/billing/refresh', (route) => {
+    paid = true;
+    return route.fulfill({ json: { plan: 'pro', outcome: 'corrected' } });
+  });
+
+  const asked = page.waitForRequest('**/api/billing/refresh');
+  await page.goto('/account/?checkout=return');
+  expect((await asked).method()).toBe('POST');
+  await expect(page).not.toHaveURL(/checkout/);
+  await expect(page.locator('.badge-pro')).toBeVisible();
+  watcher.assertClean();
+});
+
+test('an ordinary visit to the account page does not ask Dodo anything', async ({ page, baseURL }) => {
+  await signedIn(page, baseURL!);
+  let asked = false;
+  await page.route('**/api/billing/refresh', (route) => {
+    asked = true;
+    return route.fulfill({ json: { plan: 'free', outcome: 'unchanged' } });
+  });
+
+  await page.goto('/account/');
+  await expect(page.getByRole('button', { name: 'Download my data' })).toBeVisible();
+  expect(asked).toBe(false);
+});
