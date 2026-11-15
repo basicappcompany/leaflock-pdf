@@ -28,8 +28,10 @@ place deliberately: rewriting them would be the rework this file exists to preve
   shape the docs do not give). **Not probed:** a ten-year payment; none existed in test mode.
 - Migration 0008 adds three columns. The code tolerates a database without it, so a deploy that lands first cannot break
   billing. That tolerance has its own test, because the failure it prevents (a paying customer left on free) is silent.
-- Setup was done the same day (`docs/TODO.md` §3): 0008 applied to production and preview, `RECONCILE_TOKEN` set in
-  Cloudflare and GitHub. The three event types needed no change: the test webhook endpoint has no event filter.
+- Setup was done the same day (`docs/TODO.md` §3): 0008 applied to production and preview, `RECONCILE_TOKEN` set on the site
+  and on a `leaflock-billing-reconcile` Worker that runs the sweep on a cron. A GitHub Action was tried first and
+  failed: Bot Fight Mode challenges GitHub's servers (403) and the free plan cannot skip it, while a Worker's call is not
+  challenged. The three event types needed no change: the test webhook endpoint has no event filter.
 
 ## 15 November 2026 — Remove metadata also drops embedded page thumbnails
 
