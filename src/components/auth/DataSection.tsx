@@ -1,4 +1,6 @@
 import { useState, type SubmitEvent } from 'react';
+import { forgetAccountOnDevice } from '../../lib/forgetAccount';
+import { localePath } from '../../lib/localePath';
 import type { Messages } from '../../i18n';
 import { Field } from '../ui/fields';
 
@@ -39,7 +41,8 @@ export default function DataSection({ t }: { t: Messages['auth']['account'] }) {
         body: JSON.stringify({ confirm: confirmText }),
       });
       if (response.ok) {
-        window.location.href = '/';
+        forgetAccountOnDevice();
+        window.location.href = localePath('/');
         return;
       }
       const body = (await response.json().catch(() => null)) as { error?: string } | null;

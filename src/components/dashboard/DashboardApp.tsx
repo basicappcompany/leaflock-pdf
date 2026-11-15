@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { CommonMessages } from '../../i18n';
 import type { ToolId } from '../../tools/registry';
 import { useSession } from '../ui/useSession';
@@ -21,6 +22,10 @@ interface Props {
 export default function DashboardApp({ t, locale, toolLinks, links, quickTools }: Props) {
   const session = useSession();
 
+  useEffect(() => {
+    if (session.state === 'out') window.location.replace(links.login);
+  }, [session.state, links.login]);
+
   if (session.state === 'loading') {
     return (
       <p className="notice" role="status">
@@ -29,10 +34,7 @@ export default function DashboardApp({ t, locale, toolLinks, links, quickTools }
     );
   }
 
-  if (session.state === 'out') {
-    if (typeof window !== 'undefined') window.location.href = links.login;
-    return null;
-  }
+  if (session.state === 'out') return null;
 
   return (
     <DashboardPanel

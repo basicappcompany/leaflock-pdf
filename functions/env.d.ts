@@ -40,6 +40,9 @@ interface Env {
    * The matching public key is in src/lib/entitlementKey.ts. Without it no token is issued: online runs are
    * unaffected, paid tools just do not work offline. */
   ENTITLEMENT_PRIVATE_KEY?: string;
+  /** "on" forces the per-run tier gate active whatever the date, for the staging build that rehearses launch day.
+   * Never set it on production, and the claim ignores it on the production hostnames anyway (src/lib/server/claim.ts). */
+  ENTITLEMENT_GATE_ALWAYS_ON?: string;
 
   /** Google sign-in. Without these the button is hidden and the route redirects back. */
   GOOGLE_CLIENT_ID?: string;

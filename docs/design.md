@@ -424,7 +424,18 @@ extra copy is made in isolation from the rest of the output.
 An account is identified by its **email address**, and three methods can reach the same
 account in any combination: a magic link, a password, and Google.
 
-- **Magic link** — `POST /api/auth/request-link` → emailed link → `GET /api/auth/verify`.
+- **Magic link** — `POST /api/auth/request-link` → emailed link → `GET /api/auth/verify` (a page with a button, no side
+  effects) → `POST /api/auth/verify` (spends the token, opens the session, 303 to `next` or `/account/`). Two steps because mail
+  scanners open every link in a message, and a GET that signed in would have its one-time token spent before the person
+  arrived. `next` is the page that sent the visitor to sign in (`loginPath()` in `src/lib/localePath.ts`), accepted only if
+  `safeNext()` says it is a plain path on this site, so it cannot become an open redirect. Google sign-in does not carry
+  it yet and lands on `/account/`.
+- **Every `/api/*` request that changes something** must be same-origin: `functions/api/_middleware.ts` answers 403 to a
+  POST/PUT/DELETE with no matching `Origin`/`Referer`, except the Dodo webhook and the sweep, which authenticate by
+  signature and bearer token. No handler has to remember it.
+- **Client islands never hard-code `/login/`, `/account/` or `/pricing/`:** `localePath()` keeps the reader's language, and a
+  test fails the build otherwise. A signed-in visitor on `/login/` is sent on; signing out or deleting the account runs
+  `forgetAccountOnDevice()` (offline token, cached plan, plan marker).
   Only a hash of the token is stored (`magic_links.token_hash`), single-use via
   `consumed_at`.
 - **Password** — PBKDF2-HMAC-SHA256, **210,000 iterations** (OWASP's figure; raise over
@@ -485,15 +496,30 @@ dashboard now shows the free one to users, so they are no longer invisible.
   operations it calls see that a claim is held. A task counts once however many operations it uses. This also meters the
   main-thread tools that never went through `runPdfJob` and so were never counted: PDF to text, Word, Excel, Markdown and
   images, Extract tables, and Compare, which has no run button and claims when both files are open.
-- **Offline** uses an Ed25519 token (`src/lib/entitlement.ts`): the server signs `{sub, plan, tier, exp}` with the
-  `ENTITLEMENT_PRIVATE_KEY` secret and the page verifies it with the public key in `src/lib/entitlementKey.ts`. 48-hour life,
-  refreshed by every successful online claim, stored in `localStorage` as `leaflock-entitlement`. Free tools run offline
-  with no token. A browser without Ed25519 support gets no offline paid access, never a wrong grant.
+- **Offline** uses an Ed25519 token (`src/lib/entitlement.ts`): the server signs it with the
+  `ENTITLEMENT_PRIVATE_KEY` secret and the page verifies it with the public key in `src/lib/entitlementKey.ts`. Every
+  successful online claim, free, anonymous or paid, returns one, stored in `localStorage` as `leaflock-entitlement`.
+  A **paid** token is `{sub, plan, tier, exp}`, 48-hour life, not counted. A **free or anonymous** token adds `day` and
+  `runs` (what the server had left for that UTC day) and its `exp` is at most the end of that day, so it cannot straddle
+  days. Offline runs spend `runs` on the device (`leaflock-offline-used`, keyed by the token) and stop at zero. The next
+  online claim sends `{offline: {token, used}}`; the server verifies the token (same user, same day, signature), charges
+  `min(used, token.runs)` on top of the run, and reissues from server truth. With **no usable token** (first visit, a
+  day-old free token, an expired paid token, or an anonymous visitor who never ran online) `OFFLINE_GRACE_RUNS` (5) runs a
+  day are allowed, counted on the device only: this is the one defined behaviour for "no token", and what keeps free tools
+  working offline for a paid account whose token lapsed. A browser without Ed25519 support gets no offline paid access,
+  never a wrong grant.
+- **The claim reports the tier it authorized** (`authorizedTier`, and `grantedTier` for what the plan reaches), taken from
+  the server's registry by tool id, never from the client. It is logged per run (`{type:'claim', tool, required, granted,
+  outcome}`, no user id, no file data). The client refuses a run whose tool tier exceeds `authorizedTier`
+  (`assertAuthorized`, called before each operation in a claimed task): the claim-swap case.
+- **`ENTITLEMENT_GATE_ALWAYS_ON`** rehearses launch day: set to `on` for the preview environment (wrangler.toml) and
+  with `PUBLIC_ENTITLEMENT_GATE_ALWAYS_ON=on` as a preview *build* variable, it gates paid tools whatever the date. The
+  claim ignores it on leaflockpdf.com / www.leaflockpdf.com. Never set it in production; see `src/lib/proAccess.ts`.
 - **"Online" is `navigator.onLine`.** While it says online, a claim that fails or gets no answer stops the run, free tools
   included: a server outage blocks tool use. That is the decided trade-off (fail closed), not an oversight.
 - **Residual risk**, recorded in `src/lib/proAccess.ts`: the computation is on the visitor's device in a shared worker bundle, so a
-  determined person can call it directly, claim a free tool's id and run a paid one, or go offline so a free run is not
-  counted. The checks make paying the supported route; they are not a lock. The self-hosted build is ungated.
+  determined person can call it directly, claim a free tool's id and run a paid one (client-refused and logged, but skippable in devtools), or
+  clear the device's offline counters. The checks make paying the supported route; they are not a lock. The self-hosted build is ungated.
 - CI guards in `tests/unit/authorityGuards.test.ts`: only the webhook and the Dodo re-check write a plan, no client module
   imports a server module or names a server secret, and no module that claims a run reads the cached plan or a cookie.
 

@@ -1,4 +1,5 @@
 import { test as base } from '@playwright/test';
+import { tools } from '../../src/tools/registry';
 
 export * from '@playwright/test';
 
@@ -14,9 +15,12 @@ export * from '@playwright/test';
  */
 export const test = base.extend({
   page: async ({ page }, use) => {
-    await page.route('**/api/usage/claim', (route) =>
-      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ allowed: true, remaining: 20, reason: 'anonymous' }) }),
-    );
+    // Like the real endpoint, say which tier it authorized: the page refuses a tool above it.
+    await page.route('**/api/usage/claim', (route) => {
+      const tool = (JSON.parse(route.request().postData() ?? '{}') as { tool?: string }).tool;
+      const authorizedTier = tools.find((candidate) => candidate.id === tool)?.tier ?? 'free';
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ allowed: true, remaining: 20, reason: 'anonymous', authorizedTier }) });
+    });
     await use(page);
   },
 });

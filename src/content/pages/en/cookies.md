@@ -31,12 +31,12 @@ The site saves your theme choice in your browser's localStorage under the name `
 
 ### localStorage: your offline access
 
-If you have a paid plan, the site saves a short-lived signed token in your browser's localStorage under the name `leaflock-entitlement` each time you run a tool while online. It lets the paid tools you have bought keep working if you are offline. It is only saved for a paid plan.
+Each time you run a tool while online, the site saves a short-lived signed token in your browser's localStorage under the name `leaflock-entitlement`. It lets the tools keep working if you go offline: for a paid plan, the paid tools you have bought; for everyone else, the rest of that day's free runs. Two small counters (`leaflock-offline-used` and `leaflock-offline-grace`) record how many runs you have spent while offline, so they can be settled the next time you are online.
 
-- **What it contains:** an opaque account identifier (not your email address), the name of your plan, and when the token expires. It is signed by us, so it cannot be edited into something else.
-- **When it's set:** whenever you run a tool online on a paid plan. It is removed when an online check finds the plan has ended.
-- **Does it leave your device:** it is not sent anywhere by itself.
-- **How long it lasts:** it expires after 48 hours and is replaced the next time you run a tool online.
+- **What it contains:** for a paid plan, an opaque account identifier (not your email address), the name of your plan, and when the token expires. For a free account or a visitor with no account, the same, plus the day and how many free runs were left. It is signed by us, so it cannot be edited into something else.
+- **When it's set:** whenever you run a tool online. It is replaced by the next online run, and removed when an online check finds the plan has ended.
+- **Does it leave your device:** it is sent back to us only with your next online run, so the runs you made offline can be counted. It never includes a file, a file name or anything you typed.
+- **How long it lasts:** a paid plan's expires after 48 hours; a free token expires at the end of that day (UTC) at the latest. Both are replaced the next time you run a tool online.
 
 ### localStorage: your starred and recent tools
 

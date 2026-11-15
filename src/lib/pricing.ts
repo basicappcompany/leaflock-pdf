@@ -46,6 +46,16 @@ export function offerOpen(now: number = Date.now()): boolean {
 export const paidPlansAvailable = Date.now() >= plansStartAt;
 
 /**
+ * Staging only: a build made with PUBLIC_ENTITLEMENT_GATE_ALWAYS_ON=on gates the paid tools whatever the date, so launch
+ * day's 402s and offline checks can be rehearsed before 1 January 2027. The server half is the ENTITLEMENT_GATE_ALWAYS_ON
+ * variable (src/lib/server/claim.ts). Never set either on production: see src/lib/proAccess.ts. A function, so the
+ * read is one line the guard test can see.
+ */
+function gateAlwaysOn(): boolean {
+  return import.meta.env?.PUBLIC_ENTITLEMENT_GATE_ALWAYS_ON === 'on';
+}
+
+/**
  * Whether Pro tools actually require a paid plan.
  *
  * Deliberately derived from `paidPlansAvailable` rather than set on its own: locking a
@@ -58,7 +68,7 @@ export const paidPlansAvailable = Date.now() >= plansStartAt;
  * in terms.md §5, which promises Pro tools are free for now and that we'll announce it
  * before that changes.
  */
-export const proToolsGated = paidPlansAvailable;
+export const proToolsGated = paidPlansAvailable || gateAlwaysOn();
 
 /** Prices in US dollars, from the business plan. One place to change them. */
 export const prices = {

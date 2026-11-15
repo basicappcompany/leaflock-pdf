@@ -29,6 +29,14 @@ export interface EntitlementClaims {
   tier: EntitlementTier;
   /** Expiry, milliseconds since the epoch. */
   exp: number;
+  /**
+   * Free and anonymous tokens only: the UTC day the allowance belongs to ("2026-11-15") and how many runs the
+   * server said were left for it when it issued the token. Offline runs spend this locally; a paid token has
+   * neither, because a paid plan is not counted. A free token never outlives its day (`exp` is at most the end
+   * of `day`), so offline use across days cannot add up past the daily cap.
+   */
+  day?: string;
+  runs?: number;
 }
 
 const TIERS: readonly string[] = ['free', 'pro', 'practice'];
@@ -79,6 +87,7 @@ export async function verifyEntitlement(
     if (claims.v !== 1 || typeof claims.sub !== 'string' || typeof claims.plan !== 'string') return null;
     if (typeof claims.tier !== 'string' || !TIERS.includes(claims.tier)) return null;
     if (typeof claims.exp !== 'number' || claims.exp <= now) return null;
+    if (claims.runs !== undefined && (!Number.isInteger(claims.runs) || claims.runs < 0 || typeof claims.day !== 'string')) return null;
     return claims as EntitlementClaims;
   } catch {
     return null;

@@ -7,7 +7,7 @@ import { pdfUpload, watchPage } from './helpers';
 /** The usage endpoint doesn't exist under `astro preview`; answer like the real one. */
 async function allowUsage(page: Page) {
   await page.route('**/api/usage/claim', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ allowed: true, remaining: 9 }) }),
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ allowed: true, remaining: 9, authorizedTier: 'practice' }) }),
   );
 }
 

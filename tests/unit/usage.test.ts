@@ -174,6 +174,111 @@ describe('claimJob offline', () => {
   });
 });
 
+describe('offline metering of free runs (P0)', () => {
+  const today = Date.UTC(2026, 10, 15, 12);
+  const dayMs = 24 * 60 * 60 * 1000;
+  const freeToken = (runs: number, now = today) => signEntitlement(signerEnv, 'u1', 'free', now, { day: new Date(now).toISOString().slice(0, 10), runs });
+
+  it("spends the token's remaining runs and then blocks, without asking anyone", async () => {
+    const { claimJob, UsageLimitError, storage, calls } = await load({ online: false, tool: 'merge', now: today });
+    storage.setItem('leaflock-entitlement', (await freeToken(3))!);
+    for (let i = 0; i < 3; i++) await expect(claimJob()).resolves.toBeUndefined();
+    await expect(claimJob()).rejects.toBeInstanceOf(UsageLimitError);
+    expect(calls).toHaveLength(0);
+  });
+
+  it('blocks at once when the server said nothing was left', async () => {
+    const { claimJob, UsageLimitError, storage } = await load({ online: false, tool: 'merge', now: today });
+    storage.setItem('leaflock-entitlement', (await freeToken(0))!);
+    await expect(claimJob()).rejects.toBeInstanceOf(UsageLimitError);
+  });
+
+  it('rejects an edited token: raising runs breaks the signature, so only the small no-token allowance is left', async () => {
+    const { claimJob, UsageLimitError, storage, OFFLINE_GRACE_RUNS } = await load({ online: false, tool: 'merge', now: today });
+    const real = (await freeToken(0))!;
+    const [payload, signature] = real.split('.') as [string, string];
+    const forged = Buffer.from(JSON.stringify({ ...JSON.parse(Buffer.from(payload, 'base64url').toString()), runs: 5000 })).toString('base64url');
+    storage.setItem('leaflock-entitlement', `${forged}.${signature}`);
+    for (let i = 0; i < OFFLINE_GRACE_RUNS; i++) await claimJob();
+    await expect(claimJob()).rejects.toBeInstanceOf(UsageLimitError);
+  });
+
+  it('a token from yesterday carries no allowance: the no-token runs apply, then a block', async () => {
+    const yesterdayToken = (await freeToken(50, today - dayMs))!;
+    const { claimJob, UsageLimitError, storage, OFFLINE_GRACE_RUNS } = await load({ online: false, tool: 'merge', now: today });
+    storage.setItem('leaflock-entitlement', yesterdayToken);
+    for (let i = 0; i < OFFLINE_GRACE_RUNS; i++) await claimJob();
+    await expect(claimJob()).rejects.toBeInstanceOf(UsageLimitError);
+  });
+
+  it('with no token at all (a first visit), a small daily allowance runs and then blocks; the next day it resets', async () => {
+    const first = await load({ online: false, tool: 'merge', now: today });
+    for (let i = 0; i < first.OFFLINE_GRACE_RUNS; i++) await first.claimJob();
+    await expect(first.claimJob()).rejects.toBeInstanceOf(first.UsageLimitError);
+    vi.setSystemTime(today + dayMs);
+    await expect(first.claimJob()).resolves.toBeUndefined();
+  });
+
+  it('deleting the token does not reset what was spent: the no-token allowance is counted separately', async () => {
+    const { claimJob, UsageLimitError, storage, OFFLINE_GRACE_RUNS } = await load({ online: false, tool: 'merge', now: today });
+    storage.setItem('leaflock-entitlement', (await freeToken(1))!);
+    await claimJob();
+    await expect(claimJob()).rejects.toBeInstanceOf(UsageLimitError);
+    storage.removeItem('leaflock-entitlement');
+    for (let i = 0; i < OFFLINE_GRACE_RUNS; i++) await claimJob();
+    await expect(claimJob()).rejects.toBeInstanceOf(UsageLimitError);
+  });
+
+  it('a paid account with an expired token still runs free tools, but not a gated paid tool', async () => {
+    const expired = (await signEntitlement(signerEnv, 'u1', 'practice', afterLaunch - 3 * dayMs))!;
+    const freeTool = await load({ online: false, tool: 'merge', now: afterLaunch });
+    freeTool.storage.setItem('leaflock-entitlement', expired);
+    await expect(freeTool.claimJob()).resolves.toBeUndefined();
+    const paidTool = await load({ online: false, tool: 'redact', now: afterLaunch });
+    paidTool.storage.setItem('leaflock-entitlement', expired);
+    await expect(paidTool.claimJob()).rejects.toBeInstanceOf(paidTool.EntitlementError);
+  });
+
+  it('a valid paid token is not counted however many runs happen offline', async () => {
+    const { claimJob, storage } = await load({ online: false, tool: 'merge', now: afterLaunch });
+    storage.setItem('leaflock-entitlement', (await signEntitlement(signerEnv, 'u1', 'practice', afterLaunch))!);
+    for (let i = 0; i < 200; i++) await claimJob();
+  });
+
+  it('on reconnect, reports what was spent from the token and then starts again from the new one', async () => {
+    const offline = await load({ online: false, tool: 'merge', now: today });
+    const token = (await freeToken(10))!;
+    offline.storage.setItem('leaflock-entitlement', token);
+    for (let i = 0; i < 4; i++) await offline.claimJob();
+
+    const online = await load({ online: true, tool: 'merge', now: today, reply: () => json(200, { allowed: true, remaining: 5, token: 'fresh.token', authorizedTier: 'free' }) });
+    for (const key of ['leaflock-entitlement', 'leaflock-offline-used']) online.storage.setItem(key, offline.storage.getItem(key)!);
+    await online.claimJob();
+    expect(JSON.parse(online.calls[0]!.body)).toEqual({ tool: 'merge', offline: { token, used: 4 } });
+    expect(online.storage.getItem('leaflock-entitlement')).toBe('fresh.token');
+    expect(online.storage.getItem('leaflock-offline-used')).toBeNull();
+  });
+});
+
+describe('claim-swap: the client refuses a tool above what the claim authorized (P2)', () => {
+  it('claimed a free tool, then runs a paid one: refused, and nothing paid was authorized', async () => {
+    const usage = await load({ tool: 'merge', reply: () => json(200, { allowed: true, remaining: 5, authorizedTier: 'free', grantedTier: 'free' }) });
+    const { setActiveTool } = await import('../../src/lib/recentActivity');
+    await usage.withClaim(async () => {
+      expect(() => usage.assertAuthorized()).not.toThrow();
+      setActiveTool('redact' as never);
+      expect(() => usage.assertAuthorized()).toThrow(usage.EntitlementError);
+    });
+    expect(usage.calls).toHaveLength(1);
+    expect(usage.calls[0]!.body).toBe(JSON.stringify({ tool: 'merge' }));
+  });
+
+  it('lets a Practice claim run a Practice tool', async () => {
+    const usage = await load({ tool: 'redact', reply: () => json(200, { allowed: true, remaining: null, authorizedTier: 'practice', grantedTier: 'practice' }) });
+    await usage.withClaim(async () => expect(() => usage.assertAuthorized()).not.toThrow());
+  });
+});
+
 describe('withClaim', () => {
   it('claims once, holds the claim while the work runs, and releases it afterwards', async () => {
     const { withClaim, holdingClaim, calls } = await load({ tool: 'merge', reply: () => json(200, { allowed: true, remaining: 5 }) });
