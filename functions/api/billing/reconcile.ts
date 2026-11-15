@@ -1,7 +1,7 @@
 /**
  * Cloudflare Pages Function: the scheduled sweep that re-reads paid accounts from Dodo.
  *
- * Called every few hours by .github/workflows/billing-reconcile.yml with a bearer token. It takes the
+ * Called every few hours by the leaflock-billing-reconcile Worker (workers/billing-reconcile) with a bearer token. It takes the
  * accounts whose billing was read longest ago and repairs any that disagree with Dodo, so a webhook that
  * was lost or reordered is corrected even for someone who never visits again.
  *

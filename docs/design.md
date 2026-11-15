@@ -615,8 +615,12 @@ browser is never trusted for any of it: nothing a page sends changes a plan.
   in `waitUntil`, so no page waits for it); by `POST /api/billing/refresh` when a buyer returns from checkout
   (`?checkout=return`) without a plan, which finds the purchase by the `user_id` we attached and covers a
   webhook that never came; and by `POST /api/billing/reconcile`, a bearer-token endpoint called every six hours
-  by `.github/workflows/billing-reconcile.yml`, which re-reads the 20 least recently read paid accounts and
-  fails the job on any error. It answers 404 until `RECONCILE_TOKEN` is set.
+  by the `leaflock-billing-reconcile` Worker (`workers/billing-reconcile/`, cron `17 */6 * * *`), which re-reads the 20 least
+  recently read paid accounts and throws, so the invocation shows as failed, on any error. It is a Worker and not a GitHub
+  Action because Cloudflare's Bot Fight Mode answers GitHub's servers with a browser challenge and the free plan cannot skip
+  it with a rule; a call from inside Cloudflare is not challenged (probed 15 November 2026: the deployed Worker got the
+  endpoint's own 401, not a challenge page). The Worker holds only `RECONCILE_TOKEN`, so switching Dodo to live
+  mode changes nothing there. The endpoint answers 404 until `RECONCILE_TOKEN` is set on the site.
 - **Deploy order.** Migration `0008_billing_sync.sql` adds `billing_event_at`, `billing_synced_at` and
   `dodo_payment_id`. The code tolerates a database without it (`missingBillingColumns` in `db.ts`), so a deploy
   that lands first cannot break a plan update, but ordering and the re-check do nothing until it is applied.

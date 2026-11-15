@@ -1,0 +1,14 @@
+name = "leaflock-billing-reconcile"
+main = "index.ts"
+compatibility_date = "2026-10-21"
+
+# Scheduled only: nothing can call it over the network.
+workers_dev = false
+
+[triggers]
+crons = ["17 */6 * * *"]
+
+# Secret (not stored here): RECONCILE_TOKEN, set with
+#   printf '<value>' | pnpm exec wrangler secret put RECONCILE_TOKEN --config workers/billing-reconcile/wrangler.toml
+# and the same value as the site's Pages secret of that name.
+# Deploy: pnpm exec wrangler deploy --config workers/billing-reconcile/wrangler.toml
