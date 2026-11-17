@@ -31,13 +31,23 @@ export async function sitemapEntries(): Promise<SitemapEntry[]> {
   return entries;
 }
 
+/**
+ * Languages listed in the sitemap. English only for now (17 November 2026): Search Console showed 790 of 790
+ * submitted URLs as "Discovered, currently not indexed" and 0 indexed, on a domain a few weeks old. Most of
+ * those URLs were machine-translated copies of the same pages, so the sitemap now asks Google to crawl the
+ * English pages first. The translated pages still exist, carry their own hreflang tags in the HTML, and stay
+ * indexable; they are only left out of this file. To list every translated locale again, set this to null
+ * once English pages are indexed (docs/TODO.md, Search Console).
+ */
+export const SITEMAP_LOCALES: readonly string[] | null = ['en'];
+
 function escape(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 export function sitemapXml(entries: readonly SitemapEntry[]): string {
   // Only locales with a translation: a 'planned' locale serves English and must not be indexed.
-  const codes = Object.keys(locales);
+  const codes = Object.keys(locales).filter((code) => SITEMAP_LOCALES === null || SITEMAP_LOCALES.includes(code));
   const urls = codes.flatMap((locale) =>
     entries.map((entry) => {
       const alternates = [
