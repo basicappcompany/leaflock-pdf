@@ -29,6 +29,9 @@ jobs:
     # 19 October 2026, so floating means the image can change under a green build with
     # no commit of ours. Bump this deliberately, with a run to prove it.
     runs-on: ubuntu-24.04
+    # Runs of 14 and 18 minutes were seen on 15 November (a hung server, not a slow suite; a normal run is 8).
+    # A cap keeps one of those from burning a quarter of an hour of billed time.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
 
@@ -60,6 +63,14 @@ jobs:
 
       # Chromium only: playwright.config.ts uses Playwright's bundled Chromium in CI
       # (local runs drive the Edge already on the machine instead, so no download there).
+      # The browser download is cached by Playwright version; the install step still runs to add the
+      # system libraries and is a no-download no-op for the browser itself on a cache hit.
+      - id: playwright-version
+        run: echo "version=$(pnpm exec playwright --version)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
       - run: pnpm exec playwright install --with-deps chromium
 
       # Builds and serves the production output itself (playwright.config.ts's
