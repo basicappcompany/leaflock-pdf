@@ -25,7 +25,7 @@ test('login form sends a magic-link request and shows the check-your-email state
   // No sign-in hint cookie: the header's AuthNavLink won't call /api/auth/me at all.
   await page.goto('/login');
   await page.getByLabel('Email address').fill('person@example.com');
-  await page.getByRole('button', { name: /email me a sign-in link/i }).click();
+  await page.getByRole('button', { name: 'Send me a link' }).click();
 
   await expect(page.getByRole('status')).toHaveText(/Check your email/i);
   expect(requestedEmail).toBe('person@example.com');
@@ -43,7 +43,7 @@ test('a rate-limited request shows an error instead of the sent state', async ({
 
   await page.goto('/login');
   await page.getByLabel('Email address').fill('person@example.com');
-  await page.getByRole('button', { name: /email me a sign-in link/i }).click();
+  await page.getByRole('button', { name: 'Send me a link' }).click();
 
   await expect(page.getByRole('alert')).toHaveText(/Too many attempts/i);
   expect(offsite).toEqual([]);
@@ -58,6 +58,7 @@ test('logging in with a password signs you in', async ({ page, baseURL }) => {
   });
   await page.goto('/login');
   await page.getByLabel('Email address').fill('person@example.com');
+  await page.getByRole('button', { name: 'I have a password' }).click();
   await page.getByLabel('Password').fill('super secret 123');
   // Signed in only now, as the server would after the password is accepted: a visitor who is already signed in is
   // sent on from /login, so this has to come after the page has loaded signed out. The /account page it lands on
@@ -80,6 +81,7 @@ test('a wrong password says so, without saying whether the account exists', asyn
 
   await page.goto('/login');
   await page.getByLabel('Email address').fill('person@example.com');
+  await page.getByRole('button', { name: 'I have a password' }).click();
   await page.getByLabel('Password').fill('wrong password here');
   await page.getByRole('button', { name: 'Log in', exact: true }).click();
 
@@ -159,6 +161,7 @@ test('the page that asked for a sign-in is where a password sign-in returns to',
   await page.route('**/api/auth/password', (route) => route.fulfill({ status: 204 }));
   await page.goto('/login/?next=%2Fpricing%2F');
   await page.getByLabel('Email address').fill('person@example.com');
+  await page.getByRole('button', { name: 'I have a password' }).click();
   await page.getByLabel('Password').fill('super secret 123');
   await signIn(page, baseURL!, { email: 'person@example.com', plan: 'free' });
   await page.getByRole('button', { name: 'Log in', exact: true }).click();

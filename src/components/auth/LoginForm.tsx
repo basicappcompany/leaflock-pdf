@@ -36,6 +36,8 @@ function initialStatus(t: Messages['auth']['login']): Status {
 export default function LoginForm({ t }: { t: Messages['auth']['login'] }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  // The link is the default: it needs no password and also creates the account. Password sign-in is opt-in.
+  const [mode, setMode] = useState<'link' | 'password'>('link');
   const [status, setStatus] = useState<Status>(() => initialStatus(t));
   const [googleEnabled, setGoogleEnabled] = useState(false);
   const session = useSession();
@@ -133,7 +135,17 @@ export default function LoginForm({ t }: { t: Messages['auth']['login'] }) {
           </>
         )}
 
-        <form className="auth-form" onSubmit={logIn}>
+        <form
+          className="auth-form"
+          onSubmit={
+            mode === 'password'
+              ? logIn
+              : (event) => {
+                  event.preventDefault();
+                  void sendLink();
+                }
+          }
+        >
           <Field label={t.emailLabel}>
             {(id, describedBy) => (
               <input
@@ -149,27 +161,42 @@ export default function LoginForm({ t }: { t: Messages['auth']['login'] }) {
             )}
           </Field>
 
-          <Field label={t.passwordLabel}>
-            {(id, describedBy) => (
-              <input
-                id={id}
-                aria-describedby={describedBy}
-                type="password"
-                required
-                autoComplete="current-password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            )}
-          </Field>
+          {mode === 'password' && (
+            <Field label={t.passwordLabel}>
+              {(id, describedBy) => (
+                <input
+                  id={id}
+                  aria-describedby={describedBy}
+                  type="password"
+                  required
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              )}
+            </Field>
+          )}
 
-          <button type="submit" className="primary-button" disabled={busy}>
-            {status.state === 'loggingIn' ? t.loggingIn : t.logIn}
-          </button>
-
-          <button type="button" className="link-button" disabled={busy || !email} onClick={sendLink}>
-            {status.state === 'sending' ? t.sending : t.useLink}
-          </button>
+          {mode === 'link' ? (
+            <>
+              <button type="submit" className="primary-button" disabled={busy}>
+                {status.state === 'sending' ? t.sending : t.submit}
+              </button>
+              <p className="auth-note">{t.linkHint}</p>
+              <button type="button" className="link-button" disabled={busy} onClick={() => setMode('password')}>
+                {t.usePassword}
+              </button>
+            </>
+          ) : (
+            <>
+              <button type="submit" className="primary-button" disabled={busy}>
+                {status.state === 'loggingIn' ? t.loggingIn : t.logIn}
+              </button>
+              <button type="button" className="link-button" disabled={busy || !email} onClick={sendLink}>
+                {status.state === 'sending' ? t.sending : t.useLink}
+              </button>
+            </>
+          )}
 
           {status.state === 'error' && (
             <p className="error" role="alert">
@@ -178,7 +205,7 @@ export default function LoginForm({ t }: { t: Messages['auth']['login'] }) {
           )}
         </form>
       </div>
-      <p className="auth-note">{t.noPassword}</p>
+      {mode === 'password' && <p className="auth-note">{t.noPassword}</p>}
     </>
   );
 }
