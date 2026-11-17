@@ -1,0 +1,219 @@
+/*
+ * Home page only (imported by src/pages/index.astro): the hairline hero, the category tabs and the
+ * definition card with the privacy diagram. Kept out of global.css because that file is inlined into every
+ * page and counted against the HTML budget in tests/e2e/performance.spec.ts.
+ *
+ * Everything here reads the shared --color-*, --radius* and --shadow* tokens, so it re-skins with the skin
+ * picker like the rest of the site. No colour or pixel radius is hard-coded.
+ */
+
+.home-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.5fr);
+  align-items: start;
+  gap: calc(var(--space) * 2);
+  margin-bottom: calc(var(--space) * 1.25);
+  padding-block: calc(var(--space) * 1.5);
+}
+
+/* Two hairlines frame the hero, top and bottom. Decoration only: behind the content, no clicks. */
+.home-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0 calc(var(--space) * -1);
+  z-index: -1;
+  border-block: 1px solid var(--color-border);
+  pointer-events: none;
+}
+
+.home-hero__text {
+  min-width: 0;
+  padding-top: calc(var(--space) * 0.5);
+}
+
+.home-hero__text h1 {
+  display: block;
+  margin-bottom: calc(var(--space) * 0.75);
+  font-size: clamp(1.9rem, 3.4vw, 2.5rem);
+  text-wrap: balance;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.home-hero__text h1 em {
+  display: block;
+  color: var(--color-accent);
+  font-style: normal;
+}
+
+.home-hero__text .lead {
+  max-width: 40ch;
+  margin-bottom: 0;
+}
+
+/* ---------- Category tabs (a radio group; no script) ---------- */
+
+.home-tabs {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+/* Visually gone but still focusable, so the arrow keys and Tab work on the real radios. */
+.home-tabs__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.home-tabs__bar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-self: flex-start;
+  gap: 2px;
+  max-width: 100%;
+  padding: 3px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface-2);
+}
+
+.home-tabs__bar label {
+  padding: 0.4rem 0.85rem;
+  border-radius: calc(var(--radius-small) - 2px);
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.home-tabs__bar label:hover {
+  color: var(--color-text);
+}
+
+.home-tabs__panel {
+  display: none;
+}
+
+/* The checked radio picks its label and its panel by position: the Nth input, the Nth label, the Nth panel. */
+.home-tabs__input:nth-of-type(1):checked ~ .home-tabs__bar label:nth-child(1),
+.home-tabs__input:nth-of-type(2):checked ~ .home-tabs__bar label:nth-child(2),
+.home-tabs__input:nth-of-type(3):checked ~ .home-tabs__bar label:nth-child(3),
+.home-tabs__input:nth-of-type(4):checked ~ .home-tabs__bar label:nth-child(4) {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow);
+}
+
+.home-tabs__input:nth-of-type(1):checked ~ .home-tabs__panel:nth-of-type(1),
+.home-tabs__input:nth-of-type(2):checked ~ .home-tabs__panel:nth-of-type(2),
+.home-tabs__input:nth-of-type(3):checked ~ .home-tabs__panel:nth-of-type(3),
+.home-tabs__input:nth-of-type(4):checked ~ .home-tabs__panel:nth-of-type(4) {
+  display: block;
+}
+
+.home-tabs__input:nth-of-type(1):focus-visible ~ .home-tabs__bar label:nth-child(1),
+.home-tabs__input:nth-of-type(2):focus-visible ~ .home-tabs__bar label:nth-child(2),
+.home-tabs__input:nth-of-type(3):focus-visible ~ .home-tabs__bar label:nth-child(3),
+.home-tabs__input:nth-of-type(4):focus-visible ~ .home-tabs__bar label:nth-child(4) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Tiles in a tab: the shared .tool-grid card, a little tighter and with the summary held to two lines. */
+.tool-grid--tabs {
+  grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+.tool-grid--tabs a {
+  padding: 0.9rem;
+  border-radius: var(--radius);
+}
+
+.tool-grid--tabs .tool-grid__icon {
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.35rem;
+}
+
+.tool-grid--tabs strong {
+  font-size: 0.95rem;
+}
+
+.tool-grid--tabs span:not(.badge-pro):not(.tool-grid__icon) {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.category__viewAll {
+  display: inline-block;
+  margin-top: calc(var(--space) * 0.75);
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.category__viewAll:hover {
+  text-decoration: underline;
+}
+
+/* ---------- The definition card, with the privacy diagram beside it ---------- */
+
+.answer {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  align-items: center;
+  gap: calc(var(--space) * 2);
+}
+
+.answer__text {
+  min-width: 0;
+}
+
+@media (max-width: 52rem) {
+  .home-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space);
+    padding-block: var(--space);
+  }
+
+  .home-hero__text h1 {
+    max-width: none;
+  }
+
+  /* One row that scrolls sideways, not a second line of tabs. */
+  .home-tabs__bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .home-tabs__bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .answer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 30rem) {
+  .tool-grid--tabs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

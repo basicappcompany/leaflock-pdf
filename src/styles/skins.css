@@ -13,6 +13,16 @@
  * first paint when a visitor has chosen one of these instead.
  */
 
+/* Three tokens the alternates never set, so they used to inherit them from :root. The default changed on
+   17 November 2026 (a gold Pro colour and a lighter base shadow), and the owner asked that every other skin
+   stay exactly as it was, so the old inherited values are pinned here for all of them. A skin that sets one
+   itself (Playful Rounded sets all three) still wins, because its selector comes later with the same weight. */
+html[data-skin] {
+  --color-pro: light-dark(#6b3fa0, #c9a6f5);
+  --color-pro-soft: light-dark(#f1e9fb, #2c2238);
+  --shadow: light-dark(0 1px 3px rgb(0 0 0 / 0.08), 0 1px 3px rgb(0 0 0 / 0.5));
+}
+
 /* The site's default until 17 November 2026, kept as an alternate now that "Leaf" is the default.
    These are the values global.css used then, including the purple Pro colour that the other
    alternates no longer share (they inherit the default's gold). */
