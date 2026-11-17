@@ -460,6 +460,9 @@ what building it now does. No new tools, no new pages; the machinery under both.
   a Pro/Practice perk. `docs/design.md` §10, §10a. **Extended 7–8 November:** Recent and
   Starred tools (stars synced to the account), handles on the sidebar's inner edge,
   feature-request and feedback dialogs.
+- **Redesign (item 1.7) — done 17 November 2026.** New default skin "Leaf" (Playful Rounded kept as a selectable
+  skin), category tabs on the home page, a calmer tool page. Detail in `docs/shipped.md`; the design reasoning in
+  `docs/design.md` §10.
 
 **Done when:** the site installs, works with the network off, a new tool page arrives
 with complete structured data and internal links for free, and every tool/category page

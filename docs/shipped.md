@@ -17,6 +17,14 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 17 November 2026 — Redesign: the Leaf theme, home category tabs, a calmer tool page (1.7)
+
+- Brief: premium, minimal, friendly and serious; the complaints were flat colour, no personality, loud type, too many colours. One green, nothing heavier than 700, hairline borders, soft shadows. Default skin is "Leaf"; Playful Rounded stays as one of sixteen and the other fourteen are pinned to their old look (`html[data-skin]` in skins.css restores the three tokens they inherited: both Pro colours and the base shadow).
+- Accent text is `#15803d`, not the demo's `#16a34a` (about 3.1:1 as text; the accent is used as text). Measured.
+- The home page's four collapsible sections became category tabs with no script: a radio group, the checked input picks its label and panel by position (home.css). All 43 tools stay in the HTML. The early-access notice moved above the hero (a test requires it before the tools).
+- A tool page's placeholder was 12rem against an 8rem skeleton, an empty band under the drop zone. `light-dark()` takes two arguments, so a multi-layer shadow cannot go in it. Home HTML budget raised to 110,000.
+- Not done: header, footer, pricing and dashboard were only re-coloured; the sidebar's phone drawer is not designed.
+
 ## 15 November 2026 — The server is the only authority for a run (4.14)
 
 - A free user could run unlimited jobs: `claimJob` skipped the server when the cached plan was paid, passed when the
