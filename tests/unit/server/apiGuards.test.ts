@@ -93,6 +93,14 @@ describe('coming back to the page that asked for a sign-in', () => {
     expect(loginPath('/de/pricing/')).toBe('/de/login/?next=%2Fde%2Fpricing%2F');
   });
 
+  it('lets the button page POST back to us: its referrer policy must not turn Origin into "null"', async () => {
+    const { db } = createFakeD1();
+    const env = { DB: db, SESSION_IP_SALT: 's' } as unknown as Env;
+    const token = await createMagicLink(db, 'a@example.com', null);
+    const res = await verifyGet({ request: new Request(`https://leaflockpdf.com/api/auth/verify?token=${token}`), env });
+    expect(res.headers.get('referrer-policy')).not.toBe('no-referrer');
+  });
+
   it('carries it through the emailed link and the button, and ignores a hostile one', async () => {
     const { db } = createFakeD1();
     const env = { DB: db, SESSION_IP_SALT: 's' } as unknown as Env;

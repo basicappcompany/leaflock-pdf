@@ -31,7 +31,10 @@ export async function onRequestGet({ request }: { request: Request; env: Env }):
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'no-store',
       'Content-Security-Policy': "default-src 'none'; form-action 'self'; frame-ancestors 'none'",
-      'Referrer-Policy': 'no-referrer',
+      // Not no-referrer: that makes browsers send "Origin: null" on this page's own form POST, and the
+      // same-origin guard in _middleware.ts then refuses the sign-in with a 403. "origin" sends our origin
+      // (never the token-bearing URL) and nothing at all to other sites.
+      'Referrer-Policy': 'origin',
     },
   });
 }
