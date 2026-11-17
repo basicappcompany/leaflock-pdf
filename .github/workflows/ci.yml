@@ -61,27 +61,34 @@ jobs:
 
       - run: pnpm test
 
+      # The browser steps below run on pull requests only. A merge to main re-runs the type check, tracker and
+      # unit tests (about a minute) but not the browser suite (about seven more): the PR already ran it on the
+      # same change, and running it again on every merge was close to half of all CI minutes.
       # Chromium only: playwright.config.ts uses Playwright's bundled Chromium in CI
       # (local runs drive the Edge already on the machine instead, so no download there).
       # The browser download is cached by Playwright version; the install step still runs to add the
       # system libraries and is a no-download no-op for the browser itself on a cache hit.
       - id: playwright-version
+        if: github.event_name == 'pull_request'
         run: echo "version=$(pnpm exec playwright --version)" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@v5
+        if: github.event_name == 'pull_request'
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
       - run: pnpm exec playwright install --with-deps chromium
+        if: github.event_name == 'pull_request'
 
       # Builds and serves the production output itself (playwright.config.ts's
       # webServer); this is deliberate — the CSP is only emitted in that build, which is
       # exactly what offline.spec.ts and every watchPage().assertClean() call verifies.
       - run: pnpm test:e2e
+        if: github.event_name == 'pull_request'
 
       # playwright.config.ts sets `trace: 'retain-on-failure'`, which lands traces here
       # per failed test — `reporter: 'github'` in CI annotates the PR directly but keeps
       # no HTML report, so this is the only way to get a trace back off the runner.
-      - if: failure()
+      - if: failure() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v7
         with:
           name: playwright-traces
