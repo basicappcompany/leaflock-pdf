@@ -49,7 +49,7 @@ html[data-skin='editorial-press'] {
   --radius-small: 4px;
 }
 
-/* The site's original look, kept as an alternate now that "playful-rounded" is the
+/* The site's original look, kept as an alternate now that "Leaf" is the
    default — same values global.css used before this feature existed. */
 html[data-skin='soft-product'] {
   --color-bg: light-dark(#f6f7f4, #121513);
@@ -278,7 +278,7 @@ html[data-skin='bold-editorial'] {
  * src/lib/skins.ts gets a plain attribute-selector rule here instead, keyed off the
  * same data-skin-id the picker button already carries.
  */
-.skin-picker__opt[data-skin-id='default'] .skin-picker__dot { background: #e5533d; }
+.skin-picker__opt[data-skin-id='default'] .skin-picker__dot { background: #15803d; }
 .skin-picker__opt[data-skin-id='soft-product'] .skin-picker__dot { background: #2a7548; }
 .skin-picker__opt[data-skin-id='refined-minimal'] .skin-picker__dot { background: #1f6f50; }
 .skin-picker__opt[data-skin-id='editorial-press'] .skin-picker__dot { background: #8f3a1c; }

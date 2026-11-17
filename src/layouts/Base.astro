@@ -166,7 +166,7 @@ const chromeHeightScript = cspInlineScript(`
     <link rel="sitemap" href="/sitemap.xml" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-    <meta name="theme-color" content="#e5533d" id="siteThemeColor" />
+    <meta name="theme-color" content="#15803d" id="siteThemeColor" />
 
     <meta property="og:site_name" content={siteName} />
     <meta property="og:type" content={ogType} />
@@ -194,7 +194,7 @@ const chromeHeightScript = cspInlineScript(`
       //
       // Reading a custom property's resolved value needs an indirection:
       // getComputedStyle(docEl).getPropertyValue('--color-accent') returns the raw,
-      // *unresolved* `light-dark(#e5533d, #ff7a63)` text — custom properties are
+      // *unresolved* `light-dark(#15803d, #34d27b)` text — custom properties are
       // untyped, so the browser never evaluates the function inside one the way it does
       // for an actual <color> property. Setting that raw text as an SVG fill or a
       // theme-color is simply invalid, silently. The fix is the standard one: apply the

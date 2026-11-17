@@ -3,48 +3,44 @@
  * `color-scheme`, which follows the system unless the user chose light or dark
  * (html[data-theme], set by ThemeToggle).
  *
- * Skin: these same tokens are the default skin, "Playful Rounded" — chosen deliberately
- * over the site's original palette (now the "soft-product" alternate, see
- * src/styles/skins.css) once a chooser existed at all. Fourteen alternates live in
- * skins.css, each overriding this exact token set under html[data-skin="<id>"]; picking
- * one (src/pages/appearance.astro) sets a leaflock_skin cookie, applied before first
- * paint by the inline script in Base.astro, same technique as the theme toggle.
+ * Skin: these same tokens are the default skin, "Leaf" (17 November 2026, replacing
+ * "Playful Rounded"): warm off-white ground, hairline borders, one deep-leaf green, soft
+ * layered shadows instead of a solid offset one. Fourteen alternates live in
+ * src/styles/skins.css, each overriding this exact token set under html[data-skin="<id>"];
+ * picking one sets a leaflock_skin cookie, applied before first paint by the inline script
+ * in Base.astro, same technique as the theme toggle.
  */
 :root {
   color-scheme: light dark;
-  --color-bg: light-dark(#fffaf3, #1c1420);
-  --color-surface: light-dark(#ffffff, #241a2c);
-  --color-surface-2: light-dark(#f6f0e8, #2c2034);
-  --color-text: light-dark(#221c2b, #f3e9f7);
-  --color-muted: light-dark(#6d6480, #b29fc0);
-  --color-border: light-dark(#f0e7e2, #3a2a44);
-  /* The brighter #e5533d fails WCAG AA (axe-core: color-contrast, serious) as TEXT —
-     the eyebrow, link-button, and primary-button label all use this token directly —
-     against every background it actually appears on: --color-bg/--color-surface
-     (~4.9:1 needed 4.5), and --color-accent-soft specifically (the success-panel tint
-     12 components use), which is dimmer still and needed one shade darker again
-     (~4.43:1 at the old shade). --color-accent-hover moves a shade darker than this so
-     it stays visibly distinct on press/hover. Dark mode's lighter accent sits on a
-     near-black ground and already clears AA, so it's untouched. */
-  --color-accent: light-dark(#b93824, #ff7a63);
-  --color-accent-hover: light-dark(#96301e, #ff9682);
-  --color-on-accent: light-dark(#ffffff, #200804);
-  --color-accent-soft: light-dark(#ffe8e3, #3a1812);
+  --color-bg: light-dark(#f8f8f6, #0c0e0c);
+  --color-surface: light-dark(#ffffff, #141714);
+  --color-surface-2: light-dark(#f2f2ef, #1a1e1a);
+  --color-text: light-dark(#171a17, #eceeeb);
+  --color-muted: light-dark(#5b625b, #98a198);
+  --color-border: light-dark(#e3e5df, #252a25);
+  /* The accent is used as TEXT directly (the eyebrow, link-button and the primary-button
+     label), so the light value is the deep green that clears WCAG AA (4.5:1) on the
+     background, the surface and the soft tint (4.72, 5.02 and 4.53, measured). The brighter
+     #16a34a from the design demo fails as text (about 3.1:1), so it is not used.
+     Dark mode's mint sits on a near-black ground and clears AA by a wide margin. */
+  --color-accent: light-dark(#15803d, #34d27b);
+  --color-accent-hover: light-dark(#166534, #5be39a);
+  --color-on-accent: light-dark(#ffffff, #04210f);
+  --color-accent-soft: light-dark(#ecf6ee, #15241a);
   --color-error: light-dark(#b3261e, #ff8f86);
   --color-warning: light-dark(#8a5a00, #f2c065);
-  --color-pro: light-dark(#6b3fa0, #c9a6f5);
-  --color-pro-soft: light-dark(#f1e9fb, #2c2238);
+  /* Pro is a muted gold, not a second hue to compete with the green. */
+  --color-pro: light-dark(#7a5a12, #e0c27a);
+  --color-pro-soft: light-dark(#f6efdf, #2a2314);
   --color-focus: light-dark(#1d6fd8, #7fb3ff);
-  --shadow: light-dark(0 1px 3px rgb(0 0 0 / 0.08), 0 1px 3px rgb(0 0 0 / 0.5));
-  /* Playful Rounded's cards lean on a solid offset shadow, not blur — chunkier and more
-     tactile than the depth-blur approach the original skin used. */
-  --shadow-card: 0 4px 0 light-dark(#f0e7e2, #3a2a44);
-  --shadow-card-hover: 0 6px 0 light-dark(#f0e7e2, #3a2a44);
-  /* Light mode gets no card outline at all; dark mode still needs a hairline,
-     because shadow alone cannot separate a dark surface from a dark ground. */
-  --color-card-border: light-dark(transparent, #3a2a44);
-  --radius: 22px;
-  --radius-small: 14px;
+  --shadow: light-dark(0 1px 2px rgb(18 28 22 / 0.06), 0 1px 2px rgb(0 0 0 / 0.5));
+  /* Cards: a hairline border plus a soft shadow, lifted a little on hover. */
+  --shadow-card: light-dark(0 1px 2px rgb(18 28 22 / 0.05), 0 1px 2px rgb(0 0 0 / 0.5));
+  /* One layer per side: light-dark() takes two arguments, so a comma list would not parse. */
+  --shadow-card-hover: light-dark(0 10px 28px rgb(18 28 22 / 0.09), 0 10px 28px rgb(0 0 0 / 0.5));
+  --color-card-border: light-dark(#e3e5df, #252a25);
+  --radius: 16px;
+  --radius-small: 10px;
   --space: 1rem;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
   line-height: 1.5;

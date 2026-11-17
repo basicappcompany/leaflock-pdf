@@ -12,8 +12,8 @@ import { toolById } from '../tools/registry';
  * before any stylesheet exists — so they are the literal light-theme values from
  * src/styles/global.css and must be changed alongside them.
  */
-const THEME_COLOR = '#e5533d';
-const BACKGROUND_COLOR = '#fffaf3';
+const THEME_COLOR = '#15803d';
+const BACKGROUND_COLOR = '#f8f8f6';
 
 /** The tools worth a launcher shortcut: the most reached for, and all free. */
 const SHORTCUT_TOOLS = ['merge', 'split', 'compress'] as const;
