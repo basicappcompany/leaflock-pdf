@@ -47,7 +47,7 @@ had been wrong for days, in the one section of this document written to tell a r
 exists (`docs/process.md` §8).
 
 **Live and proven since 31 October 2026:** `.github/workflows/ci.yml` runs the type check,
-`pnpm tracker`, the unit tests and the full Playwright suite on every PR; a push to `main` (a merge) runs only the type check, tracker and unit tests, since the PR already ran the browser suite (16 Nov 2026, to save CI minutes).
+`pnpm tracker`, the unit tests and the full Playwright suite on push and PR. First run was
 green in 8m11s on `ubuntu-latest`, with 275 browser tests in 4.3m and no retries used — so
 the one step that had no local equivalent, `playwright install --with-deps chromium` on a
 fresh runner, is now tested rather than assumed. Remote is `basicappcompany/leaflock-pdf`,
