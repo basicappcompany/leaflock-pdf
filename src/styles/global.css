@@ -5,7 +5,7 @@
  *
  * Skin: these same tokens are the default skin, "Leaf" (17 November 2026, replacing
  * "Playful Rounded"): warm off-white ground, hairline borders, one deep-leaf green, soft
- * layered shadows instead of a solid offset one. Fourteen alternates live in
+ * layered shadows instead of a solid offset one. Fifteen alternates live in
  * src/styles/skins.css, each overriding this exact token set under html[data-skin="<id>"];
  * picking one sets a leaflock_skin cookie, applied before first paint by the inline script
  * in Base.astro, same technique as the theme toggle.

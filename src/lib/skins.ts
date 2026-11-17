@@ -20,6 +20,7 @@ export interface Skin {
 
 export const skins: readonly Skin[] = [
   { id: 'default', name: 'Leaf', swatch: '#15803d', blurb: 'Warm off-white, hairline borders, one deep-leaf green and soft shadows. Calm and premium — the site default.' },
+  { id: 'playful-rounded', name: 'Playful Rounded', swatch: '#e5533d', blurb: 'Big soft radii, a chunky solid shadow, warm coral. The previous site default.' },
   { id: 'soft-product', name: 'Soft Product', swatch: '#2a7548', blurb: "LeafLock's original look: pillowy cards, round tinted icons, gentle lift on hover." },
   { id: 'refined-minimal', name: 'Refined Minimal', swatch: '#1f6f50', blurb: 'Hairline dividers instead of cards, lots of air, nothing competing for attention.' },
   { id: 'editorial-press', name: 'Editorial Press', swatch: '#8f3a1c', blurb: 'Serif display, numbered index, no cards at all. Quiet and bookish.' },
