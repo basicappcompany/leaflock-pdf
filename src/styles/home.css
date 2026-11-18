@@ -1,17 +1,13 @@
 /*
- * Home page only (imported by src/pages/index.astro): the hairline hero, the category tabs and the
- * definition card with the privacy diagram. Kept out of global.css because that file is inlined into every
- * page and counted against the HTML budget in tests/e2e/performance.spec.ts.
+ * Home page only (imported by src/pages/index.astro): the banner, the hero, the bento of major tools, the category tabs
+ * and the definition card. Kept out of global.css because that file is inlined into every page and counted against the
+ * HTML budget in tests/e2e/performance.spec.ts.
  *
- * Everything here reads the shared --color-*, --radius* and --shadow* tokens, so it re-skins with the skin
- * picker like the rest of the site. No colour or pixel radius is hard-coded.
+ * Everything here reads the shared --color-*, --radius* and --shadow* tokens, so it re-skins with the skin picker like
+ * the rest of the site. No colour or pixel radius is hard-coded. Nothing has a fixed height: at a high browser zoom or in a
+ * small window the content needs more room than the screen has, and the page then scrolls instead of squeezing or clipping
+ * anything (tests/e2e/zoomLayout.spec.ts checks this from 100% to 400%).
  */
-
-/* The page's own column is 64rem, a good measure for reading and too narrow for a hero with a tool grid beside it.
-   Only the page that has a .home-hero takes the wider column. */
-main:has(> .home-hero) {
-  max-width: 76rem;
-}
 
 /* The early-access notice: a full-width accent bar above the header, as in the approved demo. */
 .top-banner {
@@ -37,63 +33,40 @@ main:has(> .home-hero) {
   text-decoration: underline;
 }
 
-.home-hero {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr);
-  align-items: stretch;
-  gap: calc(var(--space) * 2.5);
-  margin-bottom: 0;
-  padding: calc(var(--space) * 1.5);
-  container-type: inline-size;
-  /* The whole first screen is the hero: the viewport minus the banner, header and strip above it (about 7.9rem) and a
-     little air below, so a visitor sees the headline and every tab's tools without scrolling. A constant, not the
-     measured --tools-chrome-h: that shrinks when the header condenses on scroll, and a hero that followed it would
-     move the page under the reader. A minimum, never a fixed height: at a high browser zoom or in a small window the
-     content needs more room than the screen has, and the page then scrolls instead of squeezing or clipping anything. */
-  min-height: clamp(30rem, calc(100svh - 12rem), 46rem);
+/* The page's own column is 64rem, a good measure for reading and too narrow for a bento. The page that has a .home-hero
+   takes a wider one, framed by two hairlines and a very faint ruled grid, as in the approved demo. */
+main:has(> .home-hero) {
+  max-width: 76rem;
+  padding-inline: calc(var(--space) * 2);
+  border-inline: 1px solid var(--color-border);
+  background-image: linear-gradient(color-mix(in srgb, var(--color-border) 55%, transparent) 1px, transparent 1px);
+  background-size: 100% 14rem;
 }
 
-/* A hairline frame round the hero and a faint wash of the accent from its top right corner: the two things that
-   give the first screen some presence without a second colour. Decoration only: behind the content, no clicks. */
-.home-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: radial-gradient(
-    70% 90% at 85% 0%,
-    color-mix(in srgb, var(--color-accent) 9%, transparent),
-    transparent 70%
-  );
-  pointer-events: none;
+/* ---------- Hero ---------- */
+
+.home-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: calc(var(--space) * 3);
+  padding-block: calc(var(--space) * 3) calc(var(--space) * 2.5);
+  container-type: inline-size;
 }
 
 .home-hero__text {
-  align-self: center;
   min-width: 0;
-}
-
-/* The trust claims stand in a short column under the buttons, one to a line. */
-.home-hero__text .trust {
-  flex-direction: column;
-  gap: 0.45rem;
-  margin-top: calc(var(--space) * 1.5);
-  overflow: visible;
 }
 
 .home-hero__text h1 {
   display: block;
   margin-bottom: calc(var(--space) * 0.75);
-  /* Follows the hero's own width, not the window's: with the sidebar open the hero is narrower and the same
-     window-based size wrapped the headline onto five lines. */
-  font-size: clamp(1.9rem, calc(0.4rem + 3.5cqi), 3.4rem);
-  text-wrap: balance;
+  /* Follows the hero's own width, not the window's: with the sidebar open the hero is narrower. */
+  font-size: clamp(2.1rem, calc(0.4rem + 4.6cqi), 3.7rem);
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.04em;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
 }
 
 .home-hero__text h1 em {
@@ -103,104 +76,217 @@ main:has(> .home-hero) {
 }
 
 .home-hero__text .lead {
-  max-width: 40ch;
+  max-width: 42ch;
   margin-bottom: 0;
   font-size: 1.1rem;
 }
 
-/* ---------- Category tabs (a radio group; no script) ---------- */
-
-.home-tabs {
-  position: relative;
+.home-chips {
   display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-  min-width: 0;
-  min-height: 0;
-}
-
-/* Visually gone but still focusable, so the arrow keys and Tab work on the real radios. */
-.home-tabs__input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.home-tabs__bar {
-  display: inline-flex;
   flex-wrap: wrap;
-  align-self: flex-start;
-  gap: 2px;
-  max-width: 100%;
-  padding: 3px;
+  gap: 0.5rem;
+  margin: calc(var(--space) * 1.25) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-chips a {
+  display: block;
+  padding: 0.3rem 0.8rem;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-small);
-  background: var(--color-surface-2);
-}
-
-.home-tabs__bar label {
-  padding: 0.4rem 0.85rem;
-  border-radius: calc(var(--radius-small) - 2px);
-  color: var(--color-muted);
-  font-size: 0.88rem;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.home-tabs__bar label:hover {
-  color: var(--color-text);
-}
-
-.home-tabs__panel {
-  display: none;
-}
-
-/* The checked radio picks its label and its panel by position: the Nth input, the Nth label, the Nth panel. */
-.home-tabs__input:nth-of-type(1):checked ~ .home-tabs__bar label:nth-child(1),
-.home-tabs__input:nth-of-type(2):checked ~ .home-tabs__bar label:nth-child(2),
-.home-tabs__input:nth-of-type(3):checked ~ .home-tabs__bar label:nth-child(3),
-.home-tabs__input:nth-of-type(4):checked ~ .home-tabs__bar label:nth-child(4) {
+  border-radius: 999px;
   background: var(--color-surface);
   color: var(--color-text);
-  box-shadow: var(--shadow);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
 }
 
-.home-tabs__input:nth-of-type(1):checked ~ .home-tabs__panel:nth-of-type(1),
-.home-tabs__input:nth-of-type(2):checked ~ .home-tabs__panel:nth-of-type(2),
-.home-tabs__input:nth-of-type(3):checked ~ .home-tabs__panel:nth-of-type(3),
-.home-tabs__input:nth-of-type(4):checked ~ .home-tabs__panel:nth-of-type(4) {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-height: 0;
+.home-chips a:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
-.home-tabs__input:nth-of-type(1):focus-visible ~ .home-tabs__bar label:nth-child(1),
-.home-tabs__input:nth-of-type(2):focus-visible ~ .home-tabs__bar label:nth-child(2),
-.home-tabs__input:nth-of-type(3):focus-visible ~ .home-tabs__bar label:nth-child(3),
-.home-tabs__input:nth-of-type(4):focus-visible ~ .home-tabs__bar label:nth-child(4) {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
+.home-hero__text .trust {
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin-top: calc(var(--space) * 1.5);
+  overflow: visible;
 }
 
-/* Tiles in a tab: four columns, and the first tool is the big feature tile, two columns by two rows, tinted with the
-   accent and dashed like a drop target, as in the approved demo. The summary of the others is held to two lines. */
-.tool-grid--tabs {
-  flex: 1;
+/* The privacy diagram in a card with a faint wash of the accent: the proof, beside the promise. */
+.home-hero__visual {
+  min-width: 0;
+  padding: calc(var(--space) * 1.5);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(70% 90% at 90% 0%, color-mix(in srgb, var(--color-accent) 9%, transparent), transparent 70%),
+    var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+/* ---------- Sections ---------- */
+
+.home-section {
+  margin-top: calc(var(--space) * 2.5);
+}
+
+.home-section__title {
+  margin: 0 0 var(--space);
+  color: var(--color-muted);
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- The bento of major tools ---------- */
+
+.home-bento {
+  display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(min-content, 1fr));
-  gap: 0.85rem;
-  min-height: 0;
+  grid-auto-rows: minmax(9.5rem, auto);
+  gap: 0.9rem;
 }
 
-/* Eight tiles fit the three rows beside the feature tile; the rest are still in the page (a crawler and a screen
-   reader get them) and one click away on the category's own page, which the last tile opens. */
-.tool-grid--tabs li:nth-child(n + 9):not(.tool-grid__more) {
-  display: none;
+.bt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 1.1rem;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.bt strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+}
+
+.bt__text {
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.bt .tool-grid__icon {
+  margin-bottom: 0.35rem;
+}
+
+a.bt {
+  transition:
+    border-color 0.15s,
+    box-shadow 0.18s;
+}
+
+a.bt:hover,
+a.bt:focus-visible {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-card-hover);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a.bt {
+    transition:
+      transform 0.18s ease,
+      border-color 0.15s,
+      box-shadow 0.18s;
+  }
+
+  a.bt:hover,
+  a.bt:focus-visible {
+    transform: translateY(-3px);
+  }
+}
+
+a.bt:hover .tool-grid__icon,
+a.bt:focus-visible .tool-grid__icon {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* The first tool: two columns by two rows, tinted with the accent and dashed like a drop target. */
+.bt--feature {
+  grid-column: span 2;
+  grid-row: span 2;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1.5rem;
+  border: 2px dashed color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+  background: color-mix(in srgb, var(--color-accent-soft) 70%, var(--color-surface));
+  text-align: center;
+}
+
+.bt--feature strong {
+  justify-content: center;
+  font-size: 1.35rem;
+}
+
+.bt--feature .tool-grid__icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0;
+  border-color: transparent;
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.bt--feature .tool-grid__icon .tool-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.bt--feature .bt__text {
+  font-size: 0.95rem;
+}
+
+.bt--feature .tile-pv {
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+/* The tile that says nothing leaves the device: inverted, a dark tile in light mode and the reverse in dark, from tokens. */
+.bt--ink {
+  justify-content: flex-end;
+  border-color: transparent;
+  background: light-dark(var(--color-text), var(--color-surface-2));
+  color: light-dark(var(--color-bg), var(--color-text));
+}
+
+.bt--ink .bt__text {
+  color: inherit;
+  opacity: 0.75;
+}
+
+.bt--more {
+  align-items: center;
+  justify-content: center;
+  border-style: dashed;
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-accent);
+  text-align: center;
+}
+
+.bt__count {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
 }
 
 /* A small drawn preview in a tile, from the approved demo. Decoration only (aria-hidden, no text of its own), built from
@@ -302,27 +388,85 @@ main:has(> .home-hero) {
   line-height: 1;
 }
 
-.tool-grid--tabs li:first-child .tile-pv {
-  justify-content: center;
-}
+/* ---------- Category tabs (a radio group; no script) ---------- */
 
-.tool-grid__more a {
-  align-items: center;
-  justify-content: center;
-  border-style: dashed;
-  background: transparent;
-  box-shadow: none;
-  color: var(--color-accent);
-  font-weight: 600;
-  text-align: center;
-}
-
-.tool-grid__more a::after {
-  content: '→';
-}
-
-.tool-grid--tabs li {
+.home-tabs {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
   min-width: 0;
+}
+
+/* Visually gone but still focusable, so the arrow keys and Tab work on the real radios. */
+.home-tabs__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.home-tabs__bar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-self: flex-start;
+  gap: 2px;
+  max-width: 100%;
+  padding: 3px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface-2);
+}
+
+.home-tabs__bar label {
+  padding: 0.4rem 0.85rem;
+  border-radius: calc(var(--radius-small) - 2px);
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.home-tabs__bar label:hover {
+  color: var(--color-text);
+}
+
+.home-tabs__panel {
+  display: none;
+}
+
+/* The checked radio picks its label and its panel by position: the Nth input, the Nth label, the Nth panel. */
+.home-tabs__input:nth-of-type(1):checked ~ .home-tabs__bar label:nth-child(1),
+.home-tabs__input:nth-of-type(2):checked ~ .home-tabs__bar label:nth-child(2),
+.home-tabs__input:nth-of-type(3):checked ~ .home-tabs__bar label:nth-child(3),
+.home-tabs__input:nth-of-type(4):checked ~ .home-tabs__bar label:nth-child(4) {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow);
+}
+
+.home-tabs__input:nth-of-type(1):checked ~ .home-tabs__panel:nth-of-type(1),
+.home-tabs__input:nth-of-type(2):checked ~ .home-tabs__panel:nth-of-type(2),
+.home-tabs__input:nth-of-type(3):checked ~ .home-tabs__panel:nth-of-type(3),
+.home-tabs__input:nth-of-type(4):checked ~ .home-tabs__panel:nth-of-type(4) {
+  display: block;
+}
+
+.home-tabs__input:nth-of-type(1):focus-visible ~ .home-tabs__bar label:nth-child(1),
+.home-tabs__input:nth-of-type(2):focus-visible ~ .home-tabs__bar label:nth-child(2),
+.home-tabs__input:nth-of-type(3):focus-visible ~ .home-tabs__bar label:nth-child(3),
+.home-tabs__input:nth-of-type(4):focus-visible ~ .home-tabs__bar label:nth-child(4) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Every tool of the chosen category, in the shared .tool-grid card, a little tighter than elsewhere. */
+.tool-grid--tabs {
+  grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  gap: 0.85rem;
 }
 
 .tool-grid--tabs a {
@@ -340,65 +484,22 @@ main:has(> .home-hero) {
   font-size: 1rem;
 }
 
-.tool-grid--tabs span:not(.badge-pro):not(.tool-grid__icon):not(.tile-pv) {
+.tool-grid--tabs span:not(.badge-pro):not(.tool-grid__icon) {
   display: -webkit-box;
   overflow: hidden;
   font-size: 0.85rem;
   line-height: 1.4;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-}
-
-.tool-grid--tabs li:first-child {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
-.tool-grid--tabs li:first-child a {
-  justify-content: center;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 1.5rem;
-  border: 2px dashed color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
-  background: color-mix(in srgb, var(--color-accent-soft) 70%, var(--color-surface));
-  text-align: center;
-}
-
-.tool-grid--tabs li:first-child .tool-grid__icon {
-  width: 3.5rem;
-  height: 3.5rem;
-  margin: 0;
-  border-color: transparent;
-  border-radius: var(--radius);
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-}
-
-.tool-grid--tabs li:first-child .tool-grid__icon .tool-icon {
-  width: 1.75rem;
-  height: 1.75rem;
-}
-
-.tool-grid--tabs li:first-child strong {
-  justify-content: center;
-  font-size: 1.3rem;
-}
-
-.tool-grid--tabs li:first-child span:not(.badge-pro):not(.tool-grid__icon):not(.tile-pv) {
-  display: block;
-  font-size: 0.95rem;
-  -webkit-line-clamp: unset;
-  line-clamp: unset;
-}
-
-.tool-grid--tabs li:first-child a:hover .tool-grid__icon,
-.tool-grid--tabs li:first-child a:focus-visible .tool-grid__icon {
-  background: var(--color-accent-hover);
-  color: var(--color-on-accent);
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 .category__viewAll {
+  display: inline-block;
+  margin-top: calc(var(--space) * 0.9);
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -406,54 +507,82 @@ main:has(> .home-hero) {
   text-decoration: underline;
 }
 
-/* ---------- The definition card, with the privacy diagram beside it ---------- */
+/* ---------- The definition card ---------- */
 
+/* The heading across the top, the plain definition on the left and the proof and who it is for on the right. */
 .answer {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-  align-items: center;
-  gap: calc(var(--space) * 2.5);
-  margin-top: calc(var(--space) * 2);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: calc(var(--space) * 3);
+  margin-top: calc(var(--space) * 2.5);
   padding: calc(var(--space) * 2) calc(var(--space) * 1.5);
-  border-color: var(--color-border);
-  background: radial-gradient(
-      60% 100% at 100% 100%,
-      color-mix(in srgb, var(--color-accent) 7%, transparent),
-      transparent 70%
-    ),
+  border-color: var(--color-card-border);
+  background:
+    radial-gradient(60% 100% at 100% 100%, color-mix(in srgb, var(--color-accent) 7%, transparent), transparent 70%),
     var(--color-surface);
 }
 
-.answer__text {
-  min-width: 0;
+/* ---------- Smaller screens and higher zoom ---------- */
+
+.answer h2 {
+  grid-column: 1 / -1;
+}
+
+.answer p:nth-of-type(1) {
+  grid-column: 1;
+  grid-row: 2 / span 2;
+}
+
+.answer p:nth-of-type(2) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.answer p:nth-of-type(3) {
+  grid-column: 2;
+  grid-row: 3;
 }
 
 @media (max-width: 64rem) {
-  .tool-grid--tabs {
+  .home-bento {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .bt--feature {
+    grid-column: span 3;
+    grid-row: span 1;
   }
 }
 
 @media (max-width: 52rem) {
+  .answer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .answer p:nth-of-type(n) {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  main:has(> .home-hero) {
+    padding-inline: var(--space);
+    border-inline: 0;
+    background-image: none;
+  }
+
   .home-hero {
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space);
-    padding: var(--space);
-    min-height: 0;
+    gap: calc(var(--space) * 1.5);
+    padding-block: var(--space);
   }
 
-  .tool-grid--tabs {
+  .home-bento {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: none;
-    grid-auto-rows: minmax(7.5rem, auto);
+    grid-auto-rows: auto;
   }
 
-  .tool-grid--tabs li:first-child {
-    grid-row: span 1;
-  }
-
-  .home-hero__text h1 {
-    max-width: none;
+  .bt--feature {
+    grid-column: span 2;
   }
 
   /* One row that scrolls sideways, not a second line of tabs. */
@@ -466,18 +595,15 @@ main:has(> .home-hero) {
   .home-tabs__bar::-webkit-scrollbar {
     display: none;
   }
-
-  .answer {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 @media (max-width: 30rem) {
+  .home-bento,
   .tool-grid--tabs {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .tool-grid--tabs li:first-child {
+  .bt--feature {
     grid-column: span 1;
   }
 }

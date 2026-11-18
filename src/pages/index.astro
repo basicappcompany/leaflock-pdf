@@ -10,6 +10,7 @@ import { formatEarlyAccessEnd, launchPercentOff, paidPlansAvailable } from '../l
 import { itemList } from '../lib/seo';
 import { tierBadgeText } from '../lib/tierBadge';
 import { categories, toolById, tools } from '../tools/registry';
+import type { ToolId } from '../tools/registry';
 
 const locale = Astro.currentLocale ?? 'en';
 const messages = getMessages(locale);
@@ -21,10 +22,18 @@ const mergeTool = toolById('merge');
 // the text colour and the rest in the accent. A locale whose tagline does not split into exactly two on a full
 // stop and a space just shows the whole line in one colour.
 const taglineParts = common.site.tagline.split('. ');
-// Tools whose tile carries a small drawn preview of what they do (decoration only, in CSS: src/styles/home.css).
-const previewIds = new Set(['merge', 'split', 'compress', 'sign', 'ocr', 'redact', 'rotate', 'crop']);
 const headLead = taglineParts.length === 2 ? `${taglineParts[0]}.` : common.site.tagline;
 const headAccent = taglineParts.length === 2 ? taglineParts[1] : '';
+
+// The major tools. The first is the big feature tile; the order is the order of the bento grid in home.css (the feature
+// tile, then two beside it, then the "no upload" tile and one more, then a row of four with "All tools" last). They
+// come from the registry by id, so a renamed or removed tool is a type error here, not a dead link.
+const popularIds: ToolId[] = ['merge', 'compress', 'sign', 'ocr', 'split', 'redact', 'protect'];
+const popular = popularIds.map((id) => toolById(id));
+// Chips under the headline: the five most-searched tools.
+const chipIds: ToolId[] = ['merge', 'split', 'compress', 'sign', 'ocr'];
+// Tools whose tile carries a small drawn preview of what they do (decoration only, in CSS: src/styles/home.css).
+const previewIds = new Set<ToolId>(['merge', 'split', 'compress', 'sign', 'ocr', 'redact', 'rotate', 'crop']);
 
 // One readable list of everything the site does, for a crawler or an assistant asked
 // what tools exist. Registry order, so it cannot fall behind the grid below.
@@ -62,6 +71,7 @@ const jsonLd = [
       )
     }
   </Fragment>
+
   <section class="home-hero">
     <div class="home-hero__text">
       <p class="hero__eyebrow">{common.site.eyebrow}</p>
@@ -70,6 +80,18 @@ const jsonLd = [
         {headAccent && <em>{headAccent}</em>}
       </h1>
       <p class="lead">{common.site.privacyNote}</p>
+      <ul class="home-chips">
+        {
+          chipIds.map((id) => {
+            const tool = toolById(id);
+            return (
+              <li>
+                <a href={getRelativeLocaleUrl(locale, tool.slug)}>{messages.tools[id].title}</a>
+              </li>
+            );
+          })
+        }
+      </ul>
       <div class="hero__cta">
         <a class="primary-button" href={getRelativeLocaleUrl(locale, mergeTool.slug)}>
           {common.cta.merge}
@@ -85,12 +107,59 @@ const jsonLd = [
         <li>{common.trust.noFileSizeLimit}</li>
       </ul>
     </div>
-    {/* Category tabs with no script: a radio group, so the browser handles the arrow keys, the selection
-        and the focus, and the CSS (src/styles/home.css) shows the panel that matches the checked radio.
-        Every category's tools are in the HTML either way (a crawler and a screen reader get all of them);
-        only the checked one is shown. The radios come first, as siblings of the bar and the panels, because
-        the stylesheet selects forward from the checked input. */}
-    <div class="home-tabs" role="radiogroup" aria-label={common.site.allTools}>
+    <div class="home-hero__visual">
+      <PrivacyDiagram
+        label={common.diagram.label}
+        device={common.diagram.device}
+        work={common.diagram.work}
+        result={common.diagram.result}
+        server={common.diagram.server}
+      />
+    </div>
+  </section>
+
+  {/* The major tools as a bento grid, below the hero: a big tile for the first, small drawn previews, one tile that
+      says nothing leaves the device, and a last tile that jumps to the full list. */}
+  <section class="home-section" aria-labelledby="home-popular">
+    <h2 class="home-section__title" id="home-popular">{messages.pricing.homePopular}</h2>
+    <div class="home-bento">
+      {
+        popular.map((tool, index) => (
+          <>
+            <a class={`bt${index === 0 ? ' bt--feature' : ''}`} href={getRelativeLocaleUrl(locale, tool.slug)}>
+              <span class="tool-grid__icon">
+                <ToolIcon tool={tool.id} />
+              </span>
+              <strong>
+                {messages.tools[tool.id].title}
+                {tool.tier !== 'free' && <span class="badge-pro">{tierBadgeText(common.toolPage.tiers[tool.tier].label, messages.pricing.freeNow)}</span>}
+              </strong>
+              <span class="bt__text">{messages.tools[tool.id].summary}</span>
+              {previewIds.has(tool.id) && <span class={`tile-pv tile-pv--${tool.id}`} aria-hidden="true"><i /><i /><i /></span>}
+            </a>
+            {index === 2 && (
+              <div class="bt bt--ink">
+                <strong>{common.trust.noUpload}</strong>
+                <span class="bt__text">{common.site.eyebrow}</span>
+              </div>
+            )}
+          </>
+        ))
+      }
+      <a class="bt bt--more" href="#all-tools">
+        <span class="bt__count">+{tools.length - popular.length}</span>
+        <strong>{common.site.allTools}</strong>
+      </a>
+    </div>
+  </section>
+
+  {/* Every tool, by category, in tabs with no script: a radio group, so the browser handles the arrow keys, the
+      selection and the focus, and home.css shows the panel that matches the checked radio. Every category's tools are
+      in the HTML either way (a crawler and a screen reader get all of them); only the checked one is shown. The radios
+      come first, as siblings of the bar and the panels, because the stylesheet selects forward from the checked input. */}
+  <section class="home-section" id="all-tools" aria-labelledby="home-all">
+    <h2 class="home-section__title" id="home-all">{common.site.allTools}</h2>
+    <div class="home-tabs" role="radiogroup" aria-labelledby="home-all">
       {
         categories.map((category, index) => (
           <input
@@ -123,39 +192,28 @@ const jsonLd = [
                         {tool.tier !== 'free' && <span class="badge-pro">{tierBadgeText(common.toolPage.tiers[tool.tier].label, messages.pricing.freeNow)}</span>}
                       </strong>
                       <span>{messages.tools[tool.id].summary}</span>
-                      {previewIds.has(tool.id) && <span class={`tile-pv tile-pv--${tool.id}`} aria-hidden="true"><i /><i /><i /></span>}
                     </a>
                   </li>
                 ))}
-                <li class="tool-grid__more">
-                  <a class="category__viewAll" href={getRelativeLocaleUrl(locale, `tools/${category}`)}>
-                    {format(common.home.viewAll, { category: common.categories[category] })}
-                  </a>
-                </li>
               </ul>
+              <a class="category__viewAll" href={getRelativeLocaleUrl(locale, `tools/${category}`)}>
+                {format(common.home.viewAll, { category: common.categories[category] })}
+              </a>
             </section>
           );
         })
       }
     </div>
   </section>
+
   {/* A plain definition for people and for the assistants and search engines that quote the first
       clear statement of what a site is. It sits below the tools: a visitor came to use one, and the
       hero and the headings above already say what the site is for. It is still real text in the page,
       so it is read the same either way. The count is computed, never typed. */}
   <section class="answer">
-    <div class="answer__text">
-      <h2>{common.home.whatIsHeading}</h2>
-      <p>{format(common.home.whatIsBody, { count: tools.length })}</p>
-      <p>{common.home.whatIsProof}</p>
-      <p>{common.home.whatIsFor}</p>
-    </div>
-    <PrivacyDiagram
-      label={common.diagram.label}
-      device={common.diagram.device}
-      work={common.diagram.work}
-      result={common.diagram.result}
-      server={common.diagram.server}
-    />
+    <h2>{common.home.whatIsHeading}</h2>
+    <p>{format(common.home.whatIsBody, { count: tools.length })}</p>
+    <p>{common.home.whatIsProof}</p>
+    <p>{common.home.whatIsFor}</p>
   </section>
 </Base>
