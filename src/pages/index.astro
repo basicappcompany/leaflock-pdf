@@ -2,6 +2,7 @@
 import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
 import Base from '../layouts/Base.astro';
 import '../styles/early-notice.css';
+import '../styles/home.css';
 import PrivacyDiagram from '../components/PrivacyDiagram.astro';
 import ToolIcon from '../components/ToolIcon.astro';
 import { format, getMessages } from '../i18n';
@@ -9,6 +10,7 @@ import { formatEarlyAccessEnd, launchPercentOff, paidPlansAvailable } from '../l
 import { itemList } from '../lib/seo';
 import { tierBadgeText } from '../lib/tierBadge';
 import { categories, toolById, tools } from '../tools/registry';
+import type { ToolId } from '../tools/registry';
 
 const locale = Astro.currentLocale ?? 'en';
 const messages = getMessages(locale);
@@ -16,6 +18,22 @@ const common = messages.common;
 // The primary call to action points at the most-searched-for tool. Taken from the
 // registry so it cannot drift from the published slug.
 const mergeTool = toolById('merge');
+// The tagline is two sentences ("Private PDF tools. Your files never leave your device."). The first reads in
+// the text colour and the rest in the accent. A locale whose tagline does not split into exactly two on a full
+// stop and a space just shows the whole line in one colour.
+const taglineParts = common.site.tagline.split('. ');
+const headLead = taglineParts.length === 2 ? `${taglineParts[0]}.` : common.site.tagline;
+const headAccent = taglineParts.length === 2 ? taglineParts[1] : '';
+
+// The major tools. The first is the big feature tile; the order is the order of the bento grid in home.css (the feature
+// tile, then two beside it, then the "no upload" tile and one more, then a row of five small tiles with "All tools" last). They
+// come from the registry by id, so a renamed or removed tool is a type error here, not a dead link.
+const popularIds: ToolId[] = ['merge', 'compress', 'sign', 'ocr', 'split', 'redact', 'protect', 'rotate'];
+const popular = popularIds.map((id) => toolById(id));
+// Chips under the headline: the five most-searched tools.
+const chipIds: ToolId[] = ['merge', 'split', 'compress', 'sign', 'ocr'];
+// Tools whose tile carries a small drawn preview of what they do (decoration only, in CSS: src/styles/home.css).
+const previewIds = new Set<ToolId>(['merge', 'split', 'compress', 'sign', 'ocr', 'redact', 'rotate', 'crop']);
 
 // One readable list of everything the site does, for a crawler or an assistant asked
 // what tools exist. Registry order, so it cannot fall behind the grid below.
@@ -39,11 +57,41 @@ const jsonLd = [
   toolsSidebarDefaultHidden
   memberHint
 >
-  <section class="hero">
-    <div class="hero__text">
+  {/* The early-access notice is a full-width accent banner above the header (Base's "banner" slot). It stays before the
+      tool tabs in this file, which tests/unit/earlyAccessVisible.test.ts requires: early access is stated before the tools. */}
+  <Fragment slot="banner">
+    {
+      !paidPlansAvailable && (
+        <a class="top-banner for-new" href={getRelativeLocaleUrl(locale, 'pricing')}>
+          {format(messages.pricing.homeNotice, {
+            endDate: formatEarlyAccessEnd(locale),
+            percent: Math.max(...Object.values(launchPercentOff)),
+          })}
+        </a>
+      )
+    }
+  </Fragment>
+
+  <section class="home-hero">
+    <div class="home-hero__text">
       <p class="hero__eyebrow">{common.site.eyebrow}</p>
-      <h1>{common.site.tagline}</h1>
+      <h1>
+        {headLead}{headAccent && " "}
+        {headAccent && <em>{headAccent}</em>}
+      </h1>
       <p class="lead">{common.site.privacyNote}</p>
+      <ul class="home-chips">
+        {
+          chipIds.map((id) => {
+            const tool = toolById(id);
+            return (
+              <li>
+                <a href={getRelativeLocaleUrl(locale, tool.slug)}>{messages.tools[id].title}</a>
+              </li>
+            );
+          })
+        }
+      </ul>
       <div class="hero__cta">
         <a class="primary-button" href={getRelativeLocaleUrl(locale, mergeTool.slug)}>
           {common.cta.merge}
@@ -52,90 +100,121 @@ const jsonLd = [
           {common.cta.howItWorks}
         </a>
       </div>
+      <ul class="trust">
+        <li>{common.trust.noUpload}</li>
+        <li>{common.trust.worksOffline}</li>
+        <li>{common.trust.freeToStart}</li>
+        <li>{common.trust.noFileSizeLimit}</li>
+      </ul>
     </div>
-    <PrivacyDiagram
-      label={common.diagram.label}
-      device={common.diagram.device}
-      work={common.diagram.work}
-      result={common.diagram.result}
-      server={common.diagram.server}
-    />
-  </section>
-  {/* Outside .hero__text, not inside it: that column is only ~half the page's width
-      (shared with PrivacyDiagram), too narrow to fit all four claims on the one line
-      they're meant to read as — full hero width has room to spare. Tool pages
-      ([tool].astro) have no such column to escape; their hero is already full width. */}
-  <ul class="trust">
-    <li>{common.trust.noUpload}</li>
-    <li>{common.trust.worksOffline}</li>
-    <li>{common.trust.freeToStart}</li>
-    <li>{common.trust.noFileSizeLimit}</li>
-  </ul>
-  {
-    !paidPlansAvailable && (
-      <p class="early-notice for-new">
-        <a href={getRelativeLocaleUrl(locale, 'pricing')}>
-          {format(messages.pricing.homeNotice, {
-            endDate: formatEarlyAccessEnd(locale),
-            percent: Math.max(...Object.values(launchPercentOff)),
-          })}
+    <div class="home-hero__visual" role="group" aria-label={messages.pricing.homePopular}>
+      <div class="home-bento">
+        {
+          popular.map((tool, index) => (
+            <>
+              <a class={`bt${index === 0 ? ' bt--feature' : ''}${index >= 4 ? ' bt--sm' : ''}`} href={getRelativeLocaleUrl(locale, tool.slug)}>
+                <span class="tool-grid__icon">
+                  <ToolIcon tool={tool.id} />
+                </span>
+                <strong>
+                  {messages.tools[tool.id].title}
+                  {tool.tier !== 'free' && <span class="badge-pro">{tierBadgeText(common.toolPage.tiers[tool.tier].label, messages.pricing.freeNow)}</span>}
+                </strong>
+                {index < 4 && <span class="bt__text">{messages.tools[tool.id].summary}</span>}
+                {previewIds.has(tool.id) && <span class={`tile-pv tile-pv--${tool.id}`} aria-hidden="true"><i /><i /><i /></span>}
+              </a>
+              {index === 2 && (
+                <div class="bt bt--ink">
+                  <strong>{common.trust.noUpload}</strong>
+                  <span class="bt__text">{common.site.eyebrow}</span>
+                </div>
+              )}
+            </>
+          ))
+        }
+        <a class="bt bt--sm bt--more" href="#all-tools">
+          <span class="bt__count">+{tools.length - popular.length}</span>
+          <strong>{common.site.allTools}</strong>
         </a>
-      </p>
-    )
-  }
+      </div>
+    </div>
+  </section>
 
-  {
-    categories.map((category, index) => {
-      const inCategory = tools.filter((tool) => tool.category === category);
-      // Every category starts open: the front page is where someone looks over everything on offer,
-      // and a closed section hides tools they came to find. Each is still a native <details>, so a
-      // visitor can fold one away.
-      return (
-        <details class={`category category--${category}${index === 0 ? ' category--first' : ''}`} open>
-          <summary>
-            <ToolIcon category={category} />
-            <span class="category__name">{common.categories[category]}</span>
-            <span class="category__count">{inCategory.length}</span>
-            <span class="category__rule"></span>
-            <svg class="category__chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="m9 6 6 6-6 6" />
-            </svg>
-          </summary>
-          <ul class="tool-grid">
-            {inCategory.map((tool) => (
-              <li>
-                <a href={getRelativeLocaleUrl(locale, tool.slug)}>
-                  <span class="tool-grid__icon">
-                    <ToolIcon tool={tool.id} />
-                  </span>
-                  <strong>
-                    {messages.tools[tool.id].title}
-                    {tool.tier !== 'free' && <span class="badge-pro">{tierBadgeText(common.toolPage.tiers[tool.tier].label, messages.pricing.freeNow)}</span>}
-                  </strong>
-                  <span>{messages.tools[tool.id].summary}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-          {/* The category hub (src/pages/tools/[category].astro) is the real destination for
-              browsing past the headline tools — this just says it exists, same link the <a>
-              in the summary already points at (common.categories[category] itself is not a
-              link anymore now that the whole summary is a native toggle control). */}
-          <a class="category__viewAll" href={getRelativeLocaleUrl(locale, `tools/${category}`)}>
-            {format(common.home.viewAll, { category: common.categories[category] })}
-          </a>
-        </details>
-      );
-    })
-  }
-  {/* A plain definition for people and for the assistants and search engines that quote the first
+  {/* Every tool in one list, filtered by tabs with no script: a radio group (All first, then a category each), so the
+      browser handles the arrow keys, the selection and the focus, and home.css hides the tools of the other categories.
+      All of them are in the HTML either way (a crawler and a screen reader get all of them). The radios come first, as
+      siblings of the bar and the panel, because the stylesheet selects forward from the checked input. Each category's
+      "See all" link is in the page too and shown with its tab (all four under All). "See all tools" starts the row on every tab: under All it goes to the directory in the footer, under a category it opens All. */}
+  <section class="home-section" id="all-tools" aria-labelledby="home-all">
+    <h2 class="home-section__title" id="home-all">{common.site.allTools}</h2>
+    <div class="home-tabs" role="radiogroup" aria-labelledby="home-all">
+      <input class="home-tabs__input" type="radio" name="home-category" id="home-tab-all" checked aria-label={common.site.allTools} />
+      {
+        categories.map((category) => (
+          <input class="home-tabs__input" type="radio" name="home-category" id={`home-tab-${category}`} aria-label={common.categories[category]} />
+        ))
+      }
+      <div class="home-tabs__bar">
+        <label for="home-tab-all">{common.site.allTools}</label>
+        {categories.map((category) => <label for={`home-tab-${category}`}>{common.categories[category]}</label>)}
+      </div>
+      <div class="home-tabs__panel">
+        <ul class="tool-grid tool-grid--tabs">
+          {
+            categories.flatMap((category) =>
+              tools
+                .filter((tool) => tool.category === category)
+                .map((tool) => (
+                  <li data-category={category}>
+                    <a href={getRelativeLocaleUrl(locale, tool.slug)}>
+                      <span class="tool-grid__icon">
+                        <ToolIcon tool={tool.id} />
+                      </span>
+                      <strong>
+                        {messages.tools[tool.id].title}
+                        {tool.tier !== 'free' && <span class="badge-pro">{tierBadgeText(common.toolPage.tiers[tool.tier].label, messages.pricing.freeNow)}</span>}
+                      </strong>
+                      <span>{messages.tools[tool.id].summary}</span>
+                    </a>
+                  </li>
+                )),
+            )
+          }
+        </ul>
+        <div class="home-tabs__links">
+          <a class="category__viewAll home-tabs__all" href="#site-footer">{messages.pricing.homeSeeAll}</a>
+          <label class="home-tabs__show" for="home-tab-all">{messages.pricing.homeSeeAll}</label>
+          {
+            categories.map((category) => (
+              <a class="category__viewAll" data-category={category} href={getRelativeLocaleUrl(locale, `tools/${category}`)}>
+                {format(common.home.viewAll, { category: common.categories[category] })}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* The definition on the left and, beside it, the diagram that shows why it is true. A plain definition for people and for the assistants and search engines that quote the first
       clear statement of what a site is. It sits below the tools: a visitor came to use one, and the
       hero and the headings above already say what the site is for. It is still real text in the page,
       so it is read the same either way. The count is computed, never typed. */}
   <section class="answer">
-    <h2>{common.home.whatIsHeading}</h2>
-    <p>{format(common.home.whatIsBody, { count: tools.length })}</p>
-    <p>{common.home.whatIsProof}</p>
-    <p>{common.home.whatIsFor}</p>
+    <div class="answer__text">
+      <h2>{common.home.whatIsHeading}</h2>
+      <p>{format(common.home.whatIsBody, { count: tools.length })}</p>
+      <p>{common.home.whatIsProof}</p>
+      <p>{common.home.whatIsFor}</p>
+    </div>
+    <div class="answer__diagram">
+      <PrivacyDiagram
+        label={common.diagram.label}
+        device={common.diagram.device}
+        work={common.diagram.work}
+        result={common.diagram.result}
+        server={common.diagram.server}
+      />
+    </div>
   </section>
 </Base>

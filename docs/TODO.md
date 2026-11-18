@@ -15,7 +15,7 @@ A dated snapshot; the sections below are the detail and the source of truth.
 - **Dodo:** test mode is live on the site (12 November). Left: when the first real Pro to Practice upgrade settles,
   check the plan flipped and the 50% code did not also discount the first renewal; go-live mode (§3); a deploy on
   1 January 2027.
-- Bing Webmaster Tools; look at Search Console in a few days; post the launch drafts when signed in.
+- Bing Webmaster Tools; post the launch drafts when signed in. **Search Console (17 Nov 2026):** property `leaflockpdf.com`, signed in as `basicappcompany@` (a Chrome profile can default to another account: use the `/u/2/` URL). 790 of 790 pages "Discovered, currently not indexed", 0 indexed; the sitemap was read once, on 8 Nov. The sitemap is now English only (`SITEMAP_LOCALES`); once English pages index, set it to `null` and resubmit. Request indexing was sent for `/`, `/merge-pdf/`, `/compress-pdf/` and `/pricing/` on 17 Nov (about 10 a day are allowed by hand).
 
 **Pending on me** (engineering, no input needed to start):
 - More size landings (100 KB, 500 KB, 2 MB) only if the 200 KB and 1 MB pages show traffic.
@@ -242,6 +242,7 @@ set up and shipped the same day (PRs #49-#51):
 - [ ] **New wording for two failure states, needs translation:** a tool above the plan reached through a tampered page, and a
       paid tool offline with no valid token, both show the generic "Something went wrong" sentence today. Proper copy means
       new `common.errors` strings in all ten catalogues (and checking the page-size budget in `performance.spec.ts`).
+- [ ] **Redesign leftovers (17-18 November 2026):** the new English strings (`pricing.homePopular`, `homeSeeAll`, and the earlier login ones) fall back to English in the other locales until `scripts/translate.mjs` is run; the OG share images (`pnpm og`, then `git checkout -- public/og` for the existing ones if only some should change) still show the old look; pricing and the dashboard are re-coloured, not redesigned; and `common.home.viewAll` is the only English string the home page still reads from `common` for the category links.
 - [ ] **Still open for 4.13:** at go-live, create the live-mode webhook endpoint with no event filter (or with those three
       events included). The sweep reads whichever mode `DODO_MODE` selects, so it needs no other change. Unverified until a ten-year purchase exists in test mode: that its payment carries `metadata.user_id` and a
       `product_cart`.

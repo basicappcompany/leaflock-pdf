@@ -40,6 +40,8 @@ test('sitemap lists every page, with language alternates', async ({ request }) =
     expect(xml, path).toContain(`<loc>${url}</loc>`);
   }
   expect(xml).toContain('hreflang="x-default"');
+  // English only until its pages are indexed (SITEMAP_LOCALES in src/lib/sitemap.ts).
+  expect(xml).not.toContain('<loc>https://leaflockpdf.com/de/');
 
   const robots = await (await request.get('/robots.txt')).text();
   expect(robots).toContain('Sitemap: https://leaflockpdf.com/sitemap.xml');

@@ -3,48 +3,44 @@
  * `color-scheme`, which follows the system unless the user chose light or dark
  * (html[data-theme], set by ThemeToggle).
  *
- * Skin: these same tokens are the default skin, "Playful Rounded" — chosen deliberately
- * over the site's original palette (now the "soft-product" alternate, see
- * src/styles/skins.css) once a chooser existed at all. Fourteen alternates live in
- * skins.css, each overriding this exact token set under html[data-skin="<id>"]; picking
- * one (src/pages/appearance.astro) sets a leaflock_skin cookie, applied before first
- * paint by the inline script in Base.astro, same technique as the theme toggle.
+ * Skin: these same tokens are the default skin, "Leaf" (17 November 2026, replacing
+ * "Playful Rounded"): warm off-white ground, hairline borders, one deep-leaf green, soft
+ * layered shadows instead of a solid offset one. Fifteen alternates live in
+ * src/styles/skins.css, each overriding this exact token set under html[data-skin="<id>"];
+ * picking one sets a leaflock_skin cookie, applied before first paint by the inline script
+ * in Base.astro, same technique as the theme toggle.
  */
 :root {
   color-scheme: light dark;
-  --color-bg: light-dark(#fffaf3, #1c1420);
-  --color-surface: light-dark(#ffffff, #241a2c);
-  --color-surface-2: light-dark(#f6f0e8, #2c2034);
-  --color-text: light-dark(#221c2b, #f3e9f7);
-  --color-muted: light-dark(#6d6480, #b29fc0);
-  --color-border: light-dark(#f0e7e2, #3a2a44);
-  /* The brighter #e5533d fails WCAG AA (axe-core: color-contrast, serious) as TEXT —
-     the eyebrow, link-button, and primary-button label all use this token directly —
-     against every background it actually appears on: --color-bg/--color-surface
-     (~4.9:1 needed 4.5), and --color-accent-soft specifically (the success-panel tint
-     12 components use), which is dimmer still and needed one shade darker again
-     (~4.43:1 at the old shade). --color-accent-hover moves a shade darker than this so
-     it stays visibly distinct on press/hover. Dark mode's lighter accent sits on a
-     near-black ground and already clears AA, so it's untouched. */
-  --color-accent: light-dark(#b93824, #ff7a63);
-  --color-accent-hover: light-dark(#96301e, #ff9682);
-  --color-on-accent: light-dark(#ffffff, #200804);
-  --color-accent-soft: light-dark(#ffe8e3, #3a1812);
+  --color-bg: light-dark(#f8f8f6, #0c0e0c);
+  --color-surface: light-dark(#ffffff, #141714);
+  --color-surface-2: light-dark(#f2f2ef, #1a1e1a);
+  --color-text: light-dark(#171a17, #eceeeb);
+  --color-muted: light-dark(#5b625b, #98a198);
+  --color-border: light-dark(#e3e5df, #252a25);
+  /* The accent is used as TEXT directly (the eyebrow, link-button and the primary-button
+     label), so the light value is the deep green that clears WCAG AA (4.5:1) on the
+     background, the surface and the soft tint (4.72, 5.02 and 4.53, measured). The brighter
+     #16a34a from the design demo fails as text (about 3.1:1), so it is not used.
+     Dark mode's mint sits on a near-black ground and clears AA by a wide margin. */
+  --color-accent: light-dark(#15803d, #34d27b);
+  --color-accent-hover: light-dark(#166534, #5be39a);
+  --color-on-accent: light-dark(#ffffff, #04210f);
+  --color-accent-soft: light-dark(#ecf6ee, #15241a);
   --color-error: light-dark(#b3261e, #ff8f86);
   --color-warning: light-dark(#8a5a00, #f2c065);
-  --color-pro: light-dark(#6b3fa0, #c9a6f5);
-  --color-pro-soft: light-dark(#f1e9fb, #2c2238);
+  /* Pro is a muted gold, not a second hue to compete with the green. */
+  --color-pro: light-dark(#7a5a12, #e0c27a);
+  --color-pro-soft: light-dark(#f6efdf, #2a2314);
   --color-focus: light-dark(#1d6fd8, #7fb3ff);
-  --shadow: light-dark(0 1px 3px rgb(0 0 0 / 0.08), 0 1px 3px rgb(0 0 0 / 0.5));
-  /* Playful Rounded's cards lean on a solid offset shadow, not blur — chunkier and more
-     tactile than the depth-blur approach the original skin used. */
-  --shadow-card: 0 4px 0 light-dark(#f0e7e2, #3a2a44);
-  --shadow-card-hover: 0 6px 0 light-dark(#f0e7e2, #3a2a44);
-  /* Light mode gets no card outline at all; dark mode still needs a hairline,
-     because shadow alone cannot separate a dark surface from a dark ground. */
-  --color-card-border: light-dark(transparent, #3a2a44);
-  --radius: 22px;
-  --radius-small: 14px;
+  --shadow: light-dark(0 1px 2px rgb(18 28 22 / 0.06), 0 1px 2px rgb(0 0 0 / 0.5));
+  /* Cards: a hairline border plus a soft shadow, lifted a little on hover. */
+  --shadow-card: light-dark(0 1px 2px rgb(18 28 22 / 0.05), 0 1px 2px rgb(0 0 0 / 0.5));
+  /* One layer per side: light-dark() takes two arguments, so a comma list would not parse. */
+  --shadow-card-hover: light-dark(0 10px 28px rgb(18 28 22 / 0.09), 0 10px 28px rgb(0 0 0 / 0.5));
+  --color-card-border: light-dark(#e3e5df, #252a25);
+  --radius: 16px;
+  --radius-small: 10px;
   --space: 1rem;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
   line-height: 1.5;
@@ -85,6 +81,11 @@ a {
   color: var(--color-accent);
 }
 
+/* A long command or path in inline code must break rather than push the page sideways at a high zoom. */
+code {
+  overflow-wrap: anywhere;
+}
+
 h1 {
   display: flex;
   flex-wrap: wrap;
@@ -92,7 +93,9 @@ h1 {
   gap: 0.5rem;
   margin: 0 0 0.5rem;
   font-size: clamp(1.75rem, 4vw, 2.25rem);
-  line-height: 1.2;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 
 h2 {
@@ -120,8 +123,7 @@ h2 {
   .tool-info > div,
   .faq > details,
   .card-list li,
-  .tool-grid li,
-  .category {
+  .tool-grid li {
     transition:
       opacity 0.5s ease,
       transform 0.5s ease;
@@ -147,6 +149,14 @@ h2 {
   z-index: 40;
 }
 
+/* A very short window (a browser zoom of 200% or more on a laptop screen): the header alone would take most of it, so it
+   scrolls away with the page instead of staying pinned. */
+@media (max-height: 30rem) {
+  .site-chrome {
+    position: static;
+  }
+}
+
 .site-header {
   display: flex;
   flex-wrap: wrap;
@@ -154,7 +164,8 @@ h2 {
   gap: var(--space);
   padding: 0.75rem calc(var(--space) * 1.5);
   border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  backdrop-filter: blur(10px);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -200,11 +211,15 @@ h2 {
 
 .privacy-strip {
   margin: 0;
-  padding: 0.35rem var(--space);
-  background: var(--color-accent-soft);
-  color: var(--color-text);
-  font-size: 0.85rem;
+  padding: 0.3rem var(--space);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+  color: var(--color-muted);
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
   text-align: center;
+  text-transform: uppercase;
 }
 
 /* Language switcher and first-visit suggestion. Logical properties throughout so the same
@@ -363,15 +378,31 @@ h2 {
    <astro-island> wrapper, so a `.site-nav > a` selector would miss it; this is why both
    carry the class explicitly instead. */
 .nav-link {
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 0.65rem;
   border-radius: var(--radius-small);
-  color: var(--color-text);
+  color: var(--color-muted);
   text-decoration: none;
+  font-size: 0.92rem;
   font-weight: 500;
 }
 
 .nav-link:hover {
   background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+/* The last item (Log in, or Dashboard once signed in) is a button: a hairline pill, like the buttons on the front page. */
+.site-nav > astro-island:last-child .nav-link {
+  margin-inline-start: 0.4rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.site-nav > astro-island:last-child .nav-link:hover {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
   color: var(--color-accent);
 }
 
@@ -882,6 +913,25 @@ html[data-sidebar-dock='right'] .tools-sidebar__handle::after {
   }
 }
 
+/* On a phone the sidebar is a drawer, slightly narrower than the window so the page shows beside it. Closed, its slim edge tab (set further down, kept
+   thin on purpose so it covers no text) is green, so it is easy to find. */
+@media (max-width: 48rem) {
+  html[data-sidebar-dock] .tools-sidebar {
+    width: min(18rem, 86vw);
+  }
+
+  html[data-sidebar-state='hidden'] .tools-sidebar__handles {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+  }
+
+  html[data-sidebar-state='hidden'] .tools-sidebar__handle--main,
+  html[data-sidebar-state='hidden'] .tools-sidebar__handle--main:hover {
+    background: transparent;
+    color: var(--color-on-accent);
+  }
+}
+
 /* The move icon is a panel with the side it will go to filled: docked left shows the right-hand
    one, docked right the left-hand one. */
 .tools-sidebar__to-left {
@@ -913,9 +963,16 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
   flex: none;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.6rem 0.75rem;
-  border-bottom: 1px solid var(--color-border);
+  margin: 0.7rem 0.75rem 0;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
   color: var(--color-muted);
+}
+
+.tools-sidebar__search:focus-within {
+  border-color: var(--color-accent);
 }
 
 .tools-sidebar__search-icon {
@@ -1017,6 +1074,7 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
   border-radius: 999px;
   background: var(--color-surface-2);
   color: var(--color-muted);
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: normal;
@@ -1043,7 +1101,7 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.4rem;
+  padding: 0.4rem 0.5rem;
   border-radius: var(--radius-small);
   color: var(--color-text);
   text-decoration: none;
@@ -1058,6 +1116,7 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
 
 .tools-sidebar li a[aria-current='page'] {
   background: var(--color-accent-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 30%, transparent);
   color: var(--color-accent);
   font-weight: 700;
 }
@@ -1433,7 +1492,7 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
      footer's edges line up with the page above it at every width. */
   padding: calc(var(--space) * 2) var(--space) var(--space);
   border-top: 1px solid var(--color-border);
-  background: var(--color-surface);
+  background: var(--color-bg);
   color: var(--color-muted);
   font-size: 0.9rem;
 }
@@ -1503,7 +1562,11 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
 .site-footer__heading {
   margin: 0 0 0.5rem;
   color: var(--color-text);
-  font-weight: 700;
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .site-footer li a {
@@ -1539,6 +1602,9 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
 
 .site-footer__bottom p {
   margin: 0;
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
 }
 
 .breadcrumb {
@@ -1754,80 +1820,6 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
   text-anchor: middle;
 }
 
-/* .category is a <details> now (index.astro): every section but the first loads
-   collapsed, so a visitor sees one full category plus three headings instead of all 43
-   tools at once, and can open whichever other group they actually want. */
-.category summary {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: calc(var(--space) * 2);
-  padding-block: 0.25rem;
-  cursor: pointer;
-  list-style: none;
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.category summary::-webkit-details-marker {
-  display: none;
-}
-
-.category summary:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
-}
-
-.category .tool-icon {
-  color: var(--color-accent);
-}
-
-/* .category__name has no rules of its own: a flex item's default basis is its
-   content's max-content width, and "Protect and optimize" at that width doesn't leave
-   room for .category__rule and the chevron on a narrow phone. It used to force
-   `white-space: nowrap`, which pushed that full-width box instead of letting the name
-   wrap onto a second line — wrapping is already the default once nowrap is gone. */
-
-.category__count {
-  padding: 0.05rem 0.5rem;
-  border-radius: 999px;
-  background: var(--color-surface-2);
-  color: var(--color-muted);
-  font-size: 0.78rem;
-  font-weight: 700;
-}
-
-/* Hairline carrying the eye across to the right of each section heading. */
-.category__rule {
-  flex: 1;
-  height: 1px;
-  min-width: 2rem;
-  background: var(--color-border);
-}
-
-.category__chevron {
-  flex: none;
-  color: var(--color-muted);
-  transition: transform 0.15s ease;
-}
-
-.category[open] > summary .category__chevron {
-  transform: rotate(90deg);
-}
-
-.category__viewAll {
-  display: inline-block;
-  margin-top: calc(var(--space) * 0.75);
-  color: var(--color-accent);
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.category__viewAll:hover {
-  text-decoration: underline;
-}
-
 /* Takes its colour from the text around it, so both themes are handled already. */
 .tool-icon {
   flex: none;
@@ -1850,9 +1842,9 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
   height: 2.25rem;
   margin-bottom: 0.5rem;
   border-radius: var(--radius-small);
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-muted);
+  border: 1px solid transparent;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
   transition:
     border-color 0.15s,
     background-color 0.15s,
@@ -1867,16 +1859,12 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
 .tool-grid a:hover .tool-grid__icon,
 .tool-grid a:focus-visible .tool-grid__icon {
   border-color: var(--color-accent);
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .tool-grid__icon {
-    transition: none;
-  }
-
-  .category__chevron {
     transition: none;
   }
 
@@ -1896,46 +1884,6 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
 
 .tool-grid--small {
   grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-}
-
-/*
- * One bento moment, home page only: the first tile of the first section is Merge PDF —
- * the same tool the hero's own primary button already points at — and it was rendering
- * as one of an undifferentiated grid of identical cards.
- *
- * `.category--first` is an explicit class (index.astro), not a `:first-of-type` guess —
- * that was tried first and silently matched nothing, because `:first-of-type` counts by
- * tag name only: `.hero` is also a `<section>` and comes first, so every `.category`
- * section was actually second-of-type-or-later and the rule never fired. An explicit
- * class is one line in the markup and isn't fooled by an unrelated earlier sibling.
- * `.category` exists nowhere else (the category hub and a tool page's "related tools"
- * list use `.tool-grid` directly, with no `.category` wrapper), so this still cannot
- * leak onto any other page's grid.
- * `span 2` is gated behind a min-width: a grid that has room for only one auto-fill
- * column (minmax(14rem, …) each) does NOT clamp a `span 2` item down to the column it
- * has — the browser grows the grid with an extra implicit column to satisfy the span
- * instead, pushing the whole page wider than the viewport. 36rem is comfortably past
- * two 14rem columns plus their gap, so the span is only ever applied where it actually
- * fits.
- */
-@media (min-width: 36rem) {
-  .category--first .tool-grid li:first-child {
-    grid-column: span 2;
-  }
-}
-
-.category--first .tool-grid li:first-child .tool-grid__icon {
-  width: 3rem;
-  height: 3rem;
-}
-
-.category--first .tool-grid li:first-child .tool-grid__icon .tool-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.category--first .tool-grid li:first-child strong {
-  font-size: 1.1rem;
 }
 
 .tool-grid a {
@@ -2130,17 +2078,19 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
 
 /* ---------- Tool page ---------- */
 
+/* As tall as the loading skeleton (8rem) and no taller: it holds the place so the page does not jump when the
+   tool arrives, without leaving an empty band under the drop zone before it does. */
 .tool-mount {
-  min-height: 12rem;
-  margin: calc(var(--space) * 1.5) 0;
+  min-height: 9rem;
+  margin: var(--space) 0 calc(var(--space) * 1.5);
 }
 
 .tool-info {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
   gap: calc(var(--space) * 2);
-  margin-top: calc(var(--space) * 3);
-  padding-top: var(--space);
+  margin-top: calc(var(--space) * 2);
+  padding-top: calc(var(--space) * 1.5);
   border-top: 1px solid var(--color-border);
 }
 
@@ -2201,9 +2151,10 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
   flex-direction: column;
   gap: var(--space);
   padding: var(--space);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-card-border);
   border-radius: var(--radius);
   background: var(--color-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .toolbar {
@@ -2217,9 +2168,9 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
 
 .dropzone {
   padding: calc(var(--space) * 3) var(--space);
-  border: 2px dashed var(--color-border);
+  border: 2px dashed color-mix(in srgb, var(--color-accent) 40%, var(--color-border));
   border-radius: var(--radius);
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-accent-soft) 60%, var(--color-surface));
   text-align: center;
   transition: border-color 0.15s, background 0.15s;
 }

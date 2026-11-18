@@ -18,6 +18,8 @@ export const auth = {
     logIn: 'Log in',
     loggingIn: 'Logging in…',
     useLink: 'Email me a sign-in link instead',
+    usePassword: 'I have a password',
+    linkHint: 'No password needed. We email you a link; open it and press Sign in.',
     noPassword: 'No password yet? Use a sign-in link, then set one from your account.',
     errorCredentials: 'That email and password don’t match.',
     errorGoogle: 'Google sign-in didn’t complete. Please try again.',

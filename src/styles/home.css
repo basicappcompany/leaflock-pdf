@@ -1,0 +1,716 @@
+/*
+ * Home page only (imported by src/pages/index.astro): the banner, the hero, the bento of major tools, the category tabs
+ * and the definition card. Kept out of global.css because that file is inlined into every page and counted against the
+ * HTML budget in tests/e2e/performance.spec.ts.
+ *
+ * Everything here reads the shared --color-*, --radius* and --shadow* tokens, so it re-skins with the skin picker like
+ * the rest of the site. No colour or pixel radius is hard-coded. Nothing has a fixed height: at a high browser zoom or in a
+ * small window the content needs more room than the screen has, and the page then scrolls instead of squeezing or clipping
+ * anything (tests/e2e/zoomLayout.spec.ts checks this from 100% to 400%).
+ */
+
+/* The early-access notice: a full-width accent bar above the header, as in the approved demo. */
+.top-banner {
+  display: block;
+  padding: 0.5rem var(--space);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.site-chrome--condensed .top-banner {
+  display: none;
+}
+
+.top-banner::after {
+  content: ' →';
+}
+
+.top-banner:hover {
+  text-decoration: underline;
+}
+
+/* The page's own column is 64rem, a good measure for reading and too narrow for a bento. The page that has a .home-hero
+   takes a wider one, framed by two hairlines and a very faint ruled grid, as in the approved demo. */
+main:has(> .home-hero) {
+  max-width: 84rem;
+  padding-inline: calc(var(--space) * 2);
+  border-inline: 1px solid var(--color-border);
+  background-image: linear-gradient(color-mix(in srgb, var(--color-border) 55%, transparent) 1px, transparent 1px);
+  background-size: 100% 14rem;
+}
+
+/* ---------- Hero ---------- */
+
+.home-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.5fr);
+  align-items: stretch;
+  /* The hero fills the first screen below the header (a minimum, never a fixed height: at a high zoom it grows). */
+  min-height: calc(100svh - var(--tools-chrome-h, 8rem) - 1rem);
+  gap: calc(var(--space) * 3);
+  padding-block: calc(var(--space) * 1.5);
+  container-type: inline-size;
+}
+
+.home-hero__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+  padding-top: calc(var(--space) * 0.5);
+}
+
+.home-hero__text h1 {
+  display: block;
+  margin-bottom: calc(var(--space) * 0.75);
+  /* Follows the hero's own width, not the window's: with the sidebar open the hero is narrower. */
+  font-size: clamp(2.1rem, calc(0.4rem + 4.2cqi), 3.7rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.home-hero__text h1 em {
+  display: block;
+  color: var(--color-accent);
+  font-style: normal;
+}
+
+.home-hero__text .lead {
+  max-width: 42ch;
+  margin-bottom: 0;
+  font-size: 1.2rem;
+}
+
+.home-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: calc(var(--space) * 1.25) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-chips a {
+  display: block;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.home-chips a:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.home-hero__text .trust {
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin-top: calc(var(--space) * 1.5);
+  overflow: visible;
+}
+
+/* The bento of major tools beside the headline, as in the approved demo. */
+.home-hero__visual {
+  display: flex;
+  min-width: 0;
+}
+
+.home-hero__visual .home-bento {
+  flex: 1;
+}
+
+/* ---------- Sections ---------- */
+
+.home-section {
+  margin-top: calc(var(--space) * 2.5);
+}
+
+.home-section__title {
+  margin: 0 0 var(--space);
+  color: var(--color-muted);
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- The bento of major tools ---------- */
+
+.home-bento {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  /* auto rows: they grow to fit their text at a high zoom, and stretch to fill the hero when there is room. */
+  grid-auto-rows: minmax(6.75rem, auto);
+  gap: 0.9rem;
+}
+
+.bt {
+  grid-column: span 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 0.95rem;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.bt strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+}
+
+.bt__text {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.bt .tool-grid__icon {
+  margin-bottom: 0.35rem;
+}
+
+a.bt {
+  transition:
+    border-color 0.15s,
+    box-shadow 0.18s;
+}
+
+a.bt:hover,
+a.bt:focus-visible {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-card-hover);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a.bt {
+    transition:
+      transform 0.18s ease,
+      border-color 0.15s,
+      box-shadow 0.18s;
+  }
+
+  a.bt:hover,
+  a.bt:focus-visible {
+    transform: translateY(-3px);
+  }
+}
+
+a.bt:hover .tool-grid__icon,
+a.bt:focus-visible .tool-grid__icon {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* The first tool: four of ten columns by two rows, tinted with the accent and dashed like a drop target. */
+.bt--feature {
+  grid-column: span 4;
+  grid-row: span 2;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1.5rem;
+  border: 2px dashed color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+  background: color-mix(in srgb, var(--color-accent-soft) 70%, var(--color-surface));
+  text-align: center;
+}
+
+.bt--feature strong {
+  justify-content: center;
+  font-size: 1.35rem;
+}
+
+.bt--feature .tool-grid__icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0;
+  border-color: transparent;
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.bt--feature .tool-grid__icon .tool-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.bt--feature .bt__text {
+  font-size: 0.95rem;
+}
+
+.bt--feature .tile-pv {
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.bt--sm {
+  grid-column: span 2;
+}
+
+/* The tile that says nothing leaves the device: inverted, a dark tile in light mode and the reverse in dark, from tokens. */
+.bt--ink {
+  justify-content: flex-end;
+  padding: 1.4rem;
+  border-color: transparent;
+  background: light-dark(var(--color-text), var(--color-surface-2));
+  color: light-dark(var(--color-bg), var(--color-text));
+}
+
+.bt--ink strong {
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.bt--ink .bt__text {
+  color: inherit;
+  opacity: 0.75;
+}
+
+.bt--more {
+  align-items: center;
+  justify-content: center;
+  border-style: dashed;
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-accent);
+  text-align: center;
+}
+
+.bt__count {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+/* A small drawn preview in a tile, from the approved demo. Decoration only (aria-hidden, no text of its own), built from
+   the shared tokens so every skin recolours it. */
+.tile-pv {
+  display: flex;
+  flex: none;
+  align-items: flex-end;
+  gap: 0.4rem;
+  height: 2.4rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.tile-pv i {
+  display: block;
+  flex: none;
+}
+
+.tile-pv--merge i,
+.tile-pv--split i {
+  width: 1.4rem;
+  height: 1.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-surface-2);
+}
+
+.tile-pv--merge i:nth-child(2) {
+  border-color: var(--color-accent);
+  transform: translateY(-0.25rem);
+}
+
+.tile-pv--split i:nth-child(1) {
+  margin-right: 0.5rem;
+}
+
+.tile-pv--split i:nth-child(3),
+.tile-pv--rotate i:nth-child(n + 2),
+.tile-pv--crop i:nth-child(n + 2),
+.tile-pv--compress i:nth-child(3),
+.tile-pv--sign i {
+  display: none;
+}
+
+.tile-pv--rotate i:nth-child(1) {
+  width: 1.4rem;
+  height: 1.9rem;
+  border: 1px solid var(--color-accent);
+  border-radius: 4px;
+  background: var(--color-surface-2);
+  transform: rotate(14deg);
+}
+
+.tile-pv--crop i:nth-child(1) {
+  width: 1.7rem;
+  height: 1.9rem;
+  border: 1px dashed var(--color-accent);
+  border-radius: 4px;
+  background: var(--color-surface-2);
+}
+
+/* Compress: a long bar, then a short accent one: the file got smaller. No numbers, so no claim. */
+.tile-pv--compress,
+.tile-pv--ocr,
+.tile-pv--redact {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: 0.3rem;
+}
+
+.tile-pv--compress i,
+.tile-pv--ocr i,
+.tile-pv--redact i {
+  height: 0.35rem;
+  border-radius: 3px;
+  background: var(--color-border);
+}
+
+.tile-pv--compress i:nth-child(2) {
+  width: 30%;
+  background: var(--color-accent);
+}
+
+.tile-pv--ocr i:nth-child(2) {
+  background: color-mix(in srgb, var(--color-warning) 55%, transparent);
+}
+
+.tile-pv--redact i:nth-child(2) {
+  background: var(--color-text);
+}
+
+/* Sign: a signature drawn with a script font. The text is CSS content, so it is not in the page for a reader. */
+.tile-pv--sign::before {
+  content: 'Ada L.';
+  color: var(--color-focus);
+  font: 1.5rem 'Segoe Script', 'Brush Script MT', cursive;
+  line-height: 1;
+}
+
+/* ---------- Category tabs (a radio group; no script) ---------- */
+
+.home-tabs {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+/* Visually gone but still focusable, so the arrow keys and Tab work on the real radios. */
+.home-tabs__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.home-tabs__bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-self: stretch;
+  gap: 2px;
+  max-width: 100%;
+  padding: 3px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface-2);
+}
+
+.home-tabs__bar label {
+  flex: 1 1 auto;
+  padding: 0.5rem 0.85rem;
+  text-align: center;
+  border-radius: calc(var(--radius-small) - 2px);
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.home-tabs__bar label:hover {
+  color: var(--color-text);
+}
+
+/* The checked radio picks its label by position (the Nth input, the Nth label). All is first, then one per category. */
+.home-tabs__input:nth-of-type(1):checked ~ .home-tabs__bar label:nth-child(1),
+.home-tabs__input:nth-of-type(2):checked ~ .home-tabs__bar label:nth-child(2),
+.home-tabs__input:nth-of-type(3):checked ~ .home-tabs__bar label:nth-child(3),
+.home-tabs__input:nth-of-type(4):checked ~ .home-tabs__bar label:nth-child(4),
+.home-tabs__input:nth-of-type(5):checked ~ .home-tabs__bar label:nth-child(5) {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow);
+}
+
+.home-tabs__input:nth-of-type(1):focus-visible ~ .home-tabs__bar label:nth-child(1),
+.home-tabs__input:nth-of-type(2):focus-visible ~ .home-tabs__bar label:nth-child(2),
+.home-tabs__input:nth-of-type(3):focus-visible ~ .home-tabs__bar label:nth-child(3),
+.home-tabs__input:nth-of-type(4):focus-visible ~ .home-tabs__bar label:nth-child(4),
+.home-tabs__input:nth-of-type(5):focus-visible ~ .home-tabs__bar label:nth-child(5) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* A category's tab hides the tools and the end link of the others. One rule per category: a new category in the
+   registry needs one here, and tests/e2e/homeExpanded.spec.ts fails until it has it. */
+#home-tab-organize:checked ~ .home-tabs__panel [data-category]:not([data-category='organize']),
+#home-tab-organize:checked ~ .home-tabs__panel .home-tabs__all,
+#home-tab-convert:checked ~ .home-tabs__panel .home-tabs__all,
+#home-tab-edit:checked ~ .home-tabs__panel .home-tabs__all,
+#home-tab-secure:checked ~ .home-tabs__panel .home-tabs__all,
+#home-tab-convert:checked ~ .home-tabs__panel [data-category]:not([data-category='convert']),
+#home-tab-edit:checked ~ .home-tabs__panel [data-category]:not([data-category='edit']),
+#home-tab-secure:checked ~ .home-tabs__panel [data-category]:not([data-category='secure']) {
+  display: none;
+}
+
+.home-tabs__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+}
+
+/* The end of the list: every link is the same pill, one size and shape. The category links are outlined; "See all tools"
+   (the .home-tabs__all link under All, and the .home-tabs__show label that starts the row under a category tab) is the
+   filled one. */
+.home-tabs__links a,
+.home-tabs__show {
+  margin-top: calc(var(--space) * 0.9);
+  padding: 0.5rem 0.95rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.home-tabs__links a:hover,
+.home-tabs__show:hover {
+  border-color: var(--color-accent);
+  text-decoration: none;
+}
+
+.home-tabs__links .home-tabs__all,
+.home-tabs__show {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.home-tabs__links .home-tabs__all:hover,
+.home-tabs__show:hover {
+  background: var(--color-accent-hover);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* "See all tools" under a category tab starts the row (it picks the All tab) and has no use under All itself. */
+.home-tabs__show {
+  cursor: pointer;
+}
+
+#home-tab-all:checked ~ .home-tabs__panel .home-tabs__show {
+  display: none;
+}
+
+/* Every tool of the chosen category, in the shared .tool-grid card, a little tighter than elsewhere. */
+.tool-grid--tabs {
+  grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  gap: 0.85rem;
+}
+
+.tool-grid--tabs a {
+  padding: 1rem;
+  border-radius: var(--radius);
+}
+
+.tool-grid--tabs .tool-grid__icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-bottom: 0.4rem;
+}
+
+.tool-grid--tabs strong {
+  font-size: 1rem;
+}
+
+.tool-grid--tabs span:not(.badge-pro):not(.tool-grid__icon) {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.category__viewAll {
+  display: inline-block;
+  margin-top: calc(var(--space) * 0.9);
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.category__viewAll:hover {
+  text-decoration: underline;
+}
+
+/* ---------- The definition card ---------- */
+
+/* The heading across the top, the plain definition on the left and the proof and who it is for on the right. */
+.answer {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: center;
+  column-gap: calc(var(--space) * 3);
+  margin-top: calc(var(--space) * 2.5);
+  padding: calc(var(--space) * 2) calc(var(--space) * 1.5);
+  border-color: var(--color-card-border);
+  background:
+    radial-gradient(60% 100% at 100% 100%, color-mix(in srgb, var(--color-accent) 7%, transparent), transparent 70%),
+    var(--color-surface);
+}
+
+/* ---------- Smaller screens and higher zoom ---------- */
+
+.answer__text {
+  min-width: 0;
+}
+
+.answer__text p {
+  max-width: 62ch;
+}
+
+.answer__diagram {
+  min-width: 0;
+  align-self: center;
+}
+
+@media (max-width: 64rem) {
+  .home-hero {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .home-bento {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .bt {
+    grid-column: span 3;
+  }
+
+  .bt--feature {
+    grid-column: span 6;
+    grid-row: span 1;
+  }
+
+  /* Five small tiles in three columns of two, then two of three: no gap in the last row. */
+  .bt--sm {
+    grid-column: span 2;
+  }
+
+  .bt--sm:nth-last-child(-n + 2) {
+    grid-column: span 3;
+  }
+
+}
+
+@media (max-width: 52rem) {
+  .answer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  main:has(> .home-hero) {
+    padding-inline: var(--space);
+    border-inline: 0;
+    background-image: none;
+  }
+
+  .home-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(var(--space) * 1.5);
+    padding-block: var(--space);
+  }
+
+  .home-bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: auto;
+  }
+
+  .bt,
+  .bt--sm,
+  .bt--sm:nth-last-child(-n + 2) {
+    grid-column: auto;
+  }
+
+  .bt--feature {
+    grid-column: span 2;
+  }
+
+  /* Nine tiles in two columns: the last takes both. */
+  .bt--sm.bt--more {
+    grid-column: span 2;
+  }
+
+  /* One row that scrolls sideways, not a second line of tabs. */
+  .home-tabs__bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .home-tabs__bar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 30rem) {
+  .home-bento,
+  .tool-grid--tabs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bt--feature,
+  .bt--sm.bt--more {
+    grid-column: span 1;
+  }
+}
+
+/* The last row: five small tiles of two columns each, the title and icon and not the sentence. */
+.bt--sm {
+  padding: 0.8rem;
+}
+
+.bt--sm .bt__text {
+  display: none;
+}
+
+.bt--sm strong {
+  font-size: 0.95rem;
+}

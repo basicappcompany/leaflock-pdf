@@ -723,7 +723,9 @@ click and keeps the tooltip pointing at the mode a click leads to. **Stated limi
 is no longer offered. The `system` string in `common.ts` is unused now but stays, because the
 other locales' catalogues are generated and would need regenerating to drop it.
 
-**Default visual system is "Playful Rounded" — changed 2 November 2026** from the
+**Update, 17 November 2026: the default skin is now "Leaf"** (off-white ground, hairline borders, one deep-leaf green `#15803d` / `#34d27b`, soft shadows, a muted-gold Pro colour), chosen from the combined demo the owner approved. "Playful Rounded" below is kept as a selectable alternate (`playful-rounded`, with its own purple Pro colour), so there are sixteen skins in all; the owner intends to prune the alternates once the theme is final. The home page is a hero with the bento of major tools beside the headline, then every tool in one list filtered by script-free tabs (a radio group; `home.css` needs one hide rule per category in the registry, and `homeExpanded.spec.ts` fails without it); tool pages get `tool-page.css`. The paragraph that follows describes the Playful Rounded decision as it was made.
+
+**Default visual system was "Playful Rounded" — changed 2 November 2026** from the
 original ("Soft Product", now an alternate skin, see below). Big soft radii
 (`--radius: 22px`, `--radius-small: 14px`), a chunky solid offset shadow rather than a
 blur (`--shadow-card: 0 4px 0 light-dark(#f0e7e2, #3a2a44)`), warm coral accent

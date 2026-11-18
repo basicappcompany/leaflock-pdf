@@ -15,7 +15,7 @@ const messages = getMessages(locale);
 const common = messages.common;
 ---
 
-<footer class:list={['site-footer', { 'site-footer--with-sidebar': withSidebar }]}>
+<footer id="site-footer" class:list={['site-footer', { 'site-footer--with-sidebar': withSidebar }]}>
   {/* Two separate grids, not one flowing list: with all seven groups (four tool
       categories plus product/company/legal) in a single auto-fill grid, the categories
       filled exactly five columns at common widths and the three link groups wrapped

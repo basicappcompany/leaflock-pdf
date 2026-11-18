@@ -446,8 +446,8 @@ what building it now does. No new tools, no new pages; the machinery under both.
   already exist on every tool page; the real gap was category hubs, now live at
   `/tools/<category>` (`src/pages/tools/[category].astro`) — one per entry in
   `categories`, each with its own `ItemList`/`BreadcrumbList` schema, linked from the
-  home page's category sections (collapsible since 3 November 2026 — the heading is a
-  `<details><summary>` toggle, not a link; the hub link moved to its own "See all" line)
+  home page's tool list (collapsible sections from 3 November 2026; since 17 November 2026 one
+  list in category tabs, with an All tab first, and each tab ending in "See all <category> tools" links)
   and from every tool page's breadcrumb (now a real middle step, not plain text).
   `tests/e2e/categoryHub.spec.ts`.
 - **Tools sidebar and a 15-skin picker — done 2 November 2026, extended 3 November.**
@@ -460,6 +460,10 @@ what building it now does. No new tools, no new pages; the machinery under both.
   a Pro/Practice perk. `docs/design.md` §10, §10a. **Extended 7–8 November:** Recent and
   Starred tools (stars synced to the account), handles on the sidebar's inner edge,
   feature-request and feedback dialogs.
+- **Redesign (item 1.7) — done 17 November 2026.** New default skin "Leaf" (Playful Rounded kept as a selectable
+  skin), a hero with the major-tools bento, category tabs on the home page, tool-page tiles, header, sidebar and
+  footer polish and a phone drawer. Detail in `docs/shipped.md`; the design reasoning in
+  `docs/design.md` §10.
 
 **Done when:** the site installs, works with the network off, a new tool page arrives
 with complete structured data and internal links for free, and every tool/category page

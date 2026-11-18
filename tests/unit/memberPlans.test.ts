@@ -76,7 +76,7 @@ describe('what a paying member sees', () => {
     const page = read('src/pages/pricing.astro');
     expect(page).toContain('early-notice for-new');
     expect(page).toContain("id === 'business' ? '' : ' for-new'");
-    expect(read('src/pages/index.astro')).toContain('early-notice for-new');
+    expect(read('src/pages/index.astro')).toContain('top-banner for-new');
     const css = read('src/styles/early-notice.css');
     expect(css).toContain("html[data-plan]:not([data-plan='free']) .for-new");
   });

@@ -8,10 +8,44 @@
  *
  * "default" has no attribute at all (data-skin unset) and lives on :root itself in
  * global.css, so a first-time visitor with nothing stored gets it with zero extra CSS
- * and zero flash — these are the fourteen alternates. Base.astro's inline pre-paint
+ * and zero flash — these are the fifteen alternates. Base.astro's inline pre-paint
  * script (mirroring the existing theme script) sets data-skin from a cookie before
  * first paint when a visitor has chosen one of these instead.
  */
+
+/* Three tokens the alternates never set, so they used to inherit them from :root. The default changed on
+   17 November 2026 (a gold Pro colour and a lighter base shadow), and the owner asked that every other skin
+   stay exactly as it was, so the old inherited values are pinned here for all of them. A skin that sets one
+   itself (Playful Rounded sets all three) still wins, because its selector comes later with the same weight. */
+html[data-skin] {
+  --color-pro: light-dark(#6b3fa0, #c9a6f5);
+  --color-pro-soft: light-dark(#f1e9fb, #2c2238);
+  --shadow: light-dark(0 1px 3px rgb(0 0 0 / 0.08), 0 1px 3px rgb(0 0 0 / 0.5));
+}
+
+/* The site's default until 17 November 2026, kept as an alternate now that "Leaf" is the default.
+   These are the values global.css used then, including the purple Pro colour that the other
+   alternates no longer share (they inherit the default's gold). */
+html[data-skin='playful-rounded'] {
+  --color-bg: light-dark(#fffaf3, #1c1420);
+  --color-surface: light-dark(#ffffff, #241a2c);
+  --color-surface-2: light-dark(#f6f0e8, #2c2034);
+  --color-text: light-dark(#221c2b, #f3e9f7);
+  --color-muted: light-dark(#6d6480, #b29fc0);
+  --color-border: light-dark(#f0e7e2, #3a2a44);
+  --color-accent: light-dark(#b93824, #ff7a63);
+  --color-accent-hover: light-dark(#96301e, #ff9682);
+  --color-on-accent: light-dark(#ffffff, #200804);
+  --color-accent-soft: light-dark(#ffe8e3, #3a1812);
+  --color-pro: light-dark(#6b3fa0, #c9a6f5);
+  --color-pro-soft: light-dark(#f1e9fb, #2c2238);
+  --shadow: light-dark(0 1px 3px rgb(0 0 0 / 0.08), 0 1px 3px rgb(0 0 0 / 0.5));
+  --shadow-card: 0 4px 0 light-dark(#f0e7e2, #3a2a44);
+  --shadow-card-hover: 0 6px 0 light-dark(#f0e7e2, #3a2a44);
+  --color-card-border: light-dark(transparent, #3a2a44);
+  --radius: 22px;
+  --radius-small: 14px;
+}
 
 html[data-skin='refined-minimal'] {
   --color-bg: light-dark(#ffffff, #121416);
@@ -49,7 +83,7 @@ html[data-skin='editorial-press'] {
   --radius-small: 4px;
 }
 
-/* The site's original look, kept as an alternate now that "playful-rounded" is the
+/* The site's original look, kept as an alternate now that "Leaf" is the
    default — same values global.css used before this feature existed. */
 html[data-skin='soft-product'] {
   --color-bg: light-dark(#f6f7f4, #121513);
@@ -278,7 +312,8 @@ html[data-skin='bold-editorial'] {
  * src/lib/skins.ts gets a plain attribute-selector rule here instead, keyed off the
  * same data-skin-id the picker button already carries.
  */
-.skin-picker__opt[data-skin-id='default'] .skin-picker__dot { background: #e5533d; }
+.skin-picker__opt[data-skin-id='default'] .skin-picker__dot { background: #15803d; }
+.skin-picker__opt[data-skin-id='playful-rounded'] .skin-picker__dot { background: #e5533d; }
 .skin-picker__opt[data-skin-id='soft-product'] .skin-picker__dot { background: #2a7548; }
 .skin-picker__opt[data-skin-id='refined-minimal'] .skin-picker__dot { background: #1f6f50; }
 .skin-picker__opt[data-skin-id='editorial-press'] .skin-picker__dot { background: #8f3a1c; }

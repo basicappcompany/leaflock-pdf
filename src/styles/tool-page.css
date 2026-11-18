@@ -1,0 +1,111 @@
+/*
+ * Tool pages only (imported by src/pages/[tool].astro): the breadcrumb, the "How it works" and "Private by design"
+ * tiles under the tool, and the questions. Kept out of global.css because that file is inlined into every page and
+ * counted against the HTML budgets in tests/e2e/performance.spec.ts.
+ *
+ * Everything reads the shared --color-*, --radius* and --shadow* tokens, so it re-skins with the skin picker. Nothing has
+ * a fixed height (tests/e2e/zoomLayout.spec.ts checks this page from 100% to 400% zoom).
+ */
+
+/* The trail above the heading, as a small mono label like the section labels on the front page. */
+.breadcrumb {
+  flex-wrap: wrap;
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* "How it works" and "Private by design" as two tiles, the second one inverted like the "No upload, ever" tile. */
+.tool-info {
+  gap: calc(var(--space) * 1);
+  padding-top: 0;
+  border-top: 0;
+}
+
+.tool-info > div {
+  min-width: 0;
+  padding: calc(var(--space) * 1.25);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.tool-info h2 {
+  margin-top: 0;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+.tool-info ol {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.tool-info ol li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  counter-increment: step;
+}
+
+.tool-info ol li::before {
+  content: counter(step, decimal-leading-zero);
+  flex: none;
+  color: var(--color-accent);
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.tool-info > div:nth-child(2) {
+  border-color: transparent;
+  background: light-dark(var(--color-text), var(--color-surface-2));
+  color: light-dark(var(--color-bg), var(--color-text));
+}
+
+.tool-info > div:nth-child(2) p {
+  color: inherit;
+}
+
+.tool-info > div:nth-child(2) a {
+  color: inherit;
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+/* The questions: each one a quiet bordered row instead of a bare rule. */
+.faq details {
+  margin-bottom: 0.6rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+}
+
+.faq details[open] {
+  border-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-card-border));
+}
+
+/* The four promises under the heading wrap on a phone instead of running off the edge. */
+@media (max-width: 48rem) {
+  main .trust {
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    overflow: visible;
+  }
+}

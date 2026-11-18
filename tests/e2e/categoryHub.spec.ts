@@ -47,14 +47,9 @@ test('the home page links each category into its hub', async ({ page, baseURL })
   const watch = watchPage(page, baseURL!);
   await page.goto('/');
   for (const category of categories) {
-    // The category heading is a <details><summary> toggle now (collapsible sections),
-    // not a link itself — the hub link lives on the "See all" line inside the panel.
-    // The first category starts open; the rest need a click to reveal that link.
-    const section = page.locator(`.category--${category}`);
-    if (!(await section.evaluate((el) => (el as HTMLDetailsElement).open))) {
-      await section.locator('summary').click();
-    }
-    await expect(section.locator('.category__viewAll')).toHaveAttribute('href', new RegExp(`/tools/${category}/?$`));
+    // The hub link is the "See all" line in each category's tab panel; pick the tab to reveal it.
+    await page.locator(`label[for="home-tab-${category}"]`).click();
+    await expect(page.locator(`.home-tabs__links a[data-category="${category}"]`)).toHaveAttribute('href', new RegExp(`/tools/${category}/?$`));
   }
   watch.assertClean();
 });

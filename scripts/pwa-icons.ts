@@ -12,7 +12,7 @@ import { test } from '@playwright/test';
  * icon designed for a browser tab gets the leaf clipped.
  */
 
-const BACKGROUND = '#2a7548';
+const BACKGROUND = '#15803d';
 
 function page(logo: string, size: number, inset: number, background: string | null): string {
   return `<!doctype html><html><head><style>
