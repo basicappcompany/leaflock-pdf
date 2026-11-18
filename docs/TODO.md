@@ -242,6 +242,7 @@ set up and shipped the same day (PRs #49-#51):
 - [ ] **New wording for two failure states, needs translation:** a tool above the plan reached through a tampered page, and a
       paid tool offline with no valid token, both show the generic "Something went wrong" sentence today. Proper copy means
       new `common.errors` strings in all ten catalogues (and checking the page-size budget in `performance.spec.ts`).
+- [ ] **Redesign leftovers (17-18 November 2026):** the new English strings (`pricing.homePopular`, `homeSeeAll`, and the earlier login ones) fall back to English in the other locales until `scripts/translate.mjs` is run; the OG share images (`pnpm og`, then `git checkout -- public/og` for the existing ones if only some should change) still show the old look; pricing and the dashboard are re-coloured, not redesigned; and `common.home.viewAll` is the only English string the home page still reads from `common` for the category links.
 - [ ] **Still open for 4.13:** at go-live, create the live-mode webhook endpoint with no event filter (or with those three
       events included). The sweep reads whichever mode `DODO_MODE` selects, so it needs no other change. Unverified until a ten-year purchase exists in test mode: that its payment carries `metadata.user_id` and a
       `product_cart`.

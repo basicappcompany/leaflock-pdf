@@ -49,7 +49,7 @@ test('the home page links each category into its hub', async ({ page, baseURL })
   for (const category of categories) {
     // The hub link is the "See all" line in each category's tab panel; pick the tab to reveal it.
     await page.locator(`label[for="home-tab-${category}"]`).click();
-    await expect(page.locator(`.home-tabs__panel--${category} .category__viewAll`)).toHaveAttribute('href', new RegExp(`/tools/${category}/?$`));
+    await expect(page.locator(`.home-tabs__links a[data-category="${category}"]`)).toHaveAttribute('href', new RegExp(`/tools/${category}/?$`));
   }
   watch.assertClean();
 });

@@ -137,6 +137,8 @@ Tools with `tier: 'pro'` are free during early access and show a Pro badge. The 
 ## Pitfalls that cost a CI run
 
 - **Styles in `global.css` and `secure.css` are inlined into every page that shares them**, home page included, and the HTML budget in `tests/e2e/performance.spec.ts` counts them. Put styles only one tool needs in their own file imported by that tool (`styles/compress.css`). The budget has been raised three times for real reasons; each raise has a comment saying why.
+- **Leftover `dist-*` test builds stop `astro dev` from starting** (Vite scans every HTML file under the project, 17 November). Delete the folder after a `LEAFLOCK_OUT_DIR=dist-a` run, and stop its `astro preview` too, or a later preview on the same port serves the old build.
+- **Clamped text fails the zoom test.** `-webkit-line-clamp` hides lines but they keep their text rects, which `tests/e2e/zoomLayout.spec.ts` reads as overlap at 300-400% zoom. Let tile text wrap, and give grid rows `minmax(x, auto)`, never a fixed height.
 - **Production builds can fail when CI and the preview pass** (Cloudflare Pages, 8 November). Re-run by pushing an empty-commit PR; do not assume the code is wrong.
 - **A mobile fix can break the 320 px reflow test** (`accessibility.spec.ts`). Run it after any change to sidebar or page padding.
 - **Locale catalogues are generated.** Add English first, then `scripts/translate.mjs --locale <code>` (or `--import` with hand translations when the key is rejected). The nine must match English's keys.

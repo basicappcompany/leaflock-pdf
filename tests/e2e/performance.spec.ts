@@ -141,7 +141,10 @@ interface Budget {
 // an alternate) plus a rule pinning three tokens for the other alternates, both in skins.css which every page
 // inlines. The front page went from 106.5 to 108.6 KB. The collapsible-section CSS it replaced is gone from
 // global.css, which already offset part of this.
-const CONTENT_BUDGET: Budget = { html: 110_000, jsCss: 320_000, lcpMs: 1500, cls: 0.1 };
+// HTML 110_000 -> 112_000 on 18 Nov 2026: the hero now carries the bento of eight major tools (a second, shorter
+// description of tools that are also in the list below) and the one all-tools list tags each tool with its category
+// and adds an All tab plus four "See all" links. The front page went from 108.6 to about 111.1 KB.
+const CONTENT_BUDGET: Budget = { html: 112_000, jsCss: 320_000, lcpMs: 1500, cls: 0.1 };
 // Tool pages' HTML 100_000 -> 102_000 on 7 Nov 2026: the language switcher (src/components/
 // LanguageSwitcher.astro) lists every translated language in every page so it works without
 // JS. Ten languages cost about 1.2 KB per page (~0.12 KB per language added); /ocr-pdf went
@@ -151,7 +154,11 @@ const CONTENT_BUDGET: Budget = { html: 110_000, jsCss: 320_000, lcpMs: 1500, cls
 // (ToolsSidebar.astro) ships its wording in a <template> on every page with the sidebar, so it is in
 // the visitor's language and needs no request to open. About 1.9 KB; /ocr-pdf went from just under
 // the old limit to 103.5 KB. Build the dialog from a fetched fragment instead if this is raised again.
-const TOOL_BUDGET: Budget = { html: 105_500, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
+// Tool pages' HTML 105_500 -> 108_500 on 18 Nov 2026 (the redesign): src/styles/tool-page.css (the two tiles under the tool,
+// numbered steps, bordered questions; inlined, about 2.7 KB, tool pages only) and a little more in global.css for the
+// header's Log in button, the sidebar's search box and the footer strip (about 1 KB on every page). /organize-pdf went
+// from just under the old limit to 106.8 KB.
+const TOOL_BUDGET: Budget = { html: 108_500, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
 
 /** One representative page per kind, not all 52: this is a real-browser measurement
  * with response-body capture, materially slower per page than site.spec.ts's "loads

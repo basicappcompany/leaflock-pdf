@@ -164,7 +164,8 @@ h2 {
   gap: var(--space);
   padding: 0.75rem calc(var(--space) * 1.5);
   border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  backdrop-filter: blur(10px);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -388,6 +389,21 @@ h2 {
 .nav-link:hover {
   background: var(--color-surface-2);
   color: var(--color-text);
+}
+
+/* The last item (Log in, or Dashboard once signed in) is a button: a hairline pill, like the buttons on the front page. */
+.site-nav > astro-island:last-child .nav-link {
+  margin-inline-start: 0.4rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.site-nav > astro-island:last-child .nav-link:hover {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+  color: var(--color-accent);
 }
 
 @media (max-width: 48rem) {
@@ -897,6 +913,25 @@ html[data-sidebar-dock='right'] .tools-sidebar__handle::after {
   }
 }
 
+/* On a phone the sidebar is a drawer, slightly narrower than the window so the page shows beside it. Closed, its slim edge tab (set further down, kept
+   thin on purpose so it covers no text) is green, so it is easy to find. */
+@media (max-width: 48rem) {
+  html[data-sidebar-dock] .tools-sidebar {
+    width: min(18rem, 86vw);
+  }
+
+  html[data-sidebar-state='hidden'] .tools-sidebar__handles {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+  }
+
+  html[data-sidebar-state='hidden'] .tools-sidebar__handle--main,
+  html[data-sidebar-state='hidden'] .tools-sidebar__handle--main:hover {
+    background: transparent;
+    color: var(--color-on-accent);
+  }
+}
+
 /* The move icon is a panel with the side it will go to filled: docked left shows the right-hand
    one, docked right the left-hand one. */
 .tools-sidebar__to-left {
@@ -928,9 +963,16 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
   flex: none;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.6rem 0.75rem;
-  border-bottom: 1px solid var(--color-border);
+  margin: 0.7rem 0.75rem 0;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
   color: var(--color-muted);
+}
+
+.tools-sidebar__search:focus-within {
+  border-color: var(--color-accent);
 }
 
 .tools-sidebar__search-icon {
@@ -1032,6 +1074,7 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
   border-radius: 999px;
   background: var(--color-surface-2);
   color: var(--color-muted);
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: normal;
@@ -1058,7 +1101,7 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.4rem;
+  padding: 0.4rem 0.5rem;
   border-radius: var(--radius-small);
   color: var(--color-text);
   text-decoration: none;
@@ -1073,6 +1116,7 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
 
 .tools-sidebar li a[aria-current='page'] {
   background: var(--color-accent-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 30%, transparent);
   color: var(--color-accent);
   font-weight: 700;
 }
@@ -1558,6 +1602,9 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
 
 .site-footer__bottom p {
   margin: 0;
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
 }
 
 .breadcrumb {

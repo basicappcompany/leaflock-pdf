@@ -21,6 +21,8 @@ export const pricing = {
   freeNow: 'Free now',
   /** The heading over the home page's grid of major tools (src/pages/index.astro). Here, not in `common`, so it costs no tool page. */
   homePopular: 'Popular right now',
+  /** "See all ..." is the one wording for every way on to a longer list: under a category tab it opens the All tab, under All it goes to the full directory at the foot of the page. */
+  homeSeeAll: 'See all tools',
   /**
    * The launch offer, shown while it can be taken (src/lib/pricing.ts `offerOpen`). `{percent}` is the
    * largest discount, `{yearlyPercent}` and `{tenYearPercent}` the two actual ones, the dates as above.
