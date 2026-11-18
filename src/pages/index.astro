@@ -21,6 +21,8 @@ const mergeTool = toolById('merge');
 // the text colour and the rest in the accent. A locale whose tagline does not split into exactly two on a full
 // stop and a space just shows the whole line in one colour.
 const taglineParts = common.site.tagline.split('. ');
+// Tools whose tile carries a small drawn preview of what they do (decoration only, in CSS: src/styles/home.css).
+const previewIds = new Set(['merge', 'split', 'compress', 'sign', 'ocr', 'redact', 'rotate', 'crop']);
 const headLead = taglineParts.length === 2 ? `${taglineParts[0]}.` : common.site.tagline;
 const headAccent = taglineParts.length === 2 ? taglineParts[1] : '';
 
@@ -46,19 +48,20 @@ const jsonLd = [
   toolsSidebarDefaultHidden
   memberHint
 >
-  {/* Above the hero, which now holds the tool tabs: early access is stated before the tools, as tests/unit/earlyAccessVisible.test.ts requires. */}
-  {
-    !paidPlansAvailable && (
-      <p class="early-notice for-new">
-        <a href={getRelativeLocaleUrl(locale, 'pricing')}>
+  {/* The early-access notice is a full-width accent banner above the header (Base's "banner" slot). It stays before the
+      tool tabs in this file, which tests/unit/earlyAccessVisible.test.ts requires: early access is stated before the tools. */}
+  <Fragment slot="banner">
+    {
+      !paidPlansAvailable && (
+        <a class="top-banner for-new" href={getRelativeLocaleUrl(locale, 'pricing')}>
           {format(messages.pricing.homeNotice, {
             endDate: formatEarlyAccessEnd(locale),
             percent: Math.max(...Object.values(launchPercentOff)),
           })}
         </a>
-      </p>
-    )
-  }
+      )
+    }
+  </Fragment>
   <section class="home-hero">
     <div class="home-hero__text">
       <p class="hero__eyebrow">{common.site.eyebrow}</p>
@@ -75,6 +78,12 @@ const jsonLd = [
           {common.cta.howItWorks}
         </a>
       </div>
+      <ul class="trust">
+        <li>{common.trust.noUpload}</li>
+        <li>{common.trust.worksOffline}</li>
+        <li>{common.trust.freeToStart}</li>
+        <li>{common.trust.noFileSizeLimit}</li>
+      </ul>
     </div>
     {/* Category tabs with no script: a radio group, so the browser handles the arrow keys, the selection
         and the focus, and the CSS (src/styles/home.css) shows the panel that matches the checked radio.
@@ -114,25 +123,22 @@ const jsonLd = [
                         {tool.tier !== 'free' && <span class="badge-pro">{tierBadgeText(common.toolPage.tiers[tool.tier].label, messages.pricing.freeNow)}</span>}
                       </strong>
                       <span>{messages.tools[tool.id].summary}</span>
+                      {previewIds.has(tool.id) && <span class={`tile-pv tile-pv--${tool.id}`} aria-hidden="true"><i /><i /><i /></span>}
                     </a>
                   </li>
                 ))}
+                <li class="tool-grid__more">
+                  <a class="category__viewAll" href={getRelativeLocaleUrl(locale, `tools/${category}`)}>
+                    {format(common.home.viewAll, { category: common.categories[category] })}
+                  </a>
+                </li>
               </ul>
-              <a class="category__viewAll" href={getRelativeLocaleUrl(locale, `tools/${category}`)}>
-                {format(common.home.viewAll, { category: common.categories[category] })}
-              </a>
             </section>
           );
         })
       }
     </div>
   </section>
-  <ul class="trust">
-    <li>{common.trust.noUpload}</li>
-    <li>{common.trust.worksOffline}</li>
-    <li>{common.trust.freeToStart}</li>
-    <li>{common.trust.noFileSizeLimit}</li>
-  </ul>
   {/* A plain definition for people and for the assistants and search engines that quote the first
       clear statement of what a site is. It sits below the tools: a visitor came to use one, and the
       hero and the headings above already say what the site is for. It is still real text in the page,

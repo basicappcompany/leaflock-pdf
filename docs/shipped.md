@@ -17,13 +17,13 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
-## 17 November 2026 — Redesign: the Leaf theme, home category tabs, a calmer tool page (1.7)
+## 17 November 2026 — Redesign: the Leaf theme, a full-width home page with category tabs, a calmer tool page (1.7)
 
-- Brief: premium, minimal, friendly and serious; the complaints were flat colour, no personality, loud type, too many colours. One green, nothing heavier than 700, hairline borders, soft shadows. Default skin is "Leaf"; Playful Rounded stays as one of sixteen and the other fourteen are pinned to their old look (`html[data-skin]` in skins.css restores the three tokens they inherited: both Pro colours and the base shadow).
-- Accent text is `#15803d`, not the demo's `#16a34a` (about 3.1:1 as text; the accent is used as text). Measured.
-- The home page's four collapsible sections became category tabs with no script: a radio group, the checked input picks its label and panel by position (home.css). All 43 tools stay in the HTML. The early-access notice moved above the hero (a test requires it before the tools).
-- A tool page's placeholder was 12rem against an 8rem skeleton, an empty band under the drop zone. `light-dark()` takes two arguments, so a multi-layer shadow cannot go in it. Home HTML budget raised to 110,000.
-- Not done: header, footer, pricing and dashboard were only re-coloured; the sidebar's phone drawer is not designed.
+- Brief: premium, minimal, friendly and serious; the complaints were flat colour, no personality, loud type, too many colours. One green, nothing heavier than 700, hairline borders, soft shadows. Default skin "Leaf"; Playful Rounded stays as one of sixteen and the other fourteen are pinned to their old look (`html[data-skin]` in skins.css restores the three tokens they inherited). Accent text is `#15803d`, not the demo's `#16a34a` (about 3.1:1 as text).
+- Home: category tabs with no script (a radio group; the checked input picks its label and panel by position, home.css), all 43 tools still in the HTML; eight tiles per tab plus a "See all" tile; a big feature tile; small drawn previews (decoration, no text); a 76rem column instead of 64rem; the early-access notice is a green banner above the header (Base's `banner` slot).
+- **A fixed-height hero overlapped at 175% browser zoom** (the window is then about 823 x 514 CSS px). It is a minimum height now, and `tests/e2e/zoomLayout.spec.ts` measures overlap, sideways scroll, clipping and a header that eats the window on six pages from 100% to 400%. The audit over all 86 English pages found one real defect (a long `docker run` in inline code, fixed with `overflow-wrap`).
+- The banner is inside `.site-chrome` so `--tools-chrome-h` includes it; outside it, an open sidebar sat over the logo. The hero's height is a constant because that variable changes when the header condenses on scroll.
+- Also found: a stale `astro preview` made every later preview fail to start; `light-dark()` takes two arguments, so a multi-layer shadow cannot go in it. Home HTML budget raised to 110,000. Not done: header, footer, pricing and dashboard only re-coloured; the sidebar's phone drawer is not designed.
 
 ## 15 November 2026 — The server is the only authority for a run (4.14)
 

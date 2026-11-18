@@ -4,10 +4,15 @@ import { en } from '../../src/i18n/en';
 
 /**
  * The front page offers every tool through category tabs (a radio group, no script): one category is shown at a
- * time, and every category's tools are in the HTML whether or not its tab is the selected one.
+ * time, and every category's tools are in the HTML whether or not its tab is the selected one. A tab shows eight
+ * tiles (the feature tile and seven more) so the first screen needs no scrolling; the rest are in the page, and the
+ * last tile opens the category's own page.
  * (The sidebar is a separate thing and is unchanged: a page opens only its own category there.)
  */
 test.use({ viewport: { width: 1280, height: 900 } });
+
+/** The feature tile plus seven more. Keep in step with the `:nth-child(n + 9)` rule in src/styles/home.css. */
+const SHOWN = 8;
 
 test('the front page has a tab for each category and starts on the first', async ({ page }) => {
   await page.goto('/');
@@ -17,9 +22,19 @@ test('the front page has a tab for each category and starts on the first', async
     await expect(labels.nth(i)).toHaveText(en.common.categories[categories[i]!]);
   }
   await expect(page.locator(`#home-tab-${categories[0]}`)).toBeChecked();
-  for (const tool of tools.filter((t) => t.category === categories[0])) {
+  const first = tools.filter((t) => t.category === categories[0]);
+  for (const tool of first.slice(0, SHOWN)) {
     await expect(page.locator(`.home-tabs__panel--${categories[0]} a[href$="/${tool.slug}/"]`), tool.id).toBeVisible();
   }
+  await expect(page.locator(`.home-tabs__panel--${categories[0]} .tool-grid__more a`)).toBeVisible();
+});
+
+test('the first screen needs no scrolling: the hero and its tools end above the bottom of the window', async ({ page }) => {
+  await page.goto('/');
+  const hero = (await page.locator('.home-hero').boundingBox())!;
+  expect(hero.y + hero.height, 'the hero ends inside the window').toBeLessThanOrEqual(900);
+  const tiles = page.locator(`.home-tabs__panel--${categories[0]} .tool-grid li:visible`);
+  await expect(tiles).toHaveCount(SHOWN + 1);
 });
 
 test('choosing a tab shows that category and hides the others', async ({ page }) => {
@@ -37,7 +52,8 @@ test('choosing a tab shows that category and hides the others', async ({ page })
 test('every tool is in the page whichever tab is showing, so a crawler sees all of them', async ({ page }) => {
   await page.goto('/');
   for (const category of categories) {
-    const expected = tools.filter((tool) => tool.category === category).length;
+    // Every tool, plus the "See all" tile.
+    const expected = tools.filter((tool) => tool.category === category).length + 1;
     await expect(page.locator(`.home-tabs__panel--${category} .tool-grid li`), category).toHaveCount(expected);
   }
 });

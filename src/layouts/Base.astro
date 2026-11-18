@@ -139,9 +139,8 @@ const preTheme = cspInlineScript(`
 
 const chromeHeightScript = cspInlineScript(`
           (function () {
-            var header = document.querySelector('.site-header');
-            var strip = document.querySelector('.privacy-strip');
-            var h = (header ? header.offsetHeight : 0) + (strip ? strip.offsetHeight : 0);
+            var chrome = document.querySelector('.site-chrome');
+            var h = chrome ? chrome.offsetHeight : 0;
             document.documentElement.style.setProperty('--tools-chrome-h', h + 'px');
           })();
         `);
@@ -232,6 +231,7 @@ const chromeHeightScript = cspInlineScript(`
         gap the height of --tools-chrome-h above the sidebar once they have — the
         sidebar held the reserved space open for chrome that was no longer there. */}
     <div class="site-chrome">
+    <slot name="banner" />
     <header class="site-header">
       <a href={getRelativeLocaleUrl(locale, '')} class="brand">
         {/* Inline, not <img src="/favicon.svg">: the browser tab icon can't react to a

@@ -81,6 +81,11 @@ a {
   color: var(--color-accent);
 }
 
+/* A long command or path in inline code must break rather than push the page sideways at a high zoom. */
+code {
+  overflow-wrap: anywhere;
+}
+
 h1 {
   display: flex;
   flex-wrap: wrap;
@@ -144,6 +149,14 @@ h2 {
   z-index: 40;
 }
 
+/* A very short window (a browser zoom of 200% or more on a laptop screen): the header alone would take most of it, so it
+   scrolls away with the page instead of staying pinned. */
+@media (max-height: 30rem) {
+  .site-chrome {
+    position: static;
+  }
+}
+
 .site-header {
   display: flex;
   flex-wrap: wrap;
@@ -197,11 +210,15 @@ h2 {
 
 .privacy-strip {
   margin: 0;
-  padding: 0.35rem var(--space);
-  background: var(--color-accent-soft);
-  color: var(--color-text);
-  font-size: 0.85rem;
+  padding: 0.3rem var(--space);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+  color: var(--color-muted);
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
   text-align: center;
+  text-transform: uppercase;
 }
 
 /* Language switcher and first-visit suggestion. Logical properties throughout so the same
@@ -360,16 +377,17 @@ h2 {
    <astro-island> wrapper, so a `.site-nav > a` selector would miss it; this is why both
    carry the class explicitly instead. */
 .nav-link {
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 0.65rem;
   border-radius: var(--radius-small);
-  color: var(--color-text);
+  color: var(--color-muted);
   text-decoration: none;
+  font-size: 0.92rem;
   font-weight: 500;
 }
 
 .nav-link:hover {
   background: var(--color-surface-2);
-  color: var(--color-accent);
+  color: var(--color-text);
 }
 
 @media (max-width: 48rem) {
@@ -1430,7 +1448,7 @@ html[data-sidebar-dock='right']:not([data-sidebar-state='hidden']) .tools-sideba
      footer's edges line up with the page above it at every width. */
   padding: calc(var(--space) * 2) var(--space) var(--space);
   border-top: 1px solid var(--color-border);
-  background: var(--color-surface);
+  background: var(--color-bg);
   color: var(--color-muted);
   font-size: 0.9rem;
 }
@@ -1500,7 +1518,11 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
 .site-footer__heading {
   margin: 0 0 0.5rem;
   color: var(--color-text);
-  font-weight: 700;
+  font-family: ui-monospace, 'Cascadia Code', SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .site-footer li a {
@@ -1773,9 +1795,9 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
   height: 2.25rem;
   margin-bottom: 0.5rem;
   border-radius: var(--radius-small);
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-muted);
+  border: 1px solid transparent;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
   transition:
     border-color 0.15s,
     background-color 0.15s,
@@ -1790,8 +1812,8 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
 .tool-grid a:hover .tool-grid__icon,
 .tool-grid a:focus-visible .tool-grid__icon {
   border-color: var(--color-accent);
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
