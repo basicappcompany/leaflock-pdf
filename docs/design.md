@@ -424,8 +424,8 @@ extra copy is made in isolation from the rest of the output.
 An account is identified by its **email address**, and three methods can reach the same
 account in any combination: a magic link, a password, and Google.
 
-- **Magic link** — `POST /api/auth/request-link` → emailed link → `GET /api/auth/verify` (a page with a button, no side
-  effects) → `POST /api/auth/verify` (spends the token, opens the session, 303 to `next` or `/account/`). Two steps because mail
+- **Magic link** — `POST /api/auth/request-link` → emailed link → `GET /api/auth/verify` (a branded one-button page, no side
+  effects; its only CSS is one inline `<style>` allowed by hash in that response's own CSP, never `'unsafe-inline'`) → `POST /api/auth/verify` (spends the token, opens the session, 303 to `next` or `/account/`). Two steps because mail
   scanners open every link in a message, and a GET that signed in would have its one-time token spent before the person
   arrived. `next` is the page that sent the visitor to sign in (`loginPath()` in `src/lib/localePath.ts`), accepted only if
   `safeNext()` says it is a plain path on this site, so it cannot become an open redirect. Google sign-in does not carry

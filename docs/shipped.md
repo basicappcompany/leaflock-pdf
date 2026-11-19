@@ -17,6 +17,12 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 ---
 
+## 19 November 2026 — Password save fixed; the sign-in button page restyled
+
+- **Setting a password never worked in production.** Workers' WebCrypto throws `NotSupportedError` above 100,000 PBKDF2 iterations and `password.ts` asked for 210,000, so set-password and password login both returned 500. Found by tailing the live deployment (`wrangler pages deployment tail <id> --project-name leaflock-pdf --environment production --format json`; the `pages.dev` host 308s `/api`, so test on the apex). Unit tests passed because Node has no cap, and the e2e tests stub the API: only a live request or a Workers-runtime test sees it. `tests/unit/server/password.test.ts` now pins the ceiling.
+- **The first diagnosis was wrong.** The 500 looked like Cloudflare's 10 ms free-plan CPU limit and the file's own comment said so. The log said 8 ms CPU and an exception; after the fix a set-password request cost 2 ms CPU, because PBKDF2 runs natively and is not billed as script time. No paid plan is needed. The stale comment in `password.ts` and the iteration figure in `docs/design.md` are corrected.
+- **The emailed link's button page was unstyled** (a bare form under `default-src 'none'`), which read as a second, unrelated sign-in. It is now a branded one-button page ("You're almost in" / "Finish signing in"). The two-step is kept on purpose: mail scanners open every link, and a GET that signed in would have its token spent. The CSS is one inline `<style>` allowed by `sha256` in that response's CSP, with a unit test that the hash matches the style. Skipping the button entirely when the link is opened in the browser that asked for it needs a pending-link cookie, which means updating `cookies.md`, `privacy.md`, `claims.md` and `security.md`; not done.
+
 ## 17 November 2026 — Redesign: the Leaf theme, a full-width home page, a calmer tool page (1.7)
 
 - Brief: premium, minimal, friendly and serious; the complaints were flat colour, no personality, loud type, too many colours. One green, nothing heavier than 700, hairline borders, soft shadows. Default skin "Leaf"; Playful Rounded stays as one of sixteen and the other fourteen are pinned to their old look (`html[data-skin]` in skins.css restores the three tokens they inherited). Accent text is `#15803d`, not the demo's `#16a34a` (about 3.1:1 as text).
