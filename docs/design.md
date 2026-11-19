@@ -438,8 +438,8 @@ account in any combination: a magic link, a password, and Google.
   `forgetAccountOnDevice()` (offline token, cached plan, plan marker).
   Only a hash of the token is stored (`magic_links.token_hash`), single-use via
   `consumed_at`.
-- **Password** — PBKDF2-HMAC-SHA256, **210,000 iterations** (OWASP's figure; raise over
-  time, never lower), stored as `pbkdf2$<iterations>$<salt>$<hash>`. Minimum length 10,
+- **Password** — PBKDF2-HMAC-SHA256, **100,000 iterations** (the most Cloudflare Workers
+  allows; it throws above that, as 210,000 did until 19 November 2026), stored as `pbkdf2$<iterations>$<salt>$<hash>`. Minimum length 10,
   maximum 200.
 - **Google** — plain authorization-code redirect, scope `openid email` only. Deliberately
   *not* One Tap or Google's SDK: those would need `script-src` and `connect-src` opened

@@ -24,7 +24,8 @@ describe('password hashing', () => {
     const stored = await hashPassword('correct horse battery staple');
     const [scheme, iterations] = stored.split('$');
     expect(scheme).toBe('pbkdf2');
-    expect(Number(iterations)).toBeGreaterThanOrEqual(210_000);
+    // Cloudflare Workers rejects anything above 100,000 (NotSupportedError), which Node does not, so only a test can catch it.
+    expect(Number(iterations)).toBeLessThanOrEqual(100_000);
   });
 
   it('refuses an account with no password set', async () => {
