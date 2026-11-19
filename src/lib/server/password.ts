@@ -8,8 +8,12 @@
  * why it stays the default way in.
  */
 
-/** OWASP's recommendation for PBKDF2-HMAC-SHA256. Raise it over time, never lower it. */
-const ITERATIONS = 210_000;
+/**
+ * Cloudflare Workers' WebCrypto refuses PBKDF2 above 100,000 iterations (NotSupportedError), so this is the ceiling
+ * there, and 210,000 made every set-password and password login fail with a 500 in production (19 November 2026).
+ * Hashes record their own cost, so a stronger scheme can replace this later without locking anyone out.
+ */
+const ITERATIONS = 100_000;
 const SALT_BYTES = 16;
 const KEY_BITS = 256;
 
