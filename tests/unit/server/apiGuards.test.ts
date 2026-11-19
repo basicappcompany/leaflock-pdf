@@ -101,6 +101,23 @@ describe('coming back to the page that asked for a sign-in', () => {
     expect(res.headers.get('referrer-policy')).not.toBe('no-referrer');
   });
 
+  it('styles the button page under a hashed style-src, never unsafe-inline, and the hash matches the style', async () => {
+    const { db } = createFakeD1();
+    const env = { DB: db, SESSION_IP_SALT: 's' } as unknown as Env;
+    const token = await createMagicLink(db, 'a@example.com', null);
+    const res = await verifyGet({ request: new Request(`https://leaflockpdf.com/api/auth/verify?token=${token}`), env });
+    const csp = res.headers.get('content-security-policy') ?? '';
+    const page = await res.text();
+    const style = /<style>([\s\S]*?)<\/style>/.exec(page)?.[1] ?? '';
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(style));
+    const hash = `'sha256-${btoa(String.fromCharCode(...new Uint8Array(digest)))}'`;
+    expect(style.length).toBeGreaterThan(100);
+    expect(csp).toContain(`style-src ${hash}`);
+    expect(csp).not.toContain('unsafe-inline');
+    expect(csp).toContain("default-src 'none'");
+    expect(page).not.toMatch(/<script|style="/i);
+  });
+
   it('carries it through the emailed link and the button, and ignores a hostile one', async () => {
     const { db } = createFakeD1();
     const env = { DB: db, SESSION_IP_SALT: 's' } as unknown as Env;
