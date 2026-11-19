@@ -11,3 +11,7 @@ overrides:
   # miniflare (via wrangler, dev only) pins undici 7.29.1, which has a published vulnerability;
   # 7.30.1 is the first fixed release. Remove once wrangler ships a miniflare that pins a fixed one.
   'undici@7.29.1': '7.30.2'
+  # astro 7.4.7 resolved @astrojs/check's optional @emnapi/runtime peer to a 2.0 beta whose API breaks it
+  # (this.bridge.setLastError is not a function), and astro check then reports its own packages as missing.
+  # main uses 1.11.3. Remove once the peer resolves to a stable release on its own.
+  '@emnapi/runtime@2.0.0-beta.2': '1.11.3'
