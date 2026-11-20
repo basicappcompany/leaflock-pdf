@@ -7,6 +7,7 @@ import AuthNavLink from '../components/auth/AuthNavLink';
 import SiteFooter from '../components/SiteFooter.astro';
 import SkinPicker from '../components/SkinPicker.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import NavToggle from '../components/NavToggle.astro';
 import ToolsMenu from '../components/ToolsMenu.astro';
 import ToolsSidebar from '../components/ToolsSidebar.astro';
 import LanguageSuggestion from '../components/LanguageSuggestion.astro';
@@ -244,7 +245,8 @@ const chromeHeightScript = cspInlineScript(`
         </svg>
         {t.site.name}
       </a>
-      <nav class="site-nav" aria-label={t.nav.label}>
+      <NavToggle label={t.nav.menu} />
+      <nav id="site-nav" class="site-nav" aria-label={t.nav.label}>
         <ToolsMenu />
         <a class="nav-link" href={getRelativeLocaleUrl(locale, 'guides')}>{t.nav.guides}</a>
         <a class="nav-link" href={getRelativeLocaleUrl(locale, 'security')}>{t.nav.security}</a>

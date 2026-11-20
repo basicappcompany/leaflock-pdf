@@ -74,14 +74,19 @@ test('the header keeps the brand, language, appearance and theme buttons on one 
     for (const selector of ['.lang-switcher summary', '.skin-picker summary', '.theme-toggle']) {
       expect(Math.abs((await rowTop(selector)) - brand), `${selector} shares the brand's row at ${width}px`).toBeLessThan(20);
     }
-    const nav = await page.locator('.site-nav').boundingBox();
-    expect(nav!.y, `nav sits below that row at ${width}px`).toBeGreaterThan(brand);
+    const menuButton = await page.locator('.nav-toggle').boundingBox();
+    expect(menuButton!.y, `the Menu button sits below that row at ${width}px`).toBeGreaterThan(brand);
   }
 });
 
 test('every header control is a comfortable size to tap', async ({ page, baseURL }) => {
   const watch = watchPage(page, baseURL!);
   await page.goto('/');
+
+  const menuButtonBox = await page.locator('.nav-toggle').boundingBox();
+  expect(menuButtonBox?.height, 'the Menu button').toBeGreaterThanOrEqual(COMFORTABLE);
+  // The links are inside the Menu panel on a phone, so it has to be open to measure them.
+  await page.locator('.nav-toggle').click();
 
   const toolsMenuBox = await page.locator('.tools-menu summary').boundingBox();
   expect(toolsMenuBox?.height, 'the "All tools" summary').toBeGreaterThanOrEqual(COMFORTABLE);
@@ -106,8 +111,56 @@ test('every header control is a comfortable size to tap', async ({ page, baseURL
   watch.assertClean();
 });
 
+test('on a phone the header links sit behind a Menu button, closed until it is pressed', async ({ page }) => {
+  await page.goto('/');
+  const toggle = page.locator('.nav-toggle');
+  await expect(toggle).toBeVisible();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  // Closed: none of the links take up room in the header.
+  for (const name of ['Guides', 'Security', 'Pricing', 'Business']) {
+    await expect(page.locator('.site-nav').getByRole('link', { name, exact: true })).toBeHidden();
+  }
+
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  for (const name of ['Guides', 'Security', 'Pricing', 'Business']) {
+    await expect(page.locator('.site-nav').getByRole('link', { name, exact: true })).toBeVisible();
+  }
+  await expect(page.locator('.site-nav .tools-menu summary')).toBeVisible();
+
+  // Escape closes it and returns focus to the button.
+  await page.keyboard.press('Escape');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('.site-nav').getByRole('link', { name: 'Pricing', exact: true })).toBeHidden();
+  await expect(toggle).toBeFocused();
+});
+
+test('the open Menu, with All tools expanded inside it, still fits the screen width', async ({ page }) => {
+  for (const width of [320, 360, 412]) {
+    await page.setViewportSize({ width, height: 740 });
+    await page.goto('/');
+    await page.locator('.nav-toggle').click();
+    await page.locator('.site-nav .tools-menu summary').click();
+    const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+    }));
+    expect(scrollWidth, `open menu at ${width}px is wider than the viewport`).toBeLessThanOrEqual(clientWidth);
+  }
+});
+
+test('on a wide screen there is no Menu button and the links show inline', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/');
+  await expect(page.locator('.nav-toggle')).toBeHidden();
+  for (const name of ['Guides', 'Security', 'Pricing', 'Business']) {
+    await expect(page.locator('.site-nav').getByRole('link', { name, exact: true })).toBeVisible();
+  }
+});
+
 test('the tools menu panel lists every tool at a comfortable size once opened', async ({ page }) => {
   await page.goto('/');
+  await page.locator('.nav-toggle').click();
   await page.locator('.tools-menu summary').click();
 
   const links = page.locator('.tools-menu__panel a');
