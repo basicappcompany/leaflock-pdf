@@ -1,5 +1,5 @@
 import { generateKeyPairSync } from 'node:crypto';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { onRequestPost as claim } from '../../../functions/api/usage/claim';
 import { onRequestPost as refresh } from '../../../functions/api/billing/refresh';
 import { verifyEntitlement } from '../../../src/lib/entitlement';
@@ -172,7 +172,14 @@ describe('the refresh endpoint', () => {
     expect((await call(env, { origin: 'https://leaflockpdf.com' })).status).toBe(401);
   });
 
+  afterEach(() => vi.useRealTimers());
+
   it('stops answering once the whole site has asked too often in a minute', async () => {
+    // The limit counts in fixed one-minute windows read from Date.now(). Left on the real clock, the loop below can cross
+    // a window boundary under the full parallel suite, the counter resets and 429 never comes (seen 19 November 2026).
+    // Pinned ten seconds into a window, nothing the loop does can reach the next one. Only Date is faked.
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(Math.floor(Date.now() / 60_000) * 60_000 + 10_000);
     const { env, cookie } = await setup('free');
     let limited = false;
     for (let i = 0; i < 130 && !limited; i++) {
