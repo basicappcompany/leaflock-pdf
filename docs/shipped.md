@@ -16,6 +16,12 @@ Entries before 29 October 2026 are in `docs/roadmap.md` under their phase items,
 place deliberately: rewriting them would be the rework this file exists to prevent.
 
 ---
+## 20 November 2026 — A phone Menu, an HTML sign-in email, no login-form flash
+
+- **Phone header:** under 48rem, with scripting on, All tools, Guides, Security, Pricing, Business and Log in sit behind one Menu button (`NavToggle.astro`); All tools opens in place inside it. Row one (brand, language, skin, theme) is unchanged because `mobile.spec.ts` pins it. **A base `display: none` placed below the media rule that shows the button beat it on source order** and hid the button everywhere; the e2e run caught it, the unit tests could not. Scripting off keeps the links visible.
+- **Sign-in email:** `src/lib/email/signInEmail.ts` returns text and HTML (table layout, inline styles, a full-width button, the link repeated under it). It loads nothing: no images, no pixel, no fonts, so nothing about opening it is reported anywhere. **Resend click and open tracking must stay off** for the sending domain, or the one-time token would be rewritten through their domain. The lifetime in it comes from `MAGIC_LINK_TTL_MS`.
+- **`/login/`** showed the form for a second or two before redirecting someone already signed in (a client-only island, then a fetch). `Base`'s `signedInHint` marks `<html data-signed-in>` before paint from the hint cookie, whatever the plan; CSS shows "Signing you in…" instead of the form, and `LoginForm` clears the mark if `/api/auth/me` finds no session. The cookie only holds the form back; the redirect still waits for the server.
+- `/redact-pdf` measured 1608 ms LCP against the 1500 budget in one local run on a loaded machine (3-4 s under load, passing in isolation for `/organize-pdf`); CI on a clean runner is the check that counts.
 
 ## 19 November 2026 — Password save fixed; the sign-in button page restyled
 
