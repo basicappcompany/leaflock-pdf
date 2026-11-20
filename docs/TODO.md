@@ -413,7 +413,7 @@ fallback for Safari/iOS and for any format the wasm decoder doesn't cover.
 
 ## 6. Small code gaps noticed along the way
 
-- [ ] **`tests/unit/server/claim.test.ts` is flaky** ("stops answering once the whole site has asked too often in a minute", seen 19 Nov). It sends up to 130 requests against a one-minute window, so under the full parallel suite the loop can straddle a minute boundary, reset the counter and never reach the limit. Passes alone. Fix by freezing the clock in that test.
+- [x] **`tests/unit/server/claim.test.ts` was flaky, fixed 20 November** ("stops answering once the whole site has asked too often in a minute", seen 19 Nov). It sends up to 130 requests against a one-minute window, so under the full parallel suite the loop can straddle a minute boundary, reset the counter and never reach the limit. Passed alone. The test now fakes only `Date` and pins it ten seconds into a window, so the loop cannot reach the next one.
 - [ ] **`pnpm-workspace.yaml` overrides `@emnapi/runtime@2.0.0-beta.2` to 1.11.3** (astro 7.4.7, 19 Nov): the lockfile resolved `@astrojs/check`'s optional peer to a 2.0 beta that breaks it. Remove the override once a plain `pnpm install` resolves that peer to a stable release and `pnpm check` still passes.
 
 - [ ] `googleConfigured()` (`src/lib/server/google.ts`) only checks that the two vars are
