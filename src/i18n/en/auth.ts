@@ -5,6 +5,7 @@ export const auth = {
     metaTitle: 'Log in or sign up | LeafLock PDF',
     metaDescription: 'Sign in to LeafLock PDF with Google, a password, or a one-time email link.',
     heading: 'Log in or sign up',
+    signingIn: 'Signing you in…',
     intro: 'Use Google, a password, or a one-time link sent to your email. If you’re new, signing in creates your account.',
     emailLabel: 'Email address',
     submit: 'Send me a link',

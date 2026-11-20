@@ -167,3 +167,37 @@ test('the page that asked for a sign-in is where a password sign-in returns to',
   await page.getByRole('button', { name: 'Log in', exact: true }).click();
   await expect(page).toHaveURL(/\/pricing\/?$/);
 });
+
+test('someone who is probably signed in never sees the login form while the server is asked', async ({ page, baseURL }) => {
+  await page.context().addCookies([{ name: 'leaflock_signed_in', value: 'free', url: baseURL! }]);
+  let answer!: () => void;
+  const held = new Promise<void>((resolve) => (answer = resolve));
+  await page.route('**/api/auth/me', async (route) => {
+    await held;
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ email: 'person@example.com', plan: 'free' }) });
+  });
+
+  await page.goto('/login');
+  // The server has not answered yet: the line shows, and neither the form nor the heading does.
+  await expect(page.getByText('Signing you in…')).toBeVisible();
+  await expect(page.getByLabel('Email address')).toBeHidden();
+  await expect(page.getByRole('heading', { name: 'Log in or sign up' })).toBeHidden();
+
+  answer();
+  await expect(page).toHaveURL(/\/account\/?$/);
+});
+
+test('an old hint cookie with no session behind it brings the login form back', async ({ page, baseURL }) => {
+  await page.context().addCookies([{ name: 'leaflock_signed_in', value: 'free', url: baseURL! }]);
+  await page.route('**/api/auth/me', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: 'null' }));
+
+  await page.goto('/login');
+  await expect(page.getByLabel('Email address')).toBeVisible();
+  await expect(page.getByText('Signing you in…')).toBeHidden();
+});
+
+test('a signed-out visitor sees the login form straight away, with no waiting line', async ({ page }) => {
+  await page.goto('/login');
+  await expect(page.getByLabel('Email address')).toBeVisible();
+  await expect(page.getByText('Signing you in…')).toBeHidden();
+});

@@ -3196,6 +3196,22 @@ button.page-grid__page {
   text-align: center;
 }
 
+/* Someone who is probably already signed in (the hint cookie, read before first paint: Base's signedInHint) is about to
+   be sent on, so the page shows a short line instead of a login form they never needed. LoginForm clears the mark if
+   the server says there is no session, which brings the form back. */
+.auth-pending {
+  display: none;
+  color: var(--color-muted);
+}
+
+html[data-signed-in] .auth > :not(.auth-pending) {
+  display: none;
+}
+
+html[data-signed-in] .auth-pending {
+  display: block;
+}
+
 .auth h1 {
   justify-content: center;
 }
