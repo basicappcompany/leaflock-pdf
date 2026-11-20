@@ -4,6 +4,10 @@
  *   node scripts/translate.mjs --locale es --dry-run     count strings, estimate cost, call nothing
  *   node scripts/translate.mjs --locale es               translate and write src/i18n/es/index.ts
  *   node scripts/translate.mjs --locale es --force       re-translate strings that already exist
+ *   node scripts/translate.mjs --patch fixes.json        add or replace a few strings in several locales at once, no API key:
+ *                                                        { "de": { "common.nav.menu": "Menü" }, "fr": { ... } }. Keys are dotted
+ *                                                        paths into the English catalogue; each value is checked like --import, and
+ *                                                        everything else in the locale's file is kept exactly as it is.
  *   node scripts/translate.mjs --export strings.json     write every English string as a JSON array
  *   node scripts/translate.mjs --locale es --import es.json
  *                                                        validate a translated array (same length
@@ -133,6 +137,42 @@ async function main() {
     const strings = leaves(await loadEnglish()).map((item) => item.text);
     await writeFile(exportTo, JSON.stringify(strings), 'utf8');
     console.log(`Exported ${strings.length} strings to ${exportTo}`);
+    return;
+  }
+
+  const patchFrom = option('patch');
+  if (patchFrom) {
+    const patch = JSON.parse(await readFile(patchFrom, 'utf8'));
+    const english = await loadEnglish();
+    const all = leaves(english);
+    for (const [code, strings] of Object.entries(patch)) {
+      const locale = localeRegistry.find((item) => item.code === code);
+      if (!locale || locale.code === 'en') {
+        console.error(`--patch: "${code}" is not a translated locale.`);
+        process.exit(2);
+      }
+      const outFile = path.join(root, 'src/i18n', locale.path, 'index.ts');
+      const existing = (await import(`${pathToFileURL(outFile).href}?t=${Date.now()}`)).default;
+      // Start from English, lay the locale's current strings over it, then the patch, so the file keeps every key.
+      const result = structuredClone(english);
+      for (const item of all) {
+        const have = getAt(existing, item.trail);
+        if (typeof have === 'string') setAt(result, item.trail, have);
+      }
+      const failed = [];
+      for (const [dotted, text] of Object.entries(strings)) {
+        const item = all.find((entry) => entry.trail.join('.') === dotted);
+        if (!item) {
+          failed.push({ trail: dotted, issues: ['no such English string'] });
+          continue;
+        }
+        const issues = problems(item.text, text);
+        if (issues.length === 0) setAt(result, item.trail, text);
+        else failed.push({ trail: dotted, issues });
+      }
+      await writeCatalogue(result, failed, outFile, 'in-session translation (scripts/translate.mjs --patch)');
+      if (failed.length > 0) process.exitCode = 1;
+    }
     return;
   }
 

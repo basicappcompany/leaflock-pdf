@@ -1,4 +1,4 @@
-// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --import). Do not edit by hand:
+// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --patch). Do not edit by hand:
 // a hand edit is overwritten by the next --force run. Fix the glossary or the English instead.
 // Strings that failed validation are left in English; see the run log.
 export default {
@@ -70,6 +70,7 @@ export default {
     },
     "nav": {
       "label": "Principal",
+      "menu": "Menu",
       "allTools": "Todas as ferramentas",
       "guides": "Guias",
       "security": "Segurança",
@@ -2864,6 +2865,8 @@ export default {
     "earlyAccess": "Pro e Practice estão em acesso antecipado até {endDate}: todas as ferramentas, inclusive as seis profissionais, são gratuitas para todos até lá. Os planos pagos começam em {startDate}.",
     "homeNotice": "As ferramentas marcadas como Pro ou Practice são gratuitas para todos até {endDate}. Compre um plano antes e economize até {percent}%.",
     "freeNow": "Grátis agora",
+    "homePopular": "Em alta agora",
+    "homeSeeAll": "Ver todas as ferramentas",
     "offer": {
       "heading": "Oferta de lançamento: até {percent}% de desconto até {endDate}",
       "body": "Compre um plano anual antes de {endDate} e pague {yearlyPercent}% menos no primeiro ano, ou {tenYearPercent}% menos no plano de dez anos. A cobrança é feita no checkout e seu plano começa em {startDate}. Os planos anuais renovam pelo preço padrão após o primeiro ano.",
@@ -3329,6 +3332,7 @@ export default {
       "metaTitle": "Entrar ou cadastrar-se | LeafLock PDF",
       "metaDescription": "Entre no LeafLock PDF com o Google, uma senha ou um link de e-mail de uso único.",
       "heading": "Entrar ou cadastrar-se",
+      "signingIn": "Entrando na sua conta…",
       "intro": "Use o Google, uma senha ou um link de uso único enviado ao seu e-mail. Se for novo por aqui, entrar cria sua conta.",
       "emailLabel": "Endereço de e-mail",
       "submit": "Enviar um link para mim",
@@ -3342,6 +3346,8 @@ export default {
       "logIn": "Entrar",
       "loggingIn": "Entrando…",
       "useLink": "Prefiro receber um link de acesso por e-mail",
+      "usePassword": "Tenho uma senha",
+      "linkHint": "Não precisa de senha. Enviamos um link de acesso por e-mail; abra-o e conclua a entrada.",
       "noPassword": "Ainda sem senha? Use um link de acesso e depois defina uma na sua conta.",
       "errorCredentials": "Esse e-mail e essa senha não coincidem.",
       "errorGoogle": "O login com o Google não foi concluído. Tente novamente.",

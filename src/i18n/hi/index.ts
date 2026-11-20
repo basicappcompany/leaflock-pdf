@@ -1,4 +1,4 @@
-// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --import). Do not edit by hand:
+// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --patch). Do not edit by hand:
 // a hand edit is overwritten by the next --force run. Fix the glossary or the English instead.
 // Strings that failed validation are left in English; see the run log.
 export default {
@@ -70,6 +70,7 @@ export default {
     },
     "nav": {
       "label": "मुख्य",
+      "menu": "मेनू",
       "allTools": "सभी टूल",
       "guides": "गाइड",
       "security": "सुरक्षा",
@@ -2864,6 +2865,8 @@ export default {
     "earlyAccess": "Pro और Practice {endDate} तक शुरुआती एक्सेस में हैं: छह प्रोफ़ेशनल टूल समेत हर टूल तब तक सबके लिए मुफ़्त है। पेड प्लान {startDate} से शुरू होते हैं।",
     "homeNotice": "Pro या Practice चिह्नित टूल {endDate} तक सबके लिए मुफ़्त हैं। उससे पहले प्लान खरीदें और {percent}% तक बचाएँ।",
     "freeNow": "अभी मुफ़्त",
+    "homePopular": "अभी लोकप्रिय",
+    "homeSeeAll": "सभी टूल देखें",
     "offer": {
       "heading": "लॉन्च ऑफ़र: {endDate} तक {percent}% तक की छूट",
       "body": "{endDate} से पहले सालाना प्लान खरीदें और पहले साल के लिए {yearlyPercent}% कम दें, या दस साल के प्लान पर {tenYearPercent}% कम दें। भुगतान चेकआउट पर लिया जाता है और आपका प्लान {startDate} से शुरू होता है। सालाना प्लान पहले साल के बाद सामान्य कीमत पर रिन्यू होते हैं।",
@@ -3329,6 +3332,7 @@ export default {
       "metaTitle": "लॉग इन करें या साइन अप करें | LeafLock PDF",
       "metaDescription": "Google, पासवर्ड, या एक बार वाले ईमेल लिंक से LeafLock PDF में साइन इन करें।",
       "heading": "लॉग इन करें या साइन अप करें",
+      "signingIn": "आपको लॉग इन किया जा रहा है…",
       "intro": "Google, पासवर्ड, या अपने ईमेल पर भेजे गए एक बार वाले लिंक का इस्तेमाल करें। अगर आप नए हैं, तो साइन इन करने से आपका खाता बन जाता है।",
       "emailLabel": "ईमेल पता",
       "submit": "मुझे लिंक भेजें",
@@ -3342,6 +3346,8 @@ export default {
       "logIn": "लॉग इन करें",
       "loggingIn": "लॉग इन हो रहा है…",
       "useLink": "इसके बजाय मुझे साइन-इन लिंक ईमेल करें",
+      "usePassword": "मेरे पास पासवर्ड है",
+      "linkHint": "पासवर्ड की ज़रूरत नहीं। हम आपको एक लिंक ईमेल करते हैं; उसे खोलें और साइन-इन पूरा करें।",
       "noPassword": "अभी पासवर्ड नहीं है? साइन-इन लिंक का इस्तेमाल करें, फिर अपने खाते से पासवर्ड सेट करें।",
       "errorCredentials": "वह ईमेल और पासवर्ड मेल नहीं खाते।",
       "errorGoogle": "Google साइन-इन पूरा नहीं हुआ। कृपया फिर कोशिश करें।",

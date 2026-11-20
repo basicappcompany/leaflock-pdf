@@ -1,4 +1,4 @@
-// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --import). Do not edit by hand:
+// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --patch). Do not edit by hand:
 // a hand edit is overwritten by the next --force run. Fix the glossary or the English instead.
 // Strings that failed validation are left in English; see the run log.
 export default {
@@ -70,6 +70,7 @@ export default {
     },
     "nav": {
       "label": "Principal",
+      "menu": "Menu",
       "allTools": "Tous les outils",
       "guides": "Guides",
       "security": "Sécurité",
@@ -2864,6 +2865,8 @@ export default {
     "earlyAccess": "Pro et Practice sont en accès anticipé jusqu’au {endDate} : tous les outils, y compris les six outils professionnels, sont gratuits pour tous jusque-là. Les forfaits payants démarrent le {startDate}.",
     "homeNotice": "Les outils marqués Pro ou Practice sont gratuits pour tous jusqu’au {endDate}. Achetez un forfait avant et économisez jusqu’à {percent} %.",
     "freeNow": "Gratuit pour l’instant",
+    "homePopular": "Populaires en ce moment",
+    "homeSeeAll": "Voir tous les outils",
     "offer": {
       "heading": "Offre de lancement : jusqu’à {percent} % de réduction jusqu’au {endDate}",
       "body": "Achetez un forfait annuel avant le {endDate} et payez {yearlyPercent} % de moins la première année, ou {tenYearPercent} % de moins pour le forfait de dix ans. Vous êtes débité au paiement et votre forfait démarre le {startDate}. Les forfaits annuels se renouvellent au prix standard après la première année.",
@@ -3329,6 +3332,7 @@ export default {
       "metaTitle": "Se connecter ou s’inscrire | LeafLock PDF",
       "metaDescription": "Connectez-vous à LeafLock PDF avec Google, un mot de passe ou un lien à usage unique envoyé par e-mail.",
       "heading": "Se connecter ou s’inscrire",
+      "signingIn": "Nous vous connectons…",
       "intro": "Utilisez Google, un mot de passe ou un lien à usage unique envoyé à votre adresse e-mail. Si vous êtes nouveau, la connexion crée votre compte.",
       "emailLabel": "Adresse e-mail",
       "submit": "Envoyez-moi un lien",
@@ -3342,6 +3346,8 @@ export default {
       "logIn": "Se connecter",
       "loggingIn": "Connexion en cours…",
       "useLink": "Envoyez-moi plutôt un lien de connexion par e-mail",
+      "usePassword": "J’ai un mot de passe",
+      "linkHint": "Pas besoin de mot de passe. Nous vous envoyons un lien par e-mail ; ouvrez-le et terminez la connexion.",
       "noPassword": "Pas encore de mot de passe ? Utilisez un lien de connexion, puis définissez-en un depuis votre compte.",
       "errorCredentials": "Cet e-mail et ce mot de passe ne correspondent pas.",
       "errorGoogle": "La connexion avec Google n’a pas abouti. Veuillez réessayer.",

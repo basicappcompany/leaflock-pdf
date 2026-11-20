@@ -1,4 +1,4 @@
-// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --import). Do not edit by hand:
+// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --patch). Do not edit by hand:
 // a hand edit is overwritten by the next --force run. Fix the glossary or the English instead.
 // Strings that failed validation are left in English; see the run log.
 export default {
@@ -70,6 +70,7 @@ export default {
     },
     "nav": {
       "label": "Utama",
+      "menu": "Menu",
       "allTools": "Semua alat",
       "guides": "Panduan",
       "security": "Keamanan",
@@ -2864,6 +2865,8 @@ export default {
     "earlyAccess": "Pro dan Practice dalam akses awal hingga {endDate}: setiap alat, termasuk enam alat profesional, gratis untuk semua orang sampai saat itu. Paket berbayar dimulai pada {startDate}.",
     "homeNotice": "Alat bertanda Pro atau Practice gratis untuk semua orang sampai {endDate}. Beli paket sebelum itu dan hemat hingga {percent}%.",
     "freeNow": "Gratis sekarang",
+    "homePopular": "Populer saat ini",
+    "homeSeeAll": "Lihat semua alat",
     "offer": {
       "heading": "Penawaran peluncuran: diskon hingga {percent}% sampai {endDate}",
       "body": "Beli paket tahunan sebelum {endDate} dan bayar {yearlyPercent}% lebih murah untuk tahun pertama, atau {tenYearPercent}% lebih murah untuk paket sepuluh tahun. Anda ditagih saat pembayaran dan paket Anda dimulai pada {startDate}. Paket tahunan diperpanjang dengan harga standar setelah tahun pertama.",
@@ -3329,6 +3332,7 @@ export default {
       "metaTitle": "Masuk atau daftar | LeafLock PDF",
       "metaDescription": "Masuk ke LeafLock PDF dengan Google, kata sandi, atau tautan email sekali pakai.",
       "heading": "Masuk atau daftar",
+      "signingIn": "Sedang membuat Anda masuk…",
       "intro": "Gunakan Google, kata sandi, atau tautan sekali pakai yang dikirim ke email Anda. Jika Anda baru, masuk akan membuat akun Anda.",
       "emailLabel": "Alamat email",
       "submit": "Kirimi saya tautan",
@@ -3342,6 +3346,8 @@ export default {
       "logIn": "Masuk",
       "loggingIn": "Sedang masuk…",
       "useLink": "Kirimi saya tautan masuk lewat email",
+      "usePassword": "Saya punya kata sandi",
+      "linkHint": "Tidak perlu kata sandi. Kami mengirim tautan lewat email; buka tautan itu dan selesaikan proses masuk.",
       "noPassword": "Belum punya kata sandi? Gunakan tautan masuk, lalu atur dari akun Anda.",
       "errorCredentials": "Email dan kata sandi itu tidak cocok.",
       "errorGoogle": "Masuk dengan Google tidak selesai. Silakan coba lagi.",

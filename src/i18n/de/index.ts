@@ -1,4 +1,4 @@
-// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --import). Do not edit by hand:
+// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --patch). Do not edit by hand:
 // a hand edit is overwritten by the next --force run. Fix the glossary or the English instead.
 // Strings that failed validation are left in English; see the run log.
 export default {
@@ -70,6 +70,7 @@ export default {
     },
     "nav": {
       "label": "Hauptmenü",
+      "menu": "Menü",
       "allTools": "Alle Werkzeuge",
       "guides": "Anleitungen",
       "security": "Sicherheit",
@@ -2864,6 +2865,8 @@ export default {
     "earlyAccess": "Pro und Practice befinden sich bis zum {endDate} im frühen Zugang: Jedes Werkzeug, auch die sechs professionellen, ist bis dahin für alle kostenlos. Bezahlte Pläne starten am {startDate}.",
     "homeNotice": "Als Pro oder Practice gekennzeichnete Werkzeuge sind bis zum {endDate} für alle kostenlos. Kaufen Sie vorher einen Plan und sparen Sie bis zu {percent}%.",
     "freeNow": "Jetzt kostenlos",
+    "homePopular": "Aktuell beliebt",
+    "homeSeeAll": "Alle Werkzeuge ansehen",
     "offer": {
       "heading": "Startangebot: bis zu {percent}% Rabatt bis zum {endDate}",
       "body": "Kaufen Sie vor dem {endDate} einen Jahresplan und zahlen Sie {yearlyPercent}% weniger für Ihr erstes Jahr, oder {tenYearPercent}% weniger für den Zehnjahresplan. Die Abbuchung erfolgt an der Kasse, Ihr Plan startet am {startDate}. Jahrespläne verlängern sich nach dem ersten Jahr zum Standardpreis.",
@@ -3329,6 +3332,7 @@ export default {
       "metaTitle": "Anmelden oder registrieren | LeafLock PDF",
       "metaDescription": "Melden Sie sich bei LeafLock PDF mit Google, einem Passwort oder einem einmaligen E-Mail-Link an.",
       "heading": "Anmelden oder registrieren",
+      "signingIn": "Sie werden angemeldet…",
       "intro": "Verwenden Sie Google, ein Passwort oder einen einmaligen Link, der an Ihre E-Mail-Adresse gesendet wird. Wenn Sie neu sind, wird beim Anmelden Ihr Konto erstellt.",
       "emailLabel": "E-Mail-Adresse",
       "submit": "Link senden",
@@ -3342,6 +3346,8 @@ export default {
       "logIn": "Anmelden",
       "loggingIn": "Anmeldung läuft…",
       "useLink": "Stattdessen einen Anmeldelink per E-Mail senden",
+      "usePassword": "Ich habe ein Passwort",
+      "linkHint": "Kein Passwort nötig. Wir senden Ihnen einen Link per E-Mail; öffnen Sie ihn und schließen Sie die Anmeldung ab.",
       "noPassword": "Noch kein Passwort? Verwenden Sie einen Anmeldelink und legen Sie dann in Ihrem Konto eines fest.",
       "errorCredentials": "E-Mail-Adresse und Passwort stimmen nicht überein.",
       "errorGoogle": "Die Anmeldung mit Google wurde nicht abgeschlossen. Bitte versuchen Sie es erneut.",
