@@ -184,6 +184,7 @@ h2 {
    without that second part, the sidebar would hold open a gap sized for the header's
    full, uncondensed height. */
 .site-chrome--condensed .site-nav,
+.site-chrome--condensed .nav-toggle,
 .site-chrome--condensed .skin-picker {
   display: none;
 }
@@ -434,6 +435,80 @@ h2 {
   .site-header {
     gap: 0.5rem;
     padding-inline: 1rem;
+  }
+}
+
+/* The phone-width "Menu" button (NavToggle.astro): hidden here, shown only by the phone block that follows it, which has to stay below this rule. */
+.nav-toggle {
+  display: none;
+}
+
+/* Phones with scripting on: the links live in a panel the Menu button opens (NavToggle.astro) rather than wrapping across
+   the header on every page. Scripting off keeps them visible, so nothing is lost without JavaScript. */
+@media (max-width: 48rem) and (scripting: enabled) {
+  .nav-toggle {
+    order: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.5rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-small);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .nav-toggle[aria-expanded='true'] {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .site-nav {
+    order: 3;
+    display: none;
+  }
+
+  .site-nav--open {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.15rem;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+
+  .site-nav--open .nav-link,
+  .site-nav--open .tools-menu summary {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
+  .site-nav--open .tools-menu summary {
+    justify-content: space-between;
+  }
+
+  /* The last link (Log in / Dashboard) stays a pill, but full width like its siblings. */
+  .site-nav--open > astro-island:last-child .nav-link {
+    margin: 0.25rem 0 0;
+    justify-content: center;
+  }
+
+  /* "All tools" opens in place inside the menu, not as a floating panel over the page. */
+  .site-nav--open .tools-menu__panel {
+    position: static;
+    width: auto;
+    max-height: none;
+    margin-top: 0.4rem;
+    padding: 0.75rem;
+    box-shadow: none;
   }
 }
 
@@ -3119,6 +3194,22 @@ button.page-grid__page {
   max-width: 26rem;
   margin: 0 auto;
   text-align: center;
+}
+
+/* Someone who is probably already signed in (the hint cookie, read before first paint: Base's signedInHint) is about to
+   be sent on, so the page shows a short line instead of a login form they never needed. LoginForm clears the mark if
+   the server says there is no session, which brings the form back. */
+.auth-pending {
+  display: none;
+  color: var(--color-muted);
+}
+
+html[data-signed-in] .auth > :not(.auth-pending) {
+  display: none;
+}
+
+html[data-signed-in] .auth-pending {
+  display: block;
 }
 
 .auth h1 {

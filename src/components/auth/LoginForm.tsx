@@ -43,9 +43,11 @@ export default function LoginForm({ t }: { t: Messages['auth']['login'] }) {
   const session = useSession();
   const busy = status.state === 'sending' || status.state === 'loggingIn';
 
-  // Already signed in: this page has nothing to offer, so go where signing in would have gone.
+  // Already signed in: this page has nothing to offer, so go where signing in would have gone. If the server says there is
+  // no session after all (an old hint cookie), clear the pre-paint mark that is holding the form back and show it.
   useEffect(() => {
     if (session.state === 'in') window.location.replace(destination());
+    else if (session.state === 'out') delete document.documentElement.dataset.signedIn;
   }, [session.state]);
 
   // Only offer Google if the server actually has credentials for it.

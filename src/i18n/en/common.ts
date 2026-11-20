@@ -91,6 +91,7 @@ export const common = {
   },
   nav: {
     label: 'Main',
+    menu: 'Menu',
     allTools: 'All tools',
     guides: 'Guides',
     security: 'Security',

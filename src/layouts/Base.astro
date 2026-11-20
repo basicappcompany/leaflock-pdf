@@ -7,6 +7,7 @@ import AuthNavLink from '../components/auth/AuthNavLink';
 import SiteFooter from '../components/SiteFooter.astro';
 import SkinPicker from '../components/SkinPicker.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import NavToggle from '../components/NavToggle.astro';
 import ToolsMenu from '../components/ToolsMenu.astro';
 import ToolsSidebar from '../components/ToolsSidebar.astro';
 import LanguageSuggestion from '../components/LanguageSuggestion.astro';
@@ -48,6 +49,13 @@ interface Props {
    * the script is bytes in every page's HTML, which the performance budgets count.
    */
   memberHint?: boolean;
+  /**
+   * Mark <html data-signed-in> before first paint when the signed-in hint cookie exists, whatever the plan (the member
+   * hint above skips free accounts). The login page uses it to hold back the form for someone who is probably already
+   * signed in, instead of showing it for a second or two and then redirecting. A hint only: the island still asks the
+   * server, and clears the mark if there is no session.
+   */
+  signedInHint?: boolean;
 }
 
 const {
@@ -61,6 +69,7 @@ const {
   toolsSidebar = false,
   toolsSidebarDefaultHidden = false,
   memberHint = false,
+  signedInHint = false,
 } = Astro.props;
 const locale = Astro.currentLocale ?? 'en';
 const t = getMessages(locale).common;
@@ -91,6 +100,10 @@ function cspInlineScript(source: string): string {
 
 const memberHintScript = memberHint
   ? cspInlineScript(`(function(){try{var d=document.documentElement,m=document.cookie.match(/(?:^|; )leaflock_signed_in=([a-z]+)/);if(m&&m[1]!=='free')d.dataset.plan=m[1];if(Date.now()>=${plansStartAt})d.dataset.started='1'}catch(e){}})()`)
+  : '';
+
+const signedInHintScript = signedInHint
+  ? cspInlineScript(`(function(){try{if(/(?:^|; )leaflock_signed_in=/.test(document.cookie))document.documentElement.dataset.signedIn='1'}catch(e){}})()`)
   : '';
 
 const preTheme = cspInlineScript(`
@@ -183,6 +196,7 @@ const chromeHeightScript = cspInlineScript(`
     <script type="application/ld+json" set:html={structuredData} />
     <script is:inline set:html={preTheme} />
     {memberHint && <script is:inline set:html={memberHintScript} />}
+    {signedInHint && <script is:inline set:html={signedInHintScript} />}
     <script>
       // The favicon and the mobile theme-color meta both ship a static default (the
       // link/meta tags above) so there's something correct before this runs — then this
@@ -244,7 +258,8 @@ const chromeHeightScript = cspInlineScript(`
         </svg>
         {t.site.name}
       </a>
-      <nav class="site-nav" aria-label={t.nav.label}>
+      <NavToggle label={t.nav.menu} />
+      <nav id="site-nav" class="site-nav" aria-label={t.nav.label}>
         <ToolsMenu />
         <a class="nav-link" href={getRelativeLocaleUrl(locale, 'guides')}>{t.nav.guides}</a>
         <a class="nav-link" href={getRelativeLocaleUrl(locale, 'security')}>{t.nav.security}</a>

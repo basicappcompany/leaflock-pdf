@@ -7,10 +7,11 @@ const locale = Astro.currentLocale ?? 'en';
 const t = getMessages(locale).auth.login;
 ---
 
-<Base title={t.metaTitle} description={t.metaDescription} path="login" noindex>
+<Base title={t.metaTitle} description={t.metaDescription} path="login" noindex signedInHint>
   <div class="auth">
     <h1>{t.heading}</h1>
     <p class="lead">{t.intro}</p>
     <LoginForm client:only="react" t={t} />
+    <p class="auth-pending" role="status">{t.signingIn}</p>
   </div>
 </Base>

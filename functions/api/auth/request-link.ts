@@ -7,9 +7,10 @@
  */
 
 import { getEmailSender } from '../../../src/lib/email/sender';
+import { signInEmail } from '../../../src/lib/email/signInEmail';
 import { safeNext } from '../../../src/lib/safeNext';
 import { hashIp } from '../../../src/lib/server/ipHash';
-import { createMagicLink } from '../../../src/lib/server/magicLink';
+import { MAGIC_LINK_TTL_MS, createMagicLink } from '../../../src/lib/server/magicLink';
 import { checkAndIncrement } from '../../../src/lib/server/rateLimit';
 
 const MAX_BODY = 512;
@@ -51,11 +52,8 @@ export async function onRequestPost({ request, env }: { request: Request; env: E
   const link = `${origin}/api/auth/verify?token=${token}${next ? `&next=${encodeURIComponent(next)}` : ''}`;
 
   try {
-    await getEmailSender(env).send({
-      to: email,
-      subject: 'Your LeafLock PDF sign-in link',
-      text: `Sign in to LeafLock PDF: ${link}\n\nThis link works once and expires in 15 minutes. If you didn't request it, you can ignore this email.`,
-    });
+    const message = signInEmail(link, Math.round(MAGIC_LINK_TTL_MS / 60_000));
+    await getEmailSender(env).send({ to: email, ...message });
   } catch (error) {
     // Same response either way: delivery failures aren't revealed to the caller.
     console.error('magic link email failed', error);

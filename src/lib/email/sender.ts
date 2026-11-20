@@ -5,6 +5,8 @@ export interface EmailMessage {
   to: string;
   subject: string;
   text: string;
+  /** Optional HTML alternative. Always send `text` too: it is what clients that show no HTML display. */
+  html?: string;
 }
 
 export interface EmailSender {
