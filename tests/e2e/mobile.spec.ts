@@ -64,6 +64,10 @@ test('the header is one row: brand, language, theme and the Menu button, with th
   for (const width of [320, 360, 390, 412]) {
     await page.setViewportSize({ width, height: 740 });
     await page.goto('/');
+    // The brand's width depends on the platform's fallback font, and CI's is wider than a laptop's. Force a wide one so
+    // this fails on any machine if the row only fits by a few pixels, not just on the one that happens to be wide.
+    // Through the element's style property (the CSSOM): the page's CSP blocks an injected <style>, on purpose.
+    await page.evaluate(() => document.querySelector<HTMLElement>('.brand')!.style.setProperty('font-family', "Verdana, 'DejaVu Sans', sans-serif", 'important'));
     const rowTop = async (selector: string) => {
       const box = await page.locator(selector).first().boundingBox();
       expect(box, `${selector} at ${width}px`).not.toBeNull();
@@ -110,7 +114,8 @@ for (const path of ['/', '/merge-pdf']) {
     await page.evaluate(() => window.scrollTo(0, 800));
     await page.waitForTimeout(120);
     const headerTop = await page.evaluate(() => Math.round(document.querySelector('.site-header')!.getBoundingClientRect().top));
-    expect(headerTop).toBe(0);
+    // Within a pixel of the top (Math.round of a sub-pixel -0.3 is -0, which toBe(0) tells apart from 0).
+    expect(Math.abs(headerTop)).toBeLessThanOrEqual(1);
   });
 }
 
