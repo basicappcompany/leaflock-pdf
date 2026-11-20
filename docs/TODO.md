@@ -15,7 +15,7 @@ A dated snapshot; the sections below are the detail and the source of truth.
 - **Dodo:** test mode is live on the site (12 November). Left: when the first real Pro to Practice upgrade settles,
   check the plan flipped and the 50% code did not also discount the first renewal; go-live mode (§3); a deploy on
   1 January 2027.
-- Bing Webmaster Tools; post the launch drafts when signed in. **Search Console (17 Nov 2026):** property `leaflockpdf.com`, signed in as `basicappcompany@` (a Chrome profile can default to another account: use the `/u/2/` URL). 790 of 790 pages "Discovered, currently not indexed", 0 indexed; the sitemap was read once, on 8 Nov. The sitemap is now English only (`SITEMAP_LOCALES`); once English pages index, set it to `null` and resubmit. Request indexing was sent for `/`, `/merge-pdf/`, `/compress-pdf/` and `/pricing/` on 17 Nov (about 10 a day are allowed by hand).
+- Bing Webmaster Tools; post the launch drafts when signed in. **Search Console (17 Nov 2026):** property `leaflockpdf.com`, signed in as `basicappcompany@` (a Chrome profile can default to another account: use the `/u/2/` URL). 790 of 790 pages "Discovered, currently not indexed", 0 indexed; the sitemap was read once, on 8 Nov. The sitemap is now English only (`SITEMAP_LOCALES`); once English pages index, set it to `null` and resubmit. Request indexing was sent for `/`, `/merge-pdf/`, `/compress-pdf/` and `/pricing/` on 17 Nov (about 10 a day are allowed by hand). **Checked 19 Nov:** still 790 not indexed, 0 indexed, one reason ("Discovered, currently not indexed", the crawl is deferred, not an error); nothing on our side blocks it (`robots.txt` allows all, `index,follow`, canonical correct, Googlebot gets 200). Google's copy of the sitemap is the 8 Nov one (790 URLs, locales included) and the live one lists 86. A resubmit was clicked on 19 Nov but the table did not change; the owner checks **Last read** and resubmits by hand (`https://leaflockpdf.com/sitemap.xml`) if it has not moved past 8 Nov. Real links to the site are the lever that moves a new domain; waiting does the rest.
 
 **Pending on me** (engineering, no input needed to start):
 - More size landings (100 KB, 500 KB, 2 MB) only if the 200 KB and 1 MB pages show traffic.
@@ -412,6 +412,9 @@ Already shipped and staying as-is: `.heic` reaches `imagesToPdf.ts`'s existing
 fallback for Safari/iOS and for any format the wasm decoder doesn't cover.
 
 ## 6. Small code gaps noticed along the way
+
+- [ ] **`tests/unit/server/claim.test.ts` is flaky** ("stops answering once the whole site has asked too often in a minute", seen 19 Nov). It sends up to 130 requests against a one-minute window, so under the full parallel suite the loop can straddle a minute boundary, reset the counter and never reach the limit. Passes alone. Fix by freezing the clock in that test.
+- [ ] **`pnpm-workspace.yaml` overrides `@emnapi/runtime@2.0.0-beta.2` to 1.11.3** (astro 7.4.7, 19 Nov): the lockfile resolved `@astrojs/check`'s optional peer to a 2.0 beta that breaks it. Remove the override once a plain `pnpm install` resolves that peer to a stable release and `pnpm check` still passes.
 
 - [ ] `googleConfigured()` (`src/lib/server/google.ts`) only checks that the two vars are
       non-empty, so a placeholder still renders a button that cannot work — which is the
