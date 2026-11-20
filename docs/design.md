@@ -907,26 +907,24 @@ caught.
   groups wrapped into a short second row under only the first two category columns,
   ragged because nothing tied a group's position to what it was semantically next to.
   Split, with a hairline divider between them, each row now wraps on its own terms.
-- **The header condenses to just the brand mark once scrolled past a small threshold**
-  (`.site-chrome--condensed`, toggled by a scroll listener at the bottom of
-  `Base.astro`) — reported from an actual phone, where the full header permanently ate
-  a real share of the viewport on every page. Nav, the skin picker and the theme toggle
-  collapse away; the privacy strip (`.privacy-strip`) deliberately doesn't, on the
-  owner's instruction — it stays visible through the whole scroll, not just at the top.
-  The same listener re-measures `--tools-chrome-h` on every toggle, for the same reason
-  the sticky-chrome wrapper above exists: that variable is set once before first paint
-  for the *uncondensed* height, and condensing without re-measuring it would reopen the
-  exact gap-above-the-sidebar bug the wrapper was built to close, just from a different
-  trigger.
-- **Condense and expand use two different thresholds (64px / 16px), not one.**
-  `.site-chrome` is sticky, which still means it occupies normal document flow space —
-  condensing it shrinks that space and shifts everything below it upward, including
-  whatever the visitor (or Playwright's own scroll-into-view during a `.click()`) was
-  scrolling toward. A single shared threshold lets that shift itself re-cross the
-  threshold, flipping the state back, shifting again, forever — this is exactly what
-  broke `secure.spec.ts`'s download-link click in CI, intermittently, until bisected.
-  A wide dead zone between the two thresholds means one toggle's own shift can never
-  be large enough to cross back over the other side.
+- **The header never changes size while the page scrolls.** It used to condense to just the brand mark past 64px of scroll
+  (a scroll listener in `Base.astro`, two thresholds so a toggle's own shift could not re-cross it). Every toggle shrank
+  the sticky chrome and moved all the content up under the reader's finger, and the sidebar's offset had to be re-measured
+  to follow: that was the visible jank reported on 20 November 2026, and the same shift once broke `secure.spec.ts`'s
+  download click in CI. The listener and `.site-chrome--condensed` are gone; the only script left re-measures
+  `--tools-chrome-h` and `--banner-h` when the box resizes, never on scroll.
+- **On a phone (under 48rem, scripting on) the header is one slim row:** brand on the left; language, theme and an
+  icon-only Menu button on the right (`NavToggle.astro`). The links (All tools nested inside, Guides, Security, Pricing,
+  Business, Log in) and the skin picker are in the panel the button opens. Patterns weighed: Material's top app bar and
+  Apple's navigation bar (a fixed-height bar with a few trailing actions and an overflow menu, which this follows);
+  hide-on-scroll-down and show-on-scroll-up (right for a tall bar, needless for a slim one); a bar that shrinks on scroll
+  (what was here; it changes layout, so it janks). The bar is opaque with no `backdrop-filter` on phones, because a blur
+  over scrolling content is repainted every frame there. Without JavaScript the links stay visible and wrap as before.
+- **The promo banner scrolls away with the page, and the header and privacy strip stay.** The banner is inside
+  `.site-chrome` (so the sidebar and home hero still read the full height), and the chrome's sticky offset is
+  `-var(--banner-h)`, so the banner slides off by ordinary scrolling with no layout change. Known quirk: with the
+  sidebar opened on the home page after scrolling, it sits one banner-height below the header; the sidebar is hidden by
+  default there.
 
 ## 10b. Scroll reveal
 

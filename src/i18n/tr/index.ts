@@ -1,4 +1,4 @@
-// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --import). Do not edit by hand:
+// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --patch). Do not edit by hand:
 // a hand edit is overwritten by the next --force run. Fix the glossary or the English instead.
 // Strings that failed validation are left in English; see the run log.
 export default {
@@ -70,6 +70,7 @@ export default {
     },
     "nav": {
       "label": "Ana",
+      "menu": "Menü",
       "allTools": "Tüm araçlar",
       "guides": "Kılavuzlar",
       "security": "Güvenlik",
@@ -2864,6 +2865,8 @@ export default {
     "earlyAccess": "Pro ve Practice {endDate} tarihine kadar erken erişimde: altı profesyonel araç dahil her araç, o tarihe kadar herkes için ücretsizdir. Ücretli planlar {startDate} tarihinde başlar.",
     "homeNotice": "Pro veya Practice işaretli araçlar {endDate} tarihine kadar herkes için ücretsizdir. Öncesinde bir plan alın, en fazla %{percent} tasarruf edin.",
     "freeNow": "Şu an ücretsiz",
+    "homePopular": "Şu an popüler",
+    "homeSeeAll": "Tüm araçları gör",
     "offer": {
       "heading": "Lansman teklifi: {endDate} tarihine kadar en fazla %{percent} indirim",
       "body": "{endDate} tarihinden önce yıllık plan alın, ilk yılda %{yearlyPercent} daha az ödeyin; on yıllık planda %{tenYearPercent} daha az ödeyin. Ödeme alışveriş sırasında alınır ve planınız {startDate} tarihinde başlar. Yıllık planlar ilk yıldan sonra standart fiyatla yenilenir.",
@@ -3329,6 +3332,7 @@ export default {
       "metaTitle": "Giriş yapın ya da kaydolun | LeafLock PDF",
       "metaDescription": "LeafLock PDF'e Google, bir parola ya da tek kullanımlık e-posta bağlantısıyla giriş yapın.",
       "heading": "Giriş yapın ya da kaydolun",
+      "signingIn": "Giriş yapılıyor…",
       "intro": "Google'ı, bir parolayı ya da e-postanıza gönderilen tek kullanımlık bir bağlantıyı kullanın. Yeniyseniz, giriş yapmak hesabınızı oluşturur.",
       "emailLabel": "E-posta adresi",
       "submit": "Bana bir bağlantı gönder",
@@ -3342,6 +3346,8 @@ export default {
       "logIn": "Giriş yap",
       "loggingIn": "Giriş yapılıyor…",
       "useLink": "Bunun yerine bana bir giriş bağlantısı e-postala",
+      "usePassword": "Parolam var",
+      "linkHint": "Parola gerekmez. Size bir bağlantı e-postalıyoruz; açın ve girişi tamamlayın.",
       "noPassword": "Henüz parolanız yok mu? Bir giriş bağlantısı kullanın, sonra hesabınızdan bir parola belirleyin.",
       "errorCredentials": "Bu e-posta ve parola eşleşmiyor.",
       "errorGoogle": "Google ile giriş tamamlanmadı. Lütfen tekrar deneyin.",

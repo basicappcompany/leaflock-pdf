@@ -76,7 +76,7 @@ test('theme button: an icon only, still named for assistive technology', async (
   expect(box.width).toBeGreaterThanOrEqual(36);
 });
 
-test('scrolled header: language and theme buttons stay, in the right-most corner', async ({ page, baseURL }) => {
+test('scrolled header: it keeps its size, the content does not move, and language and theme stay in the corner', async ({ page, baseURL }) => {
   const watch = watchPage(page, baseURL!);
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
@@ -86,8 +86,17 @@ test('scrolled header: language and theme buttons stay, in the right-most corner
     spacer.style.height = '3000px';
     document.body.appendChild(spacer);
   });
+  // What a reader would see move: the chrome's height, and where the page's own content sits in the document.
+  const measure = () =>
+    page.evaluate(() => ({
+      chrome: Math.round(document.querySelector('.site-chrome')!.getBoundingClientRect().height),
+      content: Math.round(document.querySelector('main')!.getBoundingClientRect().top + window.scrollY),
+    }));
+  const before = await measure();
   await page.evaluate(() => window.scrollTo(0, 600));
-  await expect(page.locator('.site-chrome')).toHaveClass(/site-chrome--condensed/);
+  await page.waitForTimeout(300);
+  // The header used to shrink as the page scrolled, which shifted everything below it; it must not change at all now.
+  expect(await measure()).toEqual(before);
 
   const lang = page.locator('.lang-switcher summary');
   const theme = page.locator('.theme-toggle');

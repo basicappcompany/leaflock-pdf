@@ -1,4 +1,4 @@
-// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --import). Do not edit by hand:
+// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --patch). Do not edit by hand:
 // a hand edit is overwritten by the next --force run. Fix the glossary or the English instead.
 // Strings that failed validation are left in English; see the run log.
 export default {
@@ -70,6 +70,7 @@ export default {
     },
     "nav": {
       "label": "Principal",
+      "menu": "Menú",
       "allTools": "Todas las herramientas",
       "guides": "Guías",
       "security": "Seguridad",
@@ -2864,6 +2865,8 @@ export default {
     "earlyAccess": "Pro y Practice están en acceso anticipado hasta el {endDate}: todas las herramientas, incluidas las seis profesionales, son gratuitas para todos hasta entonces. Los planes de pago empiezan el {startDate}.",
     "homeNotice": "Las herramientas marcadas como Pro o Practice son gratuitas para todos hasta el {endDate}. Compra un plan antes y ahorra hasta un {percent}%.",
     "freeNow": "Gratis ahora",
+    "homePopular": "Popular ahora",
+    "homeSeeAll": "Ver todas las herramientas",
     "offer": {
       "heading": "Oferta de lanzamiento: hasta un {percent}% de descuento hasta el {endDate}",
       "body": "Compra un plan anual antes del {endDate} y paga un {yearlyPercent}% menos por tu primer año, o un {tenYearPercent}% menos por el plan de diez años. Se te cobra al pagar y tu plan empieza el {startDate}. Los planes anuales se renuevan al precio estándar después del primer año.",
@@ -3329,6 +3332,7 @@ export default {
       "metaTitle": "Iniciar sesión o registrarse | LeafLock PDF",
       "metaDescription": "Inicie sesión en LeafLock PDF con Google, una contraseña o un enlace de un solo uso por correo electrónico.",
       "heading": "Iniciar sesión o registrarse",
+      "signingIn": "Iniciando su sesión…",
       "intro": "Use Google, una contraseña o un enlace de un solo uso enviado a su correo electrónico. Si es nuevo, al iniciar sesión se crea su cuenta.",
       "emailLabel": "Correo electrónico",
       "submit": "Enviarme un enlace",
@@ -3342,6 +3346,8 @@ export default {
       "logIn": "Iniciar sesión",
       "loggingIn": "Iniciando sesión…",
       "useLink": "Enviarme mejor un enlace de inicio de sesión",
+      "usePassword": "Tengo una contraseña",
+      "linkHint": "No necesita contraseña. Le enviamos un enlace por correo; ábralo y termine de iniciar sesión.",
       "noPassword": "¿Aún no tiene contraseña? Use un enlace de inicio de sesión y luego defina una desde su cuenta.",
       "errorCredentials": "Ese correo electrónico y esa contraseña no coinciden.",
       "errorGoogle": "El inicio de sesión con Google no se completó. Inténtelo de nuevo.",

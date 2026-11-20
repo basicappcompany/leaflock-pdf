@@ -1,4 +1,4 @@
-// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --import). Do not edit by hand:
+// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --patch). Do not edit by hand:
 // a hand edit is overwritten by the next --force run. Fix the glossary or the English instead.
 // Strings that failed validation are left in English; see the run log.
 export default {
@@ -70,6 +70,7 @@ export default {
     },
     "nav": {
       "label": "প্রধান",
+      "menu": "মেনু",
       "allTools": "সব টুল",
       "guides": "গাইড",
       "security": "নিরাপত্তা",
@@ -2864,6 +2865,8 @@ export default {
     "earlyAccess": "Pro ও Practice {endDate} পর্যন্ত আর্লি অ্যাক্সেসে আছে: ছয়টি পেশাদার টুলসহ প্রতিটি টুল ততদিন সবার জন্য বিনামূল্যে। পেইড প্ল্যান {startDate} থেকে শুরু।",
     "homeNotice": "Pro বা Practice চিহ্নিত টুল {endDate} পর্যন্ত সবার জন্য বিনামূল্যে। তার আগে প্ল্যান কিনুন এবং {percent}% পর্যন্ত সাশ্রয় করুন।",
     "freeNow": "এখন বিনামূল্যে",
+    "homePopular": "এখন জনপ্রিয়",
+    "homeSeeAll": "সব টুল দেখুন",
     "offer": {
       "heading": "লঞ্চ অফার: {endDate} পর্যন্ত {percent}% পর্যন্ত ছাড়",
       "body": "{endDate}-এর আগে বার্ষিক প্ল্যান কিনুন এবং প্রথম বছরে {yearlyPercent}% কম দিন, অথবা দশ বছরের প্ল্যানে {tenYearPercent}% কম দিন। চেকআউটের সময় চার্জ করা হয় এবং আপনার প্ল্যান {startDate} থেকে শুরু হয়। বার্ষিক প্ল্যান প্রথম বছরের পর স্ট্যান্ডার্ড মূল্যে নবায়ন হয়।",
@@ -3329,6 +3332,7 @@ export default {
       "metaTitle": "লগ ইন করুন বা সাইন আপ করুন | LeafLock PDF",
       "metaDescription": "Google, পাসওয়ার্ড, বা একবার ব্যবহারযোগ্য ইমেইল লিংক দিয়ে LeafLock PDF-এ সাইন ইন করুন।",
       "heading": "লগ ইন করুন বা সাইন আপ করুন",
+      "signingIn": "আপনাকে লগ ইন করানো হচ্ছে…",
       "intro": "Google, পাসওয়ার্ড, অথবা আপনার ইমেইলে পাঠানো একবার ব্যবহারযোগ্য লিংক ব্যবহার করুন। আপনি নতুন হলে সাইন ইন করলেই আপনার অ্যাকাউন্ট তৈরি হয়ে যায়।",
       "emailLabel": "ইমেইল ঠিকানা",
       "submit": "আমাকে একটি লিংক পাঠান",
@@ -3342,6 +3346,8 @@ export default {
       "logIn": "লগ ইন",
       "loggingIn": "লগ ইন হচ্ছে…",
       "useLink": "এর বদলে আমাকে সাইন-ইন লিংক ইমেইল করুন",
+      "usePassword": "আমার একটি পাসওয়ার্ড আছে",
+      "linkHint": "পাসওয়ার্ড লাগবে না। আমরা আপনাকে একটি লিংক ইমেইল করব; সেটি খুলে সাইন-ইন শেষ করুন।",
       "noPassword": "এখনও পাসওয়ার্ড নেই? সাইন-ইন লিংক ব্যবহার করুন, তারপর আপনার অ্যাকাউন্ট থেকে একটি দিন।",
       "errorCredentials": "ওই ইমেইল ও পাসওয়ার্ড মেলেনি।",
       "errorGoogle": "Google সাইন-ইন সম্পূর্ণ হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",

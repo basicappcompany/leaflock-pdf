@@ -99,7 +99,7 @@ function cspInlineScript(source: string): string {
 }
 
 const memberHintScript = memberHint
-  ? cspInlineScript(`(function(){try{var d=document.documentElement,m=document.cookie.match(/(?:^|; )leaflock_signed_in=([a-z]+)/);if(m&&m[1]!=='free')d.dataset.plan=m[1];if(Date.now()>=${plansStartAt})d.dataset.started='1'}catch(e){}})()`)
+  ? cspInlineScript(`(function(){try{var d=document.documentElement,m=document.cookie.match(/(?:^|; )leaflock_signed_in=([a-z]+)/);if(m&&m[1]!=='free')d.dataset.plan=m[1];if(Date.now()>=${plansStartAt})d.dataset.started='1';if(localStorage.getItem('leaflock_banner_closed')==='${plansStartAt}')d.dataset.bannerClosed='1'}catch(e){}})()`)
   : '';
 
 const signedInHintScript = signedInHint
@@ -367,51 +367,22 @@ const chromeHeightScript = cspInlineScript(`
       }
     </script>
     <script>
-      // Shrinks the sticky header to just the brand mark once the page has scrolled a
-      // little — on a phone, the full header permanently ate a real share of the
-      // viewport, on every page, for chrome a visitor only actually needs at the very
-      // top. The privacy strip ("Everything happens in your browser...") stays put
-      // through this, on the owner's instruction — it's the one line worth keeping
-      // visible the whole time someone's using a tool, not just at the top of the
-      // page. Site-wide, not gated behind `toolsSidebar`: the crowding applies to
-      // every page, sidebar or not.
-      //
-      // Two thresholds, not one, and far apart — this is sticky, so it still occupies
-      // document flow space, and condensing it shrinks that space, shifting everything
-      // below it upward. That shift moves whatever a visitor's cursor (or a test's
-      // scroll-into-view) was aiming at, which can nudge scrollY back across a single
-      // shared threshold and flip the state right back — condense, shift, re-cross,
-      // expand, shift again, forever. Found this the hard way: a real e2e regression
-      // where a result panel's Download link became permanently "not stable" to click,
-      // because Playwright's own auto-scroll kept landing exactly on that boundary. A
-      // wide dead zone between condense-at and expand-at means one shift from toggling
-      // can never itself cross back over the other threshold.
+      // Keeps two CSS variables in step with the chrome's real size: --tools-chrome-h (the sidebar's top
+      // offset and the home hero's height) and --banner-h (how far the promo banner lets the chrome slide
+      // up, global.css .site-chrome). It runs when the box is resized and nothing else. There is deliberately
+      // no scroll listener: the header used to shrink as the page scrolled, which moved the content under the
+      // reader's finger and needed this script to chase the sidebar; a header that never changes size needs
+      // neither.
       const chrome = document.querySelector('.site-chrome');
       if (chrome) {
-        const CONDENSE_AT = 64;
-        const EXPAND_AT = 16;
-        let condensed = false;
-        // Only pages with a sidebar read --tools-chrome-h, but setting it unconditionally
-        // is simpler than branching on `toolsSidebar`, and costs nothing on pages without one.
-        // Measured from the whole chrome box, not header plus strip, and measured again when
-        // the header's padding transition ends and whenever the box resizes: reading it only
-        // at the moment the class flips caught the header mid-transition, 8px too tall, and
-        // left that much gap between the header and the sidebar for the rest of the scroll.
-        const updateChromeHeight = () => {
-          const h = Math.round(chrome.getBoundingClientRect().height);
-          document.documentElement.style.setProperty('--tools-chrome-h', h + 'px');
+        const root = document.documentElement;
+        const banner = chrome.querySelector('.top-banner');
+        const measure = () => {
+          root.style.setProperty('--tools-chrome-h', Math.round(chrome.getBoundingClientRect().height) + 'px');
+          root.style.setProperty('--banner-h', (banner ? Math.round(banner.getBoundingClientRect().height) : 0) + 'px');
         };
-        chrome.addEventListener('transitionend', updateChromeHeight);
-        if (typeof ResizeObserver !== 'undefined') new ResizeObserver(updateChromeHeight).observe(chrome);
-        const onScroll = () => {
-          const y = window.scrollY;
-          const shouldCondense = condensed ? y > EXPAND_AT : y > CONDENSE_AT;
-          if (shouldCondense === condensed) return;
-          condensed = shouldCondense;
-          chrome.classList.toggle('site-chrome--condensed', condensed);
-          updateChromeHeight();
-        };
-        addEventListener('scroll', onScroll, { passive: true });
+        measure();
+        if (typeof ResizeObserver !== 'undefined') new ResizeObserver(measure).observe(chrome);
       }
     </script>
   </body>

@@ -1,4 +1,4 @@
-// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --import). Do not edit by hand:
+// Machine-translated from src/i18n/en by in-session translation (scripts/translate.mjs --patch). Do not edit by hand:
 // a hand edit is overwritten by the next --force run. Fix the glossary or the English instead.
 // Strings that failed validation are left in English; see the run log.
 export default {
@@ -70,6 +70,7 @@ export default {
     },
     "nav": {
       "label": "Главное",
+      "menu": "Меню",
       "allTools": "Все инструменты",
       "guides": "Руководства",
       "security": "Безопасность",
@@ -2864,6 +2865,8 @@ export default {
     "earlyAccess": "Pro и Practice находятся в раннем доступе до {endDate}: все инструменты, включая шесть профессиональных, бесплатны для всех до этой даты. Платные тарифы начинаются {startDate}.",
     "homeNotice": "Инструменты с пометкой Pro или Practice бесплатны для всех до {endDate}. Купите тариф до этой даты и сэкономьте до {percent}%.",
     "freeNow": "Сейчас бесплатно",
+    "homePopular": "Сейчас популярно",
+    "homeSeeAll": "Посмотреть все инструменты",
     "offer": {
       "heading": "Предложение к запуску: скидка до {percent}% до {endDate}",
       "body": "Купите годовой тариф до {endDate} и заплатите на {yearlyPercent}% меньше за первый год или на {tenYearPercent}% меньше за десятилетний тариф. Оплата списывается при оформлении, а ваш тариф начинается {startDate}. Годовые тарифы продлеваются по стандартной цене после первого года.",
@@ -3329,6 +3332,7 @@ export default {
       "metaTitle": "Вход или регистрация | LeafLock PDF",
       "metaDescription": "Войдите в LeafLock PDF через Google, по паролю или по одноразовой ссылке из письма.",
       "heading": "Вход или регистрация",
+      "signingIn": "Выполняем вход…",
       "intro": "Используйте Google, пароль или одноразовую ссылку, отправленную на вашу почту. Если вы новый пользователь, при входе будет создан аккаунт.",
       "emailLabel": "Адрес электронной почты",
       "submit": "Отправить мне ссылку",
@@ -3342,6 +3346,8 @@ export default {
       "logIn": "Войти",
       "loggingIn": "Вход…",
       "useLink": "Лучше отправьте мне ссылку для входа по почте",
+      "usePassword": "У меня есть пароль",
+      "linkHint": "Пароль не нужен. Мы отправим ссылку на почту; откройте её и завершите вход.",
       "noPassword": "Ещё нет пароля? Войдите по ссылке, затем задайте пароль в своём аккаунте.",
       "errorCredentials": "Эта почта и пароль не совпадают.",
       "errorGoogle": "Вход через Google не завершён. Повторите попытку.",

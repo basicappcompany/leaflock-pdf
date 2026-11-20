@@ -16,6 +16,14 @@ Entries before 29 October 2026 are in `docs/roadmap.md` under their phase items,
 place deliberately: rewriting them would be the rework this file exists to prevent.
 
 ---
+## 20 November 2026 (later) — A smooth, one-row phone header; zoomed-out layout; a closable banner
+
+- **Scrolling no longer changes the header.** It used to shrink at 64px of scroll, which moved all the content under the finger and needed a scroll listener to chase the sidebar offset. The listener and `.site-chrome--condensed` are gone; the only script left measures `--tools-chrome-h` and `--banner-h` when the box resizes. The promo banner scrolls away by ordinary scrolling (the chrome's sticky offset is `-var(--banner-h)`). Phones get an opaque bar, no `backdrop-filter`. Tests: header height and content position are identical at every scroll stop, both ways (`mobile.spec.ts`, `recentTools.spec.ts`).
+- **Phone header is one row** (brand; language, theme, an icon-only Menu button). The skin picker lives in the menu; a tap anywhere outside the open menu closes it. The language list now hangs from the screen's right edge (it was anchored to the flag button, which no longer sits at the edge). Design weighed in `docs/design.md`.
+- **Zoomed out** (a 2560px viewport at 50%): the header's contents stay in the 84rem frame the page uses, and the home hero's minimum height is capped at 46rem; a screen-high hero stretched the bento cards into empty slabs. Left alone on purpose: the sidebar stays docked to the window edge (it docks to four edges, with handles); on a very wide window it sits far from the centred content.
+- **The launch-offer banner has a close button,** remembered per offer in localStorage (`leaflock_banner_closed` = the launch date; a different offer shows again) and applied before first paint by Base's member script, so it never flashes back. It reuses the translated "Close" string. The banner's markup is now a bar (`.top-banner`) holding a link and a button.
+- **Local test lessons:** a click at the corner of a rounded panel lands on whatever is behind the curve; and a base `display: none` placed below the media rule that shows an element beats it on source order (both found by the e2e run, neither visible to unit tests).
+
 ## 20 November 2026 — A phone Menu, an HTML sign-in email, no login-form flash
 
 - **Phone header:** under 48rem, with scripting on, All tools, Guides, Security, Pricing, Business and Log in sit behind one Menu button (`NavToggle.astro`); All tools opens in place inside it. Row one (brand, language, skin, theme) is unchanged because `mobile.spec.ts` pins it. **A base `display: none` placed below the media rule that shows the button beat it on source order** and hid the button everywhere; the e2e run caught it, the unit tests could not. Scripting off keeps the links visible.

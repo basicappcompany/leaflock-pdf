@@ -49,7 +49,7 @@ Habits that keep the docs from becoming the expensive part:
   pages — `/claims`, `/security`, `/cookies`, `/privacy` — for what it just made untrue.
 - **Locale catalogues are generated.** `src/i18n/<code>/index.ts` is written by
   `node scripts/translate.mjs --locale <code> --import <file>` (export the English strings with
-  `--export`); never edit one by hand. After adding a locale folder, flip its `status` in
+  `--export`); never edit one by hand. **For a few new strings use `--patch fixes.json`** (`{ "de": { "common.nav.menu": "Menü" } }`, every locale in one file, no API key, the rest of each file untouched), not a full import. After adding a locale folder, flip its `status` in
   `src/i18n/locales.mjs`, touch `src/i18n/index.ts` (vitest caches its `import.meta.glob`), and
   run `pnpm check`, `pnpm test` and a build. Keep `buildLocales()` marked `/*#__PURE__*/`, or
   every catalogue lands in every client chunk. Anything per-language must stay out of every
