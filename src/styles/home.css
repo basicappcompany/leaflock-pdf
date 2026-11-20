@@ -9,28 +9,61 @@
  * anything (tests/e2e/zoomLayout.spec.ts checks this from 100% to 400%).
  */
 
-/* The early-access notice: a full-width accent bar above the header, as in the approved demo. */
+/* The early-access notice: a full-width accent bar above the header, as in the approved demo. The message is centred and
+   a close button sits at the trailing edge; the link's side padding keeps the text clear of the button on both sides, so
+   it stays centred. A tap target of 2.5rem by the bar's height. Closed (remembered in localStorage, read before first
+   paint by Base's member script) it is simply not there, and the header and strip are all that is left at the top. */
 .top-banner {
-  display: block;
-  padding: 0.5rem var(--space);
+  position: relative;
   background: var(--color-accent);
   color: var(--color-on-accent);
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+.top-banner__link {
+  display: block;
+  padding: 0.5rem 3rem;
+  color: inherit;
   text-align: center;
   text-decoration: none;
 }
 
-.site-chrome--condensed .top-banner {
-  display: none;
-}
-
-.top-banner::after {
+.top-banner__link::after {
   content: ' →';
 }
 
-.top-banner:hover {
+.top-banner__link:hover {
   text-decoration: underline;
+}
+
+.top-banner__close {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0.25rem;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-small);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.top-banner__close:hover {
+  background: color-mix(in srgb, var(--color-on-accent) 18%, transparent);
+}
+
+.top-banner__close:focus-visible,
+.top-banner__link:focus-visible {
+  outline: 2px solid var(--color-on-accent);
+  outline-offset: -2px;
+}
+
+html[data-banner-closed] .top-banner {
+  display: none;
 }
 
 /* The page's own column is 64rem, a good measure for reading and too narrow for a bento. The page that has a .home-hero
@@ -49,8 +82,10 @@ main:has(> .home-hero) {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.5fr);
   align-items: stretch;
-  /* The hero fills the first screen below the header (a minimum, never a fixed height: at a high zoom it grows). */
-  min-height: calc(100svh - var(--tools-chrome-h, 8rem) - 1rem);
+  /* The hero fills the first screen below the header (a minimum, never a fixed height: at a high zoom it grows). Capped at
+     46rem: on a very tall viewport (a zoomed-out browser) a screen-high hero stretched every bento card into an empty
+     slab. A cap on a minimum cannot clip anything; the content still sets the height when it needs more. */
+  min-height: min(calc(100svh - var(--tools-chrome-h, 8rem) - 1rem), 46rem);
   gap: calc(var(--space) * 3);
   padding-block: calc(var(--space) * 1.5);
   container-type: inline-size;

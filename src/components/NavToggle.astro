@@ -1,6 +1,6 @@
 ---
 /**
- * The phone-width "Menu" button. Under 48rem the header's links (All tools, Guides, Security, Pricing, Business, Log in)
+ * The phone-width Menu button (an icon, with its name for screen readers). Under 48rem the header's links (All tools, Guides, Security, Pricing, Business, Log in)
  * sit in one panel this button opens, instead of wrapping across the header on every page. Above that width the button
  * is hidden and the links show inline as before. The panel is `#site-nav`, set in Base.astro.
  *
@@ -18,7 +18,7 @@ const { label } = Astro.props;
   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
     <path d="M4 7h16M4 12h16M4 17h16"></path>
   </svg>
-  {label}
+  <span class="visually-hidden">{label}</span>
 </button>
 
 <script>
@@ -30,6 +30,15 @@ const { label } = Astro.props;
       toggle.setAttribute('aria-expanded', String(open));
     };
     toggle.addEventListener('click', () => setOpen(!nav.classList.contains('site-nav--open')));
+    // A tap anywhere outside the menu closes it. The panel, the Menu button and the skin picker (which is part of the
+    // menu while it is open) count as inside; a link inside the panel navigates away on its own.
+    const skin = document.querySelector('.skin-picker');
+    document.addEventListener('click', (event) => {
+      if (!nav.classList.contains('site-nav--open')) return;
+      const target = event.target as Node;
+      if (nav.contains(target) || toggle.contains(target) || skin?.contains(target)) return;
+      setOpen(false);
+    });
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && nav.classList.contains('site-nav--open')) {
         setOpen(false);

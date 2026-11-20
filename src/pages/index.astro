@@ -6,7 +6,7 @@ import '../styles/home.css';
 import PrivacyDiagram from '../components/PrivacyDiagram.astro';
 import ToolIcon from '../components/ToolIcon.astro';
 import { format, getMessages } from '../i18n';
-import { formatEarlyAccessEnd, launchPercentOff, paidPlansAvailable } from '../lib/pricing';
+import { formatEarlyAccessEnd, launchPercentOff, paidPlansAvailable, plansStartAt } from '../lib/pricing';
 import { itemList } from '../lib/seo';
 import { tierBadgeText } from '../lib/tierBadge';
 import { categories, toolById, tools } from '../tools/registry';
@@ -62,12 +62,20 @@ const jsonLd = [
   <Fragment slot="banner">
     {
       !paidPlansAvailable && (
-        <a class="top-banner for-new" href={getRelativeLocaleUrl(locale, 'pricing')}>
-          {format(messages.pricing.homeNotice, {
-            endDate: formatEarlyAccessEnd(locale),
-            percent: Math.max(...Object.values(launchPercentOff)),
-          })}
-        </a>
+        <div class="top-banner for-new">
+          <a class="top-banner__link" href={getRelativeLocaleUrl(locale, 'pricing')}>
+            {format(messages.pricing.homeNotice, {
+              endDate: formatEarlyAccessEnd(locale),
+              percent: Math.max(...Object.values(launchPercentOff)),
+            })}
+          </a>
+          {/* data-offer is the launch date: dismissing is remembered for this offer, and a different offer shows again. */}
+          <button type="button" class="top-banner__close" aria-label={common.feedback.close} data-offer={String(plansStartAt)}>
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
       )
     }
   </Fragment>
@@ -218,3 +226,20 @@ const jsonLd = [
     </div>
   </section>
 </Base>
+
+<script>
+  // Closing the launch-offer banner is remembered on this device for this offer (the value is the launch date, so a
+  // different offer shows again). A per-visitor convenience in localStorage, nothing sent anywhere. Base's member script
+  // reads the same key before first paint, so a banner that was closed never flashes back in.
+  const close = document.querySelector<HTMLButtonElement>('.top-banner__close');
+  close?.addEventListener('click', () => {
+    try {
+      localStorage.setItem('leaflock_banner_closed', close.dataset.offer ?? '');
+    } catch {
+      /* Private mode or blocked storage: it still closes for this visit. */
+    }
+    document.documentElement.dataset.bannerClosed = '1';
+    // The button is gone; leave focus somewhere sensible rather than on the page's body.
+    document.querySelector<HTMLElement>('.site-header .brand')?.focus();
+  });
+</script>
