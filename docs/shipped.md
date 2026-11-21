@@ -16,6 +16,17 @@ Entries before 29 October 2026 are in `docs/roadmap.md` under their phase items,
 place deliberately: rewriting them would be the rework this file exists to prevent.
 
 ---
+## 22 November 2026 — Pricing banner, home lead, security proof link, five privacy articles, listing copy
+
+- **Pricing page:** four cards (Free, Pro, Practice, Business) instead of five. The ten-year plan is a line and a button on the Pro card (`pricing.tenYearLine`, `checkout.buyTenYear`); its checkout and the member panel are unchanged. The two notices (early access, launch offer) are one banner in plain English: every tool is free until the date, no card is asked for, nothing renews by itself unless you buy a plan, and a yearly plan can be cancelled in one click before it renews. Strings translated into the nine locales with `translate.mjs --patch`. Styles for the banner are in `pricing-banner.css`, not `early-notice.css`, which the home page inlines.
+- **Home page:** the line under the headline is now the contrast (most online PDF tools send your file to their servers first; this one does the work in your browser) plus a link to `/compare`. The headline was left alone: `site.spec.ts` and `homeExpanded.spec.ts` assert it is the tagline, and the page title is derived from it. The contrast sentence is the one `compareIndex.intro` already makes.
+- **Security proof:** `/verify` already is the live network proof (the browser's own request record, a blocked off-site request, an offline test). `/security` did not link to it; it now opens with the link. No screenshot or video was made: a recording of DevTools cannot be taken from inside the page, and a screenshot proves less than the page does.
+- **Five articles** in the guides collection, under the team name, no byline: seven questions before uploading a PDF; what is hidden inside a PDF; how a website can promise files stay on the device (the CSP, and what it does not rule out); sending a sensitive PDF by email; working offline. They list no tool, so they sit under "Security and privacy" on the guides page. Every claim is one `/security`, `/verify` or a tool FAQ already makes.
+- **Two mistakes worth not repeating.** (1) An unquoted `: ` in guide frontmatter is invalid YAML and failed `pnpm check` in CI twice; `tests/unit/frontmatter.test.ts` now catches it locally. (2) On this laptop the Write tool and Python's text-mode writes leave **CRLF** in the working copy, while the repository is LF (`.gitattributes`); a unit test that matches `
+` failed on it. After editing files outside git, run `sed -i 's/$//'` on them before testing.
+- **For the owner, not shipped:** `docs/legal-fill-in.md` (the 24 `[TO CONFIRM]` lines, as 21 decisions) and `docs/launch-listings.md` (copy for Product Hunt, AlternativeTo, SaaSHub, Capterra, G2). Neither has been submitted or filled in.
+
+---
 ## 22 November 2026 — 28 landing pages, English-only (3.1); guides grouped by category
 
 - **28 landings added** (12 to 40): six "without upload" privacy pages (merge, compress, split, PDF to Word, sign, OCR), five size targets (100 KB, 500 KB, 2 MB, 5 MB, and a 10 MB email preset), nine search-name synonyms (join, shrink, password protect, encrypt, separate pages, fix corrupted, crop margins, remove comments, compare two PDFs) and eight file-type names (image, GIF, JPEG, DOCX, XLSX, TXT, make searchable). Every FAQ answer repeats a claim the tool's own FAQ already makes, so a landing cannot promise more than the tool.

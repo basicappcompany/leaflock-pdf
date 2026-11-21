@@ -6,6 +6,7 @@ A dated snapshot; the sections below are the detail and the source of truth.
 
 **Pending on you** (accounts, dashboards, people):
 - Valid `ANTHROPIC_API_KEY` (§9); a person to review translated trust claims (§9).
+- **Answer `docs/legal-fill-in.md`** (21 decisions behind the 24 `[TO CONFIRM]` lines in privacy, terms and cookies), then post `docs/launch-listings.md` (Product Hunt, AlternativeTo, SaaSHub, Capterra, G2; each needs your account). Listings link the legal pages, so fill the blanks first.
 - Send one test email each to `hello@` and `feedback@` from another account (§0, §4); decide on replying
   from `hello@`. (The feedback form was verified end to end on 12 November: stored, and the notification arrived.)
 - Auto-renew and registrar 2FA (§0); TLS 1.2 and Bot Fight Mode decisions (§8); whether an edge rule blocks

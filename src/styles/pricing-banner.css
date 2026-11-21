@@ -1,0 +1,11 @@
+/* The one plain-English banner at the top of the pricing page (early access and the launch offer in a single box).
+   Only the pricing page imports this, so it stays out of early-notice.css, which the home page inlines too. The
+   heading stays bold; the sentences under it read as ordinary text. Tokens only, so every skin re-skins it. */
+.early-notice p {
+  margin: 0.4rem 0 0;
+  font-weight: 400;
+}
+
+.early-notice strong + p {
+  margin-top: 0.3rem;
+}

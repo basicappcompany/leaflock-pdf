@@ -87,7 +87,10 @@ const jsonLd = [
         {headLead}{headAccent && " "}
         {headAccent && <em>{headAccent}</em>}
       </h1>
-      <p class="lead">{common.site.privacyNote}</p>
+      <p class="lead">
+        {messages.pricing.homeContrast}{' '}
+        <a href={getRelativeLocaleUrl(locale, 'compare')}>{common.compareIndex.title}</a>
+      </p>
       <ul class="home-chips">
         {
           chipIds.map((id) => {

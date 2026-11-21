@@ -19,8 +19,11 @@ for (const path of sitePages) {
   });
 }
 
-test('tool and landing pages carry structured data and a share image', async ({ page, request }) => {
-  for (const slug of [...tools.map((tool) => tool.slug), ...landings.map((landing) => landing.slug)]) {
+// One test per page, not one loop over all of them: the loop was a single test with a 60 s limit and about eighty page
+// loads, and it timed out on a slow CI runner (22 November 2026) once landings reached 40. Separate tests also share the
+// two workers, so the file finishes sooner.
+for (const slug of [...tools.map((tool) => tool.slug), ...landings.map((landing) => landing.slug)]) {
+  test(`/${slug} carries structured data and a share image`, async ({ page, request }) => {
     await page.goto(`/${slug}`);
     const json = await page.locator('script[type="application/ld+json"]').textContent();
     const types = (JSON.parse(json!)['@graph'] as { '@type': string }[]).map((item) => item['@type']);
@@ -31,8 +34,8 @@ test('tool and landing pages carry structured data and a share image', async ({ 
     const image = await page.locator('meta[property="og:image"]').getAttribute('content');
     const imagePath = new URL(image!).pathname;
     expect((await request.get(imagePath)).status(), imagePath).toBe(200);
-  }
-});
+  });
+}
 
 test('sitemap lists every page, with language alternates', async ({ request }) => {
   const xml = await (await request.get('/sitemap.xml')).text();
