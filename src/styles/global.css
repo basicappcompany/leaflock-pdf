@@ -529,13 +529,31 @@ h2 {
     justify-content: center;
   }
 
-  /* "All tools" opens in place inside the menu, not as a floating panel over the page. */
+  /* "All tools" opens in place inside the menu, not as a floating panel over the page. One column of 25 links is taller
+     than a phone, so the open header itself is capped at the screen and scrolls inside, with the page behind it still:
+     a sticky header taller than the screen leaves its bottom unreachable and the page scroll fights it. */
+  /* Opening the Menu makes the sticky header taller, which pushes the page content down. Scroll anchoring "corrects" that
+     by scrolling the page by the same amount (300px to 987px in a test), so the page lurched when "All tools" opened. */
+  html {
+    overflow-anchor: none;
+  }
+
+  .site-header:has(.site-nav--open) {
+    max-height: calc(100dvh - var(--banner-h, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
   .site-nav--open .tools-menu__panel {
     position: static;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
     width: auto;
     max-height: none;
     margin-top: 0.4rem;
-    padding: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    overflow: visible;
     box-shadow: none;
   }
 }
