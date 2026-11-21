@@ -16,6 +16,18 @@ Entries before 29 October 2026 are in `docs/roadmap.md` under their phase items,
 place deliberately: rewriting them would be the rework this file exists to prevent.
 
 ---
+## 22 November 2026 — A guide for every tool (3.3)
+
+- **37 guides added** under `src/content/guides/en/` (Excel and CSV share one), about 540 to 740 words each. Each lists its tool in `tools:` so the tool page links it, and each was written from that tool's FAQ in `src/i18n/en/tools/<id>.ts`, so a stated limit (what survives a conversion, what is dropped) matches the tool.
+- **Claims were checked against code, not memory.** The booklet guide first said sheet sizes the tool does not offer; the tool has A4, Letter and A3 landscape (`BookletTool.tsx`). Re-read the tool before writing a number.
+- **Not done:** the roadmap's "answer in the first two sentences" rule, and translations.
+
+## 21 November 2026 — Phone menu: "All tools" opens inside a scrolling header
+
+- **Scroll anchoring has to be switched off on `body`, not only `html`.** With `html { overflow-anchor: none }` the computed value read `none` and the page still jumped from 300 to 987 when the sticky chrome grew; `body` stopped it. Found by bisecting in a probe after CI failed. Test: `mobile.spec.ts` ("All tools" inside the Menu).
+- **A local `test:e2e` run can time out before any test runs:** the production build now takes over ten minutes on this laptop and the web server limit is 180 s. Start `astro dev` on a spare port and set `LEAFLOCK_PORT` for a layout test.
+
+---
 ## 20 November 2026 (later) — A smooth, one-row phone header; zoomed-out layout; a closable banner
 
 - **Scrolling no longer changes the header.** It used to shrink at 64px of scroll, which moved all the content under the finger and needed a scroll listener to chase the sidebar offset. The listener and `.site-chrome--condensed` are gone; the only script left measures `--tools-chrome-h` and `--banner-h` when the box resizes. The promo banner scrolls away by ordinary scrolling (the chrome's sticky offset is `-var(--banner-h)`). Phones get an opaque bar, no `backdrop-filter`. Tests: header height and content position are identical at every scroll stop, both ways (`mobile.spec.ts`, `recentTools.spec.ts`).
