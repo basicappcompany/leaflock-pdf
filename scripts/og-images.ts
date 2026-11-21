@@ -2,6 +2,7 @@
 import { readFile } from 'node:fs/promises';
 import { test } from '@playwright/test';
 import { en } from '../src/i18n/en';
+import { landingsMore } from '../src/i18n/en/landingsMore';
 import { landings, tools, toolById } from '../src/tools/registry';
 
 const categoryColor = { organize: '#2a7548', convert: '#1d6fd8', edit: '#b4561b', secure: '#6b3fa0' } as const;
@@ -27,6 +28,13 @@ function template(title: string, subtitle: string, accent: string, logo: string)
   </body></html>`;
 }
 
+/** English text for a landing: the English-only catalogue first, then the translated one. (Not landingPage(): that module needs Vite.) */
+function landingText(id: string): { title: string; summary: string } {
+  const page = (landingsMore as Record<string, { title: string; summary: string }>)[id] ?? (en.landings as Record<string, { title: string; summary: string }>)[id];
+  if (!page) throw new Error(`No text for landing ${id}`);
+  return page;
+}
+
 test('render share images', async ({ page }) => {
   const logo = (await readFile('public/favicon.svg')).toString('base64');
   const images = [
@@ -39,8 +47,8 @@ test('render share images', async ({ page }) => {
     })),
     ...landings.map((landing) => ({
       file: landing.slug,
-      title: en.landings[landing.id].title,
-      subtitle: en.landings[landing.id].summary,
+      title: landingText(landing.id).title,
+      subtitle: landingText(landing.id).summary,
       accent: categoryColor[toolById(landing.toolId).category],
     })),
   ];

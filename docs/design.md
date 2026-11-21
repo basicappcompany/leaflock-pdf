@@ -1243,9 +1243,19 @@ them from the request origin: `http://localhost:8788/api/auth/google/callback` a
 - **Compress "to a size" is a promise with a stated limit — decided 9 November 2026.** The tool
   tries the gentlest image setting that fits, over a six-step ladder, and stops at 500-pixel
   images; a target it cannot reach is reported as missed and the smallest file is still offered,
-  never a worse-looking file chased in silence. Only the 200 KB and 1 MB landings were built;
-  further sizes wait for search traffic. This reverses the 8 November note that a target-size
+  never a worse-looking file chased in silence. The 200 KB and 1 MB landings were built first;
+  further sizes waited for search traffic, until the owner asked on 22 November 2026 for every distinct
+  intent at once (100 KB, 500 KB, 2 MB, 5 MB and an email preset joined them). This reverses the 8 November note that a target-size
   landing "would promise what it cannot do" — it was true while the tool had only levels.
+- **Landings added after 22 November 2026 are English-only — decided 22 November 2026.** Twenty-eight landings were
+  added in one pass. Translating them meant about fifteen strings times nine locales each and ten times the pages in a
+  build that already takes over ten minutes against a 22-minute CI cap, so their text lives in
+  `src/i18n/en/landingsMore.ts`, outside the `en` object every locale mirrors (`localeCatalogues.test.ts`), and the
+  registry marks them `enOnly`. A non-English URL serves the English page, `noindex`, with no hreflang; the English page
+  lists English and x-default only (`Base.astro`'s `englishOnly`, `sitemap.ts`). Look the text up with
+  `landingPage()` (`src/i18n/landingPage.ts`), never `messages.landings[id]`, and never export it from
+  `src/i18n/index.ts`, which about seventy client components import. To translate one later, move its entry into
+  `landings.ts`, drop `enOnly`, and run `translate.mjs --patch`.
 - **Sidebar controls hang off the sidebar's inner edge; hidden on a phone, one slim edge tab remains —
   decided 7–8 November 2026, revised 9 November.** Stars are stored in the browser and merged into the account on
   sign-in (op-based, so a removal on one device is not undone by another). A page-edge handle

@@ -8,13 +8,15 @@ export interface SitemapEntry {
   /** Path without locale prefix. */
   path: string;
   lastmod?: Date | undefined;
+  /** Text exists in English only: listed under English alone, whatever SITEMAP_LOCALES says. */
+  englishOnly?: boolean;
 }
 
 /** Every indexable page, once per path; locale variants are added as hreflang alternates. */
 export async function sitemapEntries(): Promise<SitemapEntry[]> {
   const entries: SitemapEntry[] = [{ path: '' }, { path: 'pricing' }, { path: 'guides' }, { path: 'compare' }];
   for (const tool of tools) entries.push({ path: tool.slug });
-  for (const landing of landings) entries.push({ path: landing.slug });
+  for (const landing of landings) entries.push({ path: landing.slug, englishOnly: 'enOnly' in landing });
   for (const category of categories) entries.push({ path: `tools/${category}` });
 
   const pages = await entriesFor('pages', 'en');
@@ -49,9 +51,9 @@ export function sitemapXml(entries: readonly SitemapEntry[]): string {
   // Only locales with a translation: a 'planned' locale serves English and must not be indexed.
   const codes = Object.keys(locales).filter((code) => SITEMAP_LOCALES === null || SITEMAP_LOCALES.includes(code));
   const urls = codes.flatMap((locale) =>
-    entries.map((entry) => {
+    entries.filter((entry) => !entry.englishOnly || locale === 'en').map((entry) => {
       const alternates = [
-        ...codes.map((code) => `<xhtml:link rel="alternate" hreflang="${code}" href="${escape(getAbsoluteLocaleUrl(code, entry.path))}"/>`),
+        ...(entry.englishOnly ? ['en'] : codes).map((code) => `<xhtml:link rel="alternate" hreflang="${code}" href="${escape(getAbsoluteLocaleUrl(code, entry.path))}"/>`),
         `<xhtml:link rel="alternate" hreflang="x-default" href="${escape(getAbsoluteLocaleUrl('en', entry.path))}"/>`,
       ];
       const lastmod = entry.lastmod ? `<lastmod>${entry.lastmod.toISOString().slice(0, 10)}</lastmod>` : '';

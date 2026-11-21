@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getAbsoluteLocaleUrl } from 'astro:i18n';
 import { getMessages } from '../i18n';
+import { landingPage } from '../i18n/landingPage';
 import { guidesFor, slugOf } from '../lib/content';
 import { categories, landings, tools } from '../tools/registry';
 
@@ -50,7 +51,7 @@ export const GET: APIRoute = async ({ currentLocale }) => {
   if (landings.length > 0) {
     lines.push('## Specific conversions', '');
     for (const landing of landings) {
-      const page = messages.landings[landing.id];
+      const page = landingPage(locale, landing.id);
       lines.push(`- [${page.title}](${url(landing.slug)}): ${page.summary}`);
     }
     lines.push('');

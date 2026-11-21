@@ -1,7 +1,8 @@
-import type { LandingId, ToolId } from '../../tools/registry';
+import type { EnglishOnlyLandingId, ToolId, TranslatedLandingId } from '../../tools/registry';
 import { auth } from './auth';
 import { common } from './common';
 import { landings } from './landings';
+import { landingsMore } from './landingsMore';
 import { pricing } from './pricing';
 import { verify } from './verify';
 import batch from './tools/batch';
@@ -106,6 +107,8 @@ const tools = {
 } satisfies Record<ToolId, ToolMessagesBase>;
 
 /** English strings. This object defines the shape every other language must match. */
-landings satisfies Record<LandingId, ToolMessagesBase>;
+landings satisfies Record<TranslatedLandingId, ToolMessagesBase>;
+/** The English-only landings are checked here too, but are not part of `en`: locales do not mirror them. */
+landingsMore satisfies Record<EnglishOnlyLandingId, ToolMessagesBase>;
 
 export const en = { common, tools, pricing, landings, auth, verify };

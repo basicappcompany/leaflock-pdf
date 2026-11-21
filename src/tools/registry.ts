@@ -90,6 +90,45 @@ export const landings = [
   { id: 'reducePdfSize', slug: 'reduce-pdf-size', toolId: 'compress' },
   { id: 'compressPdfTo200kb', slug: 'compress-pdf-to-200kb', toolId: 'compress', preset: { mode: 'size', size: '200', unit: 'KB' } },
   { id: 'compressPdfTo1mb', slug: 'compress-pdf-to-1mb', toolId: 'compress', preset: { mode: 'size', size: '1', unit: 'MB' } },
-] as const satisfies readonly { id: string; slug: string; toolId: ToolId; preset?: Record<string, string> }[];
+
+  // English-only landings (22 November 2026). Their text is in src/i18n/en/landingsMore.ts, outside the catalogue every
+  // locale must mirror, so none needs translating: a non-English URL serves the English page and is noindex.
+  // Privacy intent: the query is "without uploading".
+  { id: 'mergePdfWithoutUpload', slug: 'merge-pdf-without-upload', toolId: 'merge', enOnly: true },
+  { id: 'compressPdfWithoutUpload', slug: 'compress-pdf-without-upload', toolId: 'compress', enOnly: true },
+  { id: 'splitPdfWithoutUpload', slug: 'split-pdf-without-upload', toolId: 'split', enOnly: true },
+  { id: 'pdfToWordWithoutUpload', slug: 'pdf-to-word-without-upload', toolId: 'pdfToWord', enOnly: true },
+  { id: 'signPdfWithoutUpload', slug: 'sign-pdf-without-upload', toolId: 'sign', enOnly: true },
+  { id: 'ocrPdfWithoutUpload', slug: 'ocr-pdf-without-upload', toolId: 'ocr', enOnly: true },
+  // A size the file has to fit under.
+  { id: 'compressPdfTo100kb', slug: 'compress-pdf-to-100kb', toolId: 'compress', preset: { mode: 'size', size: '100', unit: 'KB' }, enOnly: true },
+  { id: 'compressPdfTo500kb', slug: 'compress-pdf-to-500kb', toolId: 'compress', preset: { mode: 'size', size: '500', unit: 'KB' }, enOnly: true },
+  { id: 'compressPdfTo2mb', slug: 'compress-pdf-to-2mb', toolId: 'compress', preset: { mode: 'size', size: '2', unit: 'MB' }, enOnly: true },
+  { id: 'compressPdfTo5mb', slug: 'compress-pdf-to-5mb', toolId: 'compress', preset: { mode: 'size', size: '5', unit: 'MB' }, enOnly: true },
+  { id: 'compressPdfForEmail', slug: 'compress-pdf-for-email', toolId: 'compress', preset: { mode: 'size', size: '10', unit: 'MB' }, enOnly: true },
+  // The same job under the word people search for.
+  { id: 'joinPdf', slug: 'join-pdf', toolId: 'merge', enOnly: true },
+  { id: 'shrinkPdf', slug: 'shrink-pdf', toolId: 'compress', enOnly: true },
+  { id: 'passwordProtectPdf', slug: 'password-protect-pdf', toolId: 'protect', enOnly: true },
+  { id: 'encryptPdf', slug: 'encrypt-pdf', toolId: 'protect', enOnly: true },
+  { id: 'separatePdfPages', slug: 'separate-pdf-pages', toolId: 'split', enOnly: true },
+  { id: 'fixCorruptedPdf', slug: 'fix-corrupted-pdf', toolId: 'repair', enOnly: true },
+  { id: 'cropPdfMargins', slug: 'crop-pdf-margins', toolId: 'crop', enOnly: true },
+  { id: 'removePdfComments', slug: 'remove-pdf-comments', toolId: 'removeAnnotations', enOnly: true },
+  { id: 'compareTwoPdfs', slug: 'compare-two-pdfs', toolId: 'compare', enOnly: true },
+  // A file type named in the query.
+  { id: 'imageToPdf', slug: 'image-to-pdf', toolId: 'imagesToPdf', enOnly: true },
+  { id: 'gifToPdf', slug: 'gif-to-pdf', toolId: 'imagesToPdf', enOnly: true },
+  { id: 'pdfToJpeg', slug: 'pdf-to-jpeg', toolId: 'pdfToImages', enOnly: true },
+  { id: 'pdfToDocx', slug: 'pdf-to-docx', toolId: 'pdfToWord', enOnly: true },
+  { id: 'docxToPdf', slug: 'docx-to-pdf', toolId: 'wordToPdf', enOnly: true },
+  { id: 'xlsxToPdf', slug: 'xlsx-to-pdf', toolId: 'excelToPdf', enOnly: true },
+  { id: 'pdfToTxt', slug: 'pdf-to-txt', toolId: 'pdfToText', enOnly: true },
+  { id: 'makePdfSearchable', slug: 'make-pdf-searchable', toolId: 'ocr', enOnly: true },
+] as const satisfies readonly { id: string; slug: string; toolId: ToolId; preset?: Record<string, string>; enOnly?: boolean }[];
 
 export type LandingId = (typeof landings)[number]['id'];
+/** Landings whose text exists in English only: no entry in the locale catalogues, and noindex outside English. */
+export type EnglishOnlyLandingId = Extract<(typeof landings)[number], { enOnly: true }>['id'];
+/** Landings every translated locale has to carry text for. */
+export type TranslatedLandingId = Exclude<LandingId, EnglishOnlyLandingId>;

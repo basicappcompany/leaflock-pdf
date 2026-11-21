@@ -1,3 +1,4 @@
+import { readdirSync } from 'node:fs';
 import { expect, test } from './fixtures';
 import { en } from '../../src/i18n/en';
 import { contentPages } from '../../src/lib/siteLinks';
@@ -104,4 +105,31 @@ test('llms-full.txt carries every tool page in one fetch', async ({ request }) =
     const plan = en.common.toolPage.tiers[tool.tier].label;
     expect(body, tool.id).toContain(`Requires the ${plan} plan.`);
   }
+});
+
+test('an English-only landing is indexable in English and noindex in every other language', async ({ page }) => {
+  await page.goto('/merge-pdf-without-upload');
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /^index/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/merge-pdf-without-upload\/?$/);
+  // No alternates for languages that have no translation of it: English and x-default only.
+  const hreflangs = await page.locator('link[rel="alternate"][hreflang]').evaluateAll((nodes) => nodes.map((node) => node.getAttribute('hreflang')));
+  expect(hreflangs.sort()).toEqual(['en', 'x-default']);
+
+  await page.goto('/de/merge-pdf-without-upload');
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+});
+
+test('the guides page lists every guide once, under a category, with a jump link for each category', async ({ page }) => {
+  const slugs = readdirSync('src/content/guides/en')
+    .filter((file) => file.endsWith('.md'))
+    .map((file) => file.replace(/\.md$/, ''));
+  await page.goto('/guides');
+  await expect(page.locator('.guide-group .card-list li')).toHaveCount(slugs.length);
+  for (const slug of slugs) {
+    await expect(page.locator(`.guide-group a[href$="/guides/${slug}"], .guide-group a[href$="/guides/${slug}/"]`), slug).toHaveCount(1);
+  }
+  const jumps = await page.locator('.guide-groups a').evaluateAll((nodes) => nodes.map((node) => node.getAttribute('href')));
+  expect(jumps.length).toBeGreaterThanOrEqual(4);
+  for (const href of jumps) await expect(page.locator(href!), `${href} has a section`).toHaveCount(1);
 });

@@ -965,7 +965,8 @@ is free, and working it out afterwards means re-reading a hundred pages.
 
 - **Programmatic landings.** 40+ is the target (`pnpm counts` has today's number; 12 on 9 November 2026, including compress-to-200-KB and -1-MB). Extend the `landings` array: every image
   format in and out, every "A to B" pair we can genuinely do, every phrasing people
-  search for. Distinct copy, not thin duplicates.
+  search for. Distinct copy, not thin duplicates. **Done 22 November 2026** (item 3.1): 28 added, so 40 in all — privacy
+  ("without upload"), size targets, search-name synonyms and file-type names. English-only (`docs/design.md` §13).
 - **Comparison pages. Done 1 November 2026** (item 3.2) — all seven, the last five
   written that day. 2 before (iLovePDF, Smallpdf) → add Adobe, Sejda, PDF24,
   pdfFiller. These rank for "X alternative" — high intent, low competition — and ours
