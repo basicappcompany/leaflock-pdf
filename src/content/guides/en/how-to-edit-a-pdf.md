@@ -1,5 +1,5 @@
 ---
-title: How to edit a PDF: add text, images and shapes, and white out mistakes
+title: "How to edit a PDF: add text, images and shapes, and white out mistakes"
 description: Add text, images, rectangles and highlights to any PDF page, cover errors with white-out and understand what editing cannot change or remove.
 published: 2026-11-22
 tools: [edit]

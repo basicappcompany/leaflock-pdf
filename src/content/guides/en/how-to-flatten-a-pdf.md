@@ -1,5 +1,5 @@
 ---
-title: How to flatten a PDF: lock form answers and annotations into the page
+title: "How to flatten a PDF: lock form answers and annotations into the page"
 description: Turn fillable fields, comments, highlights and stamps into ordinary page content so they cannot be changed, and know what flattening does not remove.
 published: 2026-11-22
 tools: [flatten]
