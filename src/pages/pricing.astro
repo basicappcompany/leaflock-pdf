@@ -2,6 +2,7 @@
 import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
 import Article from '../layouts/Article.astro';
 import '../styles/early-notice.css';
+import '../styles/pricing-banner.css';
 import '../styles/member-panel.css';
 import CheckoutButton from '../components/billing/CheckoutButton';
 import MemberPanel from '../components/billing/MemberPanel.astro';
@@ -38,6 +39,7 @@ const plans = [
     href: getRelativeLocaleUrl(locale, ''),
     available: true,
     planKeys: undefined,
+    extra: '',
   },
   {
     id: 'pro',
@@ -50,20 +52,13 @@ const plans = [
     href: undefined,
     available: buyable,
     // The yearly plan first: it is the one the launch offer discounts.
+    // The ten-year plan is a line and a button on this card, not a fifth card: four plans side by side read as a table.
+    extra: format(t.tenYearLine, { price: price(offer ? launchPrice('proTenYear') : prices.proTenYear) }),
     planKeys: [
       { key: 'proYearly' as const, label: t.checkout.buyYearly },
       { key: 'proMonthly' as const, label: t.checkout.buyMonthly },
+      { key: 'proTenYear' as const, label: t.checkout.buyTenYear },
     ],
-  },
-  {
-    id: 'lifetime',
-    plan: t.plans.lifetime,
-    price: price(offer ? launchPrice('proTenYear') : prices.proTenYear),
-    period: t.oneTime,
-    note: offer ? was(prices.proTenYear) : '',
-    href: undefined,
-    available: buyable,
-    planKeys: [{ key: 'proTenYear' as const, label: t.checkout.buy }],
   },
   {
     id: 'practice',
@@ -74,6 +69,7 @@ const plans = [
     href: undefined,
     available: buyable,
     planKeys: [{ key: 'practiceYearly' as const, label: t.checkout.buy }],
+    extra: '',
   },
   {
     id: 'business',
@@ -84,6 +80,7 @@ const plans = [
     href: getRelativeLocaleUrl(locale, 'business'),
     available: true,
     planKeys: undefined,
+    extra: '',
   },
 ];
 // Offers only once there is a checkout behind them: markup for a plan nobody can buy
@@ -123,23 +120,27 @@ const jsonLd = buyable
     businessHref={getRelativeLocaleUrl(locale, 'business')}
     locale={locale}
   />
-  {!paidPlansAvailable && <p class="notice for-new">{format(t.earlyAccess, dates)}</p>}
   {
-    offer && (
-      <p class="early-notice for-new">
-        <strong>{format(t.offer.heading, { ...dates, percent: Math.max(...Object.values(launchPercentOff)) })}</strong>{' '}
-        {format(t.offer.body, {
-          ...dates,
-          yearlyPercent: launchPercentOff.proYearly,
-          tenYearPercent: launchPercentOff.proTenYear,
-        })}
-      </p>
+    !paidPlansAvailable && (
+      <div class="early-notice for-new">
+        {offer && <strong>{format(t.offer.heading, { ...dates, percent: Math.max(...Object.values(launchPercentOff)) })}</strong>}
+        <p>{format(t.earlyAccess, dates)}</p>
+        {offer && (
+          <p>
+            {format(t.offer.body, {
+              ...dates,
+              yearlyPercent: launchPercentOff.proYearly,
+              tenYearPercent: launchPercentOff.proTenYear,
+            })}
+          </p>
+        )}
+      </div>
     )
   }
   <div slot="after">
     <ul class="pricing-grid">
       {
-        plans.map(({ id, plan, price, period, note, href, available, planKeys }) => (
+        plans.map(({ id, plan, price, period, note, extra, href, available, planKeys }) => (
           <li class={`pricing-card pricing-card--${id}${id === 'business' ? '' : ' for-new'}`}>
             <h2>{plan.name}</h2>
             <p class="pricing-card__price">
@@ -147,6 +148,7 @@ const jsonLd = buyable
             </p>
             {note && <p class="muted">{note}</p>}
             <p>{plan.summary}</p>
+            {extra && <p class="muted">{extra}</p>}
             <ul class="pricing-card__features">
               {plan.features.map((feature) => (
                 <li>{feature}</li>

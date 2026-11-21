@@ -1,10 +1,12 @@
 ---
 title: How your files stay private
 description: LeafLock PDF processes files in your browser and never uploads them. How that works, and how to check it with developer tools.
-updated: 2026-11-12
+updated: 2026-11-22
 ---
 
 When you use a LeafLock PDF tool, your file is processed by code running in your own browser. It is not uploaded to us or to anyone else. This page explains how that works, what is and isn't stored on your device, and how you can verify all of it yourself without taking our word for it.
+
+**The fastest check:** open [See it for yourself](/verify). It reads your own browser's record of every request this page has made, asks the browser to break the rule that keeps your files on your device so you can watch it refuse, and has an offline test you run yourself. It needs no developer tools. The steps further down do the same thing with your browser's developer tools, if you prefer to see it there.
 
 ## How it works
 

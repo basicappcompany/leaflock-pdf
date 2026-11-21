@@ -7,7 +7,7 @@ export const pricing = {
   intro: 'Every core tool is free, with no account. Pro is for people who work with PDFs every day.',
   /** `{endDate}` is the last day of early access and `{startDate}` the day paid plans start (src/lib/pricing.ts). */
   earlyAccess:
-    'Pro and Practice are in early access until {endDate}: every tool, including the six professional ones, is free for everyone until then. Paid plans start on {startDate}.',
+    'Every tool, including Pro and Practice, is free until {endDate}. We never ask for a card to use the tools, and nothing renews by itself unless you buy a plan. Paid plans start on {startDate}.',
   /**
    * These two live here, not in common.ts: every tool page serialises the whole `common` catalogue
    * into its React island's props, so a string added there costs bytes on all ~80 tool pages and
@@ -23,13 +23,16 @@ export const pricing = {
   homePopular: 'Popular right now',
   /** "See all ..." is the one wording for every way on to a longer list: under a category tab it opens the All tab, under All it goes to the full directory at the foot of the page. */
   homeSeeAll: 'See all tools',
+  /** The sentence under the home page headline: the difference from other tools, then the proof. Here, not in `common`, so it costs no tool page. The `compareIndex` title follows it as a link. */
+  homeContrast:
+    'Most online PDF tools send your file to their servers first. LeafLock PDF does the work in your browser, so there is nothing to upload, and you can check that yourself.',
   /**
    * The launch offer, shown while it can be taken (src/lib/pricing.ts `offerOpen`). `{percent}` is the
    * largest discount, `{yearlyPercent}` and `{tenYearPercent}` the two actual ones, the dates as above.
    */
   offer: {
     heading: 'Launch offer: up to {percent}% off until {endDate}',
-    body: 'Buy a yearly plan before {endDate} and pay {yearlyPercent}% less for your first year, or {tenYearPercent}% less for the ten-year plan. You are charged at checkout, and your plan starts on {startDate}. Yearly plans renew at the standard price after the first year.',
+    body: 'Buy a yearly plan before {endDate} and pay {yearlyPercent}% less for your first year, or {tenYearPercent}% less for the ten-year plan. You pay at checkout and your plan starts on {startDate}. A yearly plan renews at the standard price after its first year, and you can cancel in one click before then.',
     was: 'Standard price {price}',
   },
   /**
@@ -38,6 +41,8 @@ export const pricing = {
    * and is free to everyone, so two of its three items were things we already had.
    */
   comingToPro: 'Coming to Pro later: saved workflows, team seats, and keeping a file beyond what one device can hold.',
+  /** A line on the Pro card for the ten-year option, which is no longer a card of its own. `{price}` is formatted. */
+  tenYearLine: 'Or ten years of Pro for one payment of {price}. A limited number is available.',
   perMonth: '/ month',
   perYear: '/ year',
   oneTime: 'one time',
@@ -148,6 +153,7 @@ export const pricing = {
     buy: 'Get this plan',
     buyYearly: 'Get the yearly plan',
     buyMonthly: 'Get the monthly plan',
+    buyTenYear: 'Get the ten-year plan',
     logInToBuy: 'Log in to subscribe',
     starting: 'Taking you to checkout…',
     failed: 'We could not start checkout. Please try again.',
