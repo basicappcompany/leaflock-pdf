@@ -187,6 +187,29 @@ for (const width of [320, 360, 390]) {
   });
 }
 
+test('"All tools" inside the Menu fits the screen, scrolls inside itself and leaves the page where it was', async ({ page }) => {
+  await page.goto('/merge-pdf');
+  await page.evaluate(() => window.scrollTo(0, 300));
+  const before = await page.evaluate(() => window.scrollY);
+  await page.locator('.nav-toggle').click();
+  await page.locator('.tools-menu summary').click();
+  const header = (await page.locator('.site-header').boundingBox())!;
+  const viewport = page.viewportSize()!;
+  expect(header.y + header.height, 'the open header ends inside the screen').toBeLessThanOrEqual(viewport.height + 1);
+  const scrolls = await page.locator('.site-header').evaluate((el) => el.scrollHeight > el.clientHeight);
+  expect(scrolls, 'the long list scrolls inside the header').toBe(true);
+  // The last tool is reachable by scrolling the header, not the page.
+  const last = page.locator('.tools-menu li a').last();
+  await page.locator('.site-header').evaluate((el) => el.scrollTo(0, el.scrollHeight));
+  await page.waitForTimeout(100);
+  const box = (await last.boundingBox())!;
+  expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
+  expect(await page.evaluate(() => window.scrollY), 'the page did not move').toBe(before);
+  const panel = (await page.locator('.tools-menu__panel').boundingBox())!;
+  expect(panel.x).toBeGreaterThanOrEqual(0);
+  expect(panel.x + panel.width).toBeLessThanOrEqual(viewport.width);
+});
+
 test('the skin picker, opened inside the Menu, stays on the screen', async ({ page }) => {
   await page.goto('/');
   await page.locator('.nav-toggle').click();

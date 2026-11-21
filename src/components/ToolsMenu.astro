@@ -34,6 +34,14 @@ const common = messages.common;
   // Close the menu on Escape or a click outside it; it opens and closes natively otherwise.
   const menu = document.querySelector<HTMLDetailsElement>('.tools-menu');
   if (menu) {
+    // On a phone the list opens inside the Menu, which scrolls on its own: bring the list to the top of it, so
+    // pressing "All tools" shows tools rather than leaving them below the fold.
+    menu.addEventListener('toggle', () => {
+      const header = menu.closest<HTMLElement>('.site-header');
+      if (!menu.open || !header || header.scrollHeight <= header.clientHeight) return;
+      const offset = menu.getBoundingClientRect().top - header.getBoundingClientRect().top - 8;
+      header.scrollTo({ top: header.scrollTop + offset, behavior: 'smooth' });
+    });
     document.addEventListener('click', (event) => {
       if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
     });
