@@ -120,7 +120,7 @@ there is nothing per-tool to add, and a tool that hand-rolls its own result list
 
 What `copyPages` silently drops — bookmarks, form fields, metadata, every internal link — is `docs/design.md` §5a. Read it before writing any operation that copies pages.
 
-Before building a tool, check whether an existing one already does the job: a query that deserves its own page but no new behaviour is a **landing** (`landings` in `src/tools/registry.ts`, text in `src/i18n/en/landings.ts`), optionally with a `preset` the tool honours. Reverse pages and add-blank-page are landings on Organize for exactly this reason.
+Before building a tool, check whether an existing one already does the job: a query that deserves its own page but no new behaviour is a **landing** (`landings` in `src/tools/registry.ts`, text in `src/i18n/en/landings.ts`, which every locale mirrors; or `landingsMore.ts` with `enOnly: true` in the registry for an English-only one, read through `landingPage()`), optionally with a `preset` the tool honours. Reverse pages and add-blank-page are landings on Organize for exactly this reason.
 
 ## Theme and skins
 

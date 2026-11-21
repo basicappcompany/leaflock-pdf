@@ -1,25 +1,68 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import '../../styles/guides-index.css';
 import Article from '../../layouts/Article.astro';
 import { getMessages } from '../../i18n';
 import { guidesFor, slugOf } from '../../lib/content';
+import { categories, toolById, type ToolCategory, type ToolId } from '../../tools/registry';
 
 const locale = Astro.currentLocale ?? 'en';
-const t = getMessages(locale).common.guidesIndex;
+const messages = getMessages(locale);
+const t = messages.common.guidesIndex;
 const guides = await guidesFor(locale);
+
+/**
+ * A guide sits under the category of the first tool it lists, so the page groups the way the tools menu does. A guide
+ * about no tool in particular (how to check that a site does not upload your files) goes under security and privacy.
+ * No new strings: the headings are the existing category names and the existing "Security and privacy" link text.
+ */
+type Group = ToolCategory | 'trust';
+const groupOf = (guide: (typeof guides)[number]): Group => {
+  const first = (guide.data.tools as ToolId[])[0];
+  return first ? toolById(first).category : 'trust';
+};
+const order: readonly Group[] = [...categories, 'trust'];
+const heading = (group: Group) => (group === 'trust' ? messages.common.pageLinks.security : messages.common.categories[group]);
+const groups = order
+  .map((group) => ({
+    group,
+    label: heading(group),
+    items: guides
+      .filter((guide) => groupOf(guide) === group)
+      .sort((a, b) => b.data.published.getTime() - a.data.published.getTime() || a.data.title.localeCompare(b.data.title)),
+  }))
+  .filter((entry) => entry.items.length > 0);
 ---
 
 <Article title={t.title} description={t.description} path="guides">
-  <ul class="card-list">
-    {
-      guides.map((guide) => (
-        <li>
-          <a href={getRelativeLocaleUrl(locale, `guides/${slugOf(guide)}`)}>
-            <strong>{guide.data.title}</strong>
-            <span>{guide.data.description}</span>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+  <nav class="guide-groups" aria-label={t.title}>
+    <ul>
+      {
+        groups.map(({ group, label, items }) => (
+          <li>
+            <a href={`#guides-${group}`}>
+              {label} <span class="guide-groups__count">{items.length}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  {
+    groups.map(({ group, label, items }) => (
+      <section class="guide-group" id={`guides-${group}`} aria-labelledby={`guides-${group}-heading`}>
+        <h2 id={`guides-${group}-heading`}>{label}</h2>
+        <ul class="card-list">
+          {items.map((guide) => (
+            <li>
+              <a href={getRelativeLocaleUrl(locale, `guides/${slugOf(guide)}`)}>
+                <strong>{guide.data.title}</strong>
+                <span>{guide.data.description}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
 </Article>

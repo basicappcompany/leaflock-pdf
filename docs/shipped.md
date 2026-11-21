@@ -16,6 +16,15 @@ Entries before 29 October 2026 are in `docs/roadmap.md` under their phase items,
 place deliberately: rewriting them would be the rework this file exists to prevent.
 
 ---
+## 22 November 2026 — 28 landing pages, English-only (3.1); guides grouped by category
+
+- **28 landings added** (12 to 40): six "without upload" privacy pages (merge, compress, split, PDF to Word, sign, OCR), five size targets (100 KB, 500 KB, 2 MB, 5 MB, and a 10 MB email preset), nine search-name synonyms (join, shrink, password protect, encrypt, separate pages, fix corrupted, crop margins, remove comments, compare two PDFs) and eight file-type names (image, GIF, JPEG, DOCX, XLSX, TXT, make searchable). Every FAQ answer repeats a claim the tool's own FAQ already makes, so a landing cannot promise more than the tool.
+- **English-only on purpose.** Text is in `landingsMore.ts`, outside `en`, so the locale-parity test does not ask for 28 x nine translations. `landingPage()` is the lookup; a non-English URL is `noindex` with no hreflang. Decision and the way back: `docs/design.md` §13.
+- **Reverses a settled note:** "further sizes wait for search traffic" (8 November). Done on the owner's instruction; TODO.md now says to check Search Console impressions before adding more.
+- **The guides page is grouped** by the category of each guide's first tool (Organize, Convert, Edit and sign, Protect and optimize), with jump links; a guide that lists no tool goes under "Security and privacy". No new strings: the headings are existing ones, because a string added to `common` is serialised into every tool page.
+- **Tests:** `landings.test.ts` (ids, slugs, catalogue split, unique titles, size preset matches slug); two in `seo.spec.ts` (indexing of an English-only landing in `en` and `de`; every guide listed once with a jump link).
+
+---
 ## 22 November 2026 — A guide for every tool (3.3)
 
 - **37 guides added** under `src/content/guides/en/` (Excel and CSV share one), about 540 to 740 words each. Each lists its tool in `tools:` so the tool page links it, and each was written from that tool's FAQ in `src/i18n/en/tools/<id>.ts`, so a stated limit (what survives a conversion, what is dropped) matches the tool.

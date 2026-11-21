@@ -6,6 +6,7 @@ import StarToolButton from '../components/StarToolButton.astro';
 import ToolApp from '../components/ToolApp';
 import Base from '../layouts/Base.astro';
 import { getMessages, type ToolMessagesBase } from '../i18n';
+import { isEnglishOnly, landingPage } from '../i18n/landingPage';
 import { guidesFor, slugOf } from '../lib/content';
 import { prices, proToolsGated } from '../lib/pricing';
 import { tierBadgeText } from '../lib/tierBadge';
@@ -28,7 +29,8 @@ const common = messages.common;
 const t = messages.tools[toolId];
 const landing = landingId ? landings.find((item) => item.id === landingId) : undefined;
 /** Page text: the landing page's own wording, or the tool's. */
-const page: ToolMessagesBase = landingId ? messages.landings[landingId] : t;
+const page: ToolMessagesBase = landingId ? landingPage(locale, landingId) : t;
+const englishOnly = landingId ? isEnglishOnly(landingId) : false;
 const faq = page.faq ?? [];
 const tool = tools.find((item) => item.id === toolId)!;
 const slug = landing?.slug ?? tool.slug;
@@ -62,7 +64,7 @@ const jsonLd = [
 ];
 ---
 
-<Base title={page.metaTitle} description={page.metaDescription} path={slug} ogImage={slug} jsonLd={jsonLd} toolsSidebar>
+<Base title={page.metaTitle} description={page.metaDescription} path={slug} ogImage={slug} jsonLd={jsonLd} toolsSidebar englishOnly={englishOnly}>
   <nav class="breadcrumb" aria-label={common.nav.breadcrumb}>
     <a href={getRelativeLocaleUrl(locale, '')}>{common.site.allTools}</a>
     <span aria-hidden="true">/</span>
@@ -119,7 +121,7 @@ const jsonLd = [
         {variants.map((item, index) => (
           <>
             {index > 0 && ' · '}
-            <a href={getRelativeLocaleUrl(locale, item.slug)}>{messages.landings[item.id].title}</a>
+            <a href={getRelativeLocaleUrl(locale, item.slug)}>{landingPage(locale, item.id).title}</a>
           </>
         ))}
       </p>

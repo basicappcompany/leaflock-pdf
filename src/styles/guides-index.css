@@ -1,0 +1,49 @@
+/* The guides page: a row of jump links, then one section per category. Only that page imports this file, so it stays out
+   of global.css, which is inlined into every page (the HTML budget in tests/e2e/performance.spec.ts counts it). Colours,
+   radii and spacing are the shared tokens, so every skin re-skins it. */
+
+.guide-groups ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: var(--space) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guide-groups a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.guide-groups a:hover {
+  border-color: var(--color-accent);
+}
+
+.guide-groups__count {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+/* A jump link lands with the heading clear of the pinned header. */
+.guide-group {
+  scroll-margin-top: calc(var(--tools-chrome-h, 0px) + var(--space));
+}
+
+.guide-group h2 {
+  margin-top: calc(var(--space) * 2);
+}
+
+@media (min-width: 48rem) {
+  .guide-group .card-list {
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  }
+}
