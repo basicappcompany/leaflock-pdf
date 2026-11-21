@@ -533,8 +533,11 @@ h2 {
      than a phone, so the open header itself is capped at the screen and scrolls inside, with the page behind it still:
      a sticky header taller than the screen leaves its bottom unreachable and the page scroll fights it. */
   /* Opening the Menu makes the sticky header taller, which pushes the page content down. Scroll anchoring "corrects" that
-     by scrolling the page by the same amount (300px to 987px in a test), so the page lurched when "All tools" opened. */
-  html {
+     by scrolling the page by the same amount (300px to 987px in a test), so the page lurched when "All tools" opened.
+     It has to be switched off on body as well as html: html alone left the computed value at none and the page still
+     moved (CI, 21 November 2026); only body stopped it. */
+  html,
+  body {
     overflow-anchor: none;
   }
 
