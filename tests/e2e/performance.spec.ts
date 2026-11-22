@@ -158,7 +158,11 @@ const CONTENT_BUDGET: Budget = { html: 112_000, jsCss: 320_000, lcpMs: 1500, cls
 // numbered steps, bordered questions; inlined, about 2.7 KB, tool pages only) and a little more in global.css for the
 // header's Log in button, the sidebar's search box and the footer strip (about 1 KB on every page). /organize-pdf went
 // from just under the old limit to 106.8 KB.
-const TOOL_BUDGET: Budget = { html: 108_500, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
+// Tool pages' HTML 108_500 -> 112_500 on 22 Nov 2026 (item 5.6, ten more published locales): the language switcher lists
+// every locale that has a catalogue, so going from ten to twenty adds ten flag-and-name entries (about 2.5 KB) and ten
+// hreflang links (about 0.8 KB) to every page. /ocr-pdf went from under the old limit to 111.1 KB. A switcher that
+// fetched its list on open, as the banner does, would take this back out; raise it only if that is not worth building.
+const TOOL_BUDGET: Budget = { html: 112_500, jsCss: 380_000, lcpMs: 1500, cls: 0.1 };
 
 /** One representative page per kind, not all 52: this is a real-browser measurement
  * with response-body capture, materially slower per page than site.spec.ts's "loads
