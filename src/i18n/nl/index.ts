@@ -119,11 +119,6 @@ export default {
       "switchTo": "Wisselen",
       "dismiss": "Nee, bedankt"
     },
-    "appearance": {
-      "heading": "Weergave",
-      "defaultBadge": "Standaard",
-      "freeNote": "Onthouden in deze browser met Pro of Practice. Anders alleen voor deze sessie."
-    },
     "article": {
       "published": "Gepubliceerd op {date}",
       "updated": "Bijgewerkt op {date}",

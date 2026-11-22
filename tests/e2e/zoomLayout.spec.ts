@@ -25,7 +25,7 @@ function probe(): Issue[] {
   }
 
   const skip = (el: Element) =>
-    el.closest('.tools-sidebar, .visually-hidden, .skip-link, script, style, noscript, .lang-switcher__list, .skin-picker__panel, .tools-menu__panel');
+    el.closest('.tools-sidebar, .visually-hidden, .skip-link, script, style, noscript, .lang-switcher__list, .tools-menu__panel');
   const isFixed = (el: Element) => {
     for (let e: Element | null = el; e && e !== document.body; e = e.parentElement) {
       const position = getComputedStyle(e).position;

@@ -59,7 +59,7 @@ for (const path of allPagePaths) {
   });
 }
 
-test('the header is one row: brand, language, theme and the Menu button, with the skin picker inside the menu', async ({ page }) => {
+test('the header is one row: brand, language, theme and the Menu button', async ({ page }) => {
   // 320 is the narrowest reflow width; 360 is the tightest real phone; 390 is a current iPhone.
   for (const width of [320, 360, 390, 412]) {
     await page.setViewportSize({ width, height: 740 });
@@ -80,11 +80,6 @@ test('the header is one row: brand, language, theme and the Menu button, with th
     // One slim row, not two or three.
     const header = await page.locator('.site-header').boundingBox();
     expect(header!.height, `the header is a single row at ${width}px`).toBeLessThan(70);
-    // The skin picker is not in the bar; it appears inside the open menu.
-    await expect(page.locator('.skin-picker')).toBeHidden();
-    await page.locator('.nav-toggle').click();
-    await expect(page.locator('.skin-picker summary')).toBeVisible();
-    await page.locator('.nav-toggle').click();
   }
 });
 
@@ -208,15 +203,6 @@ test('"All tools" inside the Menu fits the screen, scrolls inside itself and lea
   const panel = (await page.locator('.tools-menu__panel').boundingBox())!;
   expect(panel.x).toBeGreaterThanOrEqual(0);
   expect(panel.x + panel.width).toBeLessThanOrEqual(viewport.width);
-});
-
-test('the skin picker, opened inside the Menu, stays on the screen', async ({ page }) => {
-  await page.goto('/');
-  await page.locator('.nav-toggle').click();
-  await page.locator('.skin-picker summary').click();
-  const panel = (await page.locator('.skin-picker__panel').boundingBox())!;
-  expect(panel.x).toBeGreaterThanOrEqual(0);
-  expect(panel.x + panel.width).toBeLessThanOrEqual(360);
 });
 
 test('a tap anywhere outside the open Menu closes it, and a tap inside it does not', async ({ page }) => {

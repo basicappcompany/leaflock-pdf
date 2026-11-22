@@ -119,11 +119,6 @@ export default {
       "switchTo": "Lumipat",
       "dismiss": "Huwag na lang"
     },
-    "appearance": {
-      "heading": "Hitsura",
-      "defaultBadge": "Default",
-      "freeNote": "Naaalala sa browser na ito kapag may Pro o Practice. Kung hindi, para sa session na ito lang."
-    },
     "article": {
       "published": "Inilathala noong {date}",
       "updated": "Na-update noong {date}",

@@ -119,11 +119,6 @@ export default {
       "switchTo": "Geç",
       "dismiss": "Hayır, teşekkürler"
     },
-    "appearance": {
-      "heading": "Görünüm",
-      "defaultBadge": "Varsayılan",
-      "freeNote": "Pro veya Practice ile bu tarayıcıda hatırlanır. Aksi halde yalnızca bu oturum için geçerlidir."
-    },
     "article": {
       "published": "Yayınlanma: {date}",
       "updated": "Güncellenme: {date}",

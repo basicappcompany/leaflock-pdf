@@ -30,13 +30,12 @@ const { label } = Astro.props;
       toggle.setAttribute('aria-expanded', String(open));
     };
     toggle.addEventListener('click', () => setOpen(!nav.classList.contains('site-nav--open')));
-    // A tap anywhere outside the menu closes it. The panel, the Menu button and the skin picker (which is part of the
-    // menu while it is open) count as inside; a link inside the panel navigates away on its own.
-    const skin = document.querySelector('.skin-picker');
+    // A tap anywhere outside the menu closes it. The panel and the Menu button count as inside; a link inside the panel
+    // navigates away on its own.
     document.addEventListener('click', (event) => {
       if (!nav.classList.contains('site-nav--open')) return;
       const target = event.target as Node;
-      if (nav.contains(target) || toggle.contains(target) || skin?.contains(target)) return;
+      if (nav.contains(target) || toggle.contains(target)) return;
       setOpen(false);
     });
     document.addEventListener('keydown', (event) => {

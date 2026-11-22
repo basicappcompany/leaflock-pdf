@@ -39,7 +39,7 @@ scrubbed crash reporting · OG image generation · sitemap, canonicals, hreflang
 JSON-LD types · **installable and offline** (§4a) · **llms.txt and llms-full.txt** (§4b) ·
 **a CI-enforced performance budget** (§4c) · **category hub pages** at `/tools/<category>`
 with their own schema (§4d) · **the device-local recent-work shelf** (§4e) · **the tools
-sidebar and a 15-skin picker** (§10, §10a).
+sidebar** (§10a); the 15-skin picker was removed on 23 November 2026 (§10).
 
 **Counts are not kept here.** Run `pnpm counts`. This paragraph used to open "25 tools
 (22 free, 3 Pro) … 215 unit tests, 177 browser tests" against a real 43 and 475/246 — it
@@ -706,6 +706,19 @@ addresses.
 the policy pages promise.
 
 ## 10. Theme and skins
+
+**Update, 23 November 2026: there is one skin now, "Leaf", and everything below about alternates is history.** The
+owner finalised the UI/UX theme and asked for the rest to go. Removed: `src/styles/skins.css` (the fifteen
+alternates and the three-token pin), `src/lib/skins.ts`, `src/components/SkinPicker.astro`, the picker's rules in
+`global.css`, the pre-paint `leaflock_skin` line in `Base.astro`, `common.appearance` in all twenty catalogues, and the
+trust-page sentences about the skin cookie. Consequences worth knowing: a signed-out visitor now receives **no cookie
+at all** (the only two left, `__Host-leaflock_session` and `leaflock_signed_in`, are set by signing in), which also
+closes the open ePrivacy question about the year-long skin cookie (`docs/legal-fill-in.md` C1); and the phone header's
+`margin-inline-start: auto` that kept the theme button right when scripting is off moved from the picker onto
+`.theme-toggle`. A visitor who still has a `leaflock_skin` cookie from before keeps a harmless, ignored cookie until it
+expires. **To restore any of it, paste back from `docs/skins-archive.md`**; it has every file and hunk, the locale
+strings as a `translate.mjs --patch` file, and the old trust-page wording. The two status-page "skins" (`scripts/skins.mjs`,
+`docs/status2.html`) are a different thing and were not touched.
 
 Every colour is defined once with `light-dark()` on `:root` in `src/styles/global.css`.
 `html[data-theme]` (set by `ThemeToggle.astro`, applied before paint by an inline script

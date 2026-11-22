@@ -141,7 +141,6 @@ export const common = {
     guides: 'Guides',
     compare: 'Compare',
   },
-  /** The skin picker dropdown in the header (src/components/SkinPicker.astro). */
   /** Language switcher and the first-visit suggestion (src/components/LanguageSwitcher.astro). */
   language: {
     label: 'Language',
@@ -149,14 +148,6 @@ export const common = {
     suggest: 'This site is also available in {language}.',
     switchTo: 'Switch',
     dismiss: 'No thanks',
-  },
-  appearance: {
-    heading: 'Appearance',
-    defaultBadge: 'Default',
-    /** Remembering a choice between visits is a Pro/Practice perk (see the component's
-     * own comment for why); everyone else gets it applied for the current browser
-     * session only. */
-    freeNote: 'Remembered on this browser with Pro or Practice. Otherwise, for this session only.',
   },
   article: {
     published: 'Published {date}',

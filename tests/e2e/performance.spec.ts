@@ -122,7 +122,7 @@ interface Budget {
 // Raised from 60_000/70_000: the persistent tools sidebar (src/components/
 // ToolsSidebar.astro) renders all ~43 tools across every category into every page's
 // HTML so it works with JS disabled and needs no client fetch, and the skin picker
-// (src/components/SkinPicker.astro) renders all 15 options the same way — a real,
+// (removed 23 Nov 2026; docs/skins-archive.md) rendered all 15 options the same way — a real,
 // deliberate cost of shipping both site-wide rather than a measurement regression.
 // Current weight sits around 93-98KB; the budget leaves headroom without being toothless.
 // HTML 105_000 -> 106_000 on 9 Nov 2026: the sidebar's phone rules (the lone hide/show handle as a
@@ -139,7 +139,7 @@ interface Budget {
 // script-free radio group (four radios, a label bar and a panel per category, all 43 tools still in the HTML),
 // its own stylesheet (src/styles/home.css, inlined, about 3 KB), and the sixteenth skin (Playful Rounded, kept as
 // an alternate) plus a rule pinning three tokens for the other alternates, both in skins.css which every page
-// inlines. The front page went from 106.5 to 108.6 KB. The collapsible-section CSS it replaced is gone from
+// inlined (skins.css was removed on 23 Nov 2026, so every page's HTML is now smaller than this budget assumes). The front page went from 106.5 to 108.6 KB. The collapsible-section CSS it replaced is gone from
 // global.css, which already offset part of this.
 // HTML 110_000 -> 112_000 on 18 Nov 2026: the hero now carries the bento of eight major tools (a second, shorter
 // description of tools that are also in the list below) and the one all-tools list tags each tool with its category

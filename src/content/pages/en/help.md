@@ -20,7 +20,7 @@ No. You can use every tool without signing up or signing in.
 
 ### Do you use cookies or tracking?
 
-No tracking, ever — no analytics, no advertising, no third-party scripts. The site does set a small number of strictly-necessary cookies (keeping you signed in, remembering a visual skin you chose), never anything that tracks you across sites or builds a profile. See the [Cookie policy](/cookies) and the [Privacy policy](/privacy).
+No tracking, ever — no analytics, no advertising, no third-party scripts. The only cookies it sets are the strictly-necessary ones that keep you signed in, never anything that tracks you across sites or builds a profile. See the [Cookie policy](/cookies) and the [Privacy policy](/privacy).
 
 ### Is it safe to use with confidential documents?
 

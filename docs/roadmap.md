@@ -461,7 +461,7 @@ what building it now does. No new tools, no new pages; the machinery under both.
   Starred tools (stars synced to the account), handles on the sidebar's inner edge,
   feature-request and feedback dialogs.
 - **Redesign (item 1.7) — done 17 November 2026.** New default skin "Leaf" (Playful Rounded kept as a selectable
-  skin), a hero with the major-tools bento, category tabs on the home page, tool-page tiles, header, sidebar and
+  skin until 23 November 2026, when the theme was final and all fifteen alternates and the picker were removed; `docs/skins-archive.md`), a hero with the major-tools bento, category tabs on the home page, tool-page tiles, header, sidebar and
   footer polish and a phone drawer. Detail in `docs/shipped.md`; the design reasoning in
   `docs/design.md` §10.
 

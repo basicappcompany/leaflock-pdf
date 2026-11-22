@@ -1,11 +1,9 @@
 ---
 import '../styles/global.css';
-import '../styles/skins.css';
 import { createHash } from 'node:crypto';
 import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
 import AuthNavLink from '../components/auth/AuthNavLink';
 import SiteFooter from '../components/SiteFooter.astro';
-import SkinPicker from '../components/SkinPicker.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import NavToggle from '../components/NavToggle.astro';
 import ToolsMenu from '../components/ToolsMenu.astro';
@@ -142,14 +140,6 @@ const preTheme = cspInlineScript(`
         // has no width or height at all, before that script runs.
         const sidebarDock = localStorage.getItem('toolsSidebarDock');
         document.documentElement.dataset.sidebarDock = sidebarDock === 'left' || sidebarDock === 'right' ? sidebarDock : 'left';
-        // Same reasoning, for the chosen skin (src/components/SkinPicker.astro): a
-        // cookie, not localStorage, so it's readable the same way whether or not the
-        // visitor is signed in, and matches the site's existing leaflock_* cookie
-        // convention (src/lib/server/session.ts). No cookie means the default skin —
-        // already the :root tokens in global.css — so there's nothing to apply in that
-        // case.
-        const skinMatch = document.cookie.match(/(?:^|; )leaflock_skin=([^;]+)/);
-        if (skinMatch) document.documentElement.dataset.skin = decodeURIComponent(skinMatch[1]);
       } catch {}
     `);
 
@@ -277,7 +267,6 @@ const chromeHeightScript = cspInlineScript(`
         />
       </nav>
       <LanguageSwitcher path={path} locale={locale} t={t.language} />
-      <SkinPicker t={t.appearance} />
       <ThemeToggle t={t.theme} />
     </header>
     <p class="privacy-strip">{t.site.privacyNote}</p>

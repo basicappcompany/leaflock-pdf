@@ -124,6 +124,7 @@ own storage, which is the same category as the OCR model cache already covered i
       three cookies, not zero** — `cookies.md` previously said "exactly one" and was
       wrong even on its own terms; it now lists all three. Two (`__Host-leaflock_session`,
       `leaflock_signed_in`) are session-identity cookies, squarely strictly-necessary.
+      **(Update 23 Nov 2026: the third cookie is gone, so only the two session cookies remain and nothing here needs a reading.)**
       The third, `leaflock_skin` (a year-long persistence for signed-in Pro/Practice
       users, session-only for everyone else), is the one that actually needs a reading:
       set only on an explicit user action and used only to return what was asked for,

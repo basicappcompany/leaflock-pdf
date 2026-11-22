@@ -119,11 +119,6 @@ export default {
       "switchTo": "Chuyển",
       "dismiss": "Không, cảm ơn"
     },
-    "appearance": {
-      "heading": "Giao diện",
-      "defaultBadge": "Mặc định",
-      "freeNote": "Được ghi nhớ trên trình duyệt này với Pro hoặc Practice. Nếu không, chỉ trong phiên này."
-    },
     "article": {
       "published": "Đăng ngày {date}",
       "updated": "Cập nhật ngày {date}",
