@@ -1235,8 +1235,9 @@ reasoning that does not: a person can QA two languages and cannot QA twenty, so 
 moves from *who translates* to *what gets reviewed and how the page says so*.
 
 **Narrowed 7 November 2026 (owner): top ten only, "for now".** The first ten in
-`src/i18n/locales.mjs` are published (en, hi, bn, pt-BR, id, ru, de, es, fr, tr); vi, it, ja,
-pl, ko, ar, th, nl, fil and zh-CN stay routed as English under `noindex` (item 5.6). The
+`src/i18n/locales.mjs` were published (en, hi, bn, pt-BR, id, ru, de, es, fr, tr); vi, it, ja,
+pl, ko, ar, th, nl, fil and zh-CN were routed as English under `noindex` until item 5.6 was
+done on 22 November 2026, and are now published too, as `machine`. The
 per-page "translated automatically" note was dropped; the statement now lives once in the
 Claims page, "Honest limits". The banner's sentences are fetched from `/lang-offers.json`
 rather than embedded in every page, which would otherwise grow the HTML with each language.

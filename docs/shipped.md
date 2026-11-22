@@ -16,6 +16,16 @@ Entries before 29 October 2026 are in `docs/roadmap.md` under their phase items,
 place deliberately: rewriting them would be the rework this file exists to prevent.
 
 ---
+## 22 November 2026 — Remaining ten locales published (item 5.6)
+
+- **What shipped:** vi, it, ja, pl, ko, ar, th, nl, fil and zh-CN, status `machine`, all 2,111 strings each. Every one of the 19 registry locales now has a catalogue.
+- **How:** the Anthropic key in this environment returns 401, so the strings were translated by hand in-session in 13 chunks (`--export`, then `--import`), each chunk checked against English for key count, `{placeholders}`, URLs, tags and digits. `localeCatalogues.test.ts` then checks the assembled catalogues the same way.
+- **Plural forms:** `PluralForms` has only `one` and `other`. For pl and ar the `other` string cannot say "5 pages" and "22 pages" in different grammatical cases, so counted lines there are number-neutral ("Pages rebuilt: {count}") instead of guessing.
+- **Kept in English on purpose:** plan names (Pro, Practice, Business), file-name suffixes (`-smaller`, `bates`, `watermarked`), "AES-256", "XMP", "PDF/A-2b" and "Dodo Payments". The watermark default word is translated per language.
+- **Not done:** no native speaker has read any of them, and nobody has looked at `ar` in a browser for right-to-left layout. Fonts for CJK, Thai and Arabic (item 5.5) are still the system stacks.
+- **Test change:** `locales.test.ts` asserted Thai was untranslated; it now asserts the opposite. A plain `touch` of `src/i18n/index.ts` did not refresh vitest's `import.meta.glob` here: deleting `node_modules/.vite` and changing the file's content did.
+
+---
 ## 22 November 2026 — Pricing banner, home lead, security proof link, five privacy articles, listing copy
 
 - **Pricing page:** four cards (Free, Pro, Practice, Business) instead of five. The ten-year plan is a line and a button on the Pro card (`pricing.tenYearLine`, `checkout.buyTenYear`); its checkout and the member panel are unchanged. The two notices (early access, launch offer) are one banner in plain English: every tool is free until the date, no card is asked for, nothing renews by itself unless you buy a plan, and a yearly plan can be cancelled in one click before it renews. Strings translated into the nine locales with `translate.mjs --patch`. Styles for the banner are in `pricing-banner.css`, not `early-notice.css`, which the home page inlines.

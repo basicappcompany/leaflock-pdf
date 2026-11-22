@@ -57,7 +57,7 @@ describe('locale registry', () => {
 
   it('indexes only locales that have a translation', () => {
     expect(isTranslated('en')).toBe(true);
-    expect(isTranslated('th')).toBe(false);
+    expect(isTranslated('th')).toBe(true);
     expect(isTranslated('nope')).toBe(false);
     expect(localeInfo('pt-BR')?.path).toBe('pt-br');
   });
