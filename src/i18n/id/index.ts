@@ -119,11 +119,6 @@ export default {
       "switchTo": "Ganti",
       "dismiss": "Tidak, terima kasih"
     },
-    "appearance": {
-      "heading": "Tampilan",
-      "defaultBadge": "Default",
-      "freeNote": "Diingat di browser ini dengan Pro atau Practice. Jika tidak, hanya untuk sesi ini."
-    },
     "article": {
       "published": "Diterbitkan {date}",
       "updated": "Diperbarui {date}",

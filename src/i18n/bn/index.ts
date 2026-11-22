@@ -119,11 +119,6 @@ export default {
       "switchTo": "পরিবর্তন করুন",
       "dismiss": "না, ধন্যবাদ"
     },
-    "appearance": {
-      "heading": "চেহারা",
-      "defaultBadge": "ডিফল্ট",
-      "freeNote": "Pro বা Practice থাকলে এই ব্রাউজারে মনে রাখা হয়। নইলে শুধু এই সেশনের জন্য।"
-    },
     "article": {
       "published": "প্রকাশিত {date}",
       "updated": "হালনাগাদ {date}",

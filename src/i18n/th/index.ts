@@ -119,11 +119,6 @@ export default {
       "switchTo": "สลับ",
       "dismiss": "ไม่เป็นไร"
     },
-    "appearance": {
-      "heading": "รูปลักษณ์",
-      "defaultBadge": "ค่าเริ่มต้น",
-      "freeNote": "จดจำไว้ในเบราว์เซอร์นี้เมื่อใช้ Pro หรือ Practice มิฉะนั้นใช้เฉพาะเซสชันนี้"
-    },
     "article": {
       "published": "เผยแพร่เมื่อ {date}",
       "updated": "อัปเดตเมื่อ {date}",

@@ -119,11 +119,6 @@ export default {
       "switchTo": "切り替える",
       "dismiss": "いいえ、結構です"
     },
-    "appearance": {
-      "heading": "外観",
-      "defaultBadge": "デフォルト",
-      "freeNote": "ProまたはPracticeでは、このブラウザーに記憶されます。それ以外は、このセッションのみです。"
-    },
     "article": {
       "published": "公開日: {date}",
       "updated": "更新日: {date}",

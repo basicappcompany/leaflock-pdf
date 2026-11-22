@@ -56,8 +56,7 @@ This is the distinction this page exists to make legible, because the honest ans
 - **Recent work, if you turn it on.** A finished file can be kept in your browser's own storage for five minutes, one hour, twenty-four hours, or a length you choose on a paid plan. It is off until you enable it, it expires on its own, and you can clear it whenever you like. It never leaves your device, so the claims above are unaffected.
 - **The OCR language model**, after you first use [OCR PDF](/ocr-pdf) — about 10 MB, kept so it is not downloaded twice. It contains nothing of yours.
 - **Your light or dark theme choice**, if you pick one.
-- **Two cookies, if you sign in**: `__Host-leaflock_session`, which identifies your session and nothing else, and `leaflock_signed_in`, a one-word label of which plan you are on (for example `free` or `pro`), so the page can show you the right view without asking our server. Neither carries a profile or a record of which tools you used.
-- **One more, only if you pick a visual skin**: `leaflock_skin`, which remembers your choice. Signed out, or on a free plan, it lasts only until you close the browser; signed in on Pro or Practice, it's kept for a year. See [Cookies](/cookies) for the full detail on all three and why none of them need a banner.
+- **Two cookies, if you sign in**: `__Host-leaflock_session`, which identifies your session and nothing else, and `leaflock_signed_in`, a one-word label of which plan you are on (for example `free` or `pro`), so the page can show you the right view without asking our server. Neither carries a profile or a record of which tools you used, and the tools themselves set no cookies. See [Cookies](/cookies) for the full detail and why neither needs a banner.
 
 You can remove all of it by clearing site data for leaflockpdf.com in your browser's settings.
 

@@ -16,6 +16,16 @@ Entries before 29 October 2026 are in `docs/roadmap.md` under their phase items,
 place deliberately: rewriting them would be the rework this file exists to prevent.
 
 ---
+## 23 November 2026 — Theme finalised: the skin picker and fifteen alternates removed
+
+- **What shipped:** one look, "Leaf". Removed `src/styles/skins.css`, `src/lib/skins.ts`, `SkinPicker.astro`, the picker's CSS in `global.css`, the `leaflock_skin` pre-paint line in `Base.astro` and `common.appearance` from English and all 19 other catalogues.
+- **Revert path:** `docs/skins-archive.md` holds every removed file and hunk, the locale strings as a ready `translate.mjs --patch` file and the old trust-page wording; or `git revert` the commit.
+- **Claims that changed:** `claims`, `cookies`, `privacy`, `security`, `help` and three compare pages no longer mention a third cookie. The tools now set no cookies at all; only signing in does. That also retires legal item C1 (is the year-long skin cookie "strictly necessary").
+- **Gotcha:** the phone header's right-alignment (`margin-left: auto` when scripting is off) lived on the picker. It is now on `.theme-toggle` and reset in the scripting-enabled block, where the brand's own auto margin does the job; two auto margins would push the language button to the middle.
+- **Not touched, on purpose:** `scripts/skins.mjs`, `tests/unit/skins.test.ts` and `docs/status2.html` are the two status-page designs and only share the word.
+- **Locale tooling has no "remove a key" mode:** the `appearance` block was cut from the 19 generated catalogues by script (identical five-line shape in each, verified by diff) rather than by hand.
+
+---
 ## 22 November 2026 — Remaining ten locales published (item 5.6)
 
 - **What shipped:** vi, it, ja, pl, ko, ar, th, nl, fil and zh-CN, status `machine`, all 2,111 strings each. Every one of the 19 registry locales now has a catalogue.

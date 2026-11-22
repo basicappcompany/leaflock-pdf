@@ -119,11 +119,6 @@ export default {
       "switchTo": "Cambiar",
       "dismiss": "No, gracias"
     },
-    "appearance": {
-      "heading": "Apariencia",
-      "defaultBadge": "Predeterminado",
-      "freeNote": "Se recuerda en este navegador con Pro o Practice. De lo contrario, solo durante esta sesión."
-    },
     "article": {
       "published": "Publicado el {date}",
       "updated": "Actualizado el {date}",

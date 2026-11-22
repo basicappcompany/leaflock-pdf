@@ -119,11 +119,6 @@ export default {
       "switchTo": "切换",
       "dismiss": "不用了"
     },
-    "appearance": {
-      "heading": "外观",
-      "defaultBadge": "默认",
-      "freeNote": "使用 Pro 或 Practice 时会在此浏览器中记住。否则仅在本次会话中有效。"
-    },
     "article": {
       "published": "发布于 {date}",
       "updated": "更新于 {date}",

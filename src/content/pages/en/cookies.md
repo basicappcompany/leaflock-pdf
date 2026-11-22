@@ -1,7 +1,7 @@
 ---
 title: Cookie policy
-description: The three strictly-necessary cookies LeafLock PDF sets, what else it stores in your browser (theme choice, the OCR model), and how to remove any of it.
-updated: 2026-11-15
+description: The two strictly-necessary cookies LeafLock PDF sets when you sign in, what else it stores in your browser (theme choice, the OCR model), and how to remove any of it.
+updated: 2026-11-23
 awaitingLegalReview: true
 ---
 
@@ -9,11 +9,10 @@ This policy explains whether leaflockpdf.com uses cookies and similar technologi
 
 ## We don't use cookies
 
-leaflockpdf.com sets **no advertising cookies and no analytics or tracking cookies**, ever. There are three cookies in total, described below — none of them track you across sites, build a profile, or get sent to anyone but us.
+leaflockpdf.com sets **no advertising cookies and no analytics or tracking cookies**, ever. The tools themselves set no cookies. There are two in total, both set only when you sign in and described below — neither tracks you across sites, build a profile, or get sent to anyone but us.
 
 - **`__Host-leaflock_session`** — set only if you sign in. Identifies your signed-in session so you don't have to log in on every page, and carries nothing else: no profile, no record of which tools you used. Strictly necessary for signing in, which is the category that needs no consent under the ePrivacy rules. Signing out removes it.
 - **`leaflock_signed_in`** — set only if you sign in, alongside the cookie above. A one-word label of your plan (for example `free` or `pro`) and nothing else, so the page can show you the right view at a glance without asking our server first. It is a display hint only: our server never reads it. Also strictly necessary for the same reason, and also removed on sign-out.
-- **`leaflock_skin`** — set only if you pick a visual skin other than the default from the appearance menu, and only remembered between visits (for a year) if you're signed in on a Pro or Practice plan; for everyone else it lasts only until you close the browser. Carries nothing but which of the sixteen skins you chose. We treat this as strictly necessary too: you have to take an explicit action to set it, it exists only to give you back the thing you just asked for, and nothing about it is used to track or profile you — but we're not the final word on that reading, so [TO CONFIRM: whether the skin-choice cookie needs consent under the ePrivacy Directive, particularly for the year-long case].
 
 [TO CONFIRM: that the hosting provider does not set any cookies of its own, such as bot-protection cookies — Cloudflare's own documentation says it does not unless we turn on a bot-protection feature; confirm nothing of that kind is enabled before relying on this]
 

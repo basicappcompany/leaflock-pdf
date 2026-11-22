@@ -119,11 +119,6 @@ export default {
       "switchTo": "전환",
       "dismiss": "괜찮아요"
     },
-    "appearance": {
-      "heading": "화면 스타일",
-      "defaultBadge": "기본값",
-      "freeNote": "Pro 또는 Practice에서는 이 브라우저에 기억돼요. 그렇지 않으면 이번 세션에만 적용돼요."
-    },
     "article": {
       "published": "게시일 {date}",
       "updated": "수정일 {date}",

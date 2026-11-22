@@ -119,11 +119,6 @@ export default {
       "switchTo": "تبديل",
       "dismiss": "لا، شكرًا"
     },
-    "appearance": {
-      "heading": "المظهر",
-      "defaultBadge": "افتراضي",
-      "freeNote": "يُحفظ في هذا المتصفح مع Pro أو Practice. وإلا فلهذه الجلسة فقط."
-    },
     "article": {
       "published": "نُشر في {date}",
       "updated": "حُدّث في {date}",

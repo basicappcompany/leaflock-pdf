@@ -119,11 +119,6 @@ export default {
       "switchTo": "बदलें",
       "dismiss": "नहीं, धन्यवाद"
     },
-    "appearance": {
-      "heading": "दिखावट",
-      "defaultBadge": "डिफ़ॉल्ट",
-      "freeNote": "Pro या Practice के साथ इस ब्राउज़र में याद रखा जाता है। नहीं तो सिर्फ़ इस सत्र के लिए।"
-    },
     "article": {
       "published": "प्रकाशित {date}",
       "updated": "अपडेट किया गया {date}",

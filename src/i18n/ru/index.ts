@@ -119,11 +119,6 @@ export default {
       "switchTo": "Переключить",
       "dismiss": "Нет, спасибо"
     },
-    "appearance": {
-      "heading": "Оформление",
-      "defaultBadge": "По умолчанию",
-      "freeNote": "В тарифах Pro и Practice запоминается в этом браузере. В остальных случаях действует только в текущем сеансе."
-    },
     "article": {
       "published": "Опубликовано {date}",
       "updated": "Обновлено {date}",

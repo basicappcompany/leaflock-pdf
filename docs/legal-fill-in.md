@@ -1,11 +1,11 @@
-# Fill-in sheet: the 24 `[TO CONFIRM]` lines
+# Fill-in sheet: the 23 `[TO CONFIRM]` lines
 
 Written 22 November 2026. **Answer these and the pages can lose their draft notice.** Nothing here is filled in, because
 each blank is a fact only the owner has, or a policy only the owner (with a lawyer) can set. The wording around each
 one is already drafted.
 
-`grep -c "TO CONFIRM" src/content/pages/en/*.md` counts lines: privacy 11, terms 10, cookies 3. A line can hold more
-than one blank. Several lines take the same answer, so there are 21 decisions for the 24 lines.
+`grep -c "TO CONFIRM" src/content/pages/en/*.md` counts lines: privacy 11, terms 10, cookies 2. A line can hold more
+than one blank. Several lines take the same answer, so there are 20 decisions for the 23 lines.
 
 When you reply, quote the ids (P3, T5 ...). I will replace the blanks and run `pnpm test`. The pages keep their draft
 notice (`awaitingLegalReview`) until you say a lawyer has read them. `docs/legal-brief.md` is what goes to the lawyer.
@@ -59,7 +59,7 @@ These are your choices. The draft already says "no longer than" or similar; it n
 
 | Id | Blank | What is needed |
 |---|---|---|
-| C1 | Whether the skin-choice cookie needs consent under the ePrivacy Directive, especially the year-long case for signed-in Pro and Practice members | A lawyer's reading. The cookie only gives back the choice you made and is not used to track |
+| C1 | ~~Whether the skin-choice cookie needs consent under the ePrivacy Directive~~ | **Gone, 23 November 2026:** the skin cookie was removed with the skin picker, so there is nothing to confirm. The id is kept so the others do not renumber. |
 | C2 | That Cloudflare sets no cookies of its own on your account | Check the bot-protection and similar settings in the Cloudflare dashboard. Cloudflare's documentation says it sets none unless a bot feature is switched on |
 | C3 | That this storage is exempt from consent under the ePrivacy Directive and other applicable law | A lawyer's reading |
 

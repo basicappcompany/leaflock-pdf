@@ -6,7 +6,7 @@ A dated snapshot; the sections below are the detail and the source of truth.
 
 **Pending on you** (accounts, dashboards, people):
 - Valid `ANTHROPIC_API_KEY` (§9); a person to review translated trust claims (§9).
-- **Answer `docs/legal-fill-in.md`** (21 decisions behind the 24 `[TO CONFIRM]` lines in privacy, terms and cookies), then post `docs/launch-listings.md` (Product Hunt, AlternativeTo, SaaSHub, Capterra, G2; each needs your account). Listings link the legal pages, so fill the blanks first.
+- **Answer `docs/legal-fill-in.md`** (20 decisions behind the 23 `[TO CONFIRM]` lines in privacy, terms and cookies), then post `docs/launch-listings.md` (Product Hunt, AlternativeTo, SaaSHub, Capterra, G2; each needs your account). Listings link the legal pages, so fill the blanks first.
 - Send one test email each to `hello@` and `feedback@` from another account (§0, §4); decide on replying
   from `hello@`. (The feedback form was verified end to end on 12 November: stored, and the notification arrived.)
 - Auto-renew and registrar 2FA (§0); TLS 1.2 and Bot Fight Mode decisions (§8); whether an edge rule blocks
@@ -486,7 +486,7 @@ CONFIRM: …]`:**
   window to request one. Paddle: the EU's statutory 14-day digital-goods withdrawal
   right applies unless the buyer has expressly waived it by starting delivery; beyond
   that, refunds are Paddle's discretion.
-- The ePrivacy "strictly necessary" exemption plausibly covers `leaflock_skin` — it's
+- **(Moot since 23 November 2026: the skin cookie was removed.)** The ePrivacy "strictly necessary" exemption plausibly covers `leaflock_skin` — it's
   set only on an explicit user action and used only to give the user back what they
   asked for, and the design already withholds the year-long version from anyone who
   hasn't paid for persistence — but a long-lived preference cookie is exactly the case
