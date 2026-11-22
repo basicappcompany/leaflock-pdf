@@ -16,6 +16,12 @@ Entries before 29 October 2026 are in `docs/roadmap.md` under their phase items,
 place deliberately: rewriting them would be the rework this file exists to prevent.
 
 ---
+## 23 November 2026 — Google sign-in's state cookie documented
+
+- **What changed:** `leaflock_oauth_state` (random 32-hex code, HttpOnly, Secure, SameSite=Lax, Max-Age 600, deleted by the callback on success and on failure) was set by `functions/api/auth/google/start.ts` from the day Google sign-in shipped but listed nowhere. `cookies.md` now describes it; `claims`, `privacy` and `security` mention it where they said "two cookies".
+- **Found by:** checking what else sets a cookie while removing the skin cookie. Email-link and password sign-in do not set it (verified in `verify.ts` and `password.ts`).
+
+---
 ## 23 November 2026 — Theme finalised: the skin picker and fifteen alternates removed
 
 - **What shipped:** one look, "Leaf". Removed `src/styles/skins.css`, `src/lib/skins.ts`, `SkinPicker.astro`, the picker's CSS in `global.css`, the `leaflock_skin` pre-paint line in `Base.astro` and `common.appearance` from English and all 19 other catalogues.

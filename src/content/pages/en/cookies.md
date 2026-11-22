@@ -1,6 +1,6 @@
 ---
 title: Cookie policy
-description: The two strictly-necessary cookies LeafLock PDF sets when you sign in, what else it stores in your browser (theme choice, the OCR model), and how to remove any of it.
+description: The strictly-necessary cookies LeafLock PDF sets when you sign in (two that last, one that lives for minutes), what else it stores in your browser (theme choice, the OCR model), and how to remove any of it.
 updated: 2026-11-23
 awaitingLegalReview: true
 ---
@@ -9,10 +9,11 @@ This policy explains whether leaflockpdf.com uses cookies and similar technologi
 
 ## We don't use cookies
 
-leaflockpdf.com sets **no advertising cookies and no analytics or tracking cookies**, ever. The tools themselves set no cookies. There are two in total, both set only when you sign in and described below — neither tracks you across sites, build a profile, or get sent to anyone but us.
+leaflockpdf.com sets **no advertising cookies and no analytics or tracking cookies**, ever. The tools themselves set no cookies. There are three in total, all set only when you sign in and described below — none of them tracks you across sites, builds a profile, or is sent to anyone but us.
 
 - **`__Host-leaflock_session`** — set only if you sign in. Identifies your signed-in session so you don't have to log in on every page, and carries nothing else: no profile, no record of which tools you used. Strictly necessary for signing in, which is the category that needs no consent under the ePrivacy rules. Signing out removes it.
 - **`leaflock_signed_in`** — set only if you sign in, alongside the cookie above. A one-word label of your plan (for example `free` or `pro`) and nothing else, so the page can show you the right view at a glance without asking our server first. It is a display hint only: our server never reads it. Also strictly necessary for the same reason, and also removed on sign-out.
+- **`leaflock_oauth_state`** — set only if you press the Google sign-in button, and only for the few minutes that sign-in takes (10 minutes at most). It holds a random code and nothing else: no email address, no name, nothing about you. Its one job is security: the same code travels to Google in the sign-in link and comes back with the reply, and we only accept the reply if it matches this cookie, so a forged or replayed sign-in is refused. It is deleted as soon as the sign-in finishes or fails, and the browser drops it after 10 minutes if you never come back. Strictly necessary for the sign-in you asked for, for the same reason as the session cookie. It is not set if you sign in with an email link or a password.
 
 [TO CONFIRM: that the hosting provider does not set any cookies of its own, such as bot-protection cookies — Cloudflare's own documentation says it does not unless we turn on a bot-protection feature; confirm nothing of that kind is enabled before relying on this]
 

@@ -712,7 +712,7 @@ owner finalised the UI/UX theme and asked for the rest to go. Removed: `src/styl
 alternates and the three-token pin), `src/lib/skins.ts`, `src/components/SkinPicker.astro`, the picker's rules in
 `global.css`, the pre-paint `leaflock_skin` line in `Base.astro`, `common.appearance` in all twenty catalogues, and the
 trust-page sentences about the skin cookie. Consequences worth knowing: a signed-out visitor now receives **no cookie
-at all** (the only two left, `__Host-leaflock_session` and `leaflock_signed_in`, are set by signing in), which also
+at all** (the only ones left are set by signing in: `__Host-leaflock_session` and `leaflock_signed_in`, plus `leaflock_oauth_state`, a random 10-minute CSRF code that only the Google start route sets and the callback deletes), which also
 closes the open ePrivacy question about the year-long skin cookie (`docs/legal-fill-in.md` C1); and the phone header's
 `margin-inline-start: auto` that kept the theme button right when scripting is off moved from the picker onto
 `.theme-toggle`. A visitor who still has a `leaflock_skin` cookie from before keeps a harmless, ignored cookie until it
