@@ -3,6 +3,7 @@ title: How a website can promise your files never leave your device, and prove i
 description: Browser-side processing, the Content-Security-Policy that stops a page connecting elsewhere, and the limits a fair claim has to admit.
 published: 2026-11-22
 tools: []
+author: founder
 updated: 2026-11-23
 ---
 

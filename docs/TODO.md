@@ -20,7 +20,7 @@ A dated snapshot; the sections below are the detail and the source of truth.
 
 **Pending on me** (engineering, no input needed to start):
 - Size landings now exist for 100 KB, 500 KB, 2 MB, 5 MB and email (22 Nov); check in Search Console which ones get impressions before adding more.
-- An about page naming a person, dates on guides, `sameAs` links; more search-name landings.
+- `sameAs` links; more search-name landings. (The about page names the founder and five articles carry a byline since 23 November; add more bylines only with the owner's say.)
 - Guides (6 of one-per-tool), the remaining 10 locales, server-backed retention (2.12) — see the tracker.
 
 Counts and dates are not kept here: run `pnpm counts` and `pnpm tracker`.

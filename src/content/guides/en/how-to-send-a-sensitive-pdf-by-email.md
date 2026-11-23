@@ -3,6 +3,7 @@ title: How to send a sensitive PDF by email without oversharing
 description: "A step-by-step routine: remove what should not be there, clean hidden data, fit the size limit, add a password and send the password another way."
 published: 2026-11-22
 tools: []
+author: founder
 updated: 2026-11-23
 ---
 

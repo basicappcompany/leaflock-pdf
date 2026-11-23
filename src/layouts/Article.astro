@@ -18,6 +18,8 @@ interface Props {
   isArticle?: boolean;
   awaitingLegalReview?: boolean;
   relatedTools?: readonly ToolId[];
+  /** Named author shown in the byline and in the Article markup (src/lib/author.ts). */
+  author?: { name: string; role: string; by: string } | undefined;
   /** Shown before the related-tools list; e.g. sources for comparisons. */
   extraJsonLd?: Record<string, unknown>[];
   /** Pass through to Base: pick the member view before first paint (pricing). */
@@ -34,6 +36,7 @@ const {
   isArticle = false,
   awaitingLegalReview = false,
   relatedTools = [],
+  author,
   extraJsonLd = [],
   memberHint = false,
 } = Astro.props;
@@ -47,7 +50,7 @@ const dateFormat = new Intl.DateTimeFormat(locale, { dateStyle: 'long' });
 const crumbs = [{ name: common.site.name, path: '' }, ...trail, { name: title, path }];
 const jsonLd = [
   breadcrumbs(crumbs.map((crumb) => ({ name: crumb.name, url: getAbsoluteLocaleUrl(locale, crumb.path) }))),
-  ...(isArticle && published ? [article({ headline: title, description, url, locale, published, updated, site })] : []),
+  ...(isArticle && published ? [article({ headline: title, description, url, locale, published, updated, site, author })] : []),
   ...extraJsonLd,
 ];
 const related = tools.filter((tool) => relatedTools.includes(tool.id));
@@ -70,6 +73,7 @@ const related = tools.filter((tool) => relatedTools.includes(tool.id));
     {
       (published || updated) && (
         <p class="muted article-dates">
+          {author && <span class="article-byline">{author.by} {author.name}, {author.role} · </span>}
           {published && <time datetime={published.toISOString().slice(0, 10)}>{format(common.article.published, { date: dateFormat.format(published) })}</time>}
           {published && updated && ' · '}
           {updated && <time datetime={updated.toISOString().slice(0, 10)}>{format(common.article.updated, { date: dateFormat.format(updated) })}</time>}

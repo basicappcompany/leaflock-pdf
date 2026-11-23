@@ -3,6 +3,7 @@ title: "Working with PDFs offline: what it takes and what it proves"
 description: How browser-based PDF tools keep working with no connection, what to load first, what does not work offline and why going offline is the simplest privacy test.
 published: 2026-11-22
 tools: []
+author: founder
 updated: 2026-11-23
 ---
 

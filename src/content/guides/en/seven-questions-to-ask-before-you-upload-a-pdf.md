@@ -3,6 +3,7 @@ title: Seven questions to ask before you upload a PDF to any website
 description: Where is the file processed, who else sees it, how long is it kept? Seven questions that tell you what a PDF website really does with your document.
 published: 2026-11-22
 tools: []
+author: founder
 updated: 2026-11-23
 ---
 

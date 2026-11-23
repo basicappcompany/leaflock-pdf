@@ -21,6 +21,8 @@ const guides = defineCollection({
     updated: z.coerce.date().optional(),
     /** Tools this guide is about; it's linked from their pages. */
     tools: z.array(toolId).default([]),
+    /** Named author (src/lib/author.ts). Without one, the article is the team's. */
+    author: z.enum(['founder']).optional(),
   }),
 });
 

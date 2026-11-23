@@ -3,6 +3,7 @@ title: What is hidden inside a PDF, and who can see it
 description: "Author names, software details, edit history, comments, hidden scripts and attachments: what a PDF carries besides its pages, and how to check before you share one."
 published: 2026-11-22
 tools: []
+author: founder
 updated: 2026-11-23
 ---
 
