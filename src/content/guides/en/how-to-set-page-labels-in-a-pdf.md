@@ -3,7 +3,10 @@ title: How to set roman numerals and custom page labels in a PDF
 description: Make your PDF reader show i, ii, iii for a preface and 1, 2, 3 for the body, or prefixes like A-1, without touching what is printed on the page.
 published: 2026-11-22
 tools: [pageLabels]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Add page labels](/add-page-labels) sets the number a PDF reader shows for each page, such as roman numerals (i, ii, iii) for a preface and 1 onward for the body. It changes only what the reader displays, not what is printed on the page; [Add page numbers](/add-page-numbers) does that.
 
 Open a book-length PDF and you will often see two numbers that disagree: the reader says page 9 of 120, while the page itself says "1". The first is the physical page position; the second is the printed number. Page labels let you make the reader show the same number the page prints, so "go to page 1" takes you to the page marked 1. This guide explains what labels are and how to set them.
 

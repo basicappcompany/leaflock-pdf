@@ -20,7 +20,7 @@ A dated snapshot; the sections below are the detail and the source of truth.
 
 **Pending on me** (engineering, no input needed to start):
 - Size landings now exist for 100 KB, 500 KB, 2 MB, 5 MB and email (22 Nov); check in Search Console which ones get impressions before adding more.
-- An about page naming a person, dates on guides, `sameAs` links; more search-name landings.
+- `sameAs` links; more search-name landings. (The about page names the founder and five articles carry a byline since 23 November; add more bylines only with the owner's say.)
 - Guides (6 of one-per-tool), the remaining 10 locales, server-backed retention (2.12) — see the tracker.
 
 Counts and dates are not kept here: run `pnpm counts` and `pnpm tracker`.
@@ -500,6 +500,7 @@ Dashboard settings only; the code findings from the same review are in `docs/shi
 - [x] **HSTS** — added 7 November 2026 in `public/_headers` (`max-age=31536000`, no
       `includeSubDomains`/`preload`); live after the next deploy. Cloudflare's dashboard toggle
       is now optional, and would only add `includeSubDomains`/`preload` if ever wanted.
+- [x] **Cloudflare Web Analytics beacon — switched off by the owner, 23 November 2026; verified.** A browser-UA fetch of `/`, `/verify/`, `/pricing/` and `/merge-pdf/` carried no `cloudflareinsights` script, and the live `/verify` in Edge listed 13 requests, all to leaflockpdf.com, with the green verdict. Nothing in the repo changed; it was a dashboard setting. The planned "our own country data from Cloudflare analytics" idea in §9 now needs a decision of its own: turning analytics back on is a change to every no-analytics claim. Was: found 23 November 2026. A browser (not plain curl) is served `<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/...">` on every page, added by Cloudflare at the edge because Web Analytics automatic setup is on for the site. It is not in the repo, the build or `public/_headers`, so no test sees it. Effects: `/verify` on the live site reports "A request went somewhere other than this site" in red; it contradicts `/security`, `/claims`, the listing copy and the home page's "no analytics" lines; and it is a third-party request the CSP was meant to rule out. **Owner decision:** turn it off (Cloudflare dashboard, Analytics & Logs, Web Analytics, remove the site, or the Pages project's Web Analytics toggle) or keep it and reword every no-analytics claim. Re-check `/verify` on the live site after any Cloudflare analytics or Pages settings change: no test can see an edge injection.
 - [ ] **Minimum TLS 1.2** — same tab. Cloudflare Security Insights (4 Nov scan) flagged
       `www.leaflockpdf.com` as accepting older TLS.
 - [ ] **Decide on Bot Fight Mode** (Security → Bots) — flagged Moderate. Free, but it can block

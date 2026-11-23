@@ -3,7 +3,10 @@ title: How to check if a PDF site uploads your files
 description: A step-by-step method to see whether an online PDF tool sends your files to a server, using your browser's developer tools, offline mode and the CSP.
 published: 2026-10-21
 tools: [merge, compress, sign, redact, ocr]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open your browser's developer tools, select the **Network** tab, run the tool on a harmless test PDF and look for a request about as large as the file: an upload shows up there. A stronger test is to go offline, since a tool that still works offline cannot depend on sending your file anywhere.
 
 Many online PDF tools say your files are "secure" or "private". That can mean two very different things:
 

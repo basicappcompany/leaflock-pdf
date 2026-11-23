@@ -5,6 +5,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import Article from '../../layouts/Article.astro';
 import { getMessages } from '../../i18n';
 import { guidesFor, slugOf } from '../../lib/content';
+import { authors } from '../../lib/author';
 import type { ToolId } from '../../tools/registry';
 
 export const getStaticPaths = (async () => {
@@ -28,6 +29,7 @@ const others = (await guidesFor(locale)).filter((other) => other.id !== guide.id
   updated={guide.data.updated}
   isArticle
   relatedTools={guide.data.tools as ToolId[]}
+  author={guide.data.author ? authors[guide.data.author] : undefined}
 >
   <Content />
   {

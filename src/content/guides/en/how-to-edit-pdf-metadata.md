@@ -3,7 +3,10 @@ title: How to edit a PDF's title, author and keywords
 description: See and change the title, author, subject and keywords stored in a PDF, why the old author can still show in some viewers and how to fix that.
 published: 2026-11-22
 tools: [editMetadata]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Edit metadata](/edit-metadata) changes a PDF's title, author, subject and keywords; a field you leave empty is removed, and nothing is written until you save. An old author name can still show from a second copy of the metadata, which the guide explains.
 
 Every PDF carries a few lines of information about itself that you may never have seen: a title, an author, a subject, keywords. They appear in the reader's title bar, in search results, in file listings and when someone checks the file's properties. They are often wrong: a title like "Microsoft Word - Document1", the name of whoever created the template or an author who left the company years ago. This guide explains how to see them and fix them.
 

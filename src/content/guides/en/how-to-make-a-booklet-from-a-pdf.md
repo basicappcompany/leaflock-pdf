@@ -3,7 +3,10 @@ title: How to make a printable booklet from a PDF
 description: Reorder a PDF so that printing double-sided and folding gives a stapled booklet that reads in the right order, with the printer settings that matter.
 published: 2026-11-22
 tools: [booklet]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Booklet PDF](/booklet-pdf) rearranges your pages so that, printed double-sided and folded, they read in order. Print double-sided flipping on the short edge, with scaling at none or 100%, then fold and staple.
 
 A folded booklet is the cheapest way to turn a PDF into something you can hand to people: a programme, a manual, a zine, a short report. It only works if the pages are arranged in the order a folded stack needs, which is not the order a reader sees. This guide explains what that order is, how to print it and why the file looks wrong on screen.
 

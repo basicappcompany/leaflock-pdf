@@ -3,7 +3,10 @@ title: How to remove comments and annotations from a PDF
 description: Delete comments, highlights, stamps and drawings from a PDF before you share it, with form fields and links kept, and the comment text really gone.
 published: 2026-11-22
 tools: [removeAnnotations]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Remove annotations](/remove-annotations) strips comments, sticky notes, highlights, underlines, strikethroughs, stamps, shapes, drawings, text boxes and their pop-up notes. Form fields are always kept, and links are kept unless you ask for them to go.
 
 Review rounds leave a trail. By the time a PDF has been through two colleagues and a lawyer, it can be covered in sticky notes, highlights, strikethroughs and doodles, some of them embarrassing and some of them confidential. Before it goes to the next audience, you want a clean copy. This guide explains what annotations are, how to strip them and how to be sure the comment text is not still lurking in the file.
 

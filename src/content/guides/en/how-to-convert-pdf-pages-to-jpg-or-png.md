@@ -3,7 +3,10 @@ title: How to convert PDF pages to JPG or PNG images
 description: Save each PDF page as a JPG or PNG, choose between 72, 150 and 300 dpi, convert only some pages and download everything as one ZIP.
 published: 2026-11-22
 tools: [pdfToImages]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open [PDF to JPG](/pdf-to-jpg), choose JPG or PNG and a resolution, then download the pages one by one or as a ZIP. Use JPG for photographic pages, PNG for text and diagrams, and 72 dpi when the images are only for screens.
 
 Sometimes a PDF is the wrong container: you want a page for a slide, a thumbnail for a website, a picture to post in a chat or an image to paste into a design. Converting pages to JPG or PNG gives you ordinary image files. This guide covers how, and how to choose the format and resolution that suit the job.
 

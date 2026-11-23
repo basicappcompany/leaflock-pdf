@@ -3,7 +3,10 @@ title: How to remove hidden metadata from a PDF
 description: Strip the author, dates, software and editing history a PDF carries, plus hidden JavaScript and attachments, and why this tool adds nothing back.
 published: 2026-11-22
 tools: [removeMetadata]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Remove metadata](/remove-metadata) clears the document information (title, author, dates and the like), the XMP packet, the document ID, per-page application data and embedded thumbnails, and can remove hidden and active content too. It runs in your browser, since uploading a file to clean it would defeat the point.
 
 A PDF carries more than its pages. Behind the page content there is often an author name, the software used, creation and modification dates, an editing history and sometimes embedded files or scripts. Send the file and all of it goes with it. For a leaked-draft embarrassment, a journalist's source protection or a client who should not learn which firm wrote the report, that matters. This guide explains what is hidden in a PDF and how to remove it.
 

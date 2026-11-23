@@ -3,7 +3,10 @@ title: How to extract text from a PDF
 description: Pull all the text out of a PDF into a plain .txt file on your device, keep track of pages, and what to do when no text is found.
 published: 2026-11-22
 tools: [pdfToText]
+updated: 2026-11-23
 ---
+
+**Short answer:** [PDF to Text](/pdf-to-text) reads the text out of a PDF into a plain UTF-8 `.txt` file, with an option to mark where each page starts. Fonts, tables and images are not kept, columns can come out of order, and a scan returns no text until you run [OCR PDF](/ocr-pdf) on it.
 
 You have a PDF and you want the words in it: to paste into an email, search in a text editor, feed to another program or quote in a report. Selecting and copying works for a paragraph. For a whole document, extracting the text in one go is faster and more reliable. This guide explains how to do it, what you get and what to do when the PDF turns out to hold no text at all.
 

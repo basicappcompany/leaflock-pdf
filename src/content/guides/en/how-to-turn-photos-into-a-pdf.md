@@ -3,7 +3,10 @@ title: How to turn photos and images into a PDF
 description: Combine JPG, PNG, WebP and other images into one PDF, one image per page, with page size, margins and orientation handled for you.
 published: 2026-11-22
 tools: [imagesToPdf]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open [JPG to PDF](/jpg-to-pdf), add your images, put them in order and download the PDF; each image becomes one page. JPG, PNG, WebP, GIF and BMP work, and JPG and PNG go in unchanged.
 
 Applications for jobs, visas, insurance claims and school forms often want a single PDF, but what you have is a folder of photos. Turning images into a PDF is one of the most common conversions there is. This guide explains how to do it on your device, which formats work, and the choices about page size and quality that decide how the result looks.
 

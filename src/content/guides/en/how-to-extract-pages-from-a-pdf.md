@@ -3,7 +3,10 @@ title: How to extract pages from a PDF
 description: Copy only the pages you need into a new PDF, or save each page as its own file, without re-rendering anything or touching the original.
 published: 2026-11-22
 tools: [extractPages]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open [Extract pages](/extract-pages), choose the pages by clicking thumbnails or typing ranges such as `2-4, 9`, and save them as one PDF or one PDF per page. Extract when you want a few pages out of many; use [Remove pages](/remove-pages) when you want most of the document.
 
 Sometimes a PDF is a haystack and you only need a few needles: the three pages of a report that matter to a colleague, the signature page of a contract, one chapter of a manual. Extracting copies exactly those pages into a new file. This guide covers how, what stays the same, and what to do when you want a different order.
 

@@ -3,7 +3,10 @@ title: How to unlock a PDF you have the password for
 description: Remove a password or printing and copying restrictions from a PDF you are allowed to open, without uploading the file or the password.
 published: 2026-11-22
 tools: [unlock]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Unlock PDF](/unlock-pdf) removes an open password if you type it, and removes restrictions on printing, copying or editing without one. It cannot guess or crack a password you do not have.
 
 A password on a PDF is useful until the day you have to type it every time, or until another tool refuses to work on a locked file. If the PDF is yours, or you have been given the right to change it, removing the password is a routine job. This guide explains what unlocking does, which password to use and what it cannot do.
 

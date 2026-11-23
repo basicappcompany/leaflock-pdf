@@ -3,7 +3,10 @@ title: How to password-protect a PDF
 description: Encrypt a PDF with a password on your device, choose what people may do once it is open and learn why a forgotten password cannot be recovered.
 published: 2026-11-22
 tools: [protect]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Protect PDF](/protect-pdf) encrypts a PDF with AES-256 in your browser, behind a password people must type to open it, and lets you choose whether printing, copying and editing are allowed. How well it holds up depends mostly on the password, so use a long one.
 
 Email is not private. An attachment can sit in several inboxes, backups and servers, and a PDF sent without protection can be opened by anyone who gets hold of it. A password changes that: without it, the file is unreadable. This guide explains how to protect a PDF on your own device, how to choose a password that holds up and what the different permissions do.
 

@@ -3,7 +3,10 @@ title: How to convert a PDF to Word, and what survives the trip
 description: Turn a PDF into an editable Word document on your device, with real headings and lists, and an honest list of what a conversion cannot rebuild.
 published: 2026-11-22
 tools: [pdfToWord]
+updated: 2026-11-23
 ---
+
+**Short answer:** [PDF to Word](/pdf-to-word) rebuilds paragraphs, headings, bold and italic text and lists, as real Word styles. Tables, images, exact fonts and colors and page layout do not come across, because the structure is inferred from the PDF, not read from it.
 
 Converting a PDF to Word is one of the most searched document jobs, and also one of the most disappointing. Results range from tidy to mangled. This guide explains why, how to get the best result and how to do it without uploading a contract, payslip or medical letter to someone else's server.
 

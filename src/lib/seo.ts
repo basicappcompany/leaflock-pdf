@@ -183,7 +183,10 @@ export function article(options: {
   published: Date;
   updated?: Date | undefined;
   site: URL;
+  /** A named person; without one, the organization is the author. */
+  author?: { name: string; role: string } | undefined;
 }): JsonLd {
+  const organizationRef = { '@id': new URL('/#organization', options.site).href };
   return {
     '@type': 'Article',
     headline: options.headline,
@@ -192,8 +195,10 @@ export function article(options: {
     inLanguage: options.locale,
     datePublished: options.published.toISOString().slice(0, 10),
     dateModified: (options.updated ?? options.published).toISOString().slice(0, 10),
-    author: { '@id': new URL('/#organization', options.site).href },
-    publisher: { '@id': new URL('/#organization', options.site).href },
+    author: options.author
+      ? { '@type': 'Person', name: options.author.name, jobTitle: options.author.role, worksFor: organizationRef }
+      : organizationRef,
+    publisher: organizationRef,
   };
 }
 

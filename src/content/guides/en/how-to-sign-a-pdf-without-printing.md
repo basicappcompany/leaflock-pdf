@@ -3,7 +3,10 @@ title: How to sign a PDF without printing it
 description: Sign a PDF by drawing, typing or uploading your signature, and learn how an electronic signature differs from a digital one.
 published: 2026-10-21
 tools: [sign, fillForm, flatten]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Sign PDF](/sign-pdf) places an image of your signature on the page, drawn, typed or uploaded. That is an electronic signature, not a digital signature backed by a certificate, and the guide explains the difference.
 
 Printing a document, signing it with a pen, scanning it and emailing it back takes time and a printer you may not have. For most everyday paperwork you can sign the PDF directly on your computer or phone instead.
 

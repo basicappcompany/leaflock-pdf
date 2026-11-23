@@ -3,7 +3,11 @@ title: "Working with PDFs offline: what it takes and what it proves"
 description: How browser-based PDF tools keep working with no connection, what to load first, what does not work offline and why going offline is the simplest privacy test.
 published: 2026-11-22
 tools: []
+author: founder
+updated: 2026-11-23
 ---
+
+**Short answer:** A browser-based PDF tool keeps working offline once it has loaded, because the page, its code and the PDF engine are already on your device; a tool that uploads your file cannot. Load the tool once first, and note that some tools need extra downloads and some features do not work offline.
 
 Aeroplane mode, a train through a tunnel, a client's network with a firewall: sooner or later you need to deal with a PDF and the internet is not there. Whether a PDF tool keeps working in that moment says a lot about how it is built. This article explains how offline PDF work is possible in a browser, how to prepare for it and what it does and does not tell you.
 

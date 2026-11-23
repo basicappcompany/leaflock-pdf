@@ -3,7 +3,10 @@ title: How to print multiple PDF pages on one sheet
 description: Put 2, 4 or more PDF pages on each sheet to save paper, hand out slides or review a long document, with the layout fixed in the file itself.
 published: 2026-11-22
 tools: [nUp]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Multiple pages per sheet](/multiple-pages-per-sheet) builds a PDF with several pages drawn on each sheet, for example 2 or 4, so a 60-page document at four per sheet prints on 15 sheets. The layout is fixed in the file, so it looks the same on any printer.
 
 Printing a 60-page document one page per sheet uses 60 sheets. Put four pages on each and it is 15. Printing several pages on one sheet is called N-up printing, and it is the usual way to save paper, print slides as handouts or produce a compact review copy. This guide explains when to do it in the file rather than in the print dialog, and what the trade-offs are.
 

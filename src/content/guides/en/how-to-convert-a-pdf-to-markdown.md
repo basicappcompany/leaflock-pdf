@@ -3,7 +3,10 @@ title: How to convert a PDF to Markdown
 description: Turn a PDF into clean Markdown with headings, bold, italic and lists, for notes, wikis and documentation, and know what the conversion cannot rebuild.
 published: 2026-11-22
 tools: [pdfToMarkdown]
+updated: 2026-11-23
 ---
+
+**Short answer:** [PDF to Markdown](/pdf-to-markdown) writes paragraphs, headings, bold, italic and lists to a plain `.md` file, and leaves out tables, images, exact fonts and page layout. Headings are inferred from how the text looks, so check the result against the original.
 
 Markdown is where a lot of writing lives now: README files, wikis, static sites, note-taking apps and the text you paste into chat tools. A PDF is not a good starting point for any of those, because its text carries no structure. Converting to Markdown recovers the structure it can, so the result still has shape when it lands in a notes app or a commit. This guide explains how it works and where it falls short.
 

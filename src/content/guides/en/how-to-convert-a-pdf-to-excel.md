@@ -3,7 +3,10 @@ title: How to convert a PDF table to Excel
 description: Turn a PDF price list or statement into an editable spreadsheet on your device, how columns are found and what to check when they come out wrong.
 published: 2026-11-22
 tools: [pdfToExcel]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open [PDF to Excel](/pdf-to-excel), convert, and check each sheet against its page: every page becomes one sheet and every cell is plain text. Columns are guessed from vertical gaps in the text, so check them, and run [OCR PDF](/ocr-pdf) first on a scan.
 
 Price lists, bank statements, timetables and reports often arrive as PDFs, and then somebody retypes them into a spreadsheet. Converting directly saves hours, but only if you know what the conversion is doing, because tables are the hardest thing to recover from a PDF. This guide explains how it works, how to check the result and what to do when columns land in the wrong place.
 

@@ -3,7 +3,10 @@ title: How to convert Excel and CSV files to PDF
 description: Turn a spreadsheet or comma-separated file into a PDF grid on your device, what the result looks like and how to handle wide sheets.
 published: 2026-11-22
 tools: [excelToPdf, csvToPdf]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Excel to PDF](/excel-to-pdf) and [CSV to PDF](/csv-to-pdf) draw your data as a plain bordered table: each Excel sheet gets its own page or pages, and a CSV gets one row per line. Colors, fonts, column widths, conditional formatting and charts are not reproduced, and formulas appear as their calculated values.
 
 Sending a spreadsheet as a PDF freezes the numbers: nobody can change a cell, and everyone sees the same thing. That is why finance teams, schools and small businesses convert price lists, schedules and statements before sending them. This guide covers converting an Excel workbook or a CSV file to PDF on your own device, and the limits to know about before you rely on the result.
 

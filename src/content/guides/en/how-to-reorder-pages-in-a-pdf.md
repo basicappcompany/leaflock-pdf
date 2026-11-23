@@ -3,7 +3,10 @@ title: How to reorder, rotate and rearrange PDF pages
 description: Drag pages into the right order, turn sideways ones, drop extras and add a blank page in one view, with undo and no upload.
 published: 2026-11-22
 tools: [organize]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Organize PDF](/organize-pdf) shows every page as a thumbnail, so in one view you can reorder pages by dragging, rotate them, remove them, add a blank page and combine several PDFs. You see the finished order before you save.
 
 A PDF rarely comes out in exactly the order you need. A scan fed in upside down, an appendix that should come first, a page you want to repeat, or two documents that should become one. Organize PDF handles all of these in a single view, so you do not have to chain four tools. This guide explains how to use it well and what the edges are.
 

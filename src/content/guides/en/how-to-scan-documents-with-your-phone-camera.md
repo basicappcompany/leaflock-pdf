@@ -3,7 +3,10 @@ title: How to scan paper documents to PDF with your phone camera
 description: Photograph paper pages with your camera and save them as a single PDF in your browser, with tips for lighting, framing, retakes and searchable text.
 published: 2026-11-22
 tools: [scan]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open [Scan to PDF](/scan-to-pdf) on a phone, tablet or laptop with a camera, allow camera access, photograph each page in order and save the PDF. No app is needed, and the pictures are not uploaded.
 
 You do not need a scanner or an app to turn paper into a PDF. A phone camera and a browser are enough: photograph each page, put the pictures in order and save them as one file. This guide covers how to do it with LeafLock, how to take pages that come out clean and what the tool does not do for you.
 

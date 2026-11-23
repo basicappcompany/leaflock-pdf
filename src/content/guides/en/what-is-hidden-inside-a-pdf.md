@@ -3,7 +3,11 @@ title: What is hidden inside a PDF, and who can see it
 description: "Author names, software details, edit history, comments, hidden scripts and attachments: what a PDF carries besides its pages, and how to check before you share one."
 published: 2026-11-22
 tools: []
+author: founder
+updated: 2026-11-23
 ---
+
+**Short answer:** A PDF can carry a title, author, subject and keywords, a second copy of them in XMP metadata, a document ID, leftovers from editing software on each page, comments and annotations, and things that can run or hide. Hidden is not the same as removed, and the article shows how to check your own file and clean it.
 
 When you send a PDF, you send what is on its pages. You also send whatever the file carries behind them. Most of it is harmless. Some of it is not: the name of the person who wrote the report, the software that made it, the date it was last edited, comments that were meant to be deleted. This article lists what a PDF can hold, who can see it and how to check your own files.
 

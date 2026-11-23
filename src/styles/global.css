@@ -364,6 +364,16 @@ h2 {
   color: var(--color-text);
 }
 
+/* That item is rendered by the browser after sign-in is checked, so its slot is held open: otherwise the language and theme
+   controls to its right jump left when it appears. Not on a phone, where the menu is a column. */
+@media (min-width: 48.01rem) {
+  .site-nav > astro-island:last-child {
+    display: inline-block;
+    min-width: 5.5rem;
+    min-height: 2.5rem;
+  }
+}
+
 /* The last item (Log in, or Dashboard once signed in) is a button: a hairline pill, like the buttons on the front page. */
 .site-nav > astro-island:last-child .nav-link {
   margin-inline-start: 0.4rem;
@@ -2355,6 +2365,25 @@ html[data-sidebar-state='hidden'][data-sidebar-dock='right'] .site-footer--with-
   cursor: default;
 }
 
+.primary-button:active:not(:disabled),
+.secondary-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* A thumb needs about 44px. The small button is 32px and a bare link button is one line of text, so on touch screens the
+   login and dashboard ones get a full-height target. Scoped on purpose: the same classes sit in tool toolbars. */
+@media (pointer: coarse) {
+  .dashboard .secondary-button--small,
+  .dashboard .link-button,
+  .auth-form .link-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding-inline: 0.5rem;
+  }
+}
+
 .icon-buttons {
   display: inline-flex;
   gap: 0.25rem;
@@ -2900,6 +2929,13 @@ button.page-grid__page {
   padding: 0.5rem 1rem;
   border-left: 4px solid var(--color-accent);
   background: var(--color-surface);
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
 }
 
 .article-dates {

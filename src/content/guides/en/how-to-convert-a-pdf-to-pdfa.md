@@ -3,7 +3,10 @@ title: How to prepare a PDF for long-term archiving as PDF/A
 description: What PDF/A is, what this tool adds and removes to get to the PDF/A-2b profile, and the one requirement, font embedding, no tool can fix for you.
 published: 2026-11-22
 tools: [pdfToPdfA]
+updated: 2026-11-23
 ---
+
+**Short answer:** [PDF to PDF/A](/pdf-to-pdfa) moves a file towards PDF/A-2b: it embeds a color profile, writes the PDF/A identification and removes JavaScript, actions that run on open and embedded files. It does not guarantee the file passes validation, because fonts that were never embedded are reported, not fixed.
 
 Some institutions will not accept just any PDF. Courts, tax authorities, archives and procurement portals often ask for PDF/A, a restricted flavor of PDF built to look the same decades from now. This guide explains what PDF/A is, what this tool does to move a file towards it and the honest limit on what a tool can promise.
 

@@ -3,7 +3,10 @@ title: How to compress a PDF for email
 description: Why PDFs get too big to email, what compression actually changes, how to choose a level, and what to do when compressing doesn't make the file smaller.
 published: 2026-10-21
 tools: [compress, split, extractPages]
+updated: 2026-11-23
 ---
+
+**Short answer:** To get a PDF under an email limit, run it through [Compress PDF](/compress-pdf) at the Recommended level: it shrinks the images, which are what make most PDFs large, and leaves text and vector drawings alone. Aim for under 10 MB for email, and try the Strong level if the file is still too big.
 
 You attach a PDF, select Send, and the email bounces back: the attachment is too large. Or an online form refuses your upload because it's over the limit. This guide explains why PDFs get big, how to make them smaller without making them unreadable, and what to do when compression isn't enough.
 

@@ -3,7 +3,11 @@ title: Seven questions to ask before you upload a PDF to any website
 description: Where is the file processed, who else sees it, how long is it kept? Seven questions that tell you what a PDF website really does with your document.
 published: 2026-11-22
 tools: []
+author: founder
+updated: 2026-11-23
 ---
+
+**Short answer:** Ask where the file is processed, how long it is kept if it is uploaded, who else receives it, whether you need an account, whether the marketing matches the policy, whether you can test the claim yourself and what the result carries with it. None needs a lawyer, and most take a few minutes to answer.
 
 Contracts, payslips, medical letters, ID scans: the PDFs people most need to merge, compress or sign are the ones they would least like a stranger to read. Yet the usual way to use an online PDF tool is to hand the file to it first. Before you do, seven questions will tell you most of what you need to know. None of them needs a lawyer, and you can answer most of them in a few minutes.
 

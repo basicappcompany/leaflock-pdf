@@ -1,7 +1,7 @@
 ---
 title: About LeafLock PDF
 description: LeafLock PDF is a set of PDF tools that run in your browser. Your files stay on your device, with no account, no uploads and no tracking ads.
-updated: 2026-10-21
+updated: 2026-11-23
 ---
 
 LeafLock PDF is a set of tools for everyday PDF work: merging, splitting, rotating, compressing, signing, filling forms, recognizing text in scans and more. Every tool runs inside your web browser, on your own device. Your files are never uploaded to us.
@@ -41,6 +41,10 @@ LeafLock PDF is for anyone who works with documents they'd rather not hand to a 
 - Anyone who simply prefers that their files stay on their own device.
 
 Organizations that need the tools to run entirely inside their own network can use the [Business edition](/business).
+
+## Who runs it
+
+LeafLock PDF is built and run by T, the founder. The five articles in the [guides](/guides) about uploading, hidden data, email and working offline carry T's name; the tool guides are written under the LeafLock PDF name. Mail to hello@leaflockpdf.com reaches the founder directly.
 
 ## Get in touch
 

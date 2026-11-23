@@ -3,7 +3,10 @@ title: How to split a PDF into separate files
 description: Three ways to split a PDF, by page range, by a fixed number of pages or one file per page, and how to pick the right one for the job.
 published: 2026-11-22
 tools: [split]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Split PDF](/split-pdf) has three modes: by page ranges such as `1-4, 5-20, 21-30` (each range becomes one file), into files of a set number of pages, and one file per page. Pick the mode by how your pages are grouped.
 
 A single PDF is often several documents stuck together: a scanned stack of invoices, a report with one chapter per recipient, a contract bundle with exhibits. Splitting it gives each part its own file, so you can send, file or print them separately. This guide covers the three ways to split, when each one fits and what to check afterwards.
 

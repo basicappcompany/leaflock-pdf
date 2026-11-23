@@ -3,7 +3,10 @@ title: How to add page numbers to a PDF
 description: Number your PDF pages with the position, style and starting number you choose, skip the cover page and number only a range of pages.
 published: 2026-11-22
 tools: [pageNumbers]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open [Add page numbers](/add-page-numbers), choose a style and position, and download the file; tick **Skip the first page (cover)** to leave a cover unnumbered. The numbers are drawn on the page itself, unlike page labels, which only change what a PDF reader shows.
 
 A long document without page numbers is hard to discuss: "see the table on page 14" only works when page 14 says it is page 14. Many PDFs, especially ones merged from several files or scanned from paper, have no numbers at all. This guide explains how to add them, how to handle covers and special cases and how this differs from the page labels a PDF reader shows.
 

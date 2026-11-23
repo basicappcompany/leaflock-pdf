@@ -3,7 +3,10 @@ title: How to combine a front-side and back-side scan into one PDF
 description: Rejoin a document scanned in two passes by weaving fronts and backs together page by page, even when the backs came out in reverse order.
 published: 2026-11-22
 tools: [mixPages]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Mix pages](/mix-pdf-pages) takes a page from your PDF of fronts, then one from your PDF of backs, and repeats. Leave **the second PDF is in reverse order** on if you flipped the whole stack to scan the backs, which is the usual case.
 
 If your scanner can only scan one side of a sheet at a time, scanning a double-sided document means two passes: first all the fronts, then you flip the stack and scan all the backs. You end up with two PDFs, and neither reads properly on its own. Mixing them weaves the pages back into the right order. This guide explains how to do it and why the backs usually arrive in reverse.
 

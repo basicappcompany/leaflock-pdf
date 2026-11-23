@@ -154,6 +154,9 @@ export default function LoginForm({ t }: { t: Messages['auth']['login'] }) {
                 id={id}
                 aria-describedby={describedBy}
                 type="email"
+                inputMode="email"
+                autoCapitalize="none"
+                spellCheck={false}
                 required
                 autoComplete="email"
                 placeholder="you@example.com"
