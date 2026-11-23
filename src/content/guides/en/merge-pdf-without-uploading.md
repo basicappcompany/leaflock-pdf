@@ -3,7 +3,10 @@ title: How to merge PDF files without uploading them
 description: Combine several PDFs into one file privately, in your browser or with built-in Mac tools, plus tips on page order, file size and locked files.
 published: 2026-10-21
 tools: [merge, organize, compress, unlock]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open [Merge PDF](/merge-pdf), choose your files, put them in order and download one combined PDF; it runs in your browser, so the files are not uploaded. This guide covers three private ways to merge, including macOS Preview.
 
 Merging PDFs is one of the most common document tasks: a job application with a cover letter, CV and certificates, an expense claim with a stack of receipts, or a contract with its appendices. It's also a task where the files are often personal.
 

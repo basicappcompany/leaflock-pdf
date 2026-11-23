@@ -3,7 +3,10 @@ title: How a website can promise your files never leave your device, and prove i
 description: Browser-side processing, the Content-Security-Policy that stops a page connecting elsewhere, and the limits a fair claim has to admit.
 published: 2026-11-22
 tools: []
+updated: 2026-11-23
 ---
+
+**Short answer:** A site can make that promise true by doing the work inside the page and sending a Content-Security-Policy that stops the page connecting anywhere but its own site, which your browser enforces, not the site. Even then the claim has limits, such as a browser extension or a compromised device, and the article sets them out.
 
 "Your files never leave your device" is an easy sentence to write and a hard one to stand behind. This article explains how a website can actually be built so that it is true, what mechanism the browser itself enforces and where an honest claim has to stop. It is written for anyone who wants to judge such a promise, whoever makes it.
 

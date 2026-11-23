@@ -3,7 +3,10 @@ title: How to rotate a PDF and save it that way
 description: Turn sideways or upside-down PDF pages the right way up, one page or all of them, and save the rotation so it holds in every reader.
 published: 2026-11-22
 tools: [rotate]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Rotate PDF](/rotate-pdf) writes the rotation into the file, so it stays after you close it, unlike the rotate-view button in a reader. Pages turn in quarter turns only, so a crooked scan needs straightening elsewhere.
 
 Rotating a page in your PDF reader is easy. Keeping it rotated is the part that trips people up: you close the file, reopen it and the pages are sideways again, or the person you sent it to sees them the wrong way up. This guide explains the difference and how to save the rotation properly.
 

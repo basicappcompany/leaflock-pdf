@@ -3,7 +3,10 @@ title: How to send a sensitive PDF by email without oversharing
 description: "A step-by-step routine: remove what should not be there, clean hidden data, fit the size limit, add a password and send the password another way."
 published: 2026-11-22
 tools: []
+updated: 2026-11-23
 ---
+
+**Short answer:** Send only the pages the recipient needs, remove hidden data, lock in any filled form, shrink the file, protect it with a password and send that password by another route, then check the file you are about to send. Each step has a tool, and the whole routine is below.
 
 Email is the most common way to send a PDF and one of the least private. A message can sit in several inboxes, backups and servers, and an attachment is copied with it. If the document is a contract, a medical letter or anything with account numbers, a few minutes of preparation changes what the recipient, and anyone else who sees the message, can learn. This routine works for most documents, and every step can be done on your own device.
 

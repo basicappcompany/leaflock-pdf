@@ -42,6 +42,13 @@ place deliberately: rewriting them would be the rework this file exists to preve
 - **Test change:** `locales.test.ts` asserted Thai was untranslated; it now asserts the opposite. A plain `touch` of `src/i18n/index.ts` did not refresh vitest's `import.meta.glob` here: deleting `node_modules/.vite` and changing the file's content did.
 
 ---
+## 23 November 2026 — Short answers on every guide, a proof image on /security
+
+- **A direct answer at the top of all 48 guides.** Each opens with a `**Short answer:**` paragraph of one or two sentences, written from what the guide itself already says (stated limits, what is kept and dropped), then the existing intro. `updated:` moved to 23 November on each. `tests/unit/guideAnswers.test.ts` fails with the file name if a guide lacks one.
+- **`/security` now carries a picture of `/verify`**: the request list and the browser refusing an off-site request, at `public/img/verify-proof.png`. It is a capture of our own page, not of DevTools (Playwright cannot photograph DevTools, which are outside the page). Rebuild it with `pnpm build` then `pnpm shots`; set `LEAFLOCK_SHOT_URL` to capture a deployed site instead. The caption says it came from a local build, so the address reads localhost. Reverses the 22 November note that no screenshot would be made: the owner's list asked for one.
+- **Found on the way: the live site serves a Cloudflare Web Analytics beacon** (`static.cloudflareinsights.com/beacon.min.js`) to browsers. It is not in this repo; Cloudflare injects it. `/verify` on the live site reports it as a request to another site, and it contradicts "no analytics". See `docs/TODO.md` §8. A capture from the live site was made, looked at and **not** used for that reason.
+- **Not done:** an about page naming a person and bylines on the articles, which need the owner's real name and one line of role.
+---
 ## 22 November 2026 — Pricing banner, home lead, security proof link, five privacy articles, listing copy
 
 - **Pricing page:** four cards (Free, Pro, Practice, Business) instead of five. The ten-year plan is a line and a button on the Pro card (`pricing.tenYearLine`, `checkout.buyTenYear`); its checkout and the member panel are unchanged. The two notices (early access, launch offer) are one banner in plain English: every tool is free until the date, no card is asked for, nothing renews by itself unless you buy a plan, and a yearly plan can be cancelled in one click before it renews. Strings translated into the nine locales with `translate.mjs --patch`. Styles for the banner are in `pricing-banner.css`, not `early-notice.css`, which the home page inlines.
@@ -66,7 +73,7 @@ place deliberately: rewriting them would be the rework this file exists to preve
 
 - **37 guides added** under `src/content/guides/en/` (Excel and CSV share one), about 540 to 740 words each. Each lists its tool in `tools:` so the tool page links it, and each was written from that tool's FAQ in `src/i18n/en/tools/<id>.ts`, so a stated limit (what survives a conversion, what is dropped) matches the tool.
 - **Claims were checked against code, not memory.** The booklet guide first said sheet sizes the tool does not offer; the tool has A4, Letter and A3 landscape (`BookletTool.tsx`). Re-read the tool before writing a number.
-- **Not done:** the roadmap's "answer in the first two sentences" rule, and translations.
+- **Not done:** translations. (The "answer in the first two sentences" rule was done on 23 November, below.)
 
 ## 21 November 2026 — Phone menu: "All tools" opens inside a scrolling header
 

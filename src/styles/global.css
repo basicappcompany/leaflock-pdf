@@ -2902,6 +2902,13 @@ button.page-grid__page {
   background: var(--color-surface);
 }
 
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
 .article-dates {
   margin-top: -0.25rem;
 }

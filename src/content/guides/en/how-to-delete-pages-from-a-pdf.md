@@ -3,7 +3,10 @@ title: How to delete pages from a PDF
 description: Remove blank, duplicate or private pages from a PDF on your device, choose them by thumbnail or page number, and keep the rest exactly as it was.
 published: 2026-11-22
 tools: [removePages]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open [Remove pages](/remove-pages), click thumbnails or type page numbers such as `1-3, 5, 8-`, and download the new copy; your original is not changed. At least one page has to stay.
 
 Most PDFs carry a few pages nobody needs: a blank back of a scanned sheet, a cover page with internal notes, a duplicate, or a page with details you would rather not share. Deleting them is simple, but a few details decide whether the result is what you wanted. This guide shows how to do it and what to check.
 

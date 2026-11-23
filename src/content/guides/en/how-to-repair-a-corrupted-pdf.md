@@ -3,7 +3,10 @@ title: How to repair a corrupted PDF that will not open
 description: Try to rebuild a damaged PDF on your device, how the two-step repair works, what is lost and when a file cannot be saved.
 published: 2026-11-22
 tools: [repair]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Repair PDF](/repair-pdf) first copies every readable page into a new PDF, keeping text as text. If that fails it redraws each readable page as an image, which keeps how the page looks but not the text underneath, so check the result.
 
 "The file is damaged and could not be repaired." "There was an error processing a page." A PDF that will not open usually stopped being valid at some point: an interrupted download, a failed save, a bad email attachment or a disk problem. Sometimes the content is still mostly there. This guide explains how repair works, what it can and cannot recover and what to check afterwards.
 

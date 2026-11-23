@@ -3,7 +3,10 @@ title: How to crop a PDF, and what cropping does not remove
 description: Trim margins or cut pages down to the part you need, with exact margins on every page. Cropping hides content, it does not delete it.
 published: 2026-11-22
 tools: [crop]
+updated: 2026-11-23
 ---
+
+**Short answer:** Cropping hides what is outside the box; it does not delete it, and the hidden content can still be found. Use [Crop PDF](/crop-pdf) to tidy margins, and [Redact PDF](/redact-pdf) when information has to be removed.
 
 Cropping a PDF trims the visible area of its pages: wide margins on a scanned page, a header and footer you do not want in a handout, or a single figure cut out of a full page. It is quick and it does not lower quality. It also has a catch that matters if the document is sensitive, and we start with that.
 

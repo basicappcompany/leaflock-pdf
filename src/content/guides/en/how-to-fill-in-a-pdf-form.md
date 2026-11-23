@@ -3,7 +3,10 @@ title: How to fill in a PDF form and lock your answers
 description: Type into a PDF form's fields on your device, what to do when a form has no fillable fields and when to lock the answers in.
 published: 2026-11-22
 tools: [fillForm]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open [Fill PDF form](/fill-pdf-form), type into the fields, choose whether to lock the answers in, and download the filled copy. If the form has no fillable fields, use [Edit PDF](/edit-pdf) to type over the page instead.
 
 Tax forms, applications, registration sheets and contracts often arrive as PDFs with boxes to fill. The answers on them are personal: names, addresses, numbers. This guide shows how to fill a form on your own device so nothing you type is uploaded, what to do when a form will not let you type and how to decide whether to lock the answers afterwards.
 

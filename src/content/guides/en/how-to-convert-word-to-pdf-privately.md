@@ -3,7 +3,10 @@ title: How to convert a Word document to PDF without uploading it
 description: Turn a .docx into a PDF in your browser, what comes across (headings, lists, bold, italic), what does not, and when to use another route.
 published: 2026-11-22
 tools: [wordToPdf]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Word to PDF](/word-to-pdf) reads your `.docx` in the browser and builds a fresh PDF on plain A4 pages in a single typeface, keeping paragraphs, headings, bold and italic text and lists. Tables, images, your fonts and colors, and your page size and margins do not come across, so for a letterhead or a designed layout, export from Word itself.
 
 A Word document is something you can edit; a PDF is something you can send and trust to look the same. Converting from one to the other is a daily job, and it often involves a contract, a CV or a draft you would rather not hand to a stranger's server. This guide explains how to convert a .docx to PDF on your own device, and, just as important, what this conversion does and does not reproduce.
 

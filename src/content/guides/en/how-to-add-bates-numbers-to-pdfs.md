@@ -3,7 +3,10 @@ title: How to add Bates numbers to a set of PDFs
 description: Stamp a continuous, zero-padded identifier such as ABC000001 across every page of many PDFs, with prefix, suffix, digit count and position.
 published: 2026-11-22
 tools: [batesNumber]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open [Bates numbering](/bates-numbering), add your files in the order they should be numbered, set the prefix, digits and starting number, then stamp and download them. The numbers run on across every file, which ordinary page numbers do not.
 
 When a case involves thousands of pages across many files, "page 3 of the third PDF" is not a usable way to cite anything. Bates numbering gives every page a unique identifier, so any page can be named, found and referred to without ambiguity. This guide explains the format, how to stamp it on a set of PDFs and what to check before the numbered set goes out.
 

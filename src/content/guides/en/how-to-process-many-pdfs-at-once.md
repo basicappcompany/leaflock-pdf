@@ -3,7 +3,10 @@ title: How to process many PDFs at once
 description: Run the same job over a whole folder of PDFs without doing them one by one, what happens when a file fails and how a batch counts against your daily limit.
 published: 2026-11-22
 tools: [batch]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Batch PDF](/batch-pdf) applies the same operation to many PDFs, one after another, with no fixed file limit, and a file that fails is marked with the reason while the rest finish. It is a Practice tool.
 
 One PDF is a task; two hundred is a chore. Compressing a month of scanned invoices, stripping metadata from a folder before publishing, or numbering a stack of exhibits one at a time wastes hours. Batch processing runs the same job across many files in one go. This guide explains how it works, how it behaves when something goes wrong and how to plan a big run.
 

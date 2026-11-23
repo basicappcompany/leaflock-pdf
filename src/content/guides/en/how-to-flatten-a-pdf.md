@@ -3,7 +3,10 @@ title: "How to flatten a PDF: lock form answers and annotations into the page"
 description: Turn fillable fields, comments, highlights and stamps into ordinary page content so they cannot be changed, and know what flattening does not remove.
 published: 2026-11-22
 tools: [flatten]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Flatten PDF](/flatten-pdf) turns form fields into ordinary page content, so the answers stay visible but can no longer be edited, and by default it flattens comments, highlights, stamps and drawings too. Links keep working; the pop-up notes on comments are removed.
 
 A filled-in PDF form is still a form. Anyone who opens it can change the answers. A PDF with comments and highlights is still a working document, with notes that can be edited or deleted. Flattening finalizes it: what you see becomes part of the page. This guide explains what flattening changes, when to use it and, importantly, what it does not do.
 

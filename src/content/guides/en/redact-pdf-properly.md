@@ -3,7 +3,10 @@ title: How to redact a PDF properly
 description: Black boxes and highlighting don't remove text from a PDF. Learn how real redaction works, how to do it on your device, and what to check before sharing.
 published: 2026-10-21
 tools: [redact, flatten, compare]
+updated: 2026-11-23
 ---
+
+**Short answer:** A black box drawn over text does not redact it: the text is still in the file and can be copied, searched or recovered. [Redact PDF](/redact-pdf) turns each page with a box into an image with the boxes burned in, which removes that page's text, images and links.
 
 Redaction means removing information from a document so the people you share it with can't read it: a name in a court filing, an account number on a statement, a home address on a form.
 

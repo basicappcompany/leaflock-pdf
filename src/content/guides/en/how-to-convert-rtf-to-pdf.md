@@ -3,7 +3,10 @@ title: How to convert an RTF file to PDF
 description: Turn a rich text (.rtf) document into a PDF on your device, what paragraphs and styling survive, and when a Word file is the better starting point.
 published: 2026-11-22
 tools: [rtfToPdf]
+updated: 2026-11-23
 ---
+
+**Short answer:** [RTF to PDF](/rtf-to-pdf) keeps paragraphs, bold and italic text on plain A4 pages in a single typeface. Headings, lists, tables, images, fonts and colors do not come across, so use [Word to PDF](/word-to-pdf) if you need headings and lists.
 
 Rich Text Format is an old, widely supported document format. Plenty of programs still save it: older word processors, note apps, templates exported from other systems and legal software. Converting an .rtf to PDF is straightforward, but this tool is narrower than some others, and knowing where its edges are saves a surprise. This guide covers what it keeps, what it leaves out and what to do instead when you need more.
 

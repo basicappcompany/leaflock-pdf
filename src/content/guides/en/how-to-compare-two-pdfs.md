@@ -3,7 +3,10 @@ title: How to compare two versions of a PDF
 description: Find the words added or removed and the areas that look different between two PDFs, privately in your browser, and understand what a comparison can miss.
 published: 2026-11-22
 tools: [compare]
+updated: 2026-11-23
 ---
+
+**Short answer:** Open [Compare PDF](/compare-pdf), choose the original and the revised file, and read the text changes first, then the visual overlay. Pages are matched by position, page 1 with page 1, so a page added or removed in one version shifts everything after it.
 
 Two versions of a contract arrive an hour apart and nobody says what changed. A supplier sends a "revised" price list. A colleague re-exports a report and swears only one number is different. Reading both side by side is slow and unreliable, because the eye skips exactly the small changes that matter. This guide shows how to compare two PDFs on your device and how to read the result.
 

@@ -3,7 +3,10 @@ title: How to watermark a PDF with text or a logo
 description: Stamp DRAFT, CONFIDENTIAL or your logo across PDF pages, with opacity, angle and placement controls, and know how strong a watermark really is.
 published: 2026-11-22
 tools: [watermark]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Add watermark](/add-watermark) puts text, such as DRAFT or CONFIDENTIAL, or a logo image on the pages you choose, with opacity, angle, size and placement you set. For a logo, a PNG with a transparent background works best.
 
 A watermark tells the reader what a document is: a draft, a confidential copy, a sample, or yours. It is also a mild deterrent against passing a file around unnoticed. This guide explains how to add one with text or a logo, how to make it readable without drowning the page and what a watermark can and cannot protect.
 

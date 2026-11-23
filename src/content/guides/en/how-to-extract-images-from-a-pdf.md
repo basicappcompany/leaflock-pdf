@@ -3,7 +3,10 @@ title: How to extract images from a PDF in their original quality
 description: Pull the photos and pictures embedded in a PDF out as separate files, unchanged where possible, and why that differs from saving pages as images.
 published: 2026-11-22
 tools: [extractImages]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Extract images](/extract-images-from-pdf) pulls out the pictures already embedded in a PDF: JPEG images come out unchanged as `.jpg` and losslessly stored ones as `.png`, so extraction itself loses no quality. That differs from [PDF to JPG](/pdf-to-jpg), which draws whole pages as pictures.
 
 A brochure has a photo you want to reuse. A report has a chart image you need for a slide. A scanbook is a pile of pictures in a PDF wrapper. Screenshotting the page loses quality and drags in everything around the image. Extracting pulls out the pictures the PDF already contains. This guide explains how that works, what you get and which images cannot be extracted.
 

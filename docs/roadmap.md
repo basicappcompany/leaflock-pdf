@@ -973,8 +973,9 @@ is free, and working it out afterwards means re-reading a hundred pages.
   write themselves on the ads, CSP and offline arguments.
 - **Guides.** 6 today → one per tool minimum, each answering its query in the first two
   sentences so it is quotable by an assistant. **Done 22 November 2026** (item 3.3): one
-  guide per tool, 37 added to the six. The "answer in the first two sentences" rule was not
-  applied to the new ones; the existing intros set context first.
+  guide per tool, 37 added to the six. The "answer in the first two sentences" rule was
+  applied on 23 November 2026: every guide now opens with a **Short answer:** paragraph
+  (a test keeps it that way, `tests/unit/guideAnswers.test.ts`).
 - **The verifiability page.** "Turn off your Wi-Fi and keep working" as a live demo,
   extending `how-to-check-if-a-pdf-site-uploads-your-files.md`. **Done 30 October 2026**
   (item 3.4), at `/verify` — and it turned out not to need the DevTools network panel at

@@ -3,7 +3,10 @@ title: "How to edit a PDF: add text, images and shapes, and white out mistakes"
 description: Add text, images, rectangles and highlights to any PDF page, cover errors with white-out and understand what editing cannot change or remove.
 published: 2026-11-22
 tools: [edit]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Edit PDF](/edit-pdf) adds text, images, rectangles, highlights and white-out boxes on top of a page; it does not change the text already in the file. White-out only covers what is underneath, so use [Redact PDF](/redact-pdf) to remove it.
 
 Most people who say they want to "edit a PDF" want something modest: add a line of text, put a date in a box, drop in a picture, highlight a clause or correct a typo. PDFs are not word-processor files, so changing the text that is already there is a different and much harder problem than adding new material. This guide explains what you can do, how to do it on your device and where the limits are.
 

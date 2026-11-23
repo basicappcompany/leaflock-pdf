@@ -3,7 +3,10 @@ title: Turn a scanned PDF into searchable text
 description: What OCR is, how to prepare scans for accurate text recognition, and how to make a scanned PDF searchable on your own device without uploading it.
 published: 2026-10-21
 tools: [ocr, scan, pdfToText, rotate]
+updated: 2026-11-23
 ---
+
+**Short answer:** [OCR PDF](/ocr-pdf) adds an invisible layer of recognized text over a scan, so you can search and copy it. It recognizes English only for now, and the first run downloads a text model of about 10 MB from our site.
 
 A scanned PDF looks like a document, but to your computer it's just a set of pictures. You can't search it, select a sentence, or copy a paragraph into an email. Screen readers can't read it aloud either.
 

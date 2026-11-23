@@ -3,7 +3,10 @@ title: How to extract tables from a PDF as CSV or Excel
 description: Pull only the tables out of a PDF as CSV files or Excel sheets, skipping pages without one, and how to handle tables that run across pages.
 published: 2026-11-22
 tools: [extractTables]
+updated: 2026-11-23
 ---
+
+**Short answer:** [Extract tables](/extract-tables-from-pdf) finds tables by looking for vertical bands of blank space, keeps only the pages where one was found and gives you CSV or Excel. That is a guess from alignment, so check the result, and use [PDF to Excel](/pdf-to-excel) if you want every page.
 
 If you only want the data from a PDF, not the commentary around it, converting the whole document gives you a lot to throw away. Extracting tables keeps the pages where a table was actually found and skips everything else. This guide explains how it differs from a full conversion, how tables are located and what to do with tables that continue over several pages.
 
