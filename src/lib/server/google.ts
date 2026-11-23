@@ -12,8 +12,20 @@ const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 
 export const GOOGLE_STATE_COOKIE = 'leaflock_oauth_state';
 
+/** Placeholders people leave in a config file while the real client is being set up. */
+const STUB_VALUE = /^(dummy|placeholder|changeme|your[-_ ]|xxx|todo)/i;
+
+/**
+ * Whether Google sign-in can work at all. The login page only shows the button when this is true, so a stand-in value must
+ * not count: `dummy-...` ids are shaped like real ones and used to pass, which drew a button Google then answered with
+ * 401 invalid_client. A real client id always ends in `.apps.googleusercontent.com`.
+ */
 export function googleConfigured(env: Env): boolean {
-  return Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET);
+  const id = env.GOOGLE_CLIENT_ID?.trim();
+  const secret = env.GOOGLE_CLIENT_SECRET?.trim();
+  if (!id || !secret) return false;
+  if (STUB_VALUE.test(id) || STUB_VALUE.test(secret)) return false;
+  return id.endsWith('.apps.googleusercontent.com');
 }
 
 export function redirectUri(origin: string): string {

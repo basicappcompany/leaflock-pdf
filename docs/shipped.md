@@ -42,6 +42,13 @@ place deliberately: rewriting them would be the rework this file exists to preve
 - **Test change:** `locales.test.ts` asserted Thai was untranslated; it now asserts the opposite. A plain `touch` of `src/i18n/index.ts` did not refresh vitest's `import.meta.glob` here: deleting `node_modules/.vite` and changing the file's content did.
 
 ---
+## 24 November 2026 — Google sign-in: stub values rejected, Cancel handled
+
+- The flow itself was already built (redirect flow, state cookie, account linking by verified email). Production has no Google client yet (`/api/auth/methods` says `google:false`), so nothing is live; the owner's steps are in `docs/TODO.md` §1.
+- `googleConfigured()` rejects placeholder values and any id not ending in `.apps.googleusercontent.com`. Cancel on Google's screen returns to `/login` with no error. `tests/unit/server/google.test.ts` covers config, the redirect, the state cookie and the callback's refusals.
+- **Not done:** keeping the page a visitor came from (`next`) through Google sign-in; see §1 for why.
+
+---
 ## 23 November 2026 — Short answers on every guide, a proof image on /security
 
 - **A direct answer at the top of all 48 guides.** Each opens with a `**Short answer:**` paragraph of one or two sentences, written from what the guide itself already says (stated limits, what is kept and dropped), then the existing intro. `updated:` moved to 23 November on each. `tests/unit/guideAnswers.test.ts` fails with the file name if a guide lacks one.
