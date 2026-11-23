@@ -139,24 +139,39 @@ The code was item 4.9, **shipped 30 October 2026**:
       once. `src/lib/pricing.ts` holds $499 as `businessYearly` and $750 as
       `businessYearlyTarget` since item 4.9; what is still undecided is *when* to announce.
 
-## 1. Google sign-in — blocked, placeholders in `.dev.vars`
+## 1. Google sign-in — code done and tested; needs the owner's Google client
 
-`GOOGLE_CLIENT_ID` is `dummy-…id.apps.googleusercontent.com` and `GOOGLE_CLIENT_SECRET`
-is `dummy-secret`. Both are shaped correctly, so `googleConfigured()` returns true and the
-button renders, then Google rejects the request with **401 invalid_client**.
+The flow is the plain redirect one (`functions/api/auth/google/{start,callback}.ts`, `src/lib/server/google.ts`): no
+Google script on our pages, so the CSP is untouched. Checked 24 November 2026: production answers
+`{"google":false}` from `/api/auth/methods`, so the button is correctly hidden. `googleConfigured()` now also rejects
+stand-in values (`dummy-…`, `changeme`) and ids that do not end in `.apps.googleusercontent.com` (the old check let
+`.dev.vars`'s dummies draw a button Google answered with 401). `tests/unit/server/google.test.ts` pins it, the redirect and
+the callback's state check; Cancel on Google's screen now returns to the form without an error.
 
-- [ ] Create a Web application OAuth client: Google Cloud Console → APIs & Services →
-      Credentials → Create credentials → OAuth client ID.
-- [ ] Register both redirect URIs exactly (`redirectUri()` in `src/lib/server/google.ts`
-      builds these from the request origin, so the port must match):
-      - `http://localhost:8788/api/auth/google/callback`
-      - `https://leaflockpdf.com/api/auth/google/callback`
-- [ ] Replace the two dummy values in `.dev.vars`, then restart wrangler — it reads that
-      file only at startup.
-- [ ] Set them in production: `wrangler pages secret put GOOGLE_CLIENT_ID` and
-      `… GOOGLE_CLIENT_SECRET`.
+**Steps for the owner** (Google Cloud Console, signed in as the account that should own this):
 
-Only `openid email` is requested, so the consent screen needs no sensitive-scope review.
+- [ ] **Project:** create or choose a project (e.g. "LeafLock PDF").
+- [ ] **Consent screen** (Google Auth Platform: Branding, Audience): app name *LeafLock PDF*; support and developer email
+      `hello@leaflockpdf.com`; app domain `https://leaflockpdf.com`, privacy `https://leaflockpdf.com/privacy/`, terms
+      `https://leaflockpdf.com/terms/`; authorized domain `leaflockpdf.com`; audience **External**. Then **Publish app**
+      to "In production": left in Testing, only listed test users can sign in. Only `openid email` is requested, which is
+      not a sensitive scope, so no Google verification review is needed.
+- [ ] **Client:** Clients, Create client, type **Web application**. Authorized redirect URIs, exactly:
+      `https://leaflockpdf.com/api/auth/google/callback` and `http://localhost:8788/api/auth/google/callback`
+      (`redirectUri()` builds it from the request origin, so `www` and `pages.dev` are not valid). No JavaScript origins.
+- [ ] **Production secrets**, from the owner's own shell (the value is piped in, never typed at a prompt, and the secret
+      never goes into chat or the repo):
+      `printf '%s' '<client id>' | pnpm exec wrangler pages secret put GOOGLE_CLIENT_ID --project-name leaflock-pdf`
+      then the same for `GOOGLE_CLIENT_SECRET`.
+- [ ] **Redeploy** (the site only picks secrets up on the next deploy: an empty-commit push or "Retry deployment").
+- [ ] **Check:** `curl https://leaflockpdf.com/api/auth/methods` returns `{"google":true}`, the button shows on `/login`,
+      and a real sign-in lands on `/account`. Try a second Google account with the same email as an existing magic-link
+      account: it must land on the same account.
+- [ ] **Local:** replace the two dummies in `.dev.vars` and restart wrangler (it reads the file only at startup).
+
+Not done on purpose: the page a person was sent from (`next`) is not kept through Google sign-in, because the state cookie
+is documented as holding "a random code and nothing else" (`cookies.md`); keeping it would mean a second cookie or
+changing that sentence.
 
 ## 2. Env vars referenced in code but absent from `.dev.vars`
 
@@ -419,10 +434,7 @@ fallback for Safari/iOS and for any format the wasm decoder doesn't cover.
 - [x] **`tests/unit/server/claim.test.ts` was flaky, fixed 20 November** ("stops answering once the whole site has asked too often in a minute", seen 19 Nov). It sends up to 130 requests against a one-minute window, so under the full parallel suite the loop can straddle a minute boundary, reset the counter and never reach the limit. Passed alone. The test now fakes only `Date` and pins it ten seconds into a window, so the loop cannot reach the next one.
 - [ ] **`pnpm-workspace.yaml` overrides `@emnapi/runtime@2.0.0-beta.2` to 1.11.3** (astro 7.4.7, 19 Nov): the lockfile resolved `@astrojs/check`'s optional peer to a 2.0 beta that breaks it. Remove the override once a plain `pnpm install` resolves that peer to a stable release and `pnpm check` still passes.
 
-- [ ] `googleConfigured()` (`src/lib/server/google.ts`) only checks that the two vars are
-      non-empty, so a placeholder still renders a button that cannot work — which is the
-      opposite of what `LoginForm.tsx` intends ("a button that can't work is worse than no
-      button"). Consider rejecting obvious stubs. Owner has not decided yet.
+- [x] `googleConfigured()` rejects stub values (24 November 2026, §1).
 - [ ] The home dashboard's browser tests (`tests/e2e/dashboard.spec.ts`) stub
       `/api/auth/me` and `/api/usage/today`, because Playwright serves the static build
       through `astro preview`, where Pages Functions do not exist. A harness that can
